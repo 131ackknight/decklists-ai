@@ -46,6 +46,26 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-10-14 · Reset: where we are and what's next
+
+The owner asked to reset on status and next steps.
+
+**Done:** setup (1), card knowledge (4), the deck checker (5), harness v2 (6, run on Opus and Sonnet), and the rubric baseline half of step 2 (v1 on five models, 108 answers rated; v2 on two models, 48 rated). Spend so far about $34.
+
+**What we know:**
+1. When a winning list exists, every model returns about the same deck and the model barely matters.
+2. On brews, the model matters most (Haiku 4.5 1.52 vs. Opus 5.5 3.88 in v1).
+3. Models default to the database: even asked for something new, decks averaged 69-87% one real list.
+4. The new harness answers everything, including formats with no data, and copies a little less, but prompting alone doesn't break the habit.
+5. Faithful brews rate below proven decks with the requested card added: playability and faithfulness pull apart.
+6. Absolute 1-5 ratings drift between sessions (anchors: -0.67).
+
+**Decisions waiting on the owner:** switch to pairwise eval; the Tainted Pact round 2 ratings; and what decklists.ai should reward when faithfulness and playability conflict.
+
+**Recommended order:** (1) re-judge v1 vs. v2 pairwise with no new API spend, for a clean part two of the post; (2) build the step 8 brew pipeline, the biggest lever on what we learned; (3) the automated tests that need no rating (sideboard test, brew holdout test, which also calibrates how much a good brew borrows); (4) the Decklist Data API, site and launch.
+
+---
+
 ## 2026-10-14 · Round 2 results, rater drift, and a better eval method
 
 The owner rated 48 of the 54 round 2 answers (unrated: Penny Dreadful, the Psychatog tune, and the two Old School reruns), then said: "I think we need to come up with a different eval method next time, I am having a hard time really rating each metric on a 5 point scale."

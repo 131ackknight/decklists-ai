@@ -55,6 +55,15 @@ h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; }
 .lookfor { margin: 0; color: var(--muted); font-size: 0.95rem; max-width: 70ch; }
 .lookfor b { color: var(--ink); font-weight: 600; }
 .list { display: grid; gap: 18px; margin-top: 16px; }
+.guide { margin: 16px 0 0; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 12px 16px; }
+.guide summary { font: 600 0.95rem var(--font-body); color: var(--ink); }
+.guide p, .guide li { font-size: 0.92rem; max-width: 72ch; }
+.guide ul { padding-left: 1.2rem; margin: 8px 0; }
+.scale { overflow-x: auto; margin: 10px 0; }
+.scale table { border-collapse: collapse; font-size: 0.88rem; min-width: 560px; }
+.scale th, .scale td { text-align: left; vertical-align: top; padding: 6px 10px; border-top: 1px solid var(--line); }
+.scale th { font-weight: 600; color: var(--muted); }
+.scale td:first-child { font-weight: 600; white-space: nowrap; }
 .card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 18px; display: grid; gap: 12px; min-width: 0; }
 .card-head { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
 .letter { font: 700 1.25rem var(--font-display); width: 2.2rem; height: 2.2rem; display: grid; place-items: center; border-radius: 8px; background: var(--ink); color: var(--surface); }
@@ -102,6 +111,26 @@ textarea { width: 100%; min-height: 56px; font: 0.92rem var(--font-body); color:
 
 <div class="wrap">
   <p class="notice" id="notice">Loading saved ratings…</p>
+  <details class="guide" id="guide">
+    <summary>How to rate</summary>
+    <p>Each prompt shows the request and a gray "A good answer" line: that line is your yardstick. Below it, every answer to the prompt is a lettered card in shuffled order, so you can't tell which model wrote it. Read the reply and the deck, then set all four rows. Ratings save when you click; a card says "Rated" once all four are set.</p>
+    <div class="scale">
+      <table>
+        <thead><tr><th>Row</th><th>1</th><th>3</th><th>5</th></tr></thead>
+        <tbody>
+          <tr><td>Plan</td><td>No deck, or a pile with no way to win</td><td>A recognizable plan, some cards off-plan</td><td>Every slot serves a clear plan that matches the request</td></tr>
+          <tr><td>Legal</td><td>No deck, or ignores the request (wrong format or colors)</td><td>Legal, but bends what was asked</td><td>Legal and does what was asked</td></tr>
+          <tr><td>Mana</td><td>Unplayable land count or colors</td><td>Works but clunky</td><td>You'd sleeve it up as is</td></tr>
+          <tr><td>Shell</td><td>Old or random support cards</td><td>Reasonable but dated</td><td>What good players run right now</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <ul>
+      <li>No deck is usually 1s, unless not building was the right call: for "turn 1 every game," an honest no with the fastest real option can score well on Plan.</li>
+      <li>Legal is mostly a formality: v1's server rejects illegal decks. Use it for whether the answer did what you asked.</li>
+      <li>Compare the answers within a prompt to keep your 3s and 5s consistent.</li>
+    </ul>
+  </details>
   <section class="request" id="request"></section>
   <div class="list" id="list"></div>
   <div class="foot">
@@ -122,6 +151,10 @@ textarea { width: 100%; min-height: 56px; font: 0.92rem var(--font-body); color:
   let canWrite = false;
   let current = 0;
   try { current = Math.min(Number(localStorage.getItem("blind-prompt") || 0), DATA.prompts.length - 1) || 0; } catch (e) {}
+  // Open the guide on a first visit; remember when it's closed.
+  const guide = document.getElementById("guide");
+  try { guide.open = localStorage.getItem("blind-guide") !== "closed"; } catch (e) { guide.open = true; }
+  guide.addEventListener("toggle", () => { try { localStorage.setItem("blind-guide", guide.open ? "open" : "closed"); } catch (e) {} });
 
   const el = (tag, attrs, ...kids) => {
     const n = document.createElement(tag);

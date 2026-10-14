@@ -24,7 +24,7 @@ Each step ends by rerunning the tests. A step is done only when its number beats
 | # | Step | Where | Done when |
 | --- | --- | --- | --- |
 | 1 | Setup: repo, scaffold, API key | here | Empty site builds |
-| 2 | Tests and baseline: 22 hand-rated prompts (incl. no-data formats and Premodern storm), sideboard test on ~200 real lists, 15-20 brew-holdout decks. Score the v1 bot. | here | Baseline saved; rerun is one command |
+| 2 | Tests and baseline: 24 hand-rated prompts (incl. no-data formats and Premodern storm), sideboard test on ~200 real lists, 15-20 brew-holdout decks. Score the v1 bot. | here | Baseline saved; rerun is one command |
 | 3 | Decklist Data API v1: wrap existing stats, add main/side, core/flex, profiles, card pairs; `as_of` everywhere | decklistdata | Endpoints return correct past data quickly |
 | 4 | Card knowledge: Scryfall cards and tags, combos, format registry, `search_cards` | here | "Premodern green untappers" returns the right cards |
 | 5 | Deck checker and mana math: format rules, land count, sources, curve, roles, engine odds, fixable errors | here | Top 50 real lists per format pass; 100 generated decks pass |
@@ -38,6 +38,6 @@ Each step ends by rerunning the tests. A step is done only when its number beats
 
 - [x] Step 1: repo and scaffold
 - [ ] Step 1: Anthropic API key in `.env.local` (owner)
-- [ ] Step 2 (22 rubric prompts drafted)
+- [ ] Step 2 (24 rubric prompts drafted, 2 Commander scored separately)
 
 Build history: [BUILD_LOG.md](./BUILD_LOG.md)

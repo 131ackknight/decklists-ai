@@ -1,5 +1,5 @@
 /**
- * Hand-rated brew prompts (step 2), 22 total. The owner rates every output 1-5 on
+ * Hand-rated brew prompts (step 2), 24 total. The owner rates every output 1-5 on
  * each dimension; the mean is the rubric score for a run.
  *
  * Mix: formats with Decklist Data coverage and formats without it,
@@ -24,6 +24,11 @@ export interface RubricPrompt {
   prompt: string;
   /** What a good answer must do, for the rater. */
   lookFor: string;
+  /**
+   * 100-card singleton prompts. Commander support lands after step 10,
+   * so these are scored and reported separately from the headline score.
+   */
+  afterLaunch?: boolean;
 }
 
 export const RUBRIC_PROMPTS: RubricPrompt[] = [
@@ -176,6 +181,24 @@ export const RUBRIC_PROMPTS: RubricPrompt[] = [
     prompt: "Build a deck that best utilizes Peter Parker's Camera.",
     lookFor:
       "Picks a format where the Camera is legal and says why. Finds activated or triggered abilities worth copying three times, enough of them to make a 1-mana artifact matter.",
+  },
+  {
+    id: "commander-atraxa-proliferate",
+    format: "Commander",
+    hasData: false,
+    prompt: "Build a Commander deck with Atraxa, Praetors' Voice that's all about proliferate.",
+    lookFor:
+      "Exactly 100 singleton cards inside Atraxa's four colors, a real proliferate engine and payoffs, ramp and draw for a multiplayer game, about 36-38 lands.",
+    afterLaunch: true,
+  },
+  {
+    id: "duel-commander-red-aggro",
+    format: "Duel Commander",
+    hasData: true,
+    prompt: "Build an aggressive Duel Commander deck with a red commander.",
+    lookFor:
+      "Picks a commander legal in Duel Commander and says why, 100 singleton, a fast curve for a 1-on-1 game at 20 life, and interaction the Duel Commander field actually plays.",
+    afterLaunch: true,
   },
   {
     id: "premodern-vague",

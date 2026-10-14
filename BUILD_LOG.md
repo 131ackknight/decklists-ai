@@ -42,6 +42,25 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-10-14 · An AI judge on the tuning prompt
+
+Unsure how to rate the Psychatog tunes, the owner asked: "can you score them for me?" Claude Code agreed with a caveat for the post: it is not a neutral judge, because Opus 5.5 is one of the models under test and models tend to prefer answers that sound like their own. So the scores are labeled an AI judgment, made without opening the answer key, and the post can either drop this prompt from the headline or disclose it.
+
+Reading all six replies and checking their card claims against the card index changed the picture. The answers' card choices were similar; **their accuracy about cards was not**:
+
+| | Plan | Legal | Mana | Shell | Deciding factor |
+| --- | --- | --- | --- | --- | --- |
+| A | 4 | 3 | 5 | 4 | Good matchup reasoning; false claims: Tsabo's Web "2.7% of lists" (76-92%), "Smother is weak vs Stiflenought" (Smother kills Phyrexian Dreadnought, mana value 1) |
+| B | 3 | 3 | 5 | 4 | Copies the average sideboard; its text contradicts the deck it submitted |
+| C | 4 | 5 | 5 | 5 | Accurate, explained, honest about what it didn't check; conforms more than it reads the meta |
+| D | 4 | 3 | 5 | 5 | Best structure (sideboard map per matchup, catches a scorer error) but says Dreadnought has mana value 6, and miscounts lands |
+| E | 5 | 5 | 5 | 5 | Accurate, swaps reasoned against specific decks, explains cuts and keeps |
+| F | 2 | 2 | 5 | 2 | Cuts staples, maindecks Engineered Plague for "Enchantress tokens," contradicts itself on sweepers |
+
+Order: E > C > D ≈ A > B > F. **Finding for the post: on a tuning prompt the models differ less in which cards they pick than in whether what they say about those cards is true.** A checker can verify a decklist; it cannot yet verify the explanation. That is a gap for the new harness: claims like "mana value 6" or "2.7% of lists" should come from tools, not memory, and be checkable.
+
+---
+
 ## 2026-10-14 · Tuning: one obvious move, then stop
 
 Prompt 13 pastes a real UB Psychatog list (4th place, 4-3, Premodern Challenge 16, Oct 13) and asks to tune it for the current meta. The owner asked whether Control Magic is stock in Psychatog; the data answered it instead of memory: across 104 Psychatog lists from the last 90 days, Control Magic is a flex sideboard card (29%, 1-2 copies, never main). The stock sideboard is Engineered Plague 91%, Hydroblast 91%, Annul 86%, Tsabo's Web 76%.

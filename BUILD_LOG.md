@@ -37,8 +37,23 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 - Passes 2 and 3 of the model comparison: about $36 more (roughly $55 total) and 180 more answers to rate.
 - A one-line PR so v1 logs the real error behind the four "An error occurred." builds.
-- Adding the "distance from the nearest real deck" score to the objective scorer.
+- Adding the "distance from the nearest real deck" score and a "copy rate" score to the objective scorer.
 - Lesson to apply: any prompt or claim that names a card gets checked against the card index before it is used.
+
+---
+
+## 2026-10-14 · Five models, one Merfolk deck
+
+While rating "I want a Modern Merfolk deck that can beat the current top decks," the owner noticed: "they all produced identical decks basically." Measured without unblinding:
+
+- **5 of 6 answers built a deck, and all 5 main decks are identical, card for card (100% pairwise overlap).** Sideboards overlap 73-80%. All five were labelled "stock Merfolk." The sixth answer produced no deck.
+- **Every one of them called `reference_decklists`,** which returns a recent winning list, and copied it. Decklist Data holds 14 Modern Merfolk lists from the last 90 days.
+
+**Why it matters for the post: on this prompt the harness decided the answer, not the model.** Five models from Haiku to Fable, handed the same tool that returns a finished winning list, all handed it straight back. Model differences only show where the tools stop helping, which matches the owner's read that answers struggle on brews.
+
+Copying a proven list is reasonable for a stock request, but this prompt asked for a deck that beats the current top decks, and only the sideboard adapted. Rating guidance given: Mana and Shell high, Legal 5, Plan about 4 unless a meaningful meta-aimed change was made; judge the differences by whether the sideboard answers the decks it names.
+
+**New metric for the new harness: copy rate,** the share of a deck identical to a list the model was handed. High copy rate is right for "give me stock Goblins" and wrong for "tune this for the meta" or a brew.
 
 ---
 

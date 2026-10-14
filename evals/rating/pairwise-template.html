@@ -1,0 +1,285 @@
+<title>Brew Head-to-Head</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a head-to-head judging table. Sticky bar with progress and pair picker; the request; two answers side by side; the verdict row. */
+:root {
+  --bg: #f4f6fa;
+  --surface: #ffffff;
+  --ink: #1b2236;
+  --muted: #5d667d;
+  --line: #dde2ec;
+  --accent: #2459a6;
+  --accent-ink: #ffffff;
+  --pick: #b5650d;
+  --yes: #1f7a4d;
+  --no: #b3261e;
+  --chip: #e8edf6;
+  --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #10141d; --surface: #181e2b; --ink: #e5e9f2; --muted: #9aa4ba; --line: #2a3346;
+    --accent: #6f9fe0; --accent-ink: #0d1422; --pick: #e2a04f; --yes: #5cc28e; --no: #f08a80; --chip: #222b3d;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #10141d; --surface: #181e2b; --ink: #e5e9f2; --muted: #9aa4ba; --line: #2a3346;
+  --accent: #6f9fe0; --accent-ink: #0d1422; --pick: #e2a04f; --yes: #5cc28e; --no: #f08a80; --chip: #222b3d;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 16px/1.5 var(--font-body); }
+.wrap { max-width: 1200px; margin: 0 auto; padding-inline: 16px; padding-block: 0 64px; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; }
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); border-bottom: 1px solid var(--line); }
+.bar-inner { max-width: 1200px; margin: 0 auto; padding: 12px 16px; display: grid; gap: 10px; }
+.title-row { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 16px; }
+.title-row h1 { font-size: 1.4rem; }
+.progress { color: var(--muted); font-size: 0.9rem; font-variant-numeric: tabular-nums; }
+.progress b { color: var(--pick); font-weight: 600; }
+.nav { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.nav select { flex: 1 1 260px; min-width: 0; font: 0.95rem var(--font-body); color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 7px 10px; }
+.btn { font: 600 0.9rem var(--font-body); border: 1px solid var(--line); background: var(--surface); color: var(--ink); padding: 7px 14px; border-radius: 8px; cursor: pointer; }
+.btn:disabled { opacity: 0.5; cursor: default; }
+button:focus-visible, select:focus-visible, textarea:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.notice { margin: 16px 0 0; padding: 10px 14px; border: 1px solid var(--line); background: var(--surface); border-radius: 8px; color: var(--muted); font-size: 0.92rem; }
+.guide { margin: 12px 0 0; color: var(--muted); font-size: 0.92rem; max-width: 80ch; }
+.request { margin: 18px 0 6px; display: grid; gap: 8px; }
+.fmt { font: 600 0.75rem var(--font-body); letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); }
+.prompt { font-family: var(--font-display); font-size: 1.3rem; font-weight: 600; margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.lookfor { margin: 0; color: var(--muted); font-size: 0.95rem; max-width: 80ch; }
+.lookfor b { color: var(--ink); font-weight: 600; }
+.duel { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); gap: 16px; margin-top: 16px; }
+.side { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+.side-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.letter { font: 700 1.25rem var(--font-display); width: 2.2rem; height: 2.2rem; display: grid; place-items: center; border-radius: 8px; background: var(--ink); color: var(--surface); }
+.chip { font: 600 0.75rem var(--font-body); letter-spacing: 0.04em; text-transform: uppercase; background: var(--chip); color: var(--muted); padding: 3px 8px; border-radius: 4px; }
+details summary { cursor: pointer; color: var(--accent); font-size: 0.9rem; }
+.reply { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 24rem; overflow: auto; padding: 12px; border: 1px solid var(--line); border-radius: 8px; font-size: 0.93rem; margin-top: 8px; }
+.deck { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; }
+.deck pre { margin: 0; font: 0.8rem/1.45 var(--font-mono); padding: 10px 12px; background: var(--bg); border-radius: 8px; overflow-x: auto; min-width: 0; }
+.deck h3 { font: 600 0.78rem var(--font-body); text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin-bottom: 6px; }
+.qs { display: grid; gap: 8px; border-top: 1px solid var(--line); padding-top: 12px; }
+.q { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 12px; align-items: center; font-size: 0.92rem; }
+.yn { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.yn button { font: 600 0.9rem var(--font-body); padding: 6px 14px; border: 0; border-left: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
+.yn button:first-child { border-left: 0; }
+.yn button[data-v="yes"][aria-pressed="true"] { background: var(--yes); color: var(--surface); }
+.yn button[data-v="no"][aria-pressed="true"] { background: var(--no); color: var(--surface); }
+.verdict { margin-top: 18px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px; display: grid; gap: 12px; }
+.verdict h2 { font-size: 1.1rem; }
+.picks { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.picks button { font: 700 1rem var(--font-display); padding: 14px 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); color: var(--ink); cursor: pointer; }
+.picks button[aria-pressed="true"] { background: var(--pick); color: var(--surface); border-color: var(--pick); }
+button:disabled { cursor: not-allowed; opacity: 0.6; }
+textarea { width: 100%; min-height: 56px; font: 0.92rem var(--font-body); color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; resize: vertical; }
+.saved { font-size: 0.8rem; color: var(--muted); min-height: 1.2em; }
+.foot { display: flex; justify-content: space-between; gap: 8px; margin-top: 20px; }
+@media (max-width: 560px) { .picks { grid-template-columns: 1fr; } .q { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: no-preference) { .picks button, .yn button { transition: background 120ms ease, color 120ms ease; } }
+</style>
+
+<div class="bar">
+  <div class="bar-inner">
+    <div class="title-row">
+      <h1>Brew Head-to-Head</h1>
+      <span class="progress" id="progress"></span>
+    </div>
+    <div class="nav">
+      <button class="btn" id="prev" type="button">Previous</button>
+      <select id="picker" aria-label="Pair"></select>
+      <button class="btn" id="next" type="button">Next</button>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <p class="notice" id="notice">Loading saved picks…</p>
+  <p class="guide">Two anonymous answers to the same request, sides shuffled. Answer the two yes/no questions for each, then pick the answer that better serves the request, or tie. Judge each request by what it asks for: a stock list should be proven, a brew should actually be the brew.</p>
+  <section class="request" id="request"></section>
+  <div class="duel" id="duel"></div>
+  <section class="verdict">
+    <h2>Which answer better serves this request?</h2>
+    <div class="picks" id="picks">
+      <button type="button" data-w="A">A is better</button>
+      <button type="button" data-w="tie">Tie</button>
+      <button type="button" data-w="B">B is better</button>
+    </div>
+    <textarea id="notes" placeholder="Why (optional, one line helps the write-up)"></textarea>
+    <div class="saved" id="saved" aria-live="polite"></div>
+  </section>
+  <div class="foot">
+    <button class="btn" id="prev2" type="button">Previous pair</button>
+    <button class="btn" id="next2" type="button">Next pair</button>
+  </div>
+</div>
+
+<script type="application/json" id="data">/*DATA*/</script>
+<script>
+(function () {
+  const DATA = JSON.parse(document.getElementById("data").textContent);
+  const picks = new Map(); // pair id -> body
+  let db = null;
+  let canWrite = false;
+  let current = 0;
+  let chain = Promise.resolve();
+  try { current = Math.min(Number(localStorage.getItem("pair") || 0), DATA.pairs.length - 1) || 0; } catch (e) {}
+
+  const el = (tag, attrs, ...kids) => {
+    const n = document.createElement(tag);
+    for (const [k, v] of Object.entries(attrs || {})) {
+      if (k === "class") n.className = v;
+      else if (k === "text") n.textContent = v;
+      else if (v !== null && v !== undefined && v !== false) n.setAttribute(k, v);
+    }
+    for (const kid of kids) if (kid) n.append(kid);
+    return n;
+  };
+  const lines = (xs) => (xs || []).map((c) => `${c.qty} ${c.name}`).join("\n");
+  const complete = (id) => {
+    const p = picks.get(id);
+    return Boolean(p && p.winner && ["aAsked", "aPlay", "bAsked", "bPlay"].every((k) => typeof p[k] === "boolean"));
+  };
+
+  function renderProgress() {
+    const done = DATA.pairs.filter((p) => complete(p.id)).length;
+    document.getElementById("progress").replaceChildren(el("b", { text: `${done} of ${DATA.pairs.length}` }), " pairs judged");
+    const picker = document.getElementById("picker");
+    DATA.pairs.forEach((p, i) => {
+      const title = DATA.prompts[p.prompt].prompt.split("\n")[0].slice(0, 56);
+      picker.options[i].textContent = `${complete(p.id) ? "✓" : "·"} ${i + 1}. ${title}`;
+    });
+  }
+
+  function save(patch) {
+    if (!db || !canWrite) return;
+    const p = DATA.pairs[current];
+    const body = { ...(picks.get(p.id) || {}), ...patch, pair: p.id, prompt: p.prompt, updatedAt: new Date().toISOString() };
+    picks.set(p.id, body);
+    renderProgress();
+    const status = document.getElementById("saved");
+    status.textContent = "Saving…";
+    chain = chain
+      .then(() => db.collection("pairs").doc(p.id).set(body))
+      .then(() => { status.textContent = complete(p.id) ? "Saved. This pair is done." : "Saved"; })
+      .catch((e) => { status.textContent = e && e.code === "invalid_argument" ? "Only the owner can save picks on this page." : "Could not save. Try again in a moment."; });
+  }
+
+  function side(letter, ans, prefix) {
+    const box = el("article", { class: "side" });
+    const chip = ans.error ? el("span", { class: "chip", text: "Error" }) : ans.deck ? null : el("span", { class: "chip", text: "No deck" });
+    box.append(el("div", { class: "side-head" }, el("span", { class: "letter", text: letter }), chip));
+    if (ans.text) {
+      const d = el("details", {}, el("summary", { text: `Read the reply (${ans.text.length.toLocaleString()} characters)` }));
+      d.append(el("div", { class: "reply", text: ans.text }));
+      if (!ans.deck) d.open = true;
+      box.append(d);
+    }
+    if (ans.deck) {
+      const deck = el("div", { class: "deck" });
+      if (ans.deck.commander.length) deck.append(el("div", {}, el("h3", { text: "Commander" }), el("pre", { text: lines(ans.deck.commander) })));
+      deck.append(el("div", {}, el("h3", { text: `Main (${ans.deck.mainCount})` }), el("pre", { text: lines(ans.deck.main) })));
+      if (ans.deck.side.length) deck.append(el("div", {}, el("h3", { text: `Sideboard (${ans.deck.sideCount})` }), el("pre", { text: lines(ans.deck.side) })));
+      box.append(deck);
+    }
+    const qs = el("div", { class: "qs" });
+    for (const [k, label] of [["Asked", "Did it do what was asked?"], ["Play", "Would you play this deck, or something close?"]]) {
+      const field = prefix + k;
+      const id = `q-${field}`;
+      const yn = el("div", { class: "yn", role: "group", "aria-labelledby": id });
+      for (const v of ["yes", "no"]) {
+        const b = el("button", { type: "button", "data-v": v, "aria-pressed": "false", text: v === "yes" ? "Yes" : "No" });
+        b.disabled = !canWrite;
+        b.addEventListener("click", () => save({ [field]: v === "yes" }));
+        yn.append(b);
+      }
+      yn.dataset.field = field;
+      qs.append(el("div", { class: "q" }, el("span", { id, text: label }), yn));
+    }
+    box.append(qs);
+    return box;
+  }
+
+  function sync() {
+    const p = DATA.pairs[current];
+    const s = picks.get(p.id) || {};
+    for (const yn of document.querySelectorAll(".yn")) {
+      for (const b of yn.children) b.setAttribute("aria-pressed", String(s[yn.dataset.field] === (b.dataset.v === "yes")));
+    }
+    for (const b of document.querySelectorAll("#picks button")) {
+      b.setAttribute("aria-pressed", String(s.winner === b.dataset.w));
+      b.disabled = !canWrite;
+    }
+    const notes = document.getElementById("notes");
+    notes.disabled = !canWrite;
+    if (document.activeElement !== notes) notes.value = s.notes || "";
+  }
+
+  function render() {
+    const p = DATA.pairs[current];
+    try { localStorage.setItem("pair", String(current)); } catch (e) {}
+    document.getElementById("picker").value = String(current);
+    for (const id of ["prev", "prev2"]) document.getElementById(id).disabled = current === 0;
+    for (const id of ["next", "next2"]) document.getElementById(id).disabled = current === DATA.pairs.length - 1;
+    const pr = DATA.prompts[p.prompt];
+    const first = pr.prompt.split("\n")[0];
+    const kids = [el("span", { class: "fmt", text: pr.format })];
+    if (pr.prompt.length > 220 && pr.prompt.includes("\n")) {
+      kids.push(el("p", { class: "prompt", text: first }));
+      const d = el("details", {}, el("summary", { text: "Show the pasted list" }));
+      d.append(el("div", { class: "deck" }, el("pre", { text: pr.prompt.slice(first.length).trim() })));
+      kids.push(d);
+    } else kids.push(el("p", { class: "prompt", text: pr.prompt }));
+    const lf = el("p", { class: "lookfor" });
+    lf.append(el("b", { text: "A good answer: " }), pr.lookFor);
+    kids.push(lf);
+    document.getElementById("request").replaceChildren(...kids);
+    document.getElementById("duel").replaceChildren(side("A", p.left, "a"), side("B", p.right, "b"));
+    document.getElementById("saved").textContent = "";
+    sync();
+    renderProgress();
+  }
+
+  const picker = document.getElementById("picker");
+  DATA.pairs.forEach((p, i) => picker.append(el("option", { value: String(i), text: String(i + 1) })));
+  picker.addEventListener("change", () => { current = Number(picker.value); render(); window.scrollTo(0, 0); });
+  const go = (d) => { current = Math.max(0, Math.min(DATA.pairs.length - 1, current + d)); render(); window.scrollTo(0, 0); };
+  for (const id of ["prev", "prev2"]) document.getElementById(id).addEventListener("click", () => go(-1));
+  for (const id of ["next", "next2"]) document.getElementById(id).addEventListener("click", () => go(1));
+  for (const b of document.querySelectorAll("#picks button")) b.addEventListener("click", () => save({ winner: b.dataset.w }));
+  document.getElementById("notes").addEventListener("change", (e) => save({ notes: e.target.value }));
+
+  render();
+
+  (async () => {
+    const notice = document.getElementById("notice");
+    const claude = window.claude;
+    const dbNs = claude && claude.use ? await claude.use("db") : null;
+    const user = claude && claude.use ? await claude.use("user") : null;
+    if (!dbNs) { notice.textContent = "Picks save only when this page is open on claude.ai and you're signed in. You can still read every pair."; return; }
+    db = dbNs;
+    canWrite = user ? (user.isOwner() ?? false) : false;
+    let first = true;
+    db.collection("pairs").onSnapshot(
+      (snap) => {
+        picks.clear();
+        for (const d of snap.docs) picks.set(d.id, d.data());
+        if (first) {
+          first = false;
+          notice.textContent = canWrite ? "Picks save as you click. A pair is done once all five answers are set." : "Read-only: only the page owner can judge.";
+          render();
+          return;
+        }
+        sync();
+        renderProgress();
+      },
+      () => { notice.textContent = "Saved picks could not be loaded. Reload the page to try again."; },
+    );
+  })();
+})();
+</script>

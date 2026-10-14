@@ -41,8 +41,21 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - A one-line PR so v1 logs the real error behind the four "An error occurred." builds.
 - Adding the "distance from the nearest real deck" score and a "copy rate" score to the objective scorer.
 - Lesson to apply: any prompt or claim that names a card gets checked against the card index before it is used.
-- Switch the next round to pairwise ratings plus two yes/no questions (proposed; awaiting the owner).
-- The owner's Tainted Pact ratings in round 2 (all 1s on answers that caught the illegal card): intended or a slip?
+- ~~Switch to pairwise~~: decided yes; v1 vs. v2 pairwise page built (36 pairs), awaiting the owner's picks.
+- ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
+
+---
+
+## 2026-10-14 · Owner's decisions; pairwise judging built
+
+**The owner's answers to the three open questions:**
+1. **Switch to pairwise:** yes.
+2. **The round 2 Tainted Pact ratings (all 1s on answers that caught the illegal card):** "I can't recall." Both ratings are kept on record but excluded from analysis, marked with the reason; the pairwise round re-judges those answers.
+3. **Faithfulness vs. playability:** "I think we probably need to know semantically from the user prompt." That is, read the request's intent and judge by it. This becomes the first stage of the step 8 pipeline: classify the request (proven list, tune, brew, impossible) and how strictly it must be followed, and let that decide how much the data may steer and what a good answer is. The classifier is testable on its own: label the 24 test prompts with their intended type and measure how often it agrees.
+
+**Built: Brew Head-to-Head** (`scripts/build-pairwise-page.ts`, `evals/rating/pairwise-template.html`). For each prompt both runs answered, the two answers sit side by side with sides shuffled and no model or harness named. Per pair: "Did it do what was asked?" and "Would you play this deck, or something close?" for each answer, then "Which answer better serves this request? A, B, or tie," plus an optional one-line reason. The guide line tells the rater to judge each request by what it asks for (a stock list should be proven; a brew should actually be the brew), the owner's semantic-intent principle applied to rating. The key (which run is on which side) stays in the repo.
+
+**First use: v1 vs. v2 re-judged pairwise**, 36 pairs: Opus v1 vs. Opus v2 and Sonnet v1 vs. Sonnet v2 on the 18 prompts both harnesses answered. v1 sits on the left in 19 pairs and v2 in 17. No new API spend. This gives part two of the post a drift-free comparison.
 
 ---
 

@@ -13,10 +13,10 @@ A running record of how decklists.ai gets built: decisions, findings, numbers, a
 
 | Item | Total |
 | --- | --- |
-| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51. Total about $34.22. Plus one 17-token test call. |
+| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25. Total about $34.47. Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
-| Automated tests | 32 passing |
+| Automated tests | 35 passing |
 | Decklist Data PRs merged | 4 (#181 export, #182 baseline eval, #183 baseline on `main`, #184 model comparison) |
 | Plan steps done | 1, 4, 5, 6; step 2 rubric baseline done (108 + 48 rated, 36 pairwise judged); next: step 8 |
 
@@ -44,6 +44,22 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - Lesson to apply: any prompt or claim that names a card gets checked against the card index before it is used.
 - ~~Switch to pairwise~~: done; 36 pairs judged (v1 8 wins, v2 6, 22 ties; v2 100% faithful vs. 92%).
 - ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
+
+---
+
+## 2026-10-14 · Step 8, stage 0: reading the request (intent)
+
+The owner approved the plan; step 8 started with the intent stage.
+
+**Built:** `src/pipeline/intent.ts` returns a typed reading of each request through the SDK's structured outputs (`messages.parse` with a zod schema): type (stock, tune, sideboard, brew, impossible), format, named archetype, named cards, color constraints, other hard constraints, whether a list was pasted, and a one-sentence goal. Feasibility is deliberately not decided here: named cards get checked against the card pool in code, so a confident model can't declare a legal card illegal (v1's "Storm is not legal in Premodern"). Hand labels for all 24 prompts live in `evals/intent/labels.ts`; `scripts/eval-intent.ts` grades type, format, named cards and colors.
+
+**Iterations, in order:**
+1. First run, Haiku 5.5: **request type right on 24 of 24** for under a cent. Misses were mostly the grader and one wording problem: pasted decklists counted as "named cards," and "Old School" didn't match the registry's "Old School 93/94."
+2. Fixes: schema wording; format aliases (Old School, 93/94, EDH, Duel Commander, Penny Dreadful, Pauper EDH); a fairer grader ("exactly white" equals "exclude the other four"; only real cards count as named cards, since "Scam" is a deck, not a card); and three of Claude Code's labels corrected where the models read the prompt better (the Dimir Tempo sideboard is blue-black; "red aggro" may not mean mono red; "a red commander" could be Boros).
+3. Two real gaps fixed in code rather than wording, because Haiku kept listing pasted cards even after the wording change: a deck named after a card must contain that card ("a Dream Halls deck"), and cards from a pasted list aren't cards the player named.
+4. That rule backfired twice: "Burn" matched the split card Turn // Burn by its face name, and a "Psychatog" tune gained Psychatog as a requirement. Now only a full card name counts, and pasted lists decide their own cards. Tests cover all three cases (35 passing).
+
+**Final, two runs each on 24 prompts:** Sonnet 5.5 perfect both times (96/96 checks); Haiku 5.5 perfect once, one named-card slip the other. **Decision: Sonnet 5.5 for the intent stage.** At about half a cent per request it is negligible next to a brew's 30-50 cents, and a wrong reading sends the whole request down the wrong path. Haiku's run-to-run variation (once calling "fun mono white control" a stock deck) is the kind of noise a router can't afford.
 
 ---
 

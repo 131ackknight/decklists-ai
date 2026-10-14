@@ -1,0 +1,781 @@
+[
+ {
+  "id": "premodern-mono-g-storm",
+  "expected": {
+   "type": "brew",
+   "format": "premodern",
+   "namedCards": [],
+   "colorsExactly": [
+    "G"
+   ]
+  },
+  "got": {
+   "type": "brew",
+   "format": "Premodern",
+   "archetype": "storm",
+   "namedCards": [],
+   "colors": {
+    "exactly": [
+     "G"
+    ],
+    "exclude": []
+   },
+   "constraints": [
+    "mono green",
+    "Premodern format legality"
+   ],
+   "pastedList": false,
+   "goal": "A mono green storm deck legal in Premodern that assembles a large chain of spells in a single turn to win."
+  },
+  "checks": {
+   "type": true,
+   "format": true,
+   "namedCards": true,
+   "colors": true
+  },
+  "cost": 0.000221
+ },
+ {
+  "id": "premodern-stock-goblins",
+  "expected": {
+   "type": "stock",
+   "format": "premodern",
+   "namedCards": []
+  },
+  "got": {
+   "type": "stock",
+   "format": "Premodern",
+   "archetype": "Goblins",
+   "namedCards": [],
+   "colors": {
+    "exactly": null,
+    "exclude": []
+   },
+   "constraints": [],
+   "pastedList": false,
+   "goal": "A proven, competitive Premodern Goblins decklist that fits the Premodern format."
+  },
+  "checks": {
+   "type": true,
+   "format": true,
+   "namedCards": true,
+   "colors": true
+  },
+  "cost": 0.00021210000000000003
+ },
+ {
+  "id": "premodern-replenish-twist",
+  "expected": {
+   "type": "brew",
+   "format": "premodern",
+   "namedCards": [
+    "Replenish"
+   ],
+   "colorsExclude": [
+    "U"
+   ]
+  },
+  "got": {
+   "type": "brew",
+   "format": "Premodern",
+   "archetype": "Replenish",
+   "namedCards": [
+    "Replenish"
+   ],
+   "colors": {
+    "exactly": null,
+    "exclude": [
+     "U"
+    ]
+   },
+   "constraints": [
+    "Must not play blue, so the usual blue Replenish shell is off the table"
+   ],
+   "pastedList": false,
+   "goal": "A Premodern Replenish-based deck that plays no blue cards and still uses Replenish as its engine."
+  },
+  "checks": {
+   "type": true,
+   "format": true,
+   "namedCards": true,
+   "colors": true
+  },
+  "cost": 0.00041270000000000006
+ },
+ {
+  "id": "modern-named-two-cards",
+  "expected": {
+   "type": "brew",
+   "format": "modern",
+   "namedCards": [
+    "Thassa's Oracle",
+    "Tainted Pact"
+   ]
+  },
+  "got": {
+   "type": "brew",
+   "format": "Modern",
+   "archetype": null,
+   "namedCards": [
+    "Thassa's Oracle",
+    "Tainted Pact"
+   ],
+   "colors": {
+    "exactly": null,
+    "exclude": []
+   },
+   "constraints": [],
+   "pastedList": false,
+   "goal": "A Modern deck built around the combo of Thassa's Oracle and Tainted Pact, using both named cards as the core of the deck."
+  },
+  "checks": {
+   "type": true,
+   "format": true,
+   "namedCards": true,
+   "colors": true
+  },
+  "cost": 0.0002275
+ },
+ {
+  "id": "modern-tribal-brew",
+  "expected": {
+   "type": "stock",
+   "format": "modern",
+   "namedCards": []
+  },
+  "got": {
+   "type": "stock",
+   "format": "Modern",
+   "archetype": "Merfolk",
+   "namedCards": [],
+   "colors": {
+    "exactly": null,
+    "exclude": []
+   },
+   "constraints": [
+    "must beat the current top decks of Modern"
+   ],
+   "pastedList": false,
+   "goal": "A proven, competitive Modern Merfolk decklist that can beat the current top Modern decks."
+  },
+  "checks": {
+   "type": true,
+   "format": true,
+   "namedCards": true,
+   "colors": true
+  },
+  "cost": 0.00022060000000000002
+ },
+ {
+  "id": "modern-off-meta-color",
+  "expected": {
+   "type": "brew",
+   "format": "modern",
+   "namedCards": [],
+   "colorsExactly": [
+    "W"
+   ]
+  },
+  "got": {
+   "type": "brew",
+   "format": "Modern",
+   "archetype": "control",
+   "namedCards": [],
+   "colors": {
+    "exactly": [
+     "W"
+    ],
+    "exclude": [
+     "U",
+     "B",
+     "R",
+     "G"
+    ]
+   },
+   "constraints": [
+    "mono white",
+    "fun",
+    "suitable for Modern leagues"
+   ],
+   "pastedList": false,
+   "goal": "A fun, mono-white control decklist legal in Modern that can be played in league play."
+  },
+  "checks": {
+   "type": true,
+   "format": true,
+   "namedCards": true,
+   "colors": true
+  },
+  "cost": 0.0002232
+ },
+ {
+  "id": "legacy-sideboard-only",
+  "expected": {
+   "type": "sideboard",
+   "format": "legacy",
+   "namedCards": [],
+   "colorsExactly": [
+    "B",
+    "U"
+   ]
+  },
+  "got": {
+   "type": "sideboard",
+   "format": "Legacy",
+   "archetype": "Dimir Tempo",
+   "namedCards": [],
+   "colors": {
+    "exactly": [
+     "B",
+     "U"
+    ],
+    "exclude": []
+   },
+   "constraints": [
+    "builds a sideboard for the supplied main deck",
+    "targets the current Legacy meta"
+   ],
+   "pastedList": true,
+   "goal": "A 15-card Legacy sideboard for the supplied Dimir Tempo main deck that answers the current Legacy meta."
+  },
+  "checks": {
+   "type": true,
+   "format": true,
+   "namedCards": true,
+   "colors": true
+  },
+  "cost": 0.0005
+ },
+ {
+  "id": "pauper-budget-aggro",
+  "expected": {
+   "type": "stock",
+   "format": "pauper",
+   "namedCards": [],
+   "colorsOpen": true
+  },
+  "got": {
+   "type": "stock",
+   "format": "Pauper",
+   "archetype": "fast red aggro",
+   "namedCards": [],
+   "colors": {
+    "exactly": null,
+    "exclude": []
+   },
+   "constraints": [],
+   "pastedList": false,
+   "goal": "A proven, fast red aggro decklist legal in Pauper that pressures the opponent early with low-cost creatures and burn."
+  },
+  "checks": {
+   "type": true,
+   "format": true,
+   "namedCards": true,
+   "colors": true
+  },
+  "cost": 0.00021960000000000003
+ },
+ {
+  "id": "pioneer-named-card",
+  "expected": {
+   "type": "brew",
+   "format": "pioneer",
+   "namedCards": [
+    "Greasefang, Okiba Boss"
+   ]
+  },
+  "got": {
+   "type": "brew",
+   "format": "Pioneer",
+   "archetype": null,
+   "namedCards": [
+    "Greasefang, Okiba Boss"
+   ],
+   "colors": {
+    "exactly": null,
+    "exclude": []
+   },
+   "constraints": [
+    "Built around Greasefang, Okiba Boss",
+    "Not the usual (standard) Greasefang list"
+   ],
+   "pastedList": false,
+   "goal": "A Pioneer deck built around Greasefang, Okiba Boss that departs from the typical Greasefang build."
+  },
+  "checks": {
+   "type": true,
+   "format": true,
+   "namedCards": true,
+   "colors": true
+  },
+  "cost": 0.0002408
+ },
+ {
+  "id": "vintage-restricted",
+  "expected": {
+   "type": "stock",
+   "format": "vintage",
+   "namedCards": []
+  },
+  "got": {
+   "type": "stock",
+   "format": "Vintage",
+   "archetype": "artifact aggro",
+   "namedCards": [],
+   "colors": {
+    "exactly": null,
+    "exclude": []
+   },
+   "constraints": [],
+   "pastedList": false,
+   "goal": "Deliver a proven-style Vintage artifact aggro deck that applies early pressure using artifact threats and cost reducers."
+  },
+  "checks": {
+   "type": true,
+   "format": true,
+   "namedCards": true,
+   "colors": true
+  },
+  "cost": 0.0002195
+ },
+ {
+  "id": "standard-midrange",
+  "expected": {
+   "type": "stock",
+   "format": "standard",
+   "namedCards": [],
+   "colorsExactly": [
+    "B",
+    "G"
+   ]
+  },
+  "got": {
+   "type": "stock",
+   "format": "Standard",
+   "archetype": "Golgari midrange",
+   "namedCards": [],
+   "colors": {
+    "exactly": [
+     "B",
+     "G"
+    ],
+    "exclude": []
+   },
+   "constraints": [],
+   "pastedList": false,
+   "goal": "A strong, proven Golgari (black-green) midrange decklist legal in Standard."
+  },
+  "checks": {
+   "type": true,
+   "format": true,
+   "namedCards": true,
+   "colors": true
+  },
+  "cost": 0.00021520000000000003
+ },
+ {
+  "id": "legacy-impossible",
+  "expected": {
+   "type": "impossible",
+   "format": "legacy",
+   "namedCards": []
+  },
+  "got": {
+   "type": "impossible",
+   "format": "Legacy",
+   "archetype": null,
+   "namedCards": [],
+   "colors": {
+    "exactly": null,
+    "exclude": []
+   },
+   "constraints": [
+    "wins on turn 1 every game"
+   ],
+   "pastedList": false,
+   "goal": "Explain that no Legacy deck can reliably win on turn 1 every game, since the game cannot be won that early by any deck, and offer a realistic alternative such as a very fast aggro or combo deck that wins as early as possible."
+  },
+  "checks": {
+   "type": true,
+   "format": true,
+   "namedCards": true,
+   "colors": true
+  },
+  "cost": 0.0002395
+ },
+ {
+  "id": "timeless-no-data",
+  "expected": {
+   "type": "stock",
+   "format": "timeless",
+   "namedCards": []
+  },
+  "got": {
+   "type": "stock",
+   "format": "Timeless",
+   "archetype": "Reanimator",
+   "namedCards": [],
+   "colors": {
+    "exactly": null,
+    "exclude": []
+   },
+   "constraints": [],
+   "pastedList": false,
+   "goal": "Deliver a proven Timeless Reanimator decklist that reliably reanimates big creatures from the graveyard."
+  },
+  "checks": {
+   "type": true,
+   "format": true,
+   "namedCards": true,
+   "colors": true
+  },
+  "cost": 0.00021730000000000002
+ },
+ {
+  "id": "historic-no-data",
+  "expected": {
+   "type": "stock",
+   "format": "historic",
+   "namedCards": []
+  },
+  "got": {
+   "type": "stock",
+   "format": "Historic",
+   "archetype": "Elves",
+   "namedCards": [],
+   "colors": {
+    "exactly": null,
+    "exclude": []
+   },
+   "constraints": [],
+   "pastedList": false,
+   "goal": "Deliver a proven Historic Elves deck list that follows the established Elves archetype for the Historic format."
+  },
+  "checks": {
+   "type": true,
+   "format": true,
+   "namedCards": true,
+   "colors": true
+  },
+  "cost": 0.00021360000000000001
+ },
+ {
+  "id": "oldschool-no-data",
+  "expected": {
+   "type": "stock",
+   "format": "oldschool",
+   "namedCards": []
+  },
+  "got": {
+   "type": "stock",
+   "format": "Old School",
+   "archetype": "control",
+   "namedCards": [],
+   "colors": {
+    "exactly": null,
+    "exclude": []
+   },
+   "constraints": [
+    "Old School 93/94 card pool and rules"
+   ],
+   "pastedList": false,
+   "goal": "Deliver a proven Old School 93/94 control decklist that fits the Old School format."
+  },
+  "checks": {
+   "type": true,
+   "format": true,
+   "namedCards": true,
+   "colors": true
+  },
+  "cost": 0.00021730000000000002
+ },
+ {
+  "id": "penny-no-data",
+  "expected": {
+   "type": "stock",
+   "format": "penny",
+   "namedCards": []
+  },
+  "got": {
+   "type": "stock",
+   "format": "Penny Dreadful",
+   "archetype": "burn",
+   "namedCards": [],
+   "colors": {
+    "exactly": null,
+    "exclude": []
+   },
+   "constraints": [],
+   "pastedList": false,
+   "goal": "A proven Penny Dreadful burn deck that wins by dealing damage with burn spells."
+  },
+  "checks": {
+   "type": true,
+   "format": true,
+   "namedCards": true,
+   "colors": true
+  },
+  "cost": 0.0002144
+ },
+ {
+  "id": "premodern-paste-and-tune",
+  "expected": {
+   "type": "tune",
+   "format": "premodern",
+   "namedCards": []
+  },
+  "got": {
+   "type": "tune",
+   "format": "Premodern",
+   "archetype": null,
+   "namedCards": [],
+   "colors": {
+    "exactly": null,
+    "exclude": []
+   },
+   "constraints": [
+    "Tune for the current Premodern meta"
+   ],
+   "pastedList": true,
+   "goal": "Return a tuned version of the supplied UB Psychatog control decklist, adjusted for the current Premodern metagame, with main deck and sideboard changes explained."
+  },
+  "checks": {
+   "type": true,
+   "format": true,
+   "namedCards": true,
+   "colors": true
+  },
+  "cost": 0.000344
+ },
+ {
+  "id": "modern-combine-strategies",
+  "expected": {
+   "type": "brew",
+   "format": "modern",
+   "namedCards": [
+    "Living End"
+   ]
+  },
+  "got": {
+   "type": "brew",
+   "format": "Modern",
+   "archetype": "Living End and Scam",
+   "namedCards": [],
+   "colors": {
+    "exactly": null,
+    "exclude": []
+   },
+   "constraints": [
+    "Combine the Living End and Scam archetypes into one Modern deck"
+   ],
+   "pastedList": false,
+   "goal": "A single Modern decklist that merges the Living End and Scam game plans into one coherent deck."
+  },
+  "checks": {
+   "type": true,
+   "format": true,
+   "namedCards": false,
+   "colors": true
+  },
+  "cost": 0.00048560000000000004
+ },
+ {
+  "id": "pauper-named-common",
+  "expected": {
+   "type": "brew",
+   "format": "pauper",
+   "namedCards": [
+    "Kiln Fiend"
+   ]
+  },
+  "got": {
+   "type": "brew",
+   "format": "Pauper",
+   "archetype": null,
+   "namedCards": [
+    "Kiln Fiend"
+   ],
+   "colors": {
+    "exactly": null,
+    "exclude": []
+   },
+   "constraints": [],
+   "pastedList": false,
+   "goal": "A Pauper deck built around Kiln Fiend, a playable list that uses the card as its centerpiece."
+  },
+  "checks": {
+   "type": true,
+   "format": true,
+   "namedCards": true,
+   "colors": true
+  },
+  "cost": 0.0002188
+ },
+ {
+  "id": "premodern-dream-halls-no-storm",
+  "expected": {
+   "type": "brew",
+   "format": "premodern",
+   "namedCards": [
+    "Dream Halls"
+   ]
+  },
+  "got": {
+   "type": "brew",
+   "format": "Premodern",
+   "archetype": "Dream Halls",
+   "namedCards": [
+    "Dream Halls"
+   ],
+   "colors": {
+    "exactly": null,
+    "exclude": []
+   },
+   "constraints": [
+    "doesn't win with storm"
+   ],
+   "pastedList": false,
+   "goal": "A Premodern Dream Halls deck built around Dream Halls that wins by some means other than storm."
+  },
+  "checks": {
+   "type": true,
+   "format": true,
+   "namedCards": true,
+   "colors": true
+  },
+  "cost": 0.0003885
+ },
+ {
+  "id": "any-format-peter-parkers-camera",
+  "expected": {
+   "type": "brew",
+   "format": null,
+   "namedCards": [
+    "Peter Parker's Camera"
+   ]
+  },
+  "got": {
+   "type": "brew",
+   "format": null,
+   "archetype": null,
+   "namedCards": [
+    "Peter Parker's Camera"
+   ],
+   "colors": {
+    "exactly": null,
+    "exclude": []
+   },
+   "constraints": [],
+   "pastedList": false,
+   "goal": "A deck built around Peter Parker's Camera that makes the most of its abilities."
+  },
+  "checks": {
+   "type": true,
+   "format": true,
+   "namedCards": true,
+   "colors": true
+  },
+  "cost": 0.0003576
+ },
+ {
+  "id": "commander-atraxa-proliferate",
+  "expected": {
+   "type": "brew",
+   "format": "commander",
+   "namedCards": [
+    "Atraxa, Praetors' Voice"
+   ]
+  },
+  "got": {
+   "type": "brew",
+   "format": "Commander",
+   "archetype": "proliferate",
+   "namedCards": [
+    "Atraxa, Praetors' Voice"
+   ],
+   "colors": {
+    "exactly": null,
+    "exclude": []
+   },
+   "constraints": [
+    "Built around the commander Atraxa, Praetors' Voice",
+    "Theme is proliferate"
+   ],
+   "pastedList": false,
+   "goal": "A Commander deck led by Atraxa, Praetors' Voice that centers on proliferate counter synergies and wins through them."
+  },
+  "checks": {
+   "type": true,
+   "format": true,
+   "namedCards": true,
+   "colors": true
+  },
+  "cost": 0.000242
+ },
+ {
+  "id": "duel-commander-red-aggro",
+  "expected": {
+   "type": "stock",
+   "alsoType": [
+    "brew"
+   ],
+   "format": "duel",
+   "namedCards": [],
+   "colorsOpen": true
+  },
+  "got": {
+   "type": "brew",
+   "format": "Duel Commander",
+   "archetype": "aggro",
+   "namedCards": [],
+   "colors": {
+    "exactly": null,
+    "exclude": []
+   },
+   "constraints": [
+    "singleton Duel Commander deck led by a red commander",
+    "aggressive game plan"
+   ],
+   "pastedList": false,
+   "goal": "A legal, aggressive Duel Commander deck built around a red commander, with a coherent curve and plan to deal damage quickly."
+  },
+  "checks": {
+   "type": true,
+   "format": true,
+   "namedCards": true,
+   "colors": true
+  },
+  "cost": 0.00023320000000000003
+ },
+ {
+  "id": "premodern-vague",
+  "expected": {
+   "type": "brew",
+   "format": "premodern",
+   "namedCards": []
+  },
+  "got": {
+   "type": "brew",
+   "format": "Premodern",
+   "archetype": null,
+   "namedCards": [],
+   "colors": {
+    "exactly": null,
+    "exclude": []
+   },
+   "constraints": [
+    "competitive in Premodern",
+    "unusual or offbeat approach"
+   ],
+   "pastedList": false,
+   "goal": "A competitive Premodern deck with an unusual, offbeat strategy that still has a realistic path to winning games."
+  },
+  "checks": {
+   "type": true,
+   "format": true,
+   "namedCards": true,
+   "colors": true
+  },
+  "cost": 0.0002243
+ }
+]

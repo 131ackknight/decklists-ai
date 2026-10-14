@@ -65,3 +65,34 @@ describe("harness tools", () => {
     expect(r.each[0].percent).toBeCloseTo(52.8, 1);
   });
 });
+
+import { normalizeIntent, type Intent } from "@/pipeline/intent";
+
+describe("normalizeIntent", () => {
+  const base: Intent = {
+    type: "brew",
+    format: "Premodern",
+    archetype: null,
+    namedCards: [],
+    colors: { exactly: null, exclude: [] },
+    constraints: [],
+    pastedList: false,
+    goal: "",
+  };
+  const isCard = (n: string) => (["dream halls", "psychatog"].includes(n.toLowerCase()) ? n : undefined);
+
+  it("requires the card a deck is named after", () => {
+    expect(normalizeIntent({ ...base, archetype: "Dream Halls" }, "a Dream Halls deck", isCard).namedCards).toEqual(["Dream Halls"]);
+  });
+
+  it("ignores face names and pasted lists when adding the archetype's card", () => {
+    const faces = (n: string) => (n.toLowerCase() === "burn" ? "Turn // Burn" : undefined);
+    expect(normalizeIntent({ ...base, archetype: "Burn" }, "a burn deck", faces).namedCards).toEqual([]);
+    expect(normalizeIntent({ ...base, archetype: "Psychatog", pastedList: true }, "Tune\n4 Psychatog", isCard).namedCards).toEqual([]);
+  });
+
+  it("drops cards that only appear in a pasted list", () => {
+    const got = normalizeIntent({ ...base, pastedList: true, namedCards: ["Psychatog"] }, "Tune this\n\n4 Psychatog\n4 Island", isCard);
+    expect(got.namedCards).toEqual([]);
+  });
+});

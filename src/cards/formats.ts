@@ -96,12 +96,23 @@ export const FORMATS: FormatRules[] = [
 ];
 
 const BY_KEY = new Map(FORMATS.map((f) => [f.key, f]));
-const BY_NAME = new Map(
-  FORMATS.flatMap((f) => [
-    [f.name.toLowerCase(), f],
-    [f.key, f],
+/** Names players use that differ from the registry's display names. */
+const ALIASES: Record<string, string> = {
+  "old school": "oldschool",
+  "93/94": "oldschool",
+  "pauper edh": "paupercommander",
+  edh: "commander",
+  "duel commander": "duel",
+  "penny dreadful": "penny",
+};
+
+const BY_NAME = new Map<string, FormatRules>([
+  ...FORMATS.flatMap((f) => [
+    [f.name.toLowerCase(), f] as const,
+    [f.key, f] as const,
   ]),
-);
+  ...Object.entries(ALIASES).map(([alias, key]) => [alias, BY_KEY.get(key)!] as const),
+]);
 
 export function getFormat(keyOrName: string): FormatRules | undefined {
   const k = keyOrName.trim().toLowerCase();

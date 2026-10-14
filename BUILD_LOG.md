@@ -13,12 +13,34 @@ A running record of how decklists.ai gets built: decisions, findings, numbers, a
 
 | Item | Total |
 | --- | --- |
-| Anthropic API spend | About $0.63 (v1 baseline on Haiku 4.5), plus one 17-token test call. The 404 run and the failed Haiku 5.5 run made no billed calls. |
+| Anthropic API spend | About $8.76 so far: v1 baseline $0.63; comparison pass 1 $8.13 for four models (Fable still running). Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
 | Automated tests | 27 passing |
-| Decklist Data PRs | 3 merged (#181 export, #182 baseline eval, #183 baseline on `main`); #184 open (model comparison) |
+| Decklist Data PRs merged | 4 (#181 export, #182 baseline eval, #183 baseline on `main`, #184 model comparison) |
 | Plan steps done | 1, 4, 5 (5 waits on generated decks from step 6); step 2: v1 baseline run, owner rating pending |
+
+---
+
+## 2026-10-14 · Model comparison, pass 1 (four of five models in)
+
+Objective scores only, one pass each, so treat as early signal:
+
+| Model (v1 harness) | Decks of 18 | Pass our checker | Mana warnings | Invented cards | Lands vs. archetype (avg off) | API errors | Cost | Median time |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Haiku 4.5, as shipped | 9 | 9 | 2 | 0 | 1.79 | 0 | $0.63 | 14 s |
+| Haiku 4.5 | 7 | 7 | 1 | 0 | 1.04 | 0 | $0.75 | 16 s |
+| Haiku 5.5 | 12 | 12 | 1 | 0 | 0.95 | 2 | $0.11 | 18 s |
+| Sonnet 5.5 | **18** | 18 | 1 | 0 | 0.89 | 1 | $3.22 | 41 s |
+| Opus 5.5 | 17 | 17 | **0** | 0 | **0.84** | 0 | $4.05 | 33 s |
+| Fable 5.1 | running | | | | | | | |
+
+**First observations.**
+- **Bigger models finish the job.** The same v1 harness that produced a deck for 7-9 prompts on Haiku 4.5 produced 17-18 on Sonnet 5.5 and Opus 5.5. Most of Haiku's misses were asking a question or running out of tool calls.
+- **Haiku 5.5 is the value story:** more decks than Haiku 4.5 (12 vs. 7-9) at about a seventh of the cost ($0.11).
+- **Every accepted deck passes the decklists.ai checker, and none invent cards.** v1's own server check already guaranteed legality; the differences are in whether a deck gets built at all and how good it is, which is what the blind ratings measure.
+- **Costs ran above estimate** for the big models (Sonnet $3.22 vs. ~$1.30 estimated, Opus $4.05 vs. ~$2.50): they make more tool calls, and the prompt grows with each one.
+- **Three mid-build errors** (two Haiku 5.5, one Sonnet 5.5) after several successful tool calls. v1's SDK masks the message as "An error occurred." Next: log the real error before passes 2 and 3.
 
 ---
 

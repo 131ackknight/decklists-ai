@@ -1,0 +1,2083 @@
+{
+ "ranAt": "2026-10-14T14:41:47.961Z",
+ "model": "claude-sonnet-5-5",
+ "results": [
+  {
+   "id": "premodern-mono-g-storm",
+   "format": "Premodern",
+   "sentFormat": "Premodern",
+   "prompt": "Make a mono green storm deck in Premodern.",
+   "status": 200,
+   "ms": 67041,
+   "text": "This is a brew. It is legal in Premodern, but no mono green storm deck has shown up in results.\n\n**The storm card.** Green has one legal storm card in Premodern: Hunting Pack. It costs 7 and makes a 4/4 Beast for each copy, so the deck is built around it. It shows up in 31 decks in the format. The Elves deck is the only close shell, and it plays it in 1 of 7 lists (2 copies). The other storm cards are off color or illegal here:\n- Brain Freeze is blue and Dragonstorm is red.\n- Tendrils of Agony, Mind's Desire, Grapeshot and Empty the Warrens are illegal.\n\n**How it plays.** You make a lot of mana and cast several cheap spells in one turn. Then you cast Hunting Pack with storm.\n- **Mana creatures (15):** 4 Llanowar Elves, 4 Fyndhorn Elves, 4 Birds of Paradise, 3 Wall of Roots. The Elves list runs the same elves at 3.4 copies each.\n- **Quirion Ranger (3):** Elves runs 3.3 copies. It untaps a mana creature and costs no spell slot.\n- **Free spells:** 4 Lotus Petal and 4 Land Grant. Both add to the storm count. Land Grant costs nothing when you hold no lands.\n- **Mana enchantments:** 4 Wild Growth (588 decks), 2 Overgrowth and 2 Vernal Bloom. Overgrowth and Vernal Bloom are legal but have not shown up in results.\n- **Early Harvest (3):** It untaps your basic lands. It also has not shown up in results. With Wild Growth or Overgrowth on a Forest, one cast nets mana.\n- **Sylvan Library (3):** It digs for Hunting Pack. It appears in 4 Elves-adjacent lists at 3.5 copies.\n- **Lands (16):** 14 Forest and 2 Gaea's Cradle. Early Harvest and Land Grant want basic Forests, so Cradle stays at 2.\n\n**Sideboard.** The Elves sideboard shows Naturalize in all 7 decks, so I kept 3. That also covers Enchantress. The rest are mostly from that list:\n- 2 Tormod's Crypt\n- 2 Wall of Blossoms\n- 3 Xantid Swarm\n- 1 Uktabi Orangutan\n- 1 Nantuko Vigilante\n- 2 Yavimaya Elder\n- 1 Scroll Rack\n\n**Weak points.** You have no removal and no counter-magic, and almost every spell is a mana source with no impact on the board. A Hunting Pack with storm 4 or more is the only way you win quickly. Stiflenought, Sligh and Terrageddon will pressure you before you get there. If you want a more proven build, I can adapt the Elves list instead. It runs Anger, Deranged Hermit and Survival of the Fittest, and it is no longer mono green.",
+   "toolCalls": [
+    {
+     "name": "list_strategies",
+     "args": {}
+    },
+    {
+     "name": "card_lookup",
+     "args": {
+      "query": "storm"
+     }
+    },
+    {
+     "name": "card_lookup",
+     "args": {
+      "names": [
+       "Tendrils of Agony",
+       "Mind's Desire",
+       "Brain Freeze",
+       "Empty the Warrens",
+       "Grapeshot",
+       "Land Grant",
+       "Wild Cantor",
+       "Quirion Ranger",
+       "Fastbond",
+       "Early Harvest",
+       "Lotus Petal",
+       "Elvish Spirit Guide",
+       "Sylvan Library",
+       "Gaea's Cradle",
+       "Wirewood Symbiote",
+       "Treasure Mage"
+      ]
+     }
+    },
+    {
+     "name": "card_lookup",
+     "args": {
+      "query": "Elves"
+     }
+    },
+    {
+     "name": "card_lookup",
+     "args": {
+      "names": [
+       "Hunting Pack",
+       "Rampant Growth",
+       "Wild Growth",
+       "Overgrowth",
+       "Harmonize",
+       "Fertile Ground",
+       "Natural Order",
+       "Squirrel Nest",
+       "Sylvan Safekeeper",
+       "Crop Rotation",
+       "Eladamri's Call",
+       "Gaea's Cradle",
+       "Pulse of the Tangle",
+       "Fyndhorn Bounty",
+       "Vernal Bloom",
+       "Survival of the Fittest",
+       "Birds of Paradise",
+       "Worldly Tutor",
+       "Invigorate",
+       "Rootwater Thief"
+      ]
+     }
+    },
+    {
+     "name": "strategy_card_stats",
+     "args": {
+      "strategy": "Elves",
+      "zone": "main"
+     }
+    },
+    {
+     "name": "average_sideboard",
+     "args": {
+      "strategy": "Elves"
+     }
+    },
+    {
+     "name": "card_lookup",
+     "args": {
+      "names": [
+       "Wall of Roots",
+       "Fruition",
+       "Scroll Rack",
+       "Gaea's Bounty",
+       "Utopia Sprawl",
+       "Seed the Land",
+       "Mana Vault",
+       "Mana Crypt",
+       "Sol Ring",
+       "Sprout",
+       "Yavimaya Elder",
+       "Skyshroud Claim",
+       "Vitalizing Wind"
+      ]
+     }
+    },
+    {
+     "name": "propose_deck",
+     "args": {
+      "main": [
+       {
+        "qty": 14,
+        "name": "Forest"
+       },
+       {
+        "qty": 2,
+        "name": "Gaea's Cradle"
+       },
+       {
+        "qty": 4,
+        "name": "Llanowar Elves"
+       },
+       {
+        "qty": 4,
+        "name": "Fyndhorn Elves"
+       },
+       {
+        "qty": 4,
+        "name": "Birds of Paradise"
+       },
+       {
+        "qty": 3,
+        "name": "Wall of Roots"
+       },
+       {
+        "qty": 3,
+        "name": "Quirion Ranger"
+       },
+       {
+        "qty": 4,
+        "name": "Lotus Petal"
+       },
+       {
+        "qty": 4,
+        "name": "Wild Growth"
+       },
+       {
+        "qty": 2,
+        "name": "Overgrowth"
+       },
+       {
+        "qty": 2,
+        "name": "Vernal Bloom"
+       },
+       {
+        "qty": 3,
+        "name": "Early Harvest"
+       },
+       {
+        "qty": 4,
+        "name": "Land Grant"
+       },
+       {
+        "qty": 3,
+        "name": "Sylvan Library"
+       },
+       {
+        "qty": 4,
+        "name": "Hunting Pack"
+       }
+      ],
+      "side": [
+       {
+        "qty": 3,
+        "name": "Naturalize"
+       },
+       {
+        "qty": 2,
+        "name": "Tormod's Crypt"
+       },
+       {
+        "qty": 2,
+        "name": "Wall of Blossoms"
+       },
+       {
+        "qty": 3,
+        "name": "Xantid Swarm"
+       },
+       {
+        "qty": 1,
+        "name": "Uktabi Orangutan"
+       },
+       {
+        "qty": 1,
+        "name": "Nantuko Vigilante"
+       },
+       {
+        "qty": 2,
+        "name": "Yavimaya Elder"
+       },
+       {
+        "qty": 1,
+        "name": "Scroll Rack"
+       }
+      ]
+     },
+     "ok": true
+    }
+   ],
+   "deck": {
+    "format": "Premodern",
+    "main": [
+     {
+      "qty": 14,
+      "name": "Forest",
+      "canonical": "forest",
+      "typeLine": "Basic Land \u2014 Forest",
+      "manaCost": "",
+      "cmc": 0,
+      "isLand": true,
+      "isBasic": true
+     },
+     {
+      "qty": 2,
+      "name": "Gaea's Cradle",
+      "canonical": "gaea's cradle",
+      "typeLine": "Legendary Land",
+      "manaCost": "",
+      "cmc": 0,
+      "isLand": true,
+      "isBasic": false
+     },
+     {
+      "qty": 4,
+      "name": "Llanowar Elves",
+      "canonical": "llanowar elves",
+      "typeLine": "Creature \u2014 Elf Druid",
+      "manaCost": "{G}",
+      "cmc": 1,
+      "isLand": false,
+      "isBasic": false
+     },
+     {
+      "qty": 4,
+      "name": "Fyndhorn Elves",
+      "canonical": "fyndhorn elves",
+      "typeLine": "Creature \u2014 Elf Druid",
+      "manaCost": "{G}",
+      "cmc": 1,
+      "isLand": false,
+      "isBasic": false
+     },
+     {
+      "qty": 4,
+      "name": "Birds of Paradise",
+      "canonical": "birds of paradise",
+      "typeLine": "Creature \u2014 Bird",
+      "manaCost": "{G}",
+      "cmc": 1,
+      "isLand": false,
+      "isBasic": false
+     },
+     {
+      "qty": 3,
+      "name": "Wall of Roots",
+      "canonical": "wall of roots",
+      "typeLine": "Creature \u2014 Plant Wall",
+      "manaCost": "{1}{G}",
+      "cmc": 2,
+      "isLand": false,
+      "isBasic": false
+     },
+     {
+      "qty": 3,
+      "name": "Quirion Ranger",
+      "canonical": "quirion ranger",
+      "typeLine": "Creature \u2014 Elf Ranger",
+      "manaCost": "{G}",
+      "cmc": 1,
+      "isLand": false,
+      "isBasic": false
+     },
+     {
+      "qty": 4,
+      "name": "Lotus Petal",
+      "canonical": "lotus petal",
+      "typeLine": "Artifact",
+      "manaCost": "{0}",
+      "cmc": 0,
+      "isLand": false,
+      "isBasic": false
+     },
+     {
+      "qty": 4,
+      "name": "Wild Growth",
+      "canonical": "wild growth",
+      "typeLine": "Enchantment \u2014 Aura",
+      "manaCost": "{G}",
+      "cmc": 1,
+      "isLand": false,
+      "isBasic": false
+     },
+     {
+      "qty": 2,
+      "name": "Overgrowth",
+      "canonical": "overgrowth",
+      "typeLine": "Enchantment \u2014 Aura",
+      "manaCost": "{2}{G}",
+      "cmc": 3,
+      "isLand": false,
+      "isBasic": false
+     },
+     {
+      "qty": 2,
+      "name": "Vernal Bloom",
+      "canonical": "vernal bloom",
+      "typeLine": "Enchantment",
+      "manaCost": "{3}{G}",
+      "cmc": 4,
+      "isLand": false,
+      "isBasic": false
+     },
+     {
+      "qty": 3,
+      "name": "Early Harvest",
+      "canonical": "early harvest",
+      "typeLine": "Instant",
+      "manaCost": "{1}{G}{G}",
+      "cmc": 3,
+      "isLand": false,
+      "isBasic": false
+     },
+     {
+      "qty": 4,
+      "name": "Land Grant",
+      "canonical": "land grant",
+      "typeLine": "Sorcery",
+      "manaCost": "{1}{G}",
+      "cmc": 2,
+      "isLand": false,
+      "isBasic": false
+     },
+     {
+      "qty": 3,
+      "name": "Sylvan Library",
+      "canonical": "sylvan library",
+      "typeLine": "Enchantment",
+      "manaCost": "{1}{G}",
+      "cmc": 2,
+      "isLand": false,
+      "isBasic": false
+     },
+     {
+      "qty": 4,
+      "name": "Hunting Pack",
+      "canonical": "hunting pack",
+      "typeLine": "Instant",
+      "manaCost": "{5}{G}{G}",
+      "cmc": 7,
+      "isLand": false,
+      "isBasic": false
+     }
+    ],
+    "side": [
+     {
+      "qty": 3,
+      "name": "Naturalize",
+      "canonical": "naturalize",
+      "typeLine": "Instant",
+      "manaCost": "{1}{G}",
+      "cmc": 2,
+      "isLand": false,
+      "isBasic": false
+     },
+     {
+      "qty": 2,
+      "name": "Tormod's Crypt",
+      "canonical": "tormod's crypt",
+      "typeLine": "Artifact",
+      "manaCost": "{0}",
+      "cmc": 0,
+      "isLand": false,
+      "isBasic": false
+     },
+     {
+      "qty": 2,
+      "name": "Wall of Blossoms",
+      "canonical": "wall of blossoms",
+      "typeLine": "Creature \u2014 Plant Wall",
+      "manaCost": "{1}{G}",
+      "cmc": 2,
+      "isLand": false,
+      "isBasic": false
+     },
+     {
+      "qty": 3,
+      "name": "Xantid Swarm",
+      "canonical": "xantid swarm",
+      "typeLine": "Creature \u2014 Insect",
+      "manaCost": "{G}",
+      "cmc": 1,
+      "isLand": false,
+      "isBasic": false
+     },
+     {
+      "qty": 1,
+      "name": "Uktabi Orangutan",
+      "canonical": "uktabi orangutan",
+      "typeLine": "Creature \u2014 Ape",
+      "manaCost": "{2}{G}",
+      "cmc": 3,
+      "isLand": false,
+      "isBasic": false
+     },
+     {
+      "qty": 1,
+      "name": "Nantuko Vigilante",
+      "canonical": "nantuko vigilante",
+      "typeLine": "Creature \u2014 Insect Druid Mutant",
+      "manaCost": "{3}{G}",
+      "cmc": 4,
+      "isLand": false,
+      "isBasic": false
+     },
+     {
+      "qty": 2,
+      "name": "Yavimaya Elder",
+      "canonical": "yavimaya elder",
+      "typeLine": "Creature \u2014 Human Druid",
+      "manaCost": "{1}{G}{G}",
+      "cmc": 3,
+      "isLand": false,
+      "isBasic": false
+     },
+     {
+      "qty": 1,
+      "name": "Scroll Rack",
+      "canonical": "scroll rack",
+      "typeLine": "Artifact",
+      "manaCost": "{2}",
+      "cmc": 2,
+      "isLand": false,
+      "isBasic": false
+     }
+    ],
+    "decklistText": "14 Forest\n2 Gaea's Cradle\n4 Llanowar Elves\n4 Fyndhorn Elves\n4 Birds of Paradise\n3 Wall of Roots\n3 Quirion Ranger\n4 Lotus Petal\n4 Wild Growth\n2 Overgrowth\n2 Vernal Bloom\n3 Early Harvest\n4 Land Grant\n3 Sylvan Library\n4 Hunting Pack\n\nSideboard\n3 Naturalize\n2 Tormod's Crypt\n2 Wall of Blossoms\n3 Xantid Swarm\n1 Uktabi Orangutan\n1 Nantuko Vigilante\n2 Yavimaya Elder\n1 Scroll Rack",
+    "strategy": "Rogue",
+    "archetype": "Rogue",
+    "colorIdentity": "G",
+    "confidence": 0,
+    "badge": "brew",
+    "evidence": [
+     {
+      "canonical": "forest",
+      "name": "Forest",
+      "source": "strategy",
+      "adoption": 0.5,
+      "avgCopies": 4,
+      "decksWithCard": 6,
+      "tier": "stock"
+     },
+     {
+      "canonical": "gaea's cradle",
+      "name": "Gaea's Cradle",
+      "source": "format",
+      "adoption": null,
+      "avgCopies": null,
+      "decksWithCard": 206,
+      "tier": null
+     },
+     {
+      "canonical": "llanowar elves",
+      "name": "Llanowar Elves",
+      "source": "format",
+      "adoption": null,
+      "avgCopies": null,
+      "decksWithCard": 140,
+      "tier": null
+     },
+     {
+      "canonical": "fyndhorn elves",
+      "name": "Fyndhorn Elves",
+      "source": "format",
+      "adoption": null,
+      "avgCopies": null,
+      "decksWithCard": 128,
+      "tier": null
+     },
+     {
+      "canonical": "birds of paradise",
+      "name": "Birds of Paradise",
+      "source": "strategy",
+      "adoption": 0.08333333333333333,
+      "avgCopies": 3,
+      "decksWithCard": 1,
+      "tier": "fringe"
+     },
+     {
+      "canonical": "wall of roots",
+      "name": "Wall of Roots",
+      "source": "strategy",
+      "adoption": 0.16666666666666666,
+      "avgCopies": 4,
+      "decksWithCard": 2,
+      "tier": "flex"
+     },
+     {
+      "canonical": "quirion ranger",
+      "name": "Quirion Ranger",
+      "source": "format",
+      "adoption": null,
+      "avgCopies": null,
+      "decksWithCard": 132,
+      "tier": null
+     },
+     {
+      "canonical": "lotus petal",
+      "name": "Lotus Petal",
+      "source": "strategy",
+      "adoption": 0.16666666666666666,
+      "avgCopies": 4,
+      "decksWithCard": 2,
+      "tier": "flex"
+     },
+     {
+      "canonical": "wild growth",
+      "name": "Wild Growth",
+      "source": "format",
+      "adoption": null,
+      "avgCopies": null,
+      "decksWithCard": 588,
+      "tier": null
+     },
+     {
+      "canonical": "overgrowth",
+      "name": "Overgrowth",
+      "source": "unseen",
+      "adoption": null,
+      "avgCopies": null,
+      "decksWithCard": 0,
+      "tier": null
+     },
+     {
+      "canonical": "vernal bloom",
+      "name": "Vernal Bloom",
+      "source": "unseen",
+      "adoption": null,
+      "avgCopies": null,
+      "decksWithCard": 0,
+      "tier": null
+     },
+     {
+      "canonical": "early harvest",
+      "name": "Early Harvest",
+      "source": "unseen",
+      "adoption": null,
+      "avgCopies": null,
+      "decksWithCard": 0,
+      "tier": null
+     },
+     {
+      "canonical": "land grant",
+      "name": "Land Grant",
+      "source": "format",
+      "adoption": null,
+      "avgCopies": null,
+      "decksWithCard": 2,
+      "tier": null
+     },
+     {
+      "canonical": "sylvan library",
+      "name": "Sylvan Library",
+      "source": "strategy",
+      "adoption": 0.3333333333333333,
+      "avgCopies": 3.5,
+      "decksWithCard": 4,
+      "tier": "flex"
+     },
+     {
+      "canonical": "hunting pack",
+      "name": "Hunting Pack",
+      "source": "format",
+      "adoption": null,
+      "avgCopies": null,
+      "decksWithCard": 31,
+      "tier": null
+     },
+     {
+      "canonical": "naturalize",
+      "name": "Naturalize",
+      "source": "strategy",
+      "adoption": 0.08333333333333333,
+      "avgCopies": 2,
+      "decksWithCard": 1,
+      "tier": "fringe"
+     },
+     {
+      "canonical": "tormod's crypt",
+      "name": "Tormod's Crypt",
+      "source": "strategy",
+      "adoption": 0.16666666666666666,
+      "avgCopies": 1,
+      "decksWithCard": 2,
+      "tier": "flex"
+     },
+     {
+      "canonical": "wall of blossoms",
+      "name": "Wall of Blossoms",
+      "source": "strategy",
+      "adoption": 0.08333333333333333,
+      "avgCopies": 4,
+      "decksWithCard": 1,
+      "tier": "fringe"
+     },
+     {
+      "canonical": "xantid swarm",
+      "name": "Xantid Swarm",
+      "source": "format",
+      "adoption": null,
+      "avgCopies": null,
+      "decksWithCard": 761,
+      "tier": null
+     },
+     {
+      "canonical": "uktabi orangutan",
+      "name": "Uktabi Orangutan",
+      "source": "format",
+      "adoption": null,
+      "avgCopies": null,
+      "decksWithCard": 315,
+      "tier": null
+     },
+     {
+      "canonical": "nantuko vigilante",
+      "name": "Nantuko Vigilante",
+      "source": "format",
+      "adoption": null,
+      "avgCopies": null,
+      "decksWithCard": 238,
+      "tier": null
+     },
+     {
+      "canonical": "yavimaya elder",
+      "name": "Yavimaya Elder",
+      "source": "strategy",
+      "adoption": 0.08333333333333333,
+      "avgCopies": 4,
+      "decksWithCard": 1,
+      "tier": "fringe"
+     },
+     {
+      "canonical": "scroll rack",
+      "name": "Scroll Rack",
+      "source": "strategy",
+      "adoption": 0.25,
+      "avgCopies": 1.3333333333333333,
+      "decksWithCard": 3,
+      "tier": "flex"
+     }
+    ],
+    "warnings": [
+     "Overgrowth has not shown up in recent Premodern results.",
+     "Vernal Bloom has not shown up in recent Premodern results.",
+     "Early Harvest has not shown up in recent Premodern results."
+    ]
+   },
+   "usage": {
+    "promptTokens": 72136,
+    "completionTokens": 7084
+   },
+   "finishReason": "stop",
+   "errors": []
+  },
+  {
+   "id": "premodern-replenish-twist",
+   "format": "Premodern",
+   "sentFormat": "Premodern",
+   "prompt": "Build a Replenish deck in Premodern that doesn't play blue.",
+   "status": 200,
+   "ms": 53316,
+   "text": "I built a green-white Replenish list with no blue cards. It is a brew, not a stock list.\n\n**Why it is a brew**\n- The 37 Replenish lists in the results are all blue-white. Island, Adarkar Wastes, Skycloud Expanse, Decree of Silence, Frantic Search, Intuition and Mana Leak all need blue.\n- Attunement also needs blue ({2}{U}). I first put it in, then took it out.\n- Only 2 of the 37 Replenish lists play any green. Wild Mongrel is not in the Replenish results.\n- The closest real shell is Enchantress, with 96 decks in the results. Its winning list (walrusmadness, 8-0, Challenge 16) already runs 2 Replenish. I used that shell and raised Replenish to 4.\n- Wild Mongrel appears in 196 recent lists in the format. It has not shown up in any Enchantress or Replenish list.\n\n**How it works**\n- **Replenish (4):** the Replenish lists run it at 100%, averaging 3.9 copies.\n- **Getting enchantments into the graveyard:**\n  - Wild Mongrel (4) discards any card. It also replaces Attunement as a creature.\n  - Seal of Cleansing (3, 100% in both archetypes) sacrifices itself.\n  - Sterling Grove (3) sacrifices itself to fetch an enchantment.\n- **Opalescence (3) and Parallax Wave (3):** both are stock in Replenish and Enchantress. Replenish into Opalescence makes your enchantments into creatures.\n- **Argothian Enchantress (4) and Enchantress's Presence (4):** both are 100% stock in Enchantress. They draw cards off every enchantment.\n- **Mana:** Wild Growth (3), 4 Brushland, 4 Windswept Heath, 2 Wooded Foothills and 4 Serra's Sanctum, plus 5 Forest and 3 Plains. That is 22 lands. Serra's Sanctum is 100% stock in Enchantress.\n- **Other cards:** Swords to Plowshares (3), Mirri's Guile (2), Solitary Confinement (1) and Abeyance (1).\n\n**Sideboard (15)**\n- This is the Enchantress board: 2 Aura of Silence, 1 Karmic Justice, 2 Sacred Ground, 1 Sphere of Law, 2 Tormod's Crypt, 2 Warmth, 3 Xantid Swarm and 1 Swords to Plowshares.\n- I added 1 Exalted Angel. It is a non-blue card from the Replenish sideboard (97% of Replenish lists run it).\n- I did not use the usual Replenish sideboard otherwise. Meddling Mage and Hydroblast are blue, and Defense Grid is not a card I chose.\n\n**Weak points**\n- You lose Intuition and Frantic Search, so you have no tutor for Replenish.\n- Mongrel is a creature, so it dies to removal before it can discard.\n- Mirri's Guile is down to 2 from the Enchantress stock of 4, to make room for Mongrel.\n\nI can build a sideboard for a specific matchup if you name one.",
+   "toolCalls": [
+    {
+     "name": "card_lookup",
+     "args": {
+      "names": [
+       "Replenish"
+      ]
+     }
+    },
+    {
+     "name": "list_strategies",
+     "args": {}
+    },
+    {
+     "name": "strategy_card_stats",
+     "args": {
+      "strategy": "Replenish",
+      "zone": "main"
+     }
+    },
+    {
+     "name": "average_sideboard",
+     "args": {
+      "strategy": "Replenish"
+     }
+    },
+    {
+     "name": "reference_decklists",
+     "args": {
+      "strategy": "Replenish",
+      "n": 3
+     }
+    },
+    {
+     "name": "strategy_card_stats",
+     "args": {
+      "strategy": "Enchantress",
+      "zone": "main"
+     }
+    },
+    {
+     "name": "reference_decklists",
+     "args": {
+      "strategy": "Enchantress",
+      "n": 2
+     }
+    },
+    {
+     "name": "propose_deck",
+     "args": {
+      "main": [
+       {
+        "qty": 4,
+        "name": "Replenish"
+       },
+       {
+        "qty": 4,
+        "name": "Attunement"
+       },
+       {
+        "qty": 4,
+        "name": "Argothian Enchantress"
+       },
+       {
+        "qty": 4,
+        "name": "Enchantress's Presence"
+       },
+       {
+        "qty": 2,
+        "name": "Mirri's Guile"
+       },
+       {
+        "qty": 3,
+        "name": "Opalescence"
+       },
+       {
+        "qty": 3,
+        "name": "Parallax Wave"
+       },
+       {
+        "qty": 3,
+        "name": "Seal of Cleansing"
+       },
+       {
+        "qty": 3,
+        "name": "Swords to Plowshares"
+       },
+       {
+        "qty": 3,
+        "name": "Wild Growth"
+       },
+       {
+        "qty": 3,
+        "name": "Sterling Grove"
+       },
+       {
+        "qty": 1,
+        "name": "Solitary Confinement"
+       },
+       {
+        "qty": 1,
+        "name": "Abeyance"
+       },
+       {
+        "qty": 4,
+        "name": "Brushland"
+       },
+       {
+        "qty": 4,
+        "name": "Windswept Heath"
+       },
+       {
+        "qty": 2,
+        "name": "Wooded Foothills"
+       },
+       {
+        "qty": 4,
+        "name": "Serra's Sanctum"
+       },
+       {
+        "qty": 5,
+        "name": "Forest"
+       },
+       {
+        "qty": 3,
+        "name": "Plains"
+       }
+      ],
+      "side": [
+       {
+        "qty": 2,
+        "name": "Aura of Silence"
+       },
+       {
+        "qty": 1,
+        "name": "Karmic Justice"
+       },
+       {
+        "qty": 2,
+        "name": "Sacred Ground"
+       },
+       {
+        "qty": 1,
+        "name": "Sphere of Law"
+       },
+       {
+        "qty": 1,
+        "name": "Swords to Plowshares"
+       },
+       {
+        "qty": 2,
+        "name": "Tormod's Crypt"
+       },
+       {
+        "qty": 2,
+        "name": "Warmth"
+       },
+       {
+        "qty": 3,
+        "name": "Xantid Swarm"
+       },
+       {
+        "qty": 1,
+        "name": "Exalted Angel"
+       }
+      ]
+     },
+     "ok": true
+    },
+    {
+     "name": "card_lookup",
+     "args": {
+      "query": "Discard a card: draw"
+     }
+    },
+    {
+     "name": "card_lookup",
+     "args": {
+      "query": "Sacrifice an enchantment"
+     }
+    },
+    {
+     "name": "card_lookup",
+     "args": {
+      "names": [
+       "Wild Mongrel",
+       "Mox Diamond",
+       "Enlightened Tutor",
+       "Zuran Orb",
+       "Armageddon"
+      ]
+     }
+    },
+    {
+     "name": "propose_deck",
+     "args": {
+      "main": [
+       {
+        "qty": 4,
+        "name": "Replenish"
+       },
+       {
+        "qty": 4,
+        "name": "Wild Mongrel"
+       },
+       {
+        "qty": 4,
+        "name": "Argothian Enchantress"
+       },
+       {
+        "qty": 4,
+        "name": "Enchantress's Presence"
+       },
+       {
+        "qty": 2,
+        "name": "Mirri's Guile"
+       },
+       {
+        "qty": 3,
+        "name": "Opalescence"
+       },
+       {
+        "qty": 3,
+        "name": "Parallax Wave"
+       },
+       {
+        "qty": 3,
+        "name": "Seal of Cleansing"
+       },
+       {
+        "qty": 3,
+        "name": "Swords to Plowshares"
+       },
+       {
+        "qty": 3,
+        "name": "Wild Growth"
+       },
+       {
+        "qty": 3,
+        "name": "Sterling Grove"
+       },
+       {
+        "qty": 1,
+        "name": "Solitary Confinement"
+       },
+       {
+        "qty": 1,
+        "name": "Abeyance"
+       },
+       {
+        "qty": 4,
+        "name": "Brushland"
+       },
+       {
+        "qty": 4,
+        "name": "Windswept Heath"
+       },
+       {
+        "qty": 2,
+        "name": "Wooded Foothills"
+       },
+       {
+        "qty": 4,
+        "name": "Serra's Sanctum"
+       },
+       {
+        "qty": 5,
+        "name": "Forest"
+       },
+       {
+        "qty": 3,
+        "name": "Plains"
+       }
+      ],
+      "side": [
+       {
+        "qty": 2,
+        "name": "Aura of Silence"
+       },
+       {
+        "qty": 1,
+        "name": "Karmic Justice"
+       },
+       {
+        "qty": 2,
+        "name": "Sacred Ground"
+       },
+       {
+        "qty": 1,
+        "name": "Sphere of Law"
+       },
+       {
+        "qty": 1,
+        "name": "Swords to Plowshares"
+       },
+       {
+        "qty": 2,
+        "name": "Tormod's Crypt"
+       },
+       {
+        "qty": 2,
+        "name": "Warmth"
+       },
+       {
+        "qty": 3,
+        "name": "Xantid Swarm"
+       },
+       {
+        "qty": 1,
+        "name": "Exalted Angel"
+       }
+      ]
+     },
+     "ok": true
+    }
+   ],
+   "deck": {
+    "format": "Premodern",
+    "main": [
+     {
+      "qty": 4,
+      "name": "Replenish",
+      "canonical": "replenish",
+      "typeLine": "Sorcery",
+      "manaCost": "{3}{W}",
+      "cmc": 4,
+      "isLand": false,
+      "isBasic": false
+     },
+     {
+      "qty": 4,
+      "name": "Wild Mongrel",
+      "canonical": "wild mongrel",
+      "typeLine": "Creature \u2014 Dog",
+      "manaCost": "{1}{G}",
+      "cmc": 2,
+      "isLand": false,
+      "isBasic": false
+     },
+     {
+      "qty": 4,
+      "name": "Argothian Enchantress",
+      "canonical": "argothian enchantress",
+      "typeLine": "Creature \u2014 Human Druid",
+      "manaCost": "{1}{G}",
+      "cmc": 2,
+      "isLand": false,
+      "isBasic": false
+     },
+     {
+      "qty": 4,
+      "name": "Enchantress's Presence",
+      "canonical": "enchantress's presence",
+      "typeLine": "Enchantment",
+      "manaCost": "{2}{G}",
+      "cmc": 3,
+      "isLand": false,
+      "isBasic": false
+     },
+     {
+      "qty": 2,
+      "name": "Mirri's Guile",
+      "canonical": "mirri's guile",
+      "typeLine": "Enchantment",
+      "manaCost": "{G}",
+      "cmc": 1,
+      "isLand": false,
+      "isBasic": false
+     },
+     {
+      "qty": 3,
+      "name": "Opalescence",
+      "canonical": "opalescence",
+      "typeLine": "Enchantment",
+      "manaCost": "{2}{W}{W}",
+      "cmc": 4,
+      "isLand": false,
+      "isBasic": false
+     },
+     {
+      "qty": 3,
+      "name": "Parallax Wave",
+      "canonical": "parallax wave",
+      "typeLine": "Enchantment",
+      "manaCost": "{2}{W}{W}",
+      "cmc": 4,
+      "isLand": false,
+      "isBasic": false
+     },
+     {
+      "qty": 3,
+      "name": "Seal of Cleansing",
+      "canonical": "seal of cleansing",
+      "typeLine": "Enchantment",
+      "manaCost": "{1}{W}",
+      "cmc": 2,
+      "isLand": false,
+      "isBasic": false
+     },
+     {
+      "qty": 3,
+      "name": "Swords to Plowshares",
+      "canonical": "swords to plowshares",
+      "typeLine": "Instant",
+      "manaCost": "{W}",
+      "cmc": 1,
+      "isLand": false,
+      "isBasic": false
+     },
+     {
+      "qty": 3,
+      "name": "Wild Growth",
+      "canonical": "wild growth",
+      "typeLine": "Enchantment \u2014 Aura",
+      "manaCost": "{G}",
+      "cmc": 1,
+      "isLand": false,
+      "isBasic": false
+     },
+     {
+      "qty": 3,
+      "name": "Sterling Grove",
+      "canonical": "sterling grove",
+      "typeLine": "Enchantment",
+      "manaCost": "{G}{W}",
+      "cmc": 2,
+      "isLand": false,
+      "isBasic": false
+     },
+     {
+      "qty": 1,
+      "name": "Solitary Confinement",
+      "canonical": "solitary confinement",
+      "typeLine": "Enchantment",
+      "manaCost": "{2}{W}",
+      "cmc": 3,
+      "isLand": false,
+      "isBasic": false
+     },
+     {
+      "qty": 1,
+      "name": "Abeyance",
+      "canonical": "abeyance",
+      "typeLine": "Instant",
+      "manaCost": "{1}{W}",
+      "cmc": 2,
+      "isLand": false,
+      "isBasic": false
+     },
+     {
+      "qty": 4,
+      "name": "Brushland",
+      "canonical": "brushland",
+      "typeLine": "Land",
+      "manaCost": "",
+      "cmc": 0,
+      "isLand": true,
+      "isBasic": false
+     },
+     {
+      "qty": 4,
+      "name": "Windswept Heath",
+      "canonical": "windswept heath",
+      "typeLine": "Land",
+      "manaCost": "",
+      "cmc": 0,
+      "isLand": true,
+      "isBasic": false
+     },
+     {
+      "qty": 2,
+      "name": "Wooded Foothills",
+      "canonical": "wooded foothills",
+      "typeLine": "Land",
+      "manaCost": "",
+      "cmc": 0,
+      "isLand": true,
+      "isBasic": false
+     },
+     {
+      "qty": 4,
+      "name": "Serra's Sanctum",
+      "canonical": "serra's sanctum",
+      "typeLine": "Legendary Land",
+      "manaCost": "",
+      "cmc": 0,
+      "isLand": true,
+      "isBasic": false
+     },
+     {
+      "qty": 5,
+      "name": "Forest",
+      "canonical": "forest",
+      "typeLine": "Basic Land \u2014 Forest",
+      "manaCost": "",
+      "cmc": 0,
+      "isLand": true,
+      "isBasic": true
+     },
+     {
+      "qty": 3,
+      "name": "Plains",
+      "canonical": "plains",
+      "typeLine": "Basic Land \u2014 Plains",
+      "manaCost": "",
+      "cmc": 0,
+      "isLand": true,
+      "isBasic": true
+     }
+    ],
+    "side": [
+     {
+      "qty": 2,
+      "name": "Aura of Silence",
+      "canonical": "aura of silence",
+      "typeLine": "Enchantment",
+      "manaCost": "{1}{W}{W}",
+      "cmc": 3,
+      "isLand": false,
+      "isBasic": false
+     },
+     {
+      "qty": 1,
+      "name": "Karmic Justice",
+      "canonical": "karmic justice",
+      "typeLine": "Enchantment",
+      "manaCost": "{2}{W}",
+      "cmc": 3,
+      "isLand": false,
+      "isBasic": false
+     },
+     {
+      "qty": 2,
+      "name": "Sacred Ground",
+      "canonical": "sacred ground",
+      "typeLine": "Enchantment",
+      "manaCost": "{1}{W}",
+      "cmc": 2,
+      "isLand": false,
+      "isBasic": false
+     },
+     {
+      "qty": 1,
+      "name": "Sphere of Law",
+      "canonical": "sphere of law",
+      "typeLine": "Enchantment",
+      "manaCost": "{3}{W}",
+      "cmc": 4,
+      "isLand": false,
+      "isBasic": false
+     },
+     {
+      "qty": 1,
+      "name": "Swords to Plowshares",
+      "canonical": "swords to plowshares",
+      "typeLine": "Instant",
+      "manaCost": "{W}",
+      "cmc": 1,
+      "isLand": false,
+      "isBasic": false
+     },
+     {
+      "qty": 2,
+      "name": "Tormod's Crypt",
+      "canonical": "tormod's crypt",
+      "typeLine": "Artifact",
+      "manaCost": "{0}",
+      "cmc": 0,
+      "isLand": false,
+      "isBasic": false
+     },
+     {
+      "qty": 2,
+      "name": "Warmth",
+      "canonical": "warmth",
+      "typeLine": "Enchantment",
+      "manaCost": "{1}{W}",
+      "cmc": 2,
+      "isLand": false,
+      "isBasic": false
+     },
+     {
+      "qty": 3,
+      "name": "Xantid Swarm",
+      "canonical": "xantid swarm",
+      "typeLine": "Creature \u2014 Insect",
+      "manaCost": "{G}",
+      "cmc": 1,
+      "isLand": false,
+      "isBasic": false
+     },
+     {
+      "qty": 1,
+      "name": "Exalted Angel",
+      "canonical": "exalted angel",
+      "typeLine": "Creature \u2014 Angel",
+      "manaCost": "{4}{W}{W}",
+      "cmc": 6,
+      "isLand": false,
+      "isBasic": false
+     }
+    ],
+    "decklistText": "4 Replenish\n4 Wild Mongrel\n4 Argothian Enchantress\n4 Enchantress's Presence\n2 Mirri's Guile\n3 Opalescence\n3 Parallax Wave\n3 Seal of Cleansing\n3 Swords to Plowshares\n3 Wild Growth\n3 Sterling Grove\n1 Solitary Confinement\n1 Abeyance\n4 Brushland\n4 Windswept Heath\n2 Wooded Foothills\n4 Serra's Sanctum\n5 Forest\n3 Plains\n\nSideboard\n2 Aura of Silence\n1 Karmic Justice\n2 Sacred Ground\n1 Sphere of Law\n1 Swords to Plowshares\n2 Tormod's Crypt\n2 Warmth\n3 Xantid Swarm\n1 Exalted Angel",
+    "strategy": "Enchantress",
+    "archetype": "Enchantress",
+    "colorIdentity": "WG",
+    "confidence": 0.8,
+    "badge": "tuned",
+    "evidence": [
+     {
+      "canonical": "replenish",
+      "name": "Replenish",
+      "source": "strategy",
+      "adoption": 0.9895833333333334,
+      "avgCopies": 2.1578947368421053,
+      "decksWithCard": 95,
+      "tier": "stock"
+     },
+     {
+      "canonical": "wild mongrel",
+      "name": "Wild Mongrel",
+      "source": "format",
+      "adoption": null,
+      "avgCopies": null,
+      "decksWithCard": 196,
+      "tier": null
+     },
+     {
+      "canonical": "argothian enchantress",
+      "name": "Argothian Enchantress",
+      "source": "strategy",
+      "adoption": 1,
+      "avgCopies": 4,
+      "decksWithCard": 96,
+      "tier": "stock"
+     },
+     {
+      "canonical": "enchantress's presence",
+      "name": "Enchantress's Presence",
+      "source": "strategy",
+      "adoption": 1,
+      "avgCopies": 4,
+      "decksWithCard": 96,
+      "tier": "stock"
+     },
+     {
+      "canonical": "mirri's guile",
+      "name": "Mirri's Guile",
+      "source": "strategy",
+      "adoption": 1,
+      "avgCopies": 3.96875,
+      "decksWithCard": 96,
+      "tier": "stock"
+     },
+     {
+      "canonical": "opalescence",
+      "name": "Opalescence",
+      "source": "strategy",
+      "adoption": 0.9791666666666666,
+      "avgCopies": 2.617021276595745,
+      "decksWithCard": 94,
+      "tier": "stock"
+     },
+     {
+      "canonical": "parallax wave",
+      "name": "Parallax Wave",
+      "source": "strategy",
+      "adoption": 0.9791666666666666,
+      "avgCopies": 2.7127659574468086,
+      "decksWithCard": 94,
+      "tier": "stock"
+     },
+     {
+      "canonical": "seal of cleansing",
+      "name": "Seal of Cleansing",
+      "source": "strategy",
+      "adoption": 1,
+      "avgCopies": 3.0520833333333335,
+      "decksWithCard": 96,
+      "tier": "stock"
+     },
+     {
+      "canonical": "swords to plowshares",
+      "name": "Swords to Plowshares",
+      "source": "strategy",
+      "adoption": 0.9895833333333334,
+      "avgCopies": 3.2,
+      "decksWithCard": 95,
+      "tier": "stock"
+     },
+     {
+      "canonical": "wild growth",
+      "name": "Wild Growth",
+      "source": "strategy",
+      "adoption": 1,
+      "avgCopies": 4,
+      "decksWithCard": 96,
+      "tier": "stock"
+     },
+     {
+      "canonical": "sterling grove",
+      "name": "Sterling Grove",
+      "source": "strategy",
+      "adoption": 1,
+      "avgCopies": 2.96875,
+      "decksWithCard": 96,
+      "tier": "stock"
+     },
+     {
+      "canonical": "solitary confinement",
+      "name": "Solitary Confinement",
+      "source": "strategy",
+      "adoption": 0.9895833333333334,
+      "avgCopies": 1.831578947368421,
+      "decksWithCard": 95,
+      "tier": "stock"
+     },
+     {
+      "canonical": "abeyance",
+      "name": "Abeyance",
+      "source": "strategy",
+      "adoption": 0.16666666666666666,
+      "avgCopies": 1,
+      "decksWithCard": 16,
+      "tier": "flex"
+     },
+     {
+      "canonical": "brushland",
+      "name": "Brushland",
+      "source": "strategy",
+      "adoption": 1,
+      "avgCopies": 3.9791666666666665,
+      "decksWithCard": 96,
+      "tier": "stock"
+     },
+     {
+      "canonical": "windswept heath",
+      "name": "Windswept Heath",
+      "source": "strategy",
+      "adoption": 1,
+      "avgCopies": 4,
+      "decksWithCard": 96,
+      "tier": "stock"
+     },
+     {
+      "canonical": "wooded foothills",
+      "name": "Wooded Foothills",
+      "source": "strategy",
+      "adoption": 0.9791666666666666,
+      "avgCopies": 1.9361702127659575,
+      "decksWithCard": 94,
+      "tier": "stock"
+     },
+     {
+      "canonical": "serra's sanctum",
+      "name": "Serra's Sanctum",
+      "source": "strategy",
+      "adoption": 1,
+      "avgCopies": 3.9479166666666665,
+      "decksWithCard": 96,
+      "tier": "stock"
+     },
+     {
+      "canonical": "forest",
+      "name": "Forest",
+      "source": "strategy",
+      "adoption": 1,
+      "avgCopies": 5.6875,
+      "decksWithCard": 96,
+      "tier": "stock"
+     },
+     {
+      "canonical": "plains",
+      "name": "Plains",
+      "source": "strategy",
+      "adoption": 1,
+      "avgCopies": 2.3229166666666665,
+      "decksWithCard": 96,
+      "tier": "stock"
+     },
+     {
+      "canonical": "aura of silence",
+      "name": "Aura of Silence",
+      "source": "strategy",
+      "adoption": 0.7291666666666666,
+      "avgCopies": 1.7857142857142858,
+      "decksWithCard": 70,
+      "tier": "stock"
+     },
+     {
+      "canonical": "karmic justice",
+      "name": "Karmic Justice",
+      "source": "strategy",
+      "adoption": 0.010416666666666666,
+      "avgCopies": 1,
+      "decksWithCard": 1,
+      "tier": "fringe"
+     },
+     {
+      "canonical": "sacred ground",
+      "name": "Sacred Ground",
+      "source": "strategy",
+      "adoption": 0.010416666666666666,
+      "avgCopies": 1,
+      "decksWithCard": 1,
+      "tier": "fringe"
+     },
+     {
+      "canonical": "sphere of law",
+      "name": "Sphere of Law",
+      "source": "format",
+      "adoption": null,
+      "avgCopies": null,
+      "decksWithCard": 304,
+      "tier": null
+     },
+     {
+      "canonical": "swords to plowshares",
+      "name": "Swords to Plowshares",
+      "source": "strategy",
+      "adoption": 0.9895833333333334,
+      "avgCopies": 3.2,
+      "decksWithCard": 95,
+      "tier": "stock"
+     },
+     {
+      "canonical": "tormod's crypt",
+      "name": "Tormod's Crypt",
+      "source": "format",
+      "adoption": null,
+      "avgCopies": null,
+      "decksWithCard": 2320,
+      "tier": null
+     },
+     {
+      "canonical": "warmth",
+      "name": "Warmth",
+      "source": "format",
+      "adoption": null,
+      "avgCopies": null,
+      "decksWithCard": 441,
+      "tier": null
+     },
+     {
+      "canonical": "xantid swarm",
+      "name": "Xantid Swarm",
+      "source": "format",
+      "adoption": null,
+      "avgCopies": null,
+      "decksWithCard": 761,
+      "tier": null
+     },
+     {
+      "canonical": "exalted angel",
+      "name": "Exalted Angel",
+      "source": "format",
+      "adoption": null,
+      "avgCopies": null,
+      "decksWithCard": 686,
+      "tier": null
+     }
+    ],
+    "warnings": []
+   },
+   "usage": {
+    "promptTokens": 109332,
+    "completionTokens": 6915
+   },
+   "finishReason": "stop",
+   "errors": []
+  },
+  {
+   "id": "modern-tribal-brew",
+   "format": "Modern",
+   "sentFormat": "Modern",
+   "prompt": "I want a Modern Merfolk deck that can beat the current top decks.",
+   "status": 200,
+   "ms": 22716,
+   "text": "I built this from the 5-0 Merfolk League list of 2026-10-13 (handle fart_sniffer_93). The server validated it as a legal 60 with a 15-card sideboard.\n\n**Merfolk is not a top deck right now.** It isn't in the strategy list at all, and the data has only 6 Merfolk decks. Every adoption number below comes from those 6, so treat them as a small sample. I can't give you win rates against the top decks.\n\n**Main deck (60)**\n- Creatures: 4 each of Tide Shaper, Lord of Atlantis, Master of the Pearl Trident, Silvergill Adept, Vodalian Hexcatcher, Harbinger of the Seas and Svyelun of Sea and Sky.\n- Spells: 4 Aether Vial, 4 Flare of Denial, 4 Sink into Stupor and 4 Snapback.\n- Lands: 4 Cavern of Souls, 3 Mutavault, 2 Otawara, Soaring City and 7 Island.\n\n**Why these cards**\n- Harbinger of the Seas is in 6 of 6 decks. Lord of Atlantis, Master of the Pearl Trident, Tide Shaper, Flare of Denial and Sink into Stupor are in 5 of 6. Aether Vial and Cavern of Souls are also in 5 of 6.\n- Silvergill Adept, Svyelun, Vodalian Hexcatcher and Mutavault are in 4 of 6.\n- Snapback is in 3 of 6. I kept it because the 5-0 list ran 4.\n- I skipped the other Merfolk build, which is Merfolk Trickster, Mindspring Merfolk and Tishana's Tidebinder. It went 3-3, and each of those cards is in only 2 of 6 decks or fewer.\n\n**Sideboard (15)**\n- 4 Chalice of the Void is in 6 of 6 decks. Prowess runs cheap spells and creatures like Dragon's Rage Channeler (4 copies) and Monastery Swiftspear (3.8 copies).\n- 4 Consign to Memory is in 5 of 6. Broodscale Combo plays 4 Urza's Saga and 4 Sowing Mycospawn, and both use triggered abilities.\n- 4 Force of Negation is in 4 of 6. It gives you a free answer to a noncreature spell on the opponent's turn.\n- 3 Subtlety was in the 5-0 list. Broodscale's Emrakul, the Promised End (3.9 copies) and Devourer of Destiny (2.6 copies) are creature spells it can hit.\n\nI didn't run the sideboard scoring tool because you didn't name a single matchup. Tell me which deck to target and I'll do that. Broodscale Combo has the biggest share at 17.3%, and Prowess is next at 9.3%.",
+   "toolCalls": [
+    {
+     "name": "list_strategies",
+     "args": {}
+    },
+    {
+     "name": "strategy_card_stats",
+     "args": {
+      "strategy": "Merfolk",
+      "zone": "main"
+     }
+    },
+    {
+     "name": "average_sideboard",
+     "args": {
+      "strategy": "Merfolk"
+     }
+    },
+    {
+     "name": "reference_decklists",
+     "args": {
+      "strategy": "Merfolk",
+      "n": 3
+     }
+    },
+    {
+     "name": "strategy_card_stats",
+     "args": {
+      "strategy": "Merfolk",
+      "zone": "side"
+     }
+    },
+    {
+     "name": "matchup_preview",
+     "args": {
+      "strategy": "Broodscale Combo"
+     }
+    },
+    {
+     "name": "matchup_preview",
+     "args": {
+      "strategy": "Prowess"
+     }
+    },
+    {
+     "name": "propose_deck",
+     "args": {
+      "main": [
+       {
+        "qty": 4,
+        "name": "Aether Vial"
+       },
+       {
+        "qty": 4,
+        "name": "Harbinger of the Seas"
+       },
+       {
+        "qty": 4,
+        "name": "Lord of Atlantis"
+       },
+       {
+        "qty": 4,
+        "name": "Master of the Pearl Trident"
+       },
+       {
+        "qty": 4,
+        "name": "Silvergill Adept"
+       },
+       {
+        "qty": 4,
+        "name": "Svyelun of Sea and Sky"
+       },
+       {
+        "qty": 4,
+        "name": "Tide Shaper"
+       },
+       {
+        "qty": 4,
+        "name": "Vodalian Hexcatcher"
+       },
+       {
+        "qty": 4,
+        "name": "Flare of Denial"
+       },
+       {
+        "qty": 4,
+        "name": "Sink into Stupor"
+       },
+       {
+        "qty": 4,
+        "name": "Snapback"
+       },
+       {
+        "qty": 4,
+        "name": "Cavern of Souls"
+       },
+       {
+        "qty": 7,
+        "name": "Island"
+       },
+       {
+        "qty": 3,
+        "name": "Mutavault"
+       },
+       {
+        "qty": 2,
+        "name": "Otawara, Soaring City"
+       }
+      ],
+      "side": [
+       {
+        "qty": 4,
+        "name": "Chalice of the Void"
+       },
+       {
+        "qty": 4,
+        "name": "Consign to Memory"
+       },
+       {
+        "qty": 4,
+        "name": "Force of Negation"
+       },
+       {
+        "qty": 3,
+        "name": "Subtlety"
+       }
+      ]
+     },
+     "ok": true
+    }
+   ],
+   "deck": {
+    "format": "Modern",
+    "main": [
+     {
+      "qty": 4,
+      "name": "Aether Vial",
+      "canonical": "aether vial",
+      "typeLine": "Artifact",
+      "manaCost": "{1}",
+      "cmc": 1,
+      "isLand": false,
+      "isBasic": false
+     },
+     {
+      "qty": 4,
+      "name": "Harbinger of the Seas",
+      "canonical": "harbinger of the seas",
+      "typeLine": "Creature \u2014 Merfolk Wizard",
+      "manaCost": "{1}{U}{U}",
+      "cmc": 3,
+      "isLand": false,
+      "isBasic": false
+     },
+     {
+      "qty": 4,
+      "name": "Lord of Atlantis",
+      "canonical": "lord of atlantis",
+      "typeLine": "Creature \u2014 Merfolk",
+      "manaCost": "{U}{U}",
+      "cmc": 2,
+      "isLand": false,
+      "isBasic": false
+     },
+     {
+      "qty": 4,
+      "name": "Master of the Pearl Trident",
+      "canonical": "master of the pearl trident",
+      "typeLine": "Creature \u2014 Merfolk",
+      "manaCost": "{U}{U}",
+      "cmc": 2,
+      "isLand": false,
+      "isBasic": false
+     },
+     {
+      "qty": 4,
+      "name": "Silvergill Adept",
+      "canonical": "silvergill adept",
+      "typeLine": "Creature \u2014 Merfolk Wizard",
+      "manaCost": "{1}{U}",
+      "cmc": 2,
+      "isLand": false,
+      "isBasic": false
+     },
+     {
+      "qty": 4,
+      "name": "Svyelun of Sea And Sky",
+      "canonical": "svyelun of sea and sky",
+      "typeLine": "Legendary Creature \u2014 Merfolk God",
+      "manaCost": "{1}{U}{U}",
+      "cmc": 3,
+      "isLand": false,
+      "isBasic": false
+     },
+     {
+      "qty": 4,
+      "name": "Tide Shaper",
+      "canonical": "tide shaper",
+      "typeLine": "Creature \u2014 Merfolk Wizard",
+      "manaCost": "{U}",
+      "cmc": 1,
+      "isLand": false,
+      "isBasic": false
+     },
+     {
+      "qty": 4,
+      "name": "Vodalian Hexcatcher",
+      "canonical": "vodalian hexcatcher",
+      "typeLine": "Creature \u2014 Merfolk Wizard",
+      "manaCost": "{1}{U}",
+      "cmc": 2,
+      "isLand": false,
+      "isBasic": false
+     },
+     {
+      "qty": 4,
+      "name": "Flare of Denial",
+      "canonical": "flare of denial",
+      "typeLine": "Instant",
+      "manaCost": "{1}{U}{U}",
+      "cmc": 3,
+      "isLand": false,
+      "isBasic": false
+     },
+     {
+      "qty": 4,
+      "name": "Sink Into Stupor",
+      "canonical": "sink into stupor",
+      "typeLine": "Instant // Land",
+      "manaCost": "{1}{U}{U}",
+      "cmc": 3,
+      "isLand": true,
+      "isBasic": false
+     },
+     {
+      "qty": 4,
+      "name": "Snapback",
+      "canonical": "snapback",
+      "typeLine": "Instant",
+      "manaCost": "{1}{U}",
+      "cmc": 2,
+      "isLand": false,
+      "isBasic": false
+     },
+     {
+      "qty": 4,
+      "name": "Cavern of Souls",
+      "canonical": "cavern of souls",
+      "typeLine": "Land",
+      "manaCost": "",
+      "cmc": 0,
+      "isLand": true,
+      "isBasic": false
+     },
+     {
+      "qty": 7,
+      "name": "Island",
+      "canonical": "island",
+      "typeLine": "Basic Land \u2014 Island",
+      "manaCost": "",
+      "cmc": 0,
+      "isLand": true,
+      "isBasic": true
+     },
+     {
+      "qty": 3,
+      "name": "Mutavault",
+      "canonical": "mutavault",
+      "typeLine": "Land",
+      "manaCost": "",
+      "cmc": 0,
+      "isLand": true,
+      "isBasic": false
+     },
+     {
+      "qty": 2,
+      "name": "Otawara, Soaring City",
+      "canonical": "otawara, soaring city",
+      "typeLine": "Legendary Land",
+      "manaCost": "",
+      "cmc": 0,
+      "isLand": true,
+      "isBasic": false
+     }
+    ],
+    "side": [
+     {
+      "qty": 4,
+      "name": "Chalice of the Void",
+      "canonical": "chalice of the void",
+      "typeLine": "Artifact",
+      "manaCost": "{X}{X}",
+      "cmc": 0,
+      "isLand": false,
+      "isBasic": false
+     },
+     {
+      "qty": 4,
+      "name": "Consign to Memory",
+      "canonical": "consign to memory",
+      "typeLine": "Instant",
+      "manaCost": "{U}",
+      "cmc": 1,
+      "isLand": false,
+      "isBasic": false
+     },
+     {
+      "qty": 4,
+      "name": "Force of Negation",
+      "canonical": "force of negation",
+      "typeLine": "Instant",
+      "manaCost": "{1}{U}{U}",
+      "cmc": 3,
+      "isLand": false,
+      "isBasic": false
+     },
+     {
+      "qty": 3,
+      "name": "Subtlety",
+      "canonical": "subtlety",
+      "typeLine": "Creature \u2014 Elemental Incarnation",
+      "manaCost": "{2}{U}{U}",
+      "cmc": 4,
+      "isLand": false,
+      "isBasic": false
+     }
+    ],
+    "decklistText": "4 Aether Vial\n4 Harbinger of the Seas\n4 Lord of Atlantis\n4 Master of the Pearl Trident\n4 Silvergill Adept\n4 Svyelun of Sea And Sky\n4 Tide Shaper\n4 Vodalian Hexcatcher\n4 Flare of Denial\n4 Sink Into Stupor\n4 Snapback\n4 Cavern of Souls\n7 Island\n3 Mutavault\n2 Otawara, Soaring City\n\nSideboard\n4 Chalice of the Void\n4 Consign to Memory\n4 Force of Negation\n3 Subtlety",
+    "strategy": "Merfolk",
+    "archetype": "Merfolk",
+    "colorIdentity": "U",
+    "confidence": 0.7,
+    "badge": "stock",
+    "evidence": [
+     {
+      "canonical": "aether vial",
+      "name": "Aether Vial",
+      "source": "strategy",
+      "adoption": 0.8333333333333334,
+      "avgCopies": 4,
+      "decksWithCard": 5,
+      "tier": "stock"
+     },
+     {
+      "canonical": "harbinger of the seas",
+      "name": "Harbinger of the Seas",
+      "source": "strategy",
+      "adoption": 1,
+      "avgCopies": 3.8333333333333335,
+      "decksWithCard": 6,
+      "tier": "stock"
+     },
+     {
+      "canonical": "lord of atlantis",
+      "name": "Lord of Atlantis",
+      "source": "strategy",
+      "adoption": 0.8333333333333334,
+      "avgCopies": 3.8,
+      "decksWithCard": 5,
+      "tier": "stock"
+     },
+     {
+      "canonical": "master of the pearl trident",
+      "name": "Master of the Pearl Trident",
+      "source": "strategy",
+      "adoption": 0.8333333333333334,
+      "avgCopies": 4,
+      "decksWithCard": 5,
+      "tier": "stock"
+     },
+     {
+      "canonical": "silvergill adept",
+      "name": "Silvergill Adept",
+      "source": "strategy",
+      "adoption": 0.6666666666666666,
+      "avgCopies": 3.75,
+      "decksWithCard": 4,
+      "tier": "stock"
+     },
+     {
+      "canonical": "svyelun of sea and sky",
+      "name": "Svyelun of Sea And Sky",
+      "source": "strategy",
+      "adoption": 0.6666666666666666,
+      "avgCopies": 3.5,
+      "decksWithCard": 4,
+      "tier": "stock"
+     },
+     {
+      "canonical": "tide shaper",
+      "name": "Tide Shaper",
+      "source": "strategy",
+      "adoption": 0.8333333333333334,
+      "avgCopies": 4,
+      "decksWithCard": 5,
+      "tier": "stock"
+     },
+     {
+      "canonical": "vodalian hexcatcher",
+      "name": "Vodalian Hexcatcher",
+      "source": "strategy",
+      "adoption": 0.6666666666666666,
+      "avgCopies": 4,
+      "decksWithCard": 4,
+      "tier": "stock"
+     },
+     {
+      "canonical": "flare of denial",
+      "name": "Flare of Denial",
+      "source": "strategy",
+      "adoption": 0.8333333333333334,
+      "avgCopies": 3.6,
+      "decksWithCard": 5,
+      "tier": "stock"
+     },
+     {
+      "canonical": "sink into stupor",
+      "name": "Sink Into Stupor",
+      "source": "strategy",
+      "adoption": 0.8333333333333334,
+      "avgCopies": 4,
+      "decksWithCard": 5,
+      "tier": "stock"
+     },
+     {
+      "canonical": "snapback",
+      "name": "Snapback",
+      "source": "strategy",
+      "adoption": 0.5,
+      "avgCopies": 4,
+      "decksWithCard": 3,
+      "tier": "stock"
+     },
+     {
+      "canonical": "cavern of souls",
+      "name": "Cavern of Souls",
+      "source": "strategy",
+      "adoption": 0.8333333333333334,
+      "avgCopies": 3.8,
+      "decksWithCard": 5,
+      "tier": "stock"
+     },
+     {
+      "canonical": "island",
+      "name": "Island",
+      "source": "strategy",
+      "adoption": 1,
+      "avgCopies": 8,
+      "decksWithCard": 6,
+      "tier": "stock"
+     },
+     {
+      "canonical": "mutavault",
+      "name": "Mutavault",
+      "source": "strategy",
+      "adoption": 0.6666666666666666,
+      "avgCopies": 3,
+      "decksWithCard": 4,
+      "tier": "stock"
+     },
+     {
+      "canonical": "otawara, soaring city",
+      "name": "Otawara, Soaring City",
+      "source": "strategy",
+      "adoption": 1,
+      "avgCopies": 1.5,
+      "decksWithCard": 6,
+      "tier": "stock"
+     },
+     {
+      "canonical": "chalice of the void",
+      "name": "Chalice of the Void",
+      "source": "format",
+      "adoption": null,
+      "avgCopies": null,
+      "decksWithCard": 1542,
+      "tier": null
+     },
+     {
+      "canonical": "consign to memory",
+      "name": "Consign to Memory",
+      "source": "format",
+      "adoption": null,
+      "avgCopies": null,
+      "decksWithCard": 9738,
+      "tier": null
+     },
+     {
+      "canonical": "force of negation",
+      "name": "Force of Negation",
+      "source": "strategy",
+      "adoption": 0.5,
+      "avgCopies": 2.6666666666666665,
+      "decksWithCard": 3,
+      "tier": "stock"
+     },
+     {
+      "canonical": "subtlety",
+      "name": "Subtlety",
+      "source": "format",
+      "adoption": null,
+      "avgCopies": null,
+      "decksWithCard": 2008,
+      "tier": null
+     }
+    ],
+    "warnings": []
+   },
+   "usage": {
+    "promptTokens": 39170,
+    "completionTokens": 2484
+   },
+   "finishReason": "stop",
+   "errors": []
+  }
+ ]
+}

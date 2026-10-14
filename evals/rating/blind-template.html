@@ -224,6 +224,9 @@ textarea { width: 100%; min-height: 56px; font: 0.92rem var(--font-body); color:
     }
     if (answer.deck) {
       const deck = el("div", { class: "deck" });
+      if (answer.deck.commander && answer.deck.commander.length) {
+        deck.append(el("div", {}, el("h3", { text: "Commander" }), el("pre", { text: lines(answer.deck.commander) })));
+      }
       deck.append(el("div", {}, el("h3", { text: `Main deck (${answer.deck.mainCount})` }), el("pre", { text: lines(answer.deck.main) })));
       if (answer.deck.side.length) deck.append(el("div", {}, el("h3", { text: `Sideboard (${answer.deck.sideCount})` }), el("pre", { text: lines(answer.deck.side) })));
       card.append(deck);

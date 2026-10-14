@@ -13,12 +13,12 @@ A running record of how decklists.ai gets built: decisions, findings, numbers, a
 
 | Item | Total |
 | --- | --- |
-| Anthropic API spend | About $18.68: v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02. Plus one 17-token test call. |
+| Anthropic API spend | About $33.71: v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54). Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
 | Automated tests | 31 passing |
 | Decklist Data PRs merged | 4 (#181 export, #182 baseline eval, #183 baseline on `main`, #184 model comparison) |
-| Plan steps done | 1, 4, 5 (5 waits on generated decks from step 6); step 2: model comparison pass 1 run, blind-rated (108 answers) and unblinded |
+| Plan steps done | 1, 4, 5; step 2 done for v1 (108 answers rated); step 6 harness built and run on Opus and Sonnet (48 decks, all legal), round 2 rating open |
 
 ## The story so far (for the post)
 
@@ -41,6 +41,28 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - A one-line PR so v1 logs the real error behind the four "An error occurred." builds.
 - Adding the "distance from the nearest real deck" score and a "copy rate" score to the objective scorer.
 - Lesson to apply: any prompt or claim that names a card gets checked against the card index before it is used.
+
+---
+
+## 2026-10-14 · Harness v2 results (objective) and round 2 rating
+
+Both runs finished: **48 of 48 prompts produced a legal deck** (24 per model), with no errors and no invented cards. The six prompts v1 could not attempt (Timeless, Historic, Old School, Penny Dreadful, Commander, Duel Commander) all got decks, including 99 cards plus Atraxa for the Commander prompt.
+
+| Model | Harness | Decks | Mana warnings | Lands off real archetype | "Something new": avg copy rate | 80%+ copies | Cost | Median time |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Opus 5.5 | v1 | 17 of 18 | 0 | 0.84 | 87% | 9 of 12 | $4.05 | 33 s |
+| Opus 5.5 | **v2** | **24 of 24** | 7 | **0.60** | **76%** | **6 of 14** | $9.49 | 93 s |
+| Sonnet 5.5 | v1 | 18 of 18 | 1 | 0.89 | 78% | 8 of 13 | $3.22 | 41 s |
+| Sonnet 5.5 | **v2** | **24 of 24** | 5 | 1.34 | **69%** | **5 of 14** | $5.54 | 66 s |
+
+**Reading it:**
+- **Every prompt now gets a deck,** including all six formats v1 couldn't attempt and every brew v1 refused or redirected.
+- **Copying dropped but did not disappear.** On prompts asking for something new, copy rate fell 9-11 points and mostly-copied decks fell from 8-9 to 5-6. The prompt rules helped, which confirms the owner's observation that the models default to the database, and that prompting alone won't break the habit; the structural fixes are step 8.
+- **More mana warnings** (0-1 to 5-7) are the expected price of borrowing less; Opus's land counts still sit closest to real archetypes (0.60 off).
+- **Cost roughly doubled** ($9.49 vs. $4.05 for Opus) for 24 prompts instead of 18 and more research per prompt; time per prompt roughly doubled to tripled.
+- Total for both runs: **$15.03**, under the ~$21 estimate.
+
+**Round 2 blind scorecard published** (separate page and answer key, so round 1 is untouched): 24 prompts, 54 answers: the 48 v2 answers plus **6 anchors**, v1 answers the owner already rated in round 1 (Opus and Sonnet on mono green storm, Merfolk, and Replenish without blue), mixed in unmarked. Re-rating them measures whether the owner's scale drifted between sessions, which matters because the v1-vs-v2 comparison spans two sittings. The page now also shows the commander for Commander decks. Ratings store checked reachable and empty.
 
 ---
 

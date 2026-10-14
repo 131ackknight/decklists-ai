@@ -42,7 +42,7 @@ interface RunFile {
     text?: string;
     errors?: string[];
     requestError?: string;
-    deck?: { main: Line[]; side: Line[] } | null;
+    deck?: { main: Line[]; side: Line[]; commander?: Line[] } | null;
   }[];
 }
 interface KeyEntry {
@@ -80,6 +80,7 @@ for (const file of argv) {
         ? {
             main: r.deck.main.map((c) => ({ qty: c.qty, name: c.name })),
             side: (r.deck.side ?? []).map((c) => ({ qty: c.qty, name: c.name })),
+            commander: (r.deck.commander ?? []).map((c) => ({ qty: c.qty, name: c.name })),
             mainCount: sum(r.deck.main),
             sideCount: sum(r.deck.side ?? []),
           }

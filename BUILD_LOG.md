@@ -18,7 +18,7 @@ A running record of how decklists.ai gets built: decisions, findings, numbers, a
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
 | Automated tests | 32 passing |
 | Decklist Data PRs merged | 4 (#181 export, #182 baseline eval, #183 baseline on `main`, #184 model comparison) |
-| Plan steps done | 1, 4, 5; step 2 done for v1 (108 answers rated); step 6 harness built and run on Opus and Sonnet (48 decks, all legal), round 2 rating open |
+| Plan steps done | 1, 4, 5, 6; step 2 rubric baseline done (108 + 48 rated, 36 pairwise judged); next: step 8 |
 
 ## The story so far (for the post)
 
@@ -30,7 +30,8 @@ A running record of how decklists.ai gets built: decisions, findings, numbers, a
 6. **Measuring v1 honestly.** The baseline first hit the owner's own takedown (my stale-checkout mistake), then ran: 9 decks for 18 prompts at $0.63, and the memory failure in one line: "Storm is not legal in Premodern" (it is).
 7. **Same harness, five models.** v1 on Haiku 4.5, Haiku 5.5, Sonnet 5.5, Opus 5.5 and Fable 5.1, blind-rated by the owner. Pass 1: bigger models finish (17-18 decks vs. 7-9), Haiku 5.5 is the value pick ($0.11), Fable builds the closest mana, and every model leans on the meta data in ways that hurt brews: "not in results" read as "doesn't exist," and brews pulled back toward existing decks (mono green storm built as Elves plus Hunting Pack).
 8. **The ratings.** The owner blind-rated all 108 answers. When a list exists, every model scores about 4 and Haiku 4.5 ties Sonnet 5.5; on brews the spread grows to 2.4 points (Haiku 4.5 1.52, Opus 5.5 3.88). Opus 5.5 ranks first overall (3.85), and the most expensive model, Fable 5.1, ranks third at more than twice the cost.
-9. **Where it goes next.** The new harness: card search decides what exists, data only informs mana, interaction and the meta, then the same five models again to separate what the model buys from what the harness buys.
+9. **The new harness, judged head to head.** 36 blind pairs: a draw on quality (v1 8 wins, v2 6, 22 ties) but v2 did what was asked every time (100% vs. 92%) and handled impossible requests honestly. Better tools close the faithfulness gap; they don't close the quality gap.
+10. **Where it goes next.** The new harness: card search decides what exists, data only informs mana, interaction and the meta, then the same five models again to separate what the model buys from what the harness buys.
 
 Recurring theme for the post: the owner's pushback improved the work at nearly every turn (no bracket scraping, no new database, no Neon credentials, use our own data instead of re-scraping MTGO, every list instead of a sample, fix `main` instead of running an old build, compare models).
 
@@ -41,8 +42,41 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - A one-line PR so v1 logs the real error behind the four "An error occurred." builds.
 - Adding the "distance from the nearest real deck" score and a "copy rate" score to the objective scorer.
 - Lesson to apply: any prompt or claim that names a card gets checked against the card index before it is used.
-- ~~Switch to pairwise~~: decided yes; v1 vs. v2 pairwise page built (36 pairs), awaiting the owner's picks.
+- ~~Switch to pairwise~~: done; 36 pairs judged (v1 8 wins, v2 6, 22 ties; v2 100% faithful vs. 92%).
 - ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
+
+---
+
+## 2026-10-14 · Pairwise results: v2 is more faithful, not better
+
+The owner judged all 36 head-to-head pairs (Opus v1 vs. Opus v2, Sonnet v1 vs. Sonnet v2, 18 prompts). Unblinded with `scripts/analyze-pairwise.ts`:
+
+| | v1 | v2 (new harness) |
+| --- | --- | --- |
+| Pairs won | **8** | 6 |
+| Ties | 22 | 22 |
+| "Did it do what was asked?" | 92% | **100%** |
+| "Would you play it?" | **83%** | 81% |
+
+By prompt type (wins-ties-losses for v2; yes rates v1 vs. v2):
+
+| Type | v2 record | Did what asked | Would play |
+| --- | --- | --- | --- |
+| A list exists (4) | 0-6-2 | 100% vs. 100% | 100% vs. 88% |
+| Owner's list given (2) | 1-3-0 | 100% vs. 100% | 100% vs. 100% |
+| Brew or twist (10) | 3-12-5 | 95% vs. 100% | 75% vs. 80% |
+| Impossible as asked (2) | 2-1-1 | **50% vs. 100%** | 75% vs. 50% |
+
+**v2 won:** Dream Halls without storm (both models), Legacy "turn 1 every game" (both), Opus on the Psychatog tune and on Living End plus Scam. **v1 won:** Replenish without blue (both; the faithful v2 decks were "would play: no" both times), Peter Parker's Camera (both), Vintage artifact aggro (both), Opus on mono green storm, Sonnet on Tainted Pact. Owner's notes: "This one is tough for them" (Tainted Pact).
+
+**What it says:**
+1. **Overall a draw.** 61% ties; the 14 decisive pairs split 8-6, well within chance. On many prompts both harnesses return essentially the same deck, because they read the same data.
+2. **The new harness made the bot reliably do what was asked:** 100% vs. 92%, every request answered (plus the six formats v1 couldn't attempt), impossible requests handled honestly (100% vs. 50%).
+3. **It did not make the decks better.** "Would play" is flat. A faithful brew is still often a weaker deck (Replenish without blue).
+4. **It settles the drift question.** Round 2's raw 1-5 scores showed v2 slightly below v1, but rater drift made that unreadable. Pairwise picks can't drift between sessions, and they agree: v2 is not better on quality. So the dip was not only drift.
+5. **Pairwise worked as a method:** 36 judgments, consistent, and the owner didn't struggle with a scale. It is the method from here on.
+
+**Headline for part two of the post:** better tools and rules close the faithfulness gap and leave the quality gap open. Step 8 targets exactly that: an intent step (the owner's "read it semantically"), brews built around their engine with a borrowed shell so faithful brews are also playable, a goldfish simulator so speed and consistency are measured, and a novelty check in code. Then pairwise again: step 8 vs. v2.
 
 ---
 

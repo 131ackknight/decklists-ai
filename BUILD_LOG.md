@@ -78,6 +78,17 @@ The owner agreed with the recommendation: skip more v1 passes, build the new har
 
 **Owner's observation mid-run:** "They do seem always to want to default to what's in the database as the most valid." Why, as best we can tell: to a model a retrieved list is evidence and an invented deck is a guess; models are trained to prefer grounded answers, and a proven 5-0 list is always the safe one. The more the harness pushes grounding (needed for card facts), the more the database pulls. Early v2 signs (31 of 48 answers in): every answer built a deck and brew prompts came back labeled "brew," where v1 often refused or redirected; but on Merfolk and Kiln Fiend the models went to "tuned" versions of existing decks, and a "brew" label alone doesn't prove the deck isn't mostly an existing archetype. Next: measure copy rate (share identical to a list a tool returned) and distance from the nearest real deck on every v2 answer. The structural fix belongs to step 8: classify the request first (stock, tune, brew, impossible) to decide how much data may steer; hide decklist tools from the plan and engine steps of a brew; reject in code a brew that comes back mostly an existing deck's core; and keep the critique step from cutting engine cards.
 
+**The observation, measured** (`scripts/novelty.ts`): for every deck, the highest share of its main deck found card for card in one real list from the last 90 days ("copy rate"), and the share of its spells that are core cards of one real archetype. v1, Opus 5.5 and Sonnet 5.5:
+
+| v1 set | Prompt type | Decks | Avg copy rate | Avg core overlap | Decks 80%+ copied |
+| --- | --- | --- | --- | --- | --- |
+| Opus 5.5 | an existing deck is fine (5 prompts) | 5 | 99% | 87% | 5 |
+| Opus 5.5 | asks for something new (13 prompts) | 12 | **87%** | 73% | **9** |
+| Sonnet 5.5 | an existing deck is fine | 5 | 100% | 86% | 5 |
+| Sonnet 5.5 | asks for something new | 13 | **78%** | 67% | **8** |
+
+Even when asked for something new, v1's best two models returned decks that were on average 78-87% one real tournament list, and most of their "brews" were 80%+ copies. The v2 run will show whether the new harness breaks the habit or only relabels it.
+
 **Prepared while they run:** round 2 of blind rating gets its own page and answer key, so round 1's ratings stay untouched. The page builder and objective scorer now tag harness v2 results with a "v2-" label (the result files share model names with v1), take v2's exact cost (cached tokens are priced correctly there), and check commander decks with their commander zone.
 
 ---

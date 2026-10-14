@@ -68,7 +68,7 @@ async function main() {
         sentFormat: format ?? "Any",
         prompt: sentText.get(p.id) ?? p.prompt,
         text: r.text,
-        toolCalls: r.toolCalls.map((c) => ({ name: c.name, ok: c.accepted, isError: c.isError, stage: c.stage })),
+        toolCalls: r.toolCalls.map((c) => ({ name: c.name, ok: c.accepted, isError: c.isError, stage: c.stage, rejected: c.rejected })),
         ...(pipe ? { intent: pipe.intent, path: pipe.path, facts: pipe.facts, engine: pipe.engine } : {}),
         deck: r.deck && {
           main: r.deck.main,

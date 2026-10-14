@@ -6,6 +6,7 @@ import { SearchCardsInput, searchCards } from "@/cards/search";
 import { compareToArchetype } from "@/checker/archetype-mana";
 import { checkDeck, type CheckResult } from "@/checker/check";
 import { cardsSeen, probAtLeast, probEachGroup } from "@/checker/odds";
+import type { Card } from "@/cards/types";
 import type { DataSource, QtyName } from "@/data/source";
 import { goldfish } from "@/sim/goldfish";
 
@@ -103,24 +104,34 @@ function checkSummary(result: CheckResult) {
   };
 }
 
-function lockProblems(ctx: ToolContext, format: string, main: QtyName[], side: QtyName[]): string[] {
+/** Does a card fit the requested colors? Commander formats use color identity; others the front face's cost, with lands left to the mana checks. */
+function fitsColors(card: Card, allowed: string[], format: string): boolean {
+  if (getFormat(format)?.commander) return card.identity.every((x) => allowed.includes(x));
+  if (/\bLand\b/.test(card.typeLine.split(" // ")[0])) return true;
+  const cost = card.manaCost.split(" // ")[0];
+  const colors = new Set([...cost.matchAll(/\{([WUBRG])\}/g)].map((m) => m[1]));
+  return [...colors].every((x) => allowed.includes(x));
+}
+
+const isBasic = (card: Card | undefined) => !!card && /\bBasic\b/.test(card.typeLine);
+
+function lockProblems(ctx: ToolContext, format: string, main: QtyName[], side: QtyName[], commander: QtyName[] = []): string[] {
   const lock = ctx.lock;
   if (!lock) return [];
   const problems: string[] = [];
   const count = (name: string) => {
     const want = normalizeName(ctx.index.getCard(name)?.name ?? name);
-    return main.filter((l) => normalizeName(ctx.index.getCard(l.name)?.name ?? l.name) === want).reduce((n, l) => n + l.qty, 0);
+    return [...main, ...commander].filter((l) => normalizeName(ctx.index.getCard(l.name)?.name ?? l.name) === want).reduce((n, l) => n + l.qty, 0);
   };
   if (lock.format && lock.format !== format) problems.push(`The format is fixed as ${lock.format}.`);
   for (const c of lock.cards) {
     const have = count(c.name);
-    if (have < c.minQty) problems.push(`${c.name}: ${have} in the main deck; the plan requires at least ${c.minQty}.`);
+    if (have < c.minQty) problems.push(`${c.name}: ${have} in the deck; the plan requires at least ${c.minQty}.`);
   }
   if (lock.colorsAllowed) {
-    const allowed = new Set(lock.colorsAllowed);
-    const off = [...main, ...side]
+    const off = [...main, ...side, ...commander]
       .map((l) => ctx.index.getCard(l.name))
-      .filter((c) => c && c.identity.some((x) => !allowed.has(x)))
+      .filter((c) => c && !fitsColors(c, lock.colorsAllowed!, format))
       .map((c) => c!.name);
     if (off.length) problems.push(`Outside the requested colors (${lock.colorsAllowed.join("") || "colorless"}): ${[...new Set(off)].join(", ")}.`);
   }
@@ -329,14 +340,20 @@ export const TOOLS = [
       const key = formatKey(input.format);
       const problems: string[] = [];
       if (ctx.lock?.format && ctx.lock.format !== key) problems.push(`The format is fixed as ${ctx.lock.format}.`);
-      const unseen = input.cards.map((c) => ctx.index.getCard(c.name)?.name ?? c.name).filter((n) => !ctx.seen.has(normalizeName(n)));
+      const unseen = input.cards
+        .filter((c) => !isBasic(ctx.index.getCard(c.name)))
+        .map((c) => ctx.index.getCard(c.name)?.name ?? c.name)
+        .filter((n) => !ctx.seen.has(normalizeName(n)));
       if (unseen.length) problems.push(`Look these up first with card_info or search_cards: ${unseen.join(", ")}.`);
+      const rules = getFormat(key)!;
       for (const c of input.cards) {
         const card = ctx.index.getCard(c.name);
         const status = card?.legal[key];
+        const basic = card && /\bBasic\b/.test(card.typeLine);
+        if (card && !basic && c.qty > rules.maxCopies) problems.push(`${card.name}: ${rules.name} allows ${rules.maxCopies} cop${rules.maxCopies === 1 ? "y" : "ies"}.`);
         if (card && status !== "legal" && status !== "restricted") problems.push(`${card.name} is not legal in ${key}.`);
         if (card && status === "restricted" && c.qty > 1) problems.push(`${card.name} is restricted in ${key}: 1 copy.`);
-        if (card && ctx.lock?.colorsAllowed && card.identity.some((x) => !ctx.lock!.colorsAllowed!.includes(x))) {
+        if (card && ctx.lock?.colorsAllowed && !fitsColors(card, ctx.lock.colorsAllowed, key)) {
           problems.push(`${card.name} is outside the requested colors.`);
         }
       }
@@ -367,13 +384,14 @@ export const TOOLS = [
     run: (input, ctx) => {
       const key = formatKey(input.format);
       const unseen = [...input.main, ...input.side, ...input.commander]
+        .filter((l) => !isBasic(ctx.index.getCard(l.name)))
         .map((l) => ctx.index.getCard(l.name)?.name ?? l.name)
         .filter((n) => !ctx.seen.has(normalizeName(n)));
       if (unseen.length > 0) {
         return { accepted: false, reason: "These cards were not returned by any tool yet; look them up with card_info.", cards: [...new Set(unseen)] };
       }
       const result = checkDeck(ctx.index, { ...input, format: key });
-      const problems = lockProblems(ctx, key, input.main, input.side);
+      const problems = lockProblems(ctx, key, input.main, input.side, input.commander);
       if (!result.ok || problems.length) {
         return { accepted: false, errors: [...result.errors.map((e) => e.message), ...problems] };
       }

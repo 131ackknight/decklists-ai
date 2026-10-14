@@ -19,7 +19,11 @@ export const SearchCardsInput = z.object({
     .optional()
     .describe("Function tags, e.g. removal, mana-dork, untapper. A card matches if it has any of them or a tag beneath them."),
   allTags: z.array(z.string()).optional().describe("Card must match every one of these tags."),
-  types: z.array(z.string()).optional().describe("Every word must appear in the type line, e.g. creature, elf."),
+  types: z
+    .union([z.string(), z.array(z.string())])
+    .transform((v) => (typeof v === "string" ? [v] : v))
+    .optional()
+    .describe("Every word must appear in the type line, e.g. creature, elf."),
   text: z.string().optional().describe("Case-insensitive substring of the rules text."),
   keyword: z.string().optional().describe("Keyword ability, e.g. Storm, Flash."),
   minCmc: z.number().optional(),

@@ -16,7 +16,7 @@ A running record of how decklists.ai gets built: decisions, findings, numbers, a
 | Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40. Total about $35.87. Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
-| Automated tests | 39 passing |
+| Automated tests | 41 passing |
 | Decklist Data PRs merged | 4 (#181 export, #182 baseline eval, #183 baseline on `main`, #184 model comparison) |
 | Plan steps done | 1, 4, 5, 6; step 2 rubric baseline done (108 + 48 rated, 36 pairwise judged); next: step 8 |
 
@@ -45,6 +45,19 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - Lesson to apply: any prompt or claim that names a card gets checked against the card index before it is used.
 - ~~Switch to pairwise~~: done; 36 pairs judged (v1 8 wins, v2 6, 22 ties; v2 100% faithful vs. 92%).
 - ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
+
+---
+
+## 2026-10-14 · v3 full run: three lock bugs found and fixed
+
+Sonnet 5.5 finished the v3 run with a deck for **21 of 24** prompts ($8.80). The three failures had submissions rejected by the new code-level locks until the stage ran out of steps. The results file didn't say why, so the runner now records each rejected submission's reasons; a rerun of the three ($1.02) showed **all three were Claude Code's bugs in the locks, not model failures:**
+1. **Legacy sideboard-only:** the color lock rejected Tamiyo, Inquisitive Student, because it checked color identity, which counts a transform card's back face and ability costs. That is the Commander rule, not how 60-card colors work. And a tune shouldn't get a color lock at all: the player's list decides its colors.
+2. **Living End plus Scam:** the lock required a card named "Scam," a deck name, so it could never be satisfied. Only real cards can be required now. (The model also passed one search filter as a string instead of a list; both are accepted now.)
+3. **Atraxa Commander:** the lock counted Atraxa only in the main deck, not the commander zone, and rejected basic lands as "not looked up." The engine stage also allowed 2-of copies in a singleton format, a possible deadlock; it now enforces the format's copy limit.
+
+**Fixes:** 60-card color locks judge the front face's mana cost (lands left to the mana checks), Commander formats keep color identity; tunes get no color lock; required cards must be real cards; locked cards count the commander zone; basic lands never need a lookup; engine copies capped at the format limit. Regression tests for each (41 passing). Small mistake repeated: a stray shell command waited for input and stalled a debug run; stopped and rerun.
+
+Opus 5.5 started before the fixes and hit the same Atraxa failure. Next: rerun every failed prompt for both models on the fixed code and merge the reruns into the comparison, noting which answers are reruns.
 
 ---
 

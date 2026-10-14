@@ -80,17 +80,24 @@ export async function runPipeline(
       : intent.colors.exclude.length
         ? ["W", "U", "B", "R", "G"].filter((c) => !intent.colors.exclude.includes(c as never))
         : null;
+  // Only real, legal cards can be required ("Scam" is a deck, not a card); a tune's colors come from the player's list.
   ctx.lock = {
     format,
-    cards: path === "tune" ? [] : intent.namedCards.filter((n) => !illegal.includes(deps.index.getCard(n)?.name ?? n)).map((name) => ({ name: deps.index.getCard(name)?.name ?? name, minQty: 1 })),
-    colorsAllowed: allowed,
+    cards:
+      path === "tune"
+        ? []
+        : intent.namedCards
+            .map((n) => deps.index.getCard(n)?.name)
+            .filter((n): n is string => !!n && !illegal.includes(n))
+            .map((name) => ({ name, minQty: 1 })),
+    colorsAllowed: path === "tune" ? null : allowed,
   };
 
   const brief = [
     `Player's request:\n${req.format ? `Format selected: ${req.format}\n` : ""}${req.prompt}`,
     `Reading of the request: ${JSON.stringify({ type: intent.type, format: intent.format, archetype: intent.archetype, namedCards: intent.namedCards, colors: intent.colors, constraints: intent.constraints, goal: intent.goal })}`,
     facts.length ? `Checked facts:\n- ${facts.join("\n- ")}` : "",
-    allowed ? `Color lock: every card must fit inside ${allowed.join("")}.` : "",
+    allowed && path !== "tune" ? `Color lock: every card must fit inside ${allowed.join("")}.` : "",
   ]
     .filter(Boolean)
     .join("\n\n");

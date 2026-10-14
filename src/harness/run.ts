@@ -19,6 +19,8 @@ export interface ToolCallRecord {
   accepted?: boolean;
   /** Which pipeline stage made the call. */
   stage?: string;
+  /** For rejected submissions: why, so failures can be diagnosed from the results file. */
+  rejected?: string[];
 }
 
 export interface StageResult {
@@ -120,8 +122,11 @@ export async function runStage(opts: {
         const r = runTool(u.name, u.input, ctx, opts.tools);
         const record: ToolCallRecord = { name: u.name, input: u.input, isError: r.isError, stage };
         if ((u.name === "submit_deck" || u.name === "submit_engine") && !r.isError) {
-          record.accepted = JSON.parse(r.content).accepted === true;
+          const body = JSON.parse(r.content);
+          record.accepted = body.accepted === true;
+          if (!record.accepted) record.rejected = [...(body.errors ?? []), ...(body.problems ?? []), ...(body.reason ? [body.reason, ...(body.cards ?? [])] : [])];
         }
+        if (r.isError) record.rejected = [r.content.slice(0, 300)];
         toolCalls.push(record);
         return { type: "tool_result", tool_use_id: u.id, content: r.content, is_error: r.isError || undefined };
       });

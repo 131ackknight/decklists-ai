@@ -4,9 +4,21 @@ A running record of how decklists.ai gets built: decisions, findings, numbers, a
 
 ## How this log works
 
-- One entry per working session, newest at the top.
+- Updated at every iteration (each run, fix, and change of direction), newest at the top.
 - Each entry: what we did, what we decided and why, what we found (with numbers), and what changed our minds.
-- Mistakes and dead ends stay in. They are the interesting part of the story.
+- Mistakes and dead ends stay in, including when the owner overruled Claude Code. They are the interesting part of the story.
+- Corrections to earlier entries are added in place as notes, so the original claim stays visible.
+
+## Running totals (as of 2026-10-14)
+
+| Item | Total |
+| --- | --- |
+| Anthropic API spend | $0 (key checks use the free Models API; the first baseline run hit a 404 before any model call) |
+| Real decklists analyzed | 30,102 (last 90 days, 8 formats) |
+| Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
+| Automated tests | 27 passing |
+| Decklist Data PRs merged | 3 (#181 export, #182 baseline eval, #183 baseline on `main`) |
+| Plan steps done | 1, 4, 5 (5 waits on generated decks from step 6); step 2 in progress |
 
 ---
 
@@ -132,6 +144,7 @@ Commander support is planned for after launch, so both are flagged `afterLaunch`
 - Good idea already in place: `propose_deck` is a strict server check (60 main, 15 side max, 4-copy limit, legality, restricted list). Only passing decks reach the user.
 - Biggest hole: the card catalog only held cards that had appeared in results or that the model already knew by name. It could not search "cheap black removal legal in Pioneer," so brews fell back to the model's memory.
 - Surprise: v1 was not live. `decklistdata.com/ai-deck-builder` and its API both returned 404 even though the code was on `main`.
+  - *Correction (2026-10-14):* the code was not on `main`. The owner had taken the builder down on Oct 8 (commit `8f03628`); this audit read a local checkout that was behind GitHub. See "Step 2: setting up the v1 baseline."
 
 ### Open questions from the Fable plan, resolved
 
@@ -155,6 +168,35 @@ Commander support is planned for after launch, so both are flagged `afterLaunch`
 - **Dropped "start saving Top 8 brackets."** Claude Code proposed it; the owner asked why a brew tool needs matchup history. Correct: a brew has no match history, the sideboard model works from meta share and weak spots, and the data can be backfilled by re-scraping if ever needed.
 - **Dropped "create a new database."** Owner asked why. Steps 2 to 5 need only files; when brews need saving, a second database inside the existing Neon project is enough.
 
+### How the Fable plan reached Claude Code
+
+The research and plan from Oct 6 lived in a claude.ai chat with Fable. Claude Code could not find it among local sessions, so the owner shared the chat link; the built-in browser showed a sign-in page, the owner signed in there, and Claude Code read the full conversation, then pulled the "AI Deckbuilder Build Plan" doc through the Claude Docs connector. Two models, two roles: Fable researched and planned, Claude Code checked the plan against the real code and built it.
+
+### The 10-step plan
+
+Fable's six phases, merged with the decisions above (full version in `PLAN.md`, each step with a "done when" gate):
+
+1. Setup: repo, scaffold, API key.
+2. Tests and baseline: hand-rated prompts, sideboard test, brew holdout test; score the v1 bot.
+3. Decklist Data API with `as_of` dates.
+4. Card knowledge: Scryfall cards and function tags, format registry, `search_cards`.
+5. Deck checker and mana math.
+6. Harness v2: newer models, the new tools, background runs.
+7. Sideboard model.
+8. Brew pipeline: thesis, engine, shell, counts, odds, critique, sideboard.
+9. Site: watch-it-think UI, export, sign-in, daily cap.
+10. Launch and cross-promotion.
+
+Rule for every step: rerun the tests; a step counts as done only when its number beats the last one.
+
+### Other questions worth keeping
+
+- **"Should this be its own site?"** Claude Code first said no (SEO, simplicity). The owner wanted its own brand because it is a showcase of building an AI harness, cross-promoting Decklist Data. Claude Code agreed once the goal was clear.
+- **"Does my database help even with a new repo?"** Yes, it is the moat. A repo is code; the data lives in Postgres either way. Anyone can connect a model to Scryfall; current, labeled MTGO results for 60-card formats are what make brews playable.
+- **"Are you the one building this?"** Yes for the code, tests, data work, and PRs. The owner handles accounts and money, secrets, decisions, Magic judgment (rating the test brews), and playtesting.
+- **Naming.** Brainstormed by angle: card names with a double meaning (Tutor, Tinker, Brainstorm), off-meta (Rogue Lab, Off-Meta), brewing (Brewsmith, The Cauldron), deck terms (Seventy-Five). The owner picked the codename **decklists.ai**; a whois check that day returned "Domain not found."
+- **API key setup.** The app's file preview turned out to be read-only, so Claude Code opened both `.env.local` files in Cursor at the right line. The first save missed one file; Claude Code verified each key with a free Models API call without ever printing it.
+
 ### The test case that defined "coherent"
 
 Owner's example: *"Make a mono green storm deck in Premodern."* No such deck exists. Walking through it with real Scryfall queries:
@@ -171,11 +213,11 @@ Owner's example: *"Make a mono green storm deck in Premodern."* No such deck exi
 - `PLAN.md`: decisions and the 10 steps, each with a "done when" gate.
 - Drafted the 20 hand-rated rubric prompts (16 with data, 4 without: Timeless, Historic, Old School, Penny Dreadful), rated 1 to 5 on plan, legality, mana, and shell.
 
-### Waiting on
+### Waiting on (all resolved on 2026-10-14)
 
-- Owner review of the 20 prompts.
-- Anthropic API key in `.env.local` (owner sets it).
-- Read-only access to Decklist Data's production data for the v1 baseline and for picking the brew holdout decks.
+- Owner review of the 20 prompts. *Resolved: owner kept them and added 4, for 24.*
+- Anthropic API key in `.env.local` (owner sets it). *Resolved.*
+- Read-only access to Decklist Data's production data. *Resolved differently: GitHub Actions workflows with the existing secret, after the Neon role setup was dropped.*
 
 ---
 

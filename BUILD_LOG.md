@@ -42,6 +42,16 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-10-14 · Tuning: one obvious move, then stop
+
+Prompt 13 pastes a real UB Psychatog list (4th place, 4-3, Premodern Challenge 16, Oct 13) and asks to tune it for the current meta. The owner asked whether Control Magic is stock in Psychatog; the data answered it instead of memory: across 104 Psychatog lists from the last 90 days, Control Magic is a flex sideboard card (29%, 1-2 copies, never main). The stock sideboard is Engineered Plague 91%, Hydroblast 91%, Annul 86%, Tsabo's Web 76%.
+
+The owner then noticed: "they aren't making a lot of changes, all the models." Measured (blind, sorted by size of change): all 6 answers returned a deck, changing 0-3 main deck cards and 0-5 sideboard cards. **5 of 6 added Tsabo's Web**, the 76% staple the pasted list was missing, which points to the average-sideboard data. Beyond that one data-backed move, they barely touch the list.
+
+The same shape as the identical stock decks: the data hands the model one obvious move, it makes it, and it stops. A light touch is defensible on a list that just made Top 8, but "for the current meta" asks for reasoned, targeted changes. Rating guidance: Plan 2 no real changes, 3 an obvious add with thin reasoning, 4 targeted swaps each tied to a named matchup, 5 that plus a clear read of the list's weaknesses and why the rest stays. The explanation in the reply is worth a point here.
+
+---
+
 ## 2026-10-14 · Rating rule: the impossible request
 
 On "Make a Legacy deck that wins on turn 1 every game," every answer says it's impossible; the owner asked how to tell them apart. Ruling: saying "impossible" is the floor; the score is what comes after. Plan 5 = says so, builds the fastest real deck, gives honest turn 1 odds; 4 = names the fastest options with honest odds or reasoning but no deck; 3 = names options vaguely; 2 = just "impossible"; 1 = claims a deck really does it. Legal marks down false claims (a banned card, a card that doesn't do what's said). Mana and Shell follow the no-deck rule (1 and 1), consistent with the best answer being one that builds. Inflated odds count against Plan like any false claim.

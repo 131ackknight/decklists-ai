@@ -13,10 +13,10 @@ A running record of how decklists.ai gets built: decisions, findings, numbers, a
 
 | Item | Total |
 | --- | --- |
-| Anthropic API spend | About $33.71: v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54). Plus one 17-token test call. |
+| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51. Total about $34.22. Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
-| Automated tests | 31 passing |
+| Automated tests | 32 passing |
 | Decklist Data PRs merged | 4 (#181 export, #182 baseline eval, #183 baseline on `main`, #184 model comparison) |
 | Plan steps done | 1, 4, 5; step 2 done for v1 (108 answers rated); step 6 harness built and run on Opus and Sonnet (48 decks, all legal), round 2 rating open |
 
@@ -41,6 +41,22 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - A one-line PR so v1 logs the real error behind the four "An error occurred." builds.
 - Adding the "distance from the nearest real deck" score and a "copy rate" score to the objective scorer.
 - Lesson to apply: any prompt or claim that names a card gets checked against the card index before it is used.
+
+---
+
+## 2026-10-14 · Old School decks with no lands: a card-data bug
+
+Rating round 2, the owner: "the old school ones didn't add any lands lol." Both models had submitted Old School 93/94 decks with 4 Tolaria and no other lands.
+
+**The cause was Claude Code's card index, not the models.** Scryfall sets Old School legality **per printing** (only 1993-94 printings count), and the index kept the single modern printing from Scryfall's Oracle file. So Island, Plains, Swords to Plowshares, Mishra's Factory and the dual lands all read "not legal" in Old School, leaving 325 legal cards. The step 4 gate never caught it because it only tested Premodern and Modern.
+
+**The models handled bad data well.** Opus 5.5: the pool "looks like a data error, since no format bans basic lands," then it built the best deck the tools would accept and recommended the real list instead. Sonnet 5.5 listed every iconic card it had checked and flagged that it didn't expect its deck to play well. Both said so plainly rather than hiding it, which is the behavior the prompt asks for.
+
+**Fix:** the index build now merges legality across every English printing (a card is legal in a format if any printing is; restricted and banned outrank legal). Regression test added: Island, Swords to Plowshares and Lightning Bolt legal in Old School, Black Lotus restricted, Brainstorm (printed after 1994) still out. 32 tests pass.
+
+**Rerun** of the Old School prompt on both models with the fixed index ($0.51): both built "The Deck," the classic Old School UW control list, with power, dual lands and basics; Opus's with no warnings, Sonnet's 17 lands with a warning to add about 5. The two bugged answers stay in the answer key, marked excluded with the reason, and the owner's ratings of them (plan 1, mana 1) stay on record; they are hidden from the page and left out of the analysis. The two new answers were added to the round 2 page for rating.
+
+**Lesson:** test every format the product claims to support. A gate that only checks the formats you have data for misses the ones you don't.
 
 ---
 

@@ -130,6 +130,15 @@ describe.skipIf(!existsSync(CARD_INDEX_PATH))("real card index", () => {
     expect(r.cards.map((c) => c.name).sort()).toEqual(["Hunting Pack", "Sprouting Vines"]);
   });
 
+  it("knows Old School legality, which Scryfall sets per printing", () => {
+    expect(real.getCard("Island")?.legal.oldschool).toBe("legal");
+    expect(real.getCard("Swords to Plowshares")?.legal.oldschool).toBe("legal");
+    expect(real.getCard("Black Lotus")?.legal.oldschool).toBe("restricted");
+    expect(real.getCard("Lightning Bolt")?.legal.oldschool).toBe("legal");
+    // A card printed after 1994 stays out.
+    expect(real.getCard("Brainstorm")?.legal.oldschool).toBeUndefined();
+  });
+
   it("keeps Peter Parker's Camera out of Premodern and in Modern", () => {
     const camera = real.getCard("Peter Parker's Camera");
     expect(camera?.legal.modern).toBe("legal");

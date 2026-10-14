@@ -37,9 +37,11 @@ interface Rating {
 }
 
 const dir = process.argv[2] ?? "evals/results/model-comparison/ratings-pass1/ratings";
-const key = JSON.parse(readFileSync("evals/results/model-comparison/blind-key.json", "utf8")) as Record<
+const keyArg = process.argv.indexOf("--key");
+const keyPath = keyArg > 0 ? process.argv[keyArg + 1] : "evals/results/model-comparison/blind-key.json";
+const key = JSON.parse(readFileSync(keyPath, "utf8")) as Record<
   string,
-  { label: string; pass: string; prompt: string }
+  { label: string; pass: string; prompt: string; excluded?: string }
 >;
 const objective = JSON.parse(readFileSync("evals/results/model-comparison/objective.json", "utf8")) as {
   summary: { model: string; pass: string; decks: number; costUsd: number; medianSeconds: number }[];
@@ -52,6 +54,8 @@ const rows = readdirSync(dir)
     return (raw.data ?? raw) as Rating;
   })
   .filter((r) => DIMS.every((d) => typeof r[d] === "number"))
+  // Answers built on a known data bug are kept on record but left out.
+  .filter((r) => !key[r.aid]?.excluded)
   .map((r) => {
     const k = key[r.aid];
     if (!k) throw new Error(`No key entry for ${r.aid}`);

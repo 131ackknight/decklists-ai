@@ -49,6 +49,8 @@ interface KeyEntry {
   label: string;
   pass: string;
   prompt: string;
+  /** Set for answers built on a known data bug: kept in the key, hidden from the page. */
+  excluded?: string;
 }
 
 const key: Record<string, KeyEntry> = existsSync(KEY_PATH) ? JSON.parse(readFileSync(KEY_PATH, "utf8")) : {};
@@ -70,6 +72,7 @@ for (const file of argv) {
       key[aid] = { label, pass, prompt: r.id };
       byOrigin.set(origin, aid);
     }
+    if (key[aid].excluded) continue;
     const sum = (xs: Line[]) => xs.reduce((n, c) => n + c.qty, 0);
     const list = answersByPrompt.get(r.id) ?? [];
     list.push({

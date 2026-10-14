@@ -53,6 +53,7 @@ interface ScryfallFace {
 
 interface ScryfallPrinting {
   oracle_id?: string;
+  legalities?: Record<string, string>;
   name: string;
   lang?: string;
   printed_name?: string;
@@ -82,11 +83,20 @@ interface ScryfallTag {
   taggings: { oracle_id: string }[];
 }
 
-function toCard(c: ScryfallCard, tags: string[], aliases: string[]): Card | null {
+const RANK: Record<string, number> = { legal: 1, banned: 2, restricted: 3 };
+
+function toCard(
+  c: ScryfallCard,
+  tags: string[],
+  aliases: string[],
+  printingLegal: Record<string, Legality> = {},
+): Card | null {
   if (!c.oracle_id) return null;
-  const legal: Record<string, Legality> = {};
+  const legal: Record<string, Legality> = { ...printingLegal };
   for (const [format, status] of Object.entries(c.legalities)) {
-    if (status === "legal" || status === "restricted" || status === "banned") legal[format] = status;
+    if (status === "legal" || status === "restricted" || status === "banned") {
+      if (!legal[format] || RANK[status] > RANK[legal[format]]) legal[format] = status;
+    }
   }
   if (Object.keys(legal).length === 0) return null;
 
@@ -129,8 +139,18 @@ async function main() {
   // Omenpaths" names for Universes Beyond cards ("Kavaero, Mind-Bitten" is
   // Superior Spider-Man). Decklists from MTGO use these.
   const aliasesByOracle = new Map<string, Set<string>>();
+  // Some formats are legal per printing (Old School 93/94 allows only 1993-94
+  // printings), and the Oracle file keeps one modern printing. A card is legal
+  // in a format if any printing is.
+  const legalByOracle = new Map<string, Record<string, Legality>>();
   for await (const p of readJsonl<ScryfallPrinting>(printingsFile)) {
     if (!p.oracle_id || (p.lang && p.lang !== "en")) continue;
+    for (const [format, status] of Object.entries(p.legalities ?? {})) {
+      if (status !== "legal" && status !== "restricted" && status !== "banned") continue;
+      const row = legalByOracle.get(p.oracle_id) ?? {};
+      if (!row[format] || RANK[status] > RANK[row[format]]) row[format] = status;
+      legalByOracle.set(p.oracle_id, row);
+    }
     const names = [p.printed_name, p.flavor_name, ...(p.card_faces ?? []).flatMap((f) => [f.printed_name, f.flavor_name])];
     for (const alt of names) {
       if (!alt || alt === p.name) continue;
@@ -166,6 +186,7 @@ async function main() {
       raw,
       tagsByOracle.get(raw.oracle_id ?? "") ?? [],
       [...(aliasesByOracle.get(raw.oracle_id ?? "") ?? [])],
+      legalByOracle.get(raw.oracle_id ?? ""),
     );
     if (card) cards.push(card);
   }

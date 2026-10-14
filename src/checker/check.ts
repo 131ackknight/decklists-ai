@@ -30,6 +30,8 @@ export interface DeckInput {
   main: QtyName[];
   side?: QtyName[];
   commander?: QtyName[];
+  /** Commander formats only: a companion lives outside the deck. In 60-card formats it is in the sideboard. */
+  companion?: QtyName[];
 }
 
 export interface CheckOptions {

@@ -163,3 +163,24 @@ describe("compareToArchetype", () => {
     expect(compareToArchetype(real[0], profile)).toEqual([]);
   });
 });
+
+describe("fromMtgoList companions", () => {
+  it("keeps a companion out of the 100", () => {
+    const idx = new CardIndex({
+      cards: [
+        card("Lurrus of the Dream-Den", { typeLine: "Legendary Creature — Cat Nightmare", keywords: ["Companion", "Lifelink"], colors: ["W", "B"], identity: ["W", "B"] }),
+        card("Krenko, Mob Boss", { manaCost: "{2}{R}{R}", cmc: 4, typeLine: "Legendary Creature — Goblin Warrior" }),
+        land("Mountain", ["R"]),
+      ],
+      tags: [],
+    });
+    const deck = fromMtgoList(idx, {
+      format: "duel",
+      main: Array.from({ length: 99 }, () => ({ qty: 1, name: "Mountain" })),
+      side: [{ qty: 1, name: "Lurrus of the Dream-Den" }, { qty: 1, name: "Krenko, Mob Boss" }],
+    });
+    expect(deck.commander).toEqual([{ qty: 1, name: "Krenko, Mob Boss" }]);
+    expect(deck.companion).toEqual([{ qty: 1, name: "Lurrus of the Dream-Den" }]);
+    expect(checkDeck(idx, deck, { skipLegality: true }).errors.map((e) => e.code)).not.toContain("main-size");
+  });
+});

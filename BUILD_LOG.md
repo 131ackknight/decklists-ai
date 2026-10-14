@@ -59,6 +59,8 @@ Reading all six replies and checking their card claims against the card index ch
 
 Order: E > C > D ≈ A > B > F. **Finding for the post: on a tuning prompt the models differ less in which cards they pick than in whether what they say about those cards is true.** A checker can verify a decklist; it cannot yet verify the explanation. That is a gap for the new harness: claims like "mana value 6" or "2.7% of lists" should come from tools, not memory, and be checkable.
 
+**Saved, with provenance.** The owner said "yes save and move on." The owner had already fully rated A and given B a plan score, so human scores were kept: A stays the owner's (the AI scores are attached alongside for reference), B keeps the owner's plan with AI scores for the other three rows, and C-F carry the AI scores. Every row records `by` (owner, mixed, or ai-judge) plus an `aiJudge` copy of the AI's scores, so the analysis can separate human from AI ratings, and any later owner edit shows up as a difference from `aiJudge`. By then the store held 80 ratings, about 74 of them the owner's.
+
 ---
 
 ## 2026-10-14 · Tuning: one obvious move, then stop

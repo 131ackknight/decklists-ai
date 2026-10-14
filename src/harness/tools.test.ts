@@ -33,6 +33,7 @@ const noData: DataSource = {
   archetype: () => null,
   referenceList: () => null,
   cardPlayRate: () => null,
+  copyRate: () => null,
 };
 
 const ctx = (): ToolContext => ({ index, data: noData, seen: new Set(), submitted: null });
@@ -94,5 +95,47 @@ describe("normalizeIntent", () => {
   it("drops cards that only appear in a pasted list", () => {
     const got = normalizeIntent({ ...base, pastedList: true, namedCards: ["Psychatog"] }, "Tune this\n\n4 Psychatog\n4 Island", isCard);
     expect(got.namedCards).toEqual([]);
+  });
+});
+
+describe("pipeline locks", () => {
+  const lockIndex = new CardIndex({
+    cards: [
+      card("Lightning Bolt"),
+      card("Counterspell", { manaCost: "{U}{U}", cmc: 2, colors: ["U"], identity: ["U"] }),
+      card("Mountain", { manaCost: "", cmc: 0, typeLine: "Basic Land — Mountain", colors: [], identity: [], producedMana: ["R"] }),
+    ],
+    tags: [],
+  });
+  const fresh = (): ToolContext => ({ index: lockIndex, data: noData, seen: new Set(["lightning bolt", "counterspell", "mountain"]), submitted: null });
+
+  it("submit_engine requires the player's named cards and the requested colors", () => {
+    const c = fresh();
+    c.lock = { cards: [{ name: "Lightning Bolt", minQty: 1 }], colorsAllowed: ["R"] };
+    const bad = JSON.parse(runTool("submit_engine", {
+      format: "Modern", thesis: "x", winCondition: "x", targetTurn: 3, beats: [], losesTo: [],
+      cards: [{ name: "Counterspell", qty: 4, role: "payoff" }],
+    }, c).content);
+    expect(bad.accepted).toBe(false);
+    expect(bad.problems.join(" ")).toMatch(/outside the requested colors/);
+    expect(bad.problems.join(" ")).toMatch(/named Lightning Bolt/);
+  });
+
+  it("submit_deck keeps the locked engine and the engine share", () => {
+    const c = fresh();
+    runTool("submit_engine", {
+      format: "Modern", thesis: "x", winCondition: "x", targetTurn: 3, beats: [], losesTo: [],
+      cards: [{ name: "Lightning Bolt", qty: 4, role: "payoff" }],
+    }, c);
+    c.lock = { ...c.lock!, minEngineShare: 0.25 };
+    const missing = JSON.parse(runTool("submit_deck", {
+      format: "Modern", label: "brew", main: [{ qty: 2, name: "Lightning Bolt" }, { qty: 58, name: "Mountain" }],
+    }, c).content);
+    expect(missing.accepted).toBe(false);
+    expect(missing.errors.join(" ")).toMatch(/at least 4/);
+    const ok = JSON.parse(runTool("submit_deck", {
+      format: "Modern", label: "brew", main: [{ qty: 4, name: "Lightning Bolt" }, { qty: 56, name: "Mountain" }],
+    }, c).content);
+    expect(ok.accepted).toBe(true);
   });
 });

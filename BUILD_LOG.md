@@ -13,10 +13,10 @@ A running record of how decklists.ai gets built: decisions, findings, numbers, a
 
 | Item | Total |
 | --- | --- |
-| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25. Total about $34.47. Plus one 17-token test call. |
+| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40. Total about $35.87. Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
-| Automated tests | 37 passing |
+| Automated tests | 39 passing |
 | Decklist Data PRs merged | 4 (#181 export, #182 baseline eval, #183 baseline on `main`, #184 model comparison) |
 | Plan steps done | 1, 4, 5, 6; step 2 rubric baseline done (108 + 48 rated, 36 pairwise judged); next: step 8 |
 
@@ -44,6 +44,26 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - Lesson to apply: any prompt or claim that names a card gets checked against the card index before it is used.
 - ~~Switch to pairwise~~: done; 36 pairs judged (v1 8 wins, v2 6, 22 ties; v2 100% faithful vs. 92%).
 - ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
+
+---
+
+## 2026-10-14 · Step 8: the pipeline, end to end
+
+**Built:**
+- **A reusable stage runner** (`runStage` in `src/harness/run.ts`): the v2 loop with a chosen system prompt and toolset per stage. v2 runs on top of it with its original toolset, so v2 results stay comparable.
+- **Rules enforced in code, not prompt wording** (`src/harness/tools.ts`):
+  - `submit_engine`: the brew's plan (thesis, win condition, target turn, what it beats and loses to) and its engine cards. Rejected unless every card came from a tool, is legal, fits the requested colors, and includes every card the player named. Once accepted, the engine is locked.
+  - `submit_deck` locks: locked engine cards at their planned counts; the requested colors; the format; and for brews a **novelty check** (at most 60% of the main deck card for card one real list; engine cards at least 25% of nonland cards). Initial thresholds, to calibrate with the brew holdout test.
+  - `copyRate` added to the data source so the novelty check runs against the same 90-day lists.
+- **The pipeline** (`src/pipeline/run.ts`, prompts in `src/pipeline/prompts.ts`): stage 0 reads the request (Sonnet 5.5); code checks every named card against the card pool in the target format; named illegal cards send the request down the impossible path. Paths: **stock** (latest top list as the base, changed only for a stated reason), **tune** (keep the player's plan; every change names a matchup; sideboard-only keeps the main deck exactly), **impossible** (say so in the first sentence using the checked facts, then build the closest real deck with honest odds), **brew** in three stages: **engine** (decklist tools hidden), **shell** (borrow mana and interaction from the closest real strategy; check and simulate against it), **critique** (review against the meta; engine locked; one revision). Every path's prompt requires measured claims to cite numbers and judgment to be marked, and bans unmeasured rankings like "the fastest."
+- 39 tests pass, including the engine and deck locks.
+
+**Smoke test, Sonnet 5.5, 4 prompts, $1.40:**
+- **Stock Goblins** took the stock path: 6 cents.
+- **Tainted Pact in Modern** took the impossible path because the code check found Pact illegal. First sentence: "Tainted Pact isn't legal in Modern, so the classic Thassa's Oracle + Tainted Pact combo can't be built." It explained why Spoils of the Vault doesn't substitute, then built the nearest working Oracle deck from a real Song of Creation list, citing "Oracle in only 15.6% of lists (a measured figure)."
+- **Mono green storm**, brew path: engine of Hunting Pack, Sprouting Vines, Land Grant, Lotus Petal, Vitalize, Emerald Charm, Rofellos and mana elves (target turn 5), shell borrowed from Elves. The critique stage cut redundant untap effects ("14 untap effects, which is too many") for Birds of Paradise.
+- **Replenish without blue**, brew path: a white Lion's Eye Diamond build (discard the hand while Replenish is being cast; Opalescence, Parallax Wave, Worship, Solitary Confinement). **The critique used the simulator to fix its own mana:** "In the simulation of the submitted 21-land list, 21.8% of games were land-screwed," so it went to 22 lands.
+- Cost: brews about $0.53-0.62 on Sonnet, roughly 1.8x v2; stock requests got cheaper.
 
 ---
 

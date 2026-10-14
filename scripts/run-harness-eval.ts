@@ -1,9 +1,10 @@
 /**
  * Run the decklists.ai harness on the rubric prompts.
  *
- *   pnpm exec tsx scripts/run-harness-eval.ts --model claude-haiku-5-5 --pass 1 [--prompts id,id] [--concurrency 3]
+ *   pnpm exec tsx scripts/run-harness-eval.ts --model claude-haiku-5-5 --pass 1 [--harness v2|v3] [--prompts id,id] [--concurrency 3]
  *
- * Writes evals/results/harness-v2/<model>-p<pass>.json in the same shape as
+ * v2 is the single-loop harness; v3 is the step 8 pipeline (intent, paths,
+ * staged brews). Writes evals/results/harness-<v>/<model>-p<pass>.json in the same shape as
  * the v1 runs, so scripts/score-v1-runs.ts and the blind scorecard read both.
  * Prints the running cost after each prompt.
  */
@@ -13,6 +14,7 @@ import { loadCardIndex } from "../src/cards/load";
 import { FileDataSource } from "../src/data/source";
 import { MODELS } from "../src/harness/models";
 import { brew } from "../src/harness/run";
+import { runPipeline, type PipelineResult } from "../src/pipeline/run";
 import { RUBRIC_PROMPTS } from "../evals/rubric/prompts";
 
 try {
@@ -30,6 +32,7 @@ const modelId = arg("model", "claude-haiku-5-5")!;
 const pass = arg("pass", "1")!;
 const only = arg("prompts")?.split(",");
 const concurrency = Number(arg("concurrency", "3"));
+const harness = arg("harness", "v2")!;
 const model = MODELS[modelId];
 if (!model) throw new Error(`Unknown model ${modelId}. Known: ${Object.keys(MODELS).join(", ")}`);
 
@@ -51,11 +54,13 @@ async function main() {
     for (let i = next++; i < prompts.length; i = next++) {
       const p = prompts[i];
       const format = p.format === "Any" ? null : p.format;
-      const r = await brew(client, model, { prompt: sentText.get(p.id) ?? p.prompt, format }, { index, data });
+      const req = { prompt: sentText.get(p.id) ?? p.prompt, format };
+      const r = harness === "v3" ? await runPipeline(client, model, req, { index, data }) : await brew(client, model, req, { index, data });
+      const pipe = "path" in r ? (r as PipelineResult) : null;
       spent += r.costUsd;
       const sum = (xs: { qty: number }[]) => xs.reduce((n, c) => n + c.qty, 0);
       console.log(
-        `${p.id}: ${r.deck ? `deck (${r.deck.label}, ${sum(r.deck.main)}+${sum(r.deck.side)})` : "no deck"}, ${r.toolCalls.length} tool calls, ${r.steps} steps, $${r.costUsd.toFixed(3)}, ${Math.round(r.ms / 1000)}s${r.error ? `, error: ${r.error}` : ""}  [total $${spent.toFixed(2)}]`,
+        `${p.id}: ${pipe ? `[${pipe.path}] ` : ""}${r.deck ? `deck (${r.deck.label}, ${sum(r.deck.main)}+${sum(r.deck.side)})` : "no deck"}, ${r.toolCalls.length} tool calls, ${r.steps} steps, $${r.costUsd.toFixed(3)}, ${Math.round(r.ms / 1000)}s${r.error ? `, error: ${r.error}` : ""}  [total $${spent.toFixed(2)}]`,
       );
       results[i] = {
         id: p.id,
@@ -63,7 +68,8 @@ async function main() {
         sentFormat: format ?? "Any",
         prompt: sentText.get(p.id) ?? p.prompt,
         text: r.text,
-        toolCalls: r.toolCalls.map((c) => ({ name: c.name, ok: c.accepted, isError: c.isError })),
+        toolCalls: r.toolCalls.map((c) => ({ name: c.name, ok: c.accepted, isError: c.isError, stage: c.stage })),
+        ...(pipe ? { intent: pipe.intent, path: pipe.path, facts: pipe.facts, engine: pipe.engine } : {}),
         deck: r.deck && {
           main: r.deck.main,
           side: r.deck.side,
@@ -88,9 +94,10 @@ async function main() {
   }
 
   await Promise.all(Array.from({ length: Math.max(1, concurrency) }, worker));
-  mkdirSync("evals/results/harness-v2", { recursive: true });
-  const out = `evals/results/harness-v2/${modelId}-p${pass}${only ? "-partial" : ""}.json`;
-  writeFileSync(out, JSON.stringify({ ranAt: new Date().toISOString(), model: modelId, harness: "v2", results }, null, 1));
+  const dir = `evals/results/harness-${harness}`;
+  mkdirSync(dir, { recursive: true });
+  const out = `${dir}/${modelId}-p${pass}${only ? "-partial" : ""}.json`;
+  writeFileSync(out, JSON.stringify({ ranAt: new Date().toISOString(), model: modelId, harness, results }, null, 1));
   console.log(`wrote ${out}, total $${spent.toFixed(2)}`);
 }
 

@@ -16,6 +16,33 @@ export interface ToolContext {
   /** Normalized names of every card a tool has returned this session. */
   seen: Set<string>;
   submitted: SubmittedDeck | null;
+  /** Brew pipeline: the engine plan, once accepted. */
+  engine?: EnginePlan | null;
+  /** Rules submit_engine and submit_deck enforce in code. */
+  lock?: DeckLock;
+}
+
+export interface EnginePlan {
+  format: string;
+  thesis: string;
+  winCondition: string;
+  targetTurn: number;
+  beats: string[];
+  losesTo: string[];
+  cards: { name: string; qty: number; role: string }[];
+}
+
+export interface DeckLock {
+  /** Cards the deck must contain, at least this many copies in the main deck. */
+  cards: { name: string; minQty: number }[];
+  /** Colors every card's identity must fit inside, from the request. */
+  colorsAllowed?: string[] | null;
+  /** Format fixed by the request or the engine stage. */
+  format?: string | null;
+  /** Brews only: reject decks this close to one real list (0-1). */
+  maxCopyRate?: number;
+  /** Brews only: engine cards must be at least this share of nonland cards (0-1). */
+  minEngineShare?: number;
 }
 
 export interface SubmittedDeck {
@@ -74,6 +101,50 @@ function checkSummary(result: CheckResult) {
       curve: result.mana.curve,
     },
   };
+}
+
+function lockProblems(ctx: ToolContext, format: string, main: QtyName[], side: QtyName[]): string[] {
+  const lock = ctx.lock;
+  if (!lock) return [];
+  const problems: string[] = [];
+  const count = (name: string) => {
+    const want = normalizeName(ctx.index.getCard(name)?.name ?? name);
+    return main.filter((l) => normalizeName(ctx.index.getCard(l.name)?.name ?? l.name) === want).reduce((n, l) => n + l.qty, 0);
+  };
+  if (lock.format && lock.format !== format) problems.push(`The format is fixed as ${lock.format}.`);
+  for (const c of lock.cards) {
+    const have = count(c.name);
+    if (have < c.minQty) problems.push(`${c.name}: ${have} in the main deck; the plan requires at least ${c.minQty}.`);
+  }
+  if (lock.colorsAllowed) {
+    const allowed = new Set(lock.colorsAllowed);
+    const off = [...main, ...side]
+      .map((l) => ctx.index.getCard(l.name))
+      .filter((c) => c && c.identity.some((x) => !allowed.has(x)))
+      .map((c) => c!.name);
+    if (off.length) problems.push(`Outside the requested colors (${lock.colorsAllowed.join("") || "colorless"}): ${[...new Set(off)].join(", ")}.`);
+  }
+  if (lock.minEngineShare != null && ctx.engine) {
+    const engineNames = new Set(ctx.engine.cards.map((c) => normalizeName(ctx.index.getCard(c.name)?.name ?? c.name)));
+    let spells = 0;
+    let engine = 0;
+    for (const l of main) {
+      const card = ctx.index.getCard(l.name);
+      if (!card || /\bLand\b/.test(card.typeLine.split(" // ")[0])) continue;
+      spells += l.qty;
+      if (engineNames.has(normalizeName(card.name))) engine += l.qty;
+    }
+    if (spells && engine / spells < lock.minEngineShare) {
+      problems.push(`Engine cards are ${engine} of ${spells} nonland cards (${pct(engine / spells)}%); a brew needs at least ${pct(lock.minEngineShare)}% so the requested idea is the deck, not an add-on.`);
+    }
+  }
+  if (lock.maxCopyRate != null) {
+    const copy = ctx.data.copyRate(format, main);
+    if (copy && copy.rate > lock.maxCopyRate) {
+      problems.push(`${pct(copy.rate)}% of this main deck is card for card the ${copy.closest.strategy} list from ${copy.closest.event} (${copy.closest.date}). A brew may borrow a shell but must be at most ${pct(lock.maxCopyRate)}% one existing list.`);
+    }
+  }
+  return problems;
 }
 
 export const TOOLS = [
@@ -239,6 +310,53 @@ export const TOOLS = [
     },
   }),
   tool({
+    name: "submit_engine",
+    description:
+      "Brew pipeline: submit the game plan and the engine (enablers, payoffs, redundant copies) before any shell is added. Every card must have come from a tool, be legal, fit the requested colors, and include every card the player named. The engine is locked after this: later stages can't cut it.",
+    schema: z.object({
+      format: z.string(),
+      thesis: z.string().describe("How the deck wins, in two sentences."),
+      winCondition: z.string(),
+      targetTurn: z.number().int().min(1).max(10).describe("The turn the engine should be assembled and working."),
+      beats: z.array(z.string()),
+      losesTo: z.array(z.string()),
+      cards: z
+        .array(z.object({ name: z.string(), qty: z.number().int().min(1).max(4), role: z.enum(["enabler", "payoff", "redundancy", "protection", "other"]) }))
+        .min(1)
+        .max(30),
+    }),
+    run: (input, ctx) => {
+      const key = formatKey(input.format);
+      const problems: string[] = [];
+      if (ctx.lock?.format && ctx.lock.format !== key) problems.push(`The format is fixed as ${ctx.lock.format}.`);
+      const unseen = input.cards.map((c) => ctx.index.getCard(c.name)?.name ?? c.name).filter((n) => !ctx.seen.has(normalizeName(n)));
+      if (unseen.length) problems.push(`Look these up first with card_info or search_cards: ${unseen.join(", ")}.`);
+      for (const c of input.cards) {
+        const card = ctx.index.getCard(c.name);
+        const status = card?.legal[key];
+        if (card && status !== "legal" && status !== "restricted") problems.push(`${card.name} is not legal in ${key}.`);
+        if (card && status === "restricted" && c.qty > 1) problems.push(`${card.name} is restricted in ${key}: 1 copy.`);
+        if (card && ctx.lock?.colorsAllowed && card.identity.some((x) => !ctx.lock!.colorsAllowed!.includes(x))) {
+          problems.push(`${card.name} is outside the requested colors.`);
+        }
+      }
+      for (const req of ctx.lock?.cards ?? []) {
+        const want = normalizeName(ctx.index.getCard(req.name)?.name ?? req.name);
+        if (!input.cards.some((c) => normalizeName(ctx.index.getCard(c.name)?.name ?? c.name) === want)) {
+          problems.push(`The player named ${req.name}; it must be part of the engine.`);
+        }
+      }
+      if (problems.length) return { accepted: false, problems };
+      ctx.engine = { ...input, format: key };
+      ctx.lock = {
+        ...(ctx.lock ?? { cards: [] }),
+        format: key,
+        cards: input.cards.map((c) => ({ name: ctx.index.getCard(c.name)?.name ?? c.name, minQty: c.qty })),
+      };
+      return { accepted: true, locked: ctx.lock.cards };
+    },
+  }),
+  tool({
     name: "submit_deck",
     description:
       "Submit the final deck. Rejected if it has rule errors or names a card no tool returned this session (look those up with card_info first). Label it stock (a proven list), tuned (a proven list with changes), or brew (built around new ideas).",
@@ -255,7 +373,10 @@ export const TOOLS = [
         return { accepted: false, reason: "These cards were not returned by any tool yet; look them up with card_info.", cards: [...new Set(unseen)] };
       }
       const result = checkDeck(ctx.index, { ...input, format: key });
-      if (!result.ok) return { accepted: false, errors: result.errors.map((e) => e.message) };
+      const problems = lockProblems(ctx, key, input.main, input.side);
+      if (!result.ok || problems.length) {
+        return { accepted: false, errors: [...result.errors.map((e) => e.message), ...problems] };
+      }
       ctx.submitted = {
         format: key,
         main: input.main,

@@ -18,6 +18,14 @@ export interface DataSource {
   archetype(format: string, strategy: string, opts?: Window): ArchetypeStats | null;
   referenceList(format: string, strategy: string, opts?: Window): RefList | null;
   cardPlayRate(format: string, cardName: string, opts?: Window): CardPlay | null;
+  /** Highest share of this main deck found card for card in one real list. */
+  copyRate(format: string, main: QtyName[], opts?: Window): CopyRate | null;
+}
+
+export interface CopyRate {
+  /** 0-1: share of the deck's main cards (by copies) found in the closest real list. */
+  rate: number;
+  closest: { strategy: string; event: string; date: string };
 }
 
 export interface Window {
@@ -158,6 +166,26 @@ export class FileDataSource implements DataSource {
     const lists = this.ofStrategy(format, strategy, opts);
     const finished = (l: RefList) => (l.record === "5-0" ? 0 : (l.place ?? 99));
     return [...lists].sort((a, b) => b.date.localeCompare(a.date) || finished(a) - finished(b))[0] ?? null;
+  }
+
+  copyRate(format: string, main: QtyName[], opts?: Window): CopyRate | null {
+    const lists = this.window(format, { days: 90, ...opts });
+    if (lists.length === 0) return null;
+    const canon = (n: string) => normalizeName(this.index.getCard(n)?.name ?? n);
+    const deck = new Map<string, number>();
+    for (const c of main) deck.set(canon(c.name), (deck.get(canon(c.name)) ?? 0) + c.qty);
+    const total = [...deck.values()].reduce((a, b) => a + b, 0) || 1;
+    let best: CopyRate | null = null;
+    for (const l of lists) {
+      const real = new Map<string, number>();
+      for (const c of l.main) real.set(canon(c.name), (real.get(canon(c.name)) ?? 0) + c.qty);
+      let shared = 0;
+      for (const [k, q] of deck) shared += Math.min(q, real.get(k) ?? 0);
+      if (!best || shared / total > best.rate) {
+        best = { rate: shared / total, closest: { strategy: l.strategy, event: l.event, date: l.date } };
+      }
+    }
+    return best;
   }
 
   cardPlayRate(format: string, cardName: string, opts?: Window): CardPlay | null {

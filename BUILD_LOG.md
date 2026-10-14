@@ -37,6 +37,7 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ## Open decisions
 
+- **Research direction (agreed in principle):** after round 3, build scorer v0 from the data, validate it against real records and the owner's picks, then add search to the pipeline.
 - ~~Passes 2 and 3 of the v1 comparison~~: skipped in favor of building the new harness (owner agreed).
 - Harness v2 across the five models: about $59 for one pass of 24 prompts (Fable ~$34 of it).
 - A one-line PR so v1 logs the real error behind the four "An error occurred." builds.
@@ -44,6 +45,37 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - Lesson to apply: any prompt or claim that names a card gets checked against the card index before it is used.
 - ~~Switch to pairwise~~: done; 36 pairs judged (v1 8 wins, v2 6, 22 ties; v2 100% faithful vs. 92%).
 - ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
+
+---
+
+## 2026-10-14 · The research question: how do models get good at deck construction?
+
+Asked how the work was going, Claude Code flagged that v3 may not beat v2 on quality: code can make a brew faithful and its mana sound, but whether the deck is *good* may depend on how well models understand deck construction. The owner: "How do we fix the 'models figure out deck construction' problem? That is the key thing we are researching."
+
+**Decomposing the skill:**
+
+| Part of deck construction | Who does it well now |
+| --- | --- |
+| Legality, counts, mana, curve | code (steps 4-5) |
+| Which cards exist and what they do | card search |
+| What the format plays and how fast | the data |
+| How good a card is in this deck | nobody: the model guesses from memory |
+| Whether these 60 cards work together | nobody: the model guesses |
+| Iterating: try, measure, improve | barely: one critique pass, no real feedback |
+
+**The thesis: separate generating from judging.** Judging a deck is easier than building one. With a scorer that rates a decklist without a human, construction becomes search: generate candidates, score them, keep the best, try swaps, keep improvements. The model proposes; the scorer decides.
+
+**Scorer v0, from Decklist Data:**
+1. **Card performance** within an archetype: do lists with card X finish better than lists without it (records, placements, game win rate)? The owner's existing `spike-sideboard-card-winrates.ts` already explored this.
+2. **Synergy:** which cards are played together across 30,102 lists, so even a brew's card pairs can be checked against real decks.
+3. **Role coverage:** removal, threats, card flow per style, compared with real decks (archetypes agreed on land count within about one land; roles likely agree too).
+4. **Simulation:** level 1 now; a rough aggro clock later.
+
+**Validation before trusting it:** within an archetype, does it rank 5-0 lists above 2-3 lists (real results, no AI involved)? Does it agree with the owner's pairwise picks (36 so far, 48 more in round 3)?
+
+**Then:** search in the pipeline (several candidates, swap-by-swap improvement) and a round 4 pairwise against v3; the brew holdout test (decks that began as brews and became archetypes, rebuilt from pre-emergence data) as the generalization check that guards against overfitting v3 to the 24 prompts; an AI judge calibrated on the owner's picks, and eventually a simple model predicting those picks from the scorer's features, which would itself be a finding about what makes a deck good.
+
+**Candidate thesis for the post:** models can't yet build good decks by intuition, but they can when paired with a judge built from real tournament data. The data's real value is as a measure of quality, not a source of lists to copy.
 
 ---
 

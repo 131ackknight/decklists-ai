@@ -22,6 +22,37 @@ A running record of how decklists.ai gets built: decisions, findings, numbers, a
 
 ---
 
+## 2026-10-14 · Is the bot leaning too hard on the database?
+
+The owner asked, before reading any answers: "Do you think they are relying too much on the structured database? Is that ever going to be a thing we can get rid of? If something really doesn't exist we need to account for that."
+
+Pass 1 already holds the evidence. Ten prompts ask for decks that do not exist yet:
+
+| Set (v1 harness) | Meta/decklist tool calls | Brew decks built (of 10) | Brews labelled stock or tuned | Asked or redirected |
+| --- | --- | --- | --- | --- |
+| Haiku 4.5, as shipped | 40 | 4 | 2 | 4 |
+| Haiku 4.5 | 48 | 2 | 1 | 3 |
+| Haiku 5.5 | 74 | 5 | 5 | 3 |
+| Sonnet 5.5 | 99 | 10 | 5 | 0 |
+| Opus 5.5 | 81 | 9 | 6 | 0 |
+| Fable 5.1 | 69 | 7 | 4 | 1 |
+
+**Two failure modes:**
+1. **"Not in results" read as "doesn't exist."** Haiku 5.5 on mono green storm: "I can't build a mono green storm deck... Storm isn't a strategy in the last 30 days of Premodern results." Bigger models handle it ("This is a brew... no storm deck shows up in results"), but the harness should not depend on that.
+2. **Brews pulled toward an existing deck.** Opus 5.5 and Fable 5.1 both built mono green storm as an Elves deck with Hunting Pack added, and more than half the bigger models' "brews" were labelled stock or tuned. This is the "sanding the brew down into the donor deck" risk from Fable's plan.
+
+Reliance alone is not the problem: Sonnet 5.5 made the most data calls and built all 10 brews.
+
+**Answer: keep the data, change what it may decide.**
+- "Does this exist?" is answered only by the complete card pool (Scryfall), which can prove or disprove it. v1 got this wrong from memory ("Storm is not legal in Premodern").
+- "What do good players run?" is answered by Decklist Data, as evidence for mana, interaction, and the meta. Never as a gate.
+
+**Design rules for the step 8 pipeline:** thesis and engine come from card search only, with meta data not visible in that step; data enters at the shell step for mana and interaction; the critique step cannot cut engine cards; "can't be done" is allowed only when card search proves it.
+
+**New measurements planned for the post:** a "distance from the nearest real deck" score (share of a brew's nonland cards that are core cards of an existing archetype) and a with-data vs. without-data run of the new harness.
+
+---
+
 ## 2026-10-14 · Model comparison, pass 1
 
 Objective scores only, one pass each, so treat as early signal:

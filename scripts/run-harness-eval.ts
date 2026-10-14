@@ -15,6 +15,12 @@ import { MODELS } from "../src/harness/models";
 import { brew } from "../src/harness/run";
 import { RUBRIC_PROMPTS } from "../evals/rubric/prompts";
 
+try {
+  process.loadEnvFile(".env.local");
+} catch {
+  // No .env.local: rely on the environment (CI sets ANTHROPIC_API_KEY).
+}
+
 const arg = (name: string, fallback?: string) => {
   const i = process.argv.indexOf(`--${name}`);
   return i > 0 ? process.argv[i + 1] : fallback;

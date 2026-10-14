@@ -13,10 +13,10 @@ A running record of how decklists.ai gets built: decisions, findings, numbers, a
 
 | Item | Total |
 | --- | --- |
-| Anthropic API spend | About $18.66: v1 baseline $0.63; comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11). Plus one 17-token test call. |
+| Anthropic API spend | About $18.68: v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02. Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
-| Automated tests | 27 passing |
+| Automated tests | 31 passing |
 | Decklist Data PRs merged | 4 (#181 export, #182 baseline eval, #183 baseline on `main`, #184 model comparison) |
 | Plan steps done | 1, 4, 5 (5 waits on generated decks from step 6); step 2: model comparison pass 1 run, blind-rated (108 answers) and unblinded |
 
@@ -36,10 +36,41 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ## Open decisions
 
-- Passes 2 and 3 of the model comparison: about $36 more (roughly $55 total) and 180 more answers to rate.
+- ~~Passes 2 and 3 of the v1 comparison~~: skipped in favor of building the new harness (owner agreed).
+- Harness v2 across the five models: about $59 for one pass of 24 prompts (Fable ~$34 of it).
 - A one-line PR so v1 logs the real error behind the four "An error occurred." builds.
 - Adding the "distance from the nearest real deck" score and a "copy rate" score to the objective scorer.
 - Lesson to apply: any prompt or claim that names a card gets checked against the card index before it is used.
+
+---
+
+## 2026-10-14 · Step 6: harness v2 built
+
+The owner agreed with the recommendation: skip more v1 passes, build the new harness, and run it across the same models (part two of the post). The owner asked that every step be detailed here.
+
+**What was built** (`src/harness/`, `src/data/`, all in the decklists.ai repo):
+- **A data source with `as_of` dates** (`src/data/source.ts`). For now it reads the 30,102-list export; the Decklist Data API (plan step 3) will implement the same interface, so the harness won't change. It answers: the meta (share by strategy), how an archetype is built (core and flex cards, sideboard frequency, real land count and colored sources), the latest top list of a strategy, and how often a card is played and by which decks.
+- **Nine tools** (`src/harness/tools.ts`), each answering a v1 failure:
+  - `search_cards`, `find_tags`, `card_info`: the card pool, the authority on what exists and is legal. v1 could only look cards up by name.
+  - `meta`, `archetype`, `reference_list`: tournament results, described to the model as evidence, not limits. Formats without data return the nearest formats to borrow from.
+  - `draw_odds`: exact engine odds, so "honest odds" on impossible requests and brew redundancy come from math.
+  - `check_deck`: the step 5 checker, plus a comparison against the real archetype whose mana the deck borrows.
+  - `submit_deck`: **refuses any card name that no tool returned in this session.** This is the code-level fix for building from memory (v1's "Storm is not legal in Premodern"). It also refuses rule errors and records a stock / tuned / brew label and the donor shell.
+- **A system prompt** (`src/harness/prompt.ts`) where each rule answers a failure from pass 1: the card pool decides what exists; results are evidence, and absence from results is not impossibility; honor every explicit constraint (colors, format, named cards); tuning means changes tied to matchups; brews start from the requested cards and must not collapse into an existing deck; pick a format when none is named; every card fact must come from a tool; single message, so no questions back (v1 often asked instead of building).
+- **A manual tool loop on the official Anthropic SDK** (`src/harness/run.ts`) instead of the beta tool runner, for control a fair comparison needs: per-step token accounting, a 30-step cap, prompt caching on the system prompt and tools, append-only history so thinking blocks replay unchanged, refusal and max_tokens handling. Effort "high" on every model that supports it; Haiku 4.5 rejects the setting.
+- **An eval runner** (`scripts/run-harness-eval.ts`) writing results in the v1 format, so the scorer and blind scorecard read both.
+- 31 tests pass, including: `submit_deck` rejects unseen cards until `card_info` looks them up.
+
+**Two deliberate choices.**
+- **No automatic model fallback during evals.** The SDK can route a declined request to another model; in a model comparison that would silently mix models. Off for evals; on for the live site.
+- **The decklist UI with live progress (part of step 6's original gate) moves to step 9**, where the site is built.
+
+**Smoke test, Haiku 5.5, two prompts, $0.02 total.**
+- **Mono green storm: built, labeled a brew.** The same Haiku 5.5 that told v1 "I can't build a mono green storm deck" found Sprouting Vines and Hunting Pack through card search, used Lotus Petal and Mox Diamond as storm fuel, and checked Hunting Pack's draw odds before submitting. Same model, different harness, opposite answer: the first direct evidence for part two of the post. It left the sideboard empty, so the prompt now requires a 15-card sideboard for formats that have one.
+- **Stock Goblins:** a 5-0 League list, its source stated, checked against all 151 Goblins lists.
+- Prompt caching works: most input tokens come back from cache at a tenth of the price.
+
+**Estimated cost of one 24-prompt pass:** Haiku 5.5 ~$0.40, Haiku 4.5 ~$3.70, Sonnet 5.5 ~$7.40, Opus 5.5 ~$14, Fable 5.1 ~$34; about $59 for all five. The harness answers all 24 prompts, including the six v1 could not (Timeless, Historic, Old School, Penny Dreadful, Commander, Duel Commander).
 
 ---
 

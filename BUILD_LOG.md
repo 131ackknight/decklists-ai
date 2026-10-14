@@ -44,6 +44,23 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-10-14 · Is fetching a deck bad? (a framing for the post)
+
+The owner, thinking aloud: "Is it bad that it does that? It seems like it's less difficult to build something that just fetches a deck from a database than can create one itself."
+
+Where the discussion landed:
+- **Fetching is right when the request is a lookup.** "Stock Goblins" or "what's winning in Pauper" are retrieval problems; a proven 5-0 list beats an invented one, and the ratings agree (every model about 4 on those prompts, Haiku 4.5 tied with Sonnet 5.5). Easy problems don't need big models.
+- **Fetching is wrong when it drops the request.** A brew request answered with an existing deck plus the requested card as a 2-of is the 78-87% copy rate measured above.
+- **Creating from scratch isn't the goal either.** Good human brewers take a proven shell (mana, removal, card flow) and swap in a new engine, which is Fable's donor-shell step. A good brew might be half to two-thirds borrowed. The real question is whether the new part is the part the player asked for.
+
+**Implications:**
+1. **Route by request type:** stock and tuning to retrieval on a cheap model; brews to generation on a capable model, where the ratings show the gap (Haiku 4.5 1.52 vs. Opus 5.5 3.88 on brews). Cheaper and better.
+2. **Target a band, not zero, for brews:** the requested cards are core, the shell is borrowed. The band can be calibrated with the plan's brew holdout test: decks that started as brews and became archetypes, measured for how much existing-deck core they reused at birth.
+3. **Two modes for players:** "proven list" and "brew me something," each judged by its own standard.
+4. **The positioning:** Decklist Data already does retrieval. decklists.ai earns its place only if it brews while staying grounded, the gap Fable found no 60-card tool filling.
+
+---
+
 ## 2026-10-14 · Step 6: harness v2 built
 
 The owner agreed with the recommendation: skip more v1 passes, build the new harness, and run it across the same models (part two of the post). The owner asked that every step be detailed here.

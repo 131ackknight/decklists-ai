@@ -10,6 +10,15 @@ A running record of how decklists.ai gets built: decisions, findings, numbers, a
 
 ---
 
+## 2026-10-14 · Owner adds test prompts
+
+The owner added two prompts to the hand-rated set, bringing it to 22:
+
+- **"Build me a Premodern Dream Halls deck that doesn't win with storm."** A twist on a known engine. Dream Halls lets you cast spells free by discarding a same-color card; the deck has to keep that engine and find a different way to win.
+- **"Build a deck that best utilizes Peter Parker's Camera."** A 1-mana artifact from the 2025 Marvel's Spider-Man set that copies an activated or triggered ability, three times. No format named, so the bot has to choose one (it is legal in Standard, Pioneer, Modern, Legacy, and Vintage) and justify it. Checked against Scryfall before adding: both cards are real and the legality is as described.
+
+---
+
 ## 2026-10-13 · Planning session with Claude Code, then step 1
 
 **Starting point.** Decklist Data (decklistdata.com) scrapes public MTGO decklists into Postgres: about 1,230 commits, seven 60-card formats, archetype classification, metagame and card pages. It already had a v1 "AI deck builder" from 2026-09-06.

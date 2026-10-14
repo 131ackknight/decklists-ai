@@ -1,5 +1,5 @@
 /**
- * Hand-rated brew prompts (step 2). The owner rates every output 1-5 on
+ * Hand-rated brew prompts (step 2), 22 total. The owner rates every output 1-5 on
  * each dimension; the mean is the rubric score for a run.
  *
  * Mix: formats with Decklist Data coverage and formats without it,
@@ -160,6 +160,22 @@ export const RUBRIC_PROMPTS: RubricPrompt[] = [
     hasData: true,
     prompt: "Build a Pauper deck around Kiln Fiend.",
     lookFor: "Cheap spell density, protection, enough payoff redundancy.",
+  },
+  {
+    id: "premodern-dream-halls-no-storm",
+    format: "Premodern",
+    hasData: true,
+    prompt: "Build me a Premodern Dream Halls deck that doesn't win with storm.",
+    lookFor:
+      "Keeps the Dream Halls engine (free spells by discarding a same-color card) but wins another way, with enough card flow to feed the discards. No storm cards.",
+  },
+  {
+    id: "any-format-peter-parkers-camera",
+    format: "Any",
+    hasData: true,
+    prompt: "Build a deck that best utilizes Peter Parker's Camera.",
+    lookFor:
+      "Picks a format where the Camera is legal and says why. Finds activated or triggered abilities worth copying three times, enough of them to make a 1-mana artifact matter.",
   },
   {
     id: "premodern-vague",

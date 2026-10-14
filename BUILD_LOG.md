@@ -18,7 +18,7 @@ A running record of how decklists.ai gets built: decisions, findings, numbers, a
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
 | Automated tests | 27 passing |
 | Decklist Data PRs merged | 4 (#181 export, #182 baseline eval, #183 baseline on `main`, #184 model comparison) |
-| Plan steps done | 1, 4, 5 (5 waits on generated decks from step 6); step 2: pass 1 of the model comparison run, owner rating it blind |
+| Plan steps done | 1, 4, 5 (5 waits on generated decks from step 6); step 2: model comparison pass 1 run, blind-rated (108 answers) and unblinded |
 
 ## The story so far (for the post)
 
@@ -29,7 +29,8 @@ A running record of how decklists.ai gets built: decisions, findings, numbers, a
 5. **The checker, and the best finding so far.** Calibrated on 30,102 real tournament lists: zero errors on every real list in 8 formats. Karsten's land formulas flagged most real decks; refitting per format was the wrong shape; the right answer was the archetype itself, where land counts agree to about ±1 land (Premodern Goblins 24.0 ±0.3). The right mana base comes from the closest real deck, not a formula.
 6. **Measuring v1 honestly.** The baseline first hit the owner's own takedown (my stale-checkout mistake), then ran: 9 decks for 18 prompts at $0.63, and the memory failure in one line: "Storm is not legal in Premodern" (it is).
 7. **Same harness, five models.** v1 on Haiku 4.5, Haiku 5.5, Sonnet 5.5, Opus 5.5 and Fable 5.1, blind-rated by the owner. Pass 1: bigger models finish (17-18 decks vs. 7-9), Haiku 5.5 is the value pick ($0.11), Fable builds the closest mana, and every model leans on the meta data in ways that hurt brews: "not in results" read as "doesn't exist," and brews pulled back toward existing decks (mono green storm built as Elves plus Hunting Pack).
-8. **Where it goes next.** The new harness: card search decides what exists, data only informs mana, interaction and the meta, then the same five models again to separate what the model buys from what the harness buys.
+8. **The ratings.** The owner blind-rated all 108 answers. When a list exists, every model scores about 4 and Haiku 4.5 ties Sonnet 5.5; on brews the spread grows to 2.4 points (Haiku 4.5 1.52, Opus 5.5 3.88). Opus 5.5 ranks first overall (3.85), and the most expensive model, Fable 5.1, ranks third at more than twice the cost.
+9. **Where it goes next.** The new harness: card search decides what exists, data only informs mana, interaction and the meta, then the same five models again to separate what the model buys from what the harness buys.
 
 Recurring theme for the post: the owner's pushback improved the work at nearly every turn (no bracket scraping, no new database, no Neon credentials, use our own data instead of re-scraping MTGO, every list instead of a sample, fix `main` instead of running an old build, compare models).
 
@@ -39,6 +40,44 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - A one-line PR so v1 logs the real error behind the four "An error occurred." builds.
 - Adding the "distance from the nearest real deck" score and a "copy rate" score to the objective scorer.
 - Lesson to apply: any prompt or claim that names a card gets checked against the card index before it is used.
+
+---
+
+## 2026-10-14 · Pass 1 results, unblinded
+
+The owner finished blind-rating all 108 answers (18 prompts x 6 sets). 102 are the owner's; 6 on the Psychatog tuning prompt are AI-judged or mixed, and the human-only column shows they don't change the ranking. `scripts/analyze-ratings.ts` reproduces every number here.
+
+**Overall (mean of plan, legal, mana, shell, 1-5):**
+
+| Model (v1 harness) | Overall | Human-only | Plan | Legal | Mana | Shell | Decks of 18 | Cost |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Opus 5.5 | **3.85** | 3.79 | 3.89 | 4.00 | 3.78 | 3.72 | 17 | $4.05 |
+| Sonnet 5.5 | 3.71 | 3.68 | 3.72 | 3.61 | 3.83 | 3.67 | 18 | $3.22 |
+| Fable 5.1 | 3.57 | 3.49 | 3.67 | 3.78 | 3.56 | 3.28 | 15 | $9.90 |
+| Haiku 5.5 | 2.94 | 2.94 | 3.17 | 2.94 | 2.94 | 2.72 | 12 | $0.11 |
+| Haiku 4.5, as shipped | 2.53 | 2.51 | 2.83 | 2.56 | 2.39 | 2.33 | 9 | $0.63 |
+| Haiku 4.5 | 2.46 | 2.37 | 2.72 | 2.61 | 2.17 | 2.33 | 7 | $0.75 |
+
+**By prompt type, the post's central chart:**
+
+| Model | A list exists (4) | Owner's list given (2) | Brew or twist (10) | Impossible as asked (2) |
+| --- | --- | --- | --- | --- |
+| Opus 5.5 | 3.94 | 4.38 | **3.88** | 3.00 |
+| Sonnet 5.5 | 4.13 | 4.13 | 3.55 | 3.25 |
+| Fable 5.1 | 4.19 | 4.50 | 3.23 | 3.13 |
+| Haiku 5.5 | 4.06 | 3.50 | 2.63 | 1.75 |
+| Haiku 4.5, as shipped | 3.50 | 3.38 | 2.02 | 2.25 |
+| Haiku 4.5 | 4.13 | 4.00 | **1.52** | 2.25 |
+
+**What the numbers say:**
+1. **When a list exists, the model barely matters.** Every model scores about 4 (3.5-4.2). Haiku 4.5 ties Sonnet 5.5 at 4.13. This is the identical-decks finding, now in the owner's own ratings.
+2. **On brews and twists, the model is everything.** The spread grows from about 0.7 to 2.4 points: Haiku 4.5 at 1.52, Opus 5.5 at 3.88. The prompts where models differed most were all brews (Replenish without blue, mono green storm, Living End plus Scam).
+3. **The most expensive model is not the best.** Fable 5.1 cost $9.90 for 18 prompts and placed third (3.57), behind Opus 5.5 ($4.05, 3.85) and Sonnet 5.5 ($3.22, 3.71). Fable built fewer decks (15) and scored lowest of the three on shell.
+4. **Haiku 5.5 is the value story:** about half a point better than Haiku 4.5 for a sixth of the cost ($0.11).
+5. **Removing the temperature setting changed nothing measurable:** Haiku 4.5 as shipped 2.53 vs. filtered 2.46.
+6. **Everyone is weak on impossible requests** (best 3.25). Catching "this can't be done" and offering the best real alternative is a gap for every model, and a design target for the new harness.
+
+**Caveats for the post:** one pass, 18 prompts, one rater. The gap between the Haiku tier and the Opus/Sonnet/Fable tier is large and consistent across prompt types; the ordering within the top three (3.85 vs. 3.71 vs. 3.57) is within what one pass can't separate. That is what passes 2 and 3 would settle.
 
 ---
 

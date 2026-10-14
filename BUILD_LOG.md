@@ -13,12 +13,27 @@ A running record of how decklists.ai gets built: decisions, findings, numbers, a
 
 | Item | Total |
 | --- | --- |
-| Anthropic API spend | Under $0.01 so far (one 17-token test call; key checks use the free Models API; the 404 run and the failed Haiku 5.5 run made no billed calls). Haiku 4.5 baseline pending. |
+| Anthropic API spend | About $0.63 (v1 baseline on Haiku 4.5), plus one 17-token test call. The 404 run and the failed Haiku 5.5 run made no billed calls. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
 | Automated tests | 27 passing |
 | Decklist Data PRs merged | 3 (#181 export, #182 baseline eval, #183 baseline on `main`) |
-| Plan steps done | 1, 4, 5 (5 waits on generated decks from step 6); step 2 in progress |
+| Plan steps done | 1, 4, 5 (5 waits on generated decks from step 6); step 2: v1 baseline run, owner rating pending |
+
+---
+
+## 2026-10-14 · Step 2: the v1 baseline is in
+
+v1 on Haiku 4.5, the builder as it shipped, answered the 18 prompts in formats it supports. **Cost: $0.63** (510k input tokens, 24k output). The answers are on a private **Brew Scorecard** page for the owner to rate.
+
+**Raw numbers before rating:**
+- **A deck for only 9 of 18 prompts.** Four runs hit v1's 10-tool-call limit mid-build (Replenish twist, mono-white control, Greasefang, Dream Halls); the deck it was fixing never reached a passing state on two of them.
+- **The memory failure Fable predicted, verbatim.** Asked for mono green storm in Premodern, v1 said: "Storm is not legal in Premodern. The format's card pool ends before storm was printed." False: storm comes from Scourge, the last Premodern set, and Sprouting Vines and Hunting Pack are legal (step 4's search finds both). A model building from memory, with no way to search cards by what they do, talked itself out of the request.
+- **It often asks instead of builds.** For Merfolk, Golgari midrange, and "something weird," v1 replied with a question ("Would you like Jund Sacrifice or a Golgari brew?"). In a one-message test that counts as no deck; it is also how v1 behaves for a real first message.
+- **Peter Parker's Camera** went into Modern (v1's default) as a "tuned" Amulet Titan list.
+- **"Turn 1 every game" in Legacy** got an honest "no" and a list of the fastest real decks, without building one.
+
+**The scorecard.** One card per prompt: the request, what a good answer does, v1's reply, its deck, and tool-call stats, with 1-5 buttons for plan, legality, mana, and shell. Ratings save to the page's own store as the owner clicks, and only the owner can write. The 4 unsupported 60-card formats score 1 automatically; the 2 Commander prompts are shown but kept out of the headline score. Checked after publishing: the ratings store is reachable and empty.
 
 ---
 

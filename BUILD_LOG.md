@@ -47,6 +47,14 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-10-14 · Step 8 scoped; goldfish simulator sized
+
+Step 8 laid out for the owner: an **intent** stage first (request type, hard constraints, strictness; testable against labeled prompts), then a path per type (proven list on a cheap model; tune and sideboard with every change tied to a matchup; impossible: prove it with card search, then build the closest real version; brew: the full pipeline). The brew pipeline: game plan (meta summary only) → engine from card search only, decklist tools hidden → shell borrowed from the nearest real deck → mana set by code from the donor archetype's real numbers → verify (checker, novelty check, simulation) → critique that may not cut engine cards → sideboard → explanation that marks measured facts apart from inferences. Success: keep v2's 100% "did what was asked" and raise "would you play it" above 81%, judged pairwise against v2.
+
+**The owner asked how heavy the goldfish simulator is.** Four levels: (0) exact draw math, already built; (1) Monte Carlo of shuffles, land drops, colored mana and mulligans, no card abilities, about a day; (2) a rough aggro clock that plays creatures and burn, several days and still rough, with per-card rules for cards like Rally at the Hornburg and custom logic per combo deck; (3) a full rules engine (Forge), weeks, a Java integration, and weak at combo by its own docs. **Decision: build level 1 inside step 8** (mana that works, engines that show up, mulligan and flood/screw rates, the likely failure of weak faithful brews); defer level 2 and handle speed claims with honesty rules ("likely one of the fastest, given its curve") until a real clock is needed; skip level 3.
+
+---
+
 ## 2026-10-14 · Pairwise results: v2 is more faithful, not better
 
 The owner judged all 36 head-to-head pairs (Opus v1 vs. Opus v2, Sonnet v1 vs. Sonnet v2, 18 prompts). Unblinded with `scripts/analyze-pairwise.ts`:

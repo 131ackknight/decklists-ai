@@ -13,7 +13,7 @@ A running record of how decklists.ai gets built: decisions, findings, numbers, a
 
 | Item | Total |
 | --- | --- |
-| Anthropic API spend | About $8.76 so far: v1 baseline $0.63; comparison pass 1 $8.13 for four models (Fable still running). Plus one 17-token test call. |
+| Anthropic API spend | About $18.66: v1 baseline $0.63; comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11). Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
 | Automated tests | 27 passing |
@@ -22,7 +22,7 @@ A running record of how decklists.ai gets built: decisions, findings, numbers, a
 
 ---
 
-## 2026-10-14 · Model comparison, pass 1 (four of five models in)
+## 2026-10-14 · Model comparison, pass 1
 
 Objective scores only, one pass each, so treat as early signal:
 
@@ -33,14 +33,16 @@ Objective scores only, one pass each, so treat as early signal:
 | Haiku 5.5 | 12 | 12 | 1 | 0 | 0.95 | 2 | $0.11 | 18 s |
 | Sonnet 5.5 | **18** | 18 | 1 | 0 | 0.89 | 1 | $3.22 | 41 s |
 | Opus 5.5 | 17 | 17 | **0** | 0 | **0.84** | 0 | $4.05 | 33 s |
-| Fable 5.1 | running | | | | | | | |
+| Fable 5.1 | 15 | 15 | **0** | 0 | **0.71** | 1 | $9.90 | 36 s |
 
 **First observations.**
 - **Bigger models finish the job.** The same v1 harness that produced a deck for 7-9 prompts on Haiku 4.5 produced 17-18 on Sonnet 5.5 and Opus 5.5. Most of Haiku's misses were asking a question or running out of tool calls.
 - **Haiku 5.5 is the value story:** more decks than Haiku 4.5 (12 vs. 7-9) at about a seventh of the cost ($0.11).
 - **Every accepted deck passes the decklists.ai checker, and none invent cards.** v1's own server check already guaranteed legality; the differences are in whether a deck gets built at all and how good it is, which is what the blind ratings measure.
 - **Costs ran above estimate** for the big models (Sonnet $3.22 vs. ~$1.30 estimated, Opus $4.05 vs. ~$2.50): they make more tool calls, and the prompt grows with each one.
-- **Three mid-build errors** (two Haiku 5.5, one Sonnet 5.5) after several successful tool calls. v1's SDK masks the message as "An error occurred." Next: log the real error before passes 2 and 3.
+- **Fable 5.1 builds the closest mana bases** (0.71 lands off the real archetype on average) but produced fewer decks than Sonnet or Opus (15), at the highest cost ($9.90 for 18 prompts).
+- **Pass 1 total: $18.03.** At that rate passes 2 and 3 cost about $36 more, so the whole comparison lands near $55, above the $30-40 estimate. Flagged to the owner before spending it.
+- **Four mid-build errors** (two Haiku 5.5, one Sonnet 5.5, one Fable 5.1) after several successful tool calls. v1's SDK masks the message as "An error occurred." Next: log the real error before passes 2 and 3.
 
 ---
 

@@ -57,6 +57,8 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 **First use: v1 vs. v2 re-judged pairwise**, 36 pairs: Opus v1 vs. Opus v2 and Sonnet v1 vs. Sonnet v2 on the 18 prompts both harnesses answered. v1 sits on the left in 19 pairs and v2 in 17. No new API spend. This gives part two of the post a drift-free comparison.
 
+**The owner: "A lot of the good stuff is in the replies of the bot, should I read that?"** Yes, selectively: the reply is part of the product (plan, card reasons, sideboard plan, honesty about limits) and decides tuning, sideboard and impossible-request pairs; on stock requests the deck is the answer. The page now shows the opening of each reply by default (where answers put the plan and caveats) with the rest one click away, and the guide says when to expand.
+
 ---
 
 ## 2026-10-14 · Reset: where we are and what's next

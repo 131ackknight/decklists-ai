@@ -60,6 +60,7 @@ button:focus-visible, select:focus-visible, textarea:focus-visible, summary:focu
 .letter { font: 700 1.25rem var(--font-display); width: 2.2rem; height: 2.2rem; display: grid; place-items: center; border-radius: 8px; background: var(--ink); color: var(--surface); }
 .chip { font: 600 0.75rem var(--font-body); letter-spacing: 0.04em; text-transform: uppercase; background: var(--chip); color: var(--muted); padding: 3px 8px; border-radius: 4px; }
 details summary { cursor: pointer; color: var(--accent); font-size: 0.9rem; }
+.lead { white-space: pre-wrap; overflow-wrap: anywhere; margin: 0; font-size: 0.95rem; }
 .reply { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 24rem; overflow: auto; padding: 12px; border: 1px solid var(--line); border-radius: 8px; font-size: 0.93rem; margin-top: 8px; }
 .deck { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; }
 .deck pre { margin: 0; font: 0.8rem/1.45 var(--font-mono); padding: 10px 12px; background: var(--bg); border-radius: 8px; overflow-x: auto; min-width: 0; }
@@ -100,7 +101,7 @@ textarea { width: 100%; min-height: 56px; font: 0.92rem var(--font-body); color:
 
 <div class="wrap">
   <p class="notice" id="notice">Loading saved picks…</p>
-  <p class="guide">Two anonymous answers to the same request, sides shuffled. Answer the two yes/no questions for each, then pick the answer that better serves the request, or tie. Judge each request by what it asks for: a stock list should be proven, a brew should actually be the brew.</p>
+  <p class="guide">Two anonymous answers to the same request, sides shuffled. Answer the two yes/no questions for each, then pick the answer that better serves the request, or tie. Judge each request by what it asks for: a stock list should be proven, a brew should actually be the brew. The opening of each reply is shown; expand the rest when the two are close, or for tuning, sideboard and impossible requests, where the reasons are most of the answer.</p>
   <section class="request" id="request"></section>
   <div class="duel" id="duel"></div>
   <section class="verdict">
@@ -175,10 +176,19 @@ textarea { width: 100%; min-height: 56px; font: 0.92rem var(--font-body); color:
     const chip = ans.error ? el("span", { class: "chip", text: "Error" }) : ans.deck ? null : el("span", { class: "chip", text: "No deck" });
     box.append(el("div", { class: "side-head" }, el("span", { class: "letter", text: letter }), chip));
     if (ans.text) {
-      const d = el("details", {}, el("summary", { text: `Read the reply (${ans.text.length.toLocaleString()} characters)` }));
-      d.append(el("div", { class: "reply", text: ans.text }));
-      if (!ans.deck) d.open = true;
-      box.append(d);
+      // Show the opening of the reply (where answers put the plan and caveats); the rest expands.
+      const cut = (() => {
+        const limit = 600;
+        if (ans.text.length <= limit + 200) return ans.text.length;
+        const para = ans.text.indexOf("\n\n", 250);
+        return para > 0 && para <= limit ? para : ans.text.lastIndexOf(" ", limit);
+      })();
+      box.append(el("p", { class: "lead", text: ans.text.slice(0, cut).trim() + (cut < ans.text.length ? " …" : "") }));
+      if (cut < ans.text.length) {
+        const d = el("details", {}, el("summary", { text: `Read the rest (${(ans.text.length - cut).toLocaleString()} more characters)` }));
+        d.append(el("div", { class: "reply", text: ans.text.slice(cut).trim() }));
+        box.append(d);
+      }
     }
     if (ans.deck) {
       const deck = el("div", { class: "deck" });

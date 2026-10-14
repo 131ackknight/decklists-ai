@@ -7,6 +7,7 @@ import { compareToArchetype } from "@/checker/archetype-mana";
 import { checkDeck, type CheckResult } from "@/checker/check";
 import { cardsSeen, probAtLeast, probEachGroup } from "@/checker/odds";
 import type { DataSource, QtyName } from "@/data/source";
+import { goldfish } from "@/sim/goldfish";
 
 /** State shared by one brew's tool calls. */
 export interface ToolContext {
@@ -190,6 +191,27 @@ export const TOOLS = [
     },
   }),
   tool({
+    name: "simulate",
+    description:
+      "Play the deck's opening turns 5,000 times (land drops, colored mana, mulligans; no card abilities beyond making mana). Reports mulligan rate, land drops, color problems, and how often each engine group is in hand and castable by the target turn. Pass compareTo with a real strategy to get the same numbers for its latest top list. Cite these numbers instead of guessing about consistency or speed.",
+    schema: z.object({
+      format: z.string(),
+      main: z.array(Line).min(1),
+      engine: z.array(z.object({ name: z.string(), cards: z.array(z.string()).min(1) })).max(4).optional(),
+      targetTurn: z.number().int().min(1).max(8).optional(),
+      compareTo: z.string().optional(),
+    }),
+    run: ({ format, main, engine, targetTurn, compareTo }, ctx) => {
+      const result = goldfish(ctx.index, { main, engine, targetTurn });
+      if (!compareTo) return result;
+      const ref = ctx.data.referenceList(formatKey(format), compareTo);
+      return {
+        ...result,
+        realDeck: ref ? { strategy: compareTo, event: ref.event, date: ref.date, ...goldfish(ctx.index, { main: ref.main }) } : "no list for that strategy",
+      };
+    },
+  }),
+  tool({
     name: "check_deck",
     description:
       "Check a draft: legality, size, copies, commander rules, land count and colored sources. Pass compareTo with the strategy whose mana you borrowed to compare against real lists of it.",
@@ -250,9 +272,9 @@ export const TOOLS = [
 
 export type ToolName = (typeof TOOLS)[number]["name"];
 
-/** Tool definitions for the Messages API. */
-export function toolParams() {
-  return TOOLS.map((t) => ({
+/** Tool definitions for the Messages API, optionally limited to some tools. */
+export function toolParams(only?: readonly string[]) {
+  return TOOLS.filter((t) => !only || only.includes(t.name)).map((t) => ({
     name: t.name,
     description: t.description,
     input_schema: z.toJSONSchema(t.schema, { io: "input" }) as { type: "object"; [k: string]: unknown },
@@ -260,7 +282,13 @@ export function toolParams() {
 }
 
 /** Validate and run one tool call; errors come back as text for the model. */
-export function runTool(name: string, rawInput: unknown, ctx: ToolContext): { content: string; isError: boolean } {
+export function runTool(
+  name: string,
+  rawInput: unknown,
+  ctx: ToolContext,
+  only?: readonly string[],
+): { content: string; isError: boolean } {
+  if (only && !only.includes(name)) return { content: `The ${name} tool is not available at this stage.`, isError: true };
   const t = TOOLS.find((x) => x.name === name);
   if (!t) return { content: `Unknown tool ${name}.`, isError: true };
   const parsed = (t.schema as z.ZodTypeAny).safeParse(rawInput);

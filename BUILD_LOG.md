@@ -16,7 +16,7 @@ A running record of how decklists.ai gets built: decisions, findings, numbers, a
 | Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25. Total about $34.47. Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
-| Automated tests | 35 passing |
+| Automated tests | 37 passing |
 | Decklist Data PRs merged | 4 (#181 export, #182 baseline eval, #183 baseline on `main`, #184 model comparison) |
 | Plan steps done | 1, 4, 5, 6; step 2 rubric baseline done (108 + 48 rated, 36 pairwise judged); next: step 8 |
 
@@ -44,6 +44,19 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - Lesson to apply: any prompt or claim that names a card gets checked against the card index before it is used.
 - ~~Switch to pairwise~~: done; 36 pairs judged (v1 8 wins, v2 6, 22 ties; v2 100% faithful vs. 92%).
 - ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
+
+---
+
+## 2026-10-14 · Step 8: the level 1 simulator
+
+**Built:** `src/sim/goldfish.ts` plays a deck's opening turns 5,000 times with a seeded shuffle (reproducible): land drops (choosing the land that adds a color the hand needs), colored mana from lands, Moxen, and cheap mana rocks and creatures (creatures can't tap the turn they arrive), and one London mulligan. No card abilities beyond making mana. It reports mulligan rate, all land drops through turn 4, two-or-fewer lands on turn 4, flood (8+ lands seen by turn 6), whether every affordable spell in hand is castable by color each turn, and how often each engine group is in hand and castable by a target turn. Exposed to the bot as a `simulate` tool, optionally run side by side on a real strategy's latest top list. Tool access can now be limited per pipeline stage.
+
+**Calibrating on real decks, and a fix along the way:**
+- First run: Premodern Goblins looked right (15% mulligans; Goblin Lackey castable on turn 1 in 36% of games, against about 40% from exact draw math before mulligans). But low-land decks mulliganed far too often (Mono-Red Rally 31%, Stiflenought 35%), because the keep rule assumed every deck wants 2-5 lands. Real players keep one-landers in a 16-land deck.
+- Fix: the keep range now follows the deck's land ratio. After: Goblins 15%, Mono-Red Rally 9%, Living End 11%, Stiflenought 10%, Dimir Tempo 9%.
+- Low-land decks still show high "two or fewer lands on turn 4" rates (Stiflenought 37%), and that is fine: those decks are built to run on two lands. So the pipeline judges a brew's numbers **against its donor archetype's numbers**, not fixed thresholds, the same lesson as the land counts in step 5.
+
+37 tests pass, including reproducibility and a color-screw case (blue double-pip spells with mostly red lands).
 
 ---
 

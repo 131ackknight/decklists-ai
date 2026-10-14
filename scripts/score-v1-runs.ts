@@ -63,10 +63,12 @@ for (const file of files) {
   // Files are named <label>-p<pass>.json; the label keeps "as-shipped-claude-haiku-4-5" apart from the filtered rerun.
   const base = path.basename(file, ".json");
   const m = base.match(/^(.*)-p(\d+)$/);
-  const label = (file.includes("harness-v2") ? "v2-" : "") + (m ? m[1] : base);
+  // harness-vN folders are labelled vN-; v1 runs live elsewhere and stay unprefixed.
+  const harness = file.match(/harness-(v\d+)/)?.[1];
+  const label = (harness ? `${harness}-` : "") + (m ? m[1] : base);
   const pass = m ? m[2] : "1";
   const [pin, pout] = PRICES[run.model] ?? [0, 0];
-  const isV2 = file.includes("harness-v2");
+  const isV2 = /harness-v\d+/.test(file);
   for (const r of run.results) {
     if (r.unsupported || !r.sentFormat) continue;
     if (!r.deck && !r.usage && !r.ms) continue;

@@ -1,0 +1,1058 @@
+{
+ "ranAt": "2026-10-14T19:45:52.087Z",
+ "model": "claude-opus-5-5",
+ "harness": "v3",
+ "results": [
+  {
+   "id": "legacy-sideboard-only",
+   "format": "Legacy",
+   "sentFormat": "Legacy",
+   "prompt": "Here's my Legacy Dimir Tempo main deck, build me a sideboard for the current meta. \n\n2 Brazen Borrower\n2 Murktide Regent\n4 Orcish Bowmasters\n4 Tamiyo, Inquisitive Student\n4 Brainstorm\n4 Daze\n4 Fatal Push\n4 Force of Will\n1 Flooded Strand\n1 Island\n1 Marsh Flats\n1 Misty Rainforest\n4 Polluted Delta\n1 Scalding Tarn\n1 Swamp\n1 Undercity Sewers\n4 Underground Sea\n4 Wasteland\n1 Kaito, Bane of Nightmares\n4 Flow State\n4 Ponder\n4 Thoughtseize",
+   "text": "I built a 15-card sideboard and left your main deck exactly as you sent it. It's legal, and submit_deck accepted it.\n\n**Sideboard (15)**\n- 3 Consign to Memory\n- 2 Force of Negation\n- 2 Hydroblast\n- 2 Barrowgoyf\n- 2 Massacre\n- 2 Nihil Spellbomb\n- 1 Sheoldred's Edict\n- 1 Surgical Extraction\n\n**The plan**\nYour main deck is card for card the most recent 5-0 Dimir Tempo list. You trade cheap cantrips and free counters (Daze, Force of Will) to protect early threats like Tamiyo, Bowmasters and Murktide. The sideboard keeps that plan. It adds cheap answers to what the current meta does: colorless threats and combo, red and white creature aggro, and graveyard decks.\n\n**Why these cards**\n- **Consign to Memory (3) and Force of Negation (2):** These are the archetype's two staples: 98.2% and 94.5% of Dimir Tempo sideboards run them. Consign counters colorless spells and triggered abilities. That covers Tron (Karn, The One Ring, Ugin), Eldrazi (Chalice, Kozilek's Command, and Kozilek's Command is colorless), Sewer Combo triggers, Storm and OmniTell. Force of Negation handles combo turns you can't Daze.\n- **Massacre (2):** This is for Ocelot Aggro, the second-biggest deck at 9.0%. The usual list plays Plains (92.9% of lists) and Plateau (97.1%). Massacre is free if they control a Plains and you control a Swamp, and Underground Sea, Undercity Sewers and your basic Swamp all count. It kills Ocelot Pride, Guide of Souls, Amped Raptor and their tokens. Voice of Victory (1/3) survives. It also kills your own Bowmasters, though Tamiyo (0/3) survives.\n- **Hydroblast (2):** Answers Amped Raptor and Goblin Bombardment, plus Izzet Tempo (4.6%) and Sewer Combo's red Goblins.\n- **Barrowgoyf (2):** A deathtouch, lifelink body for the mirror (10.2%), aggro and Eldrazi.\n- **Sheoldred's Edict (1):** It can make them sacrifice a creature token, so it answers Marit Lage from Lands (5.1%). It also handles hexproof threats, Murktide in the mirror, and big Eldrazi that Fatal Push can't reach.\n- **Nihil Spellbomb (2) and Surgical Extraction (1):** Graveyard hate for Lands (Life from the Loam), Reanimator (3.8%), Hogaak (2.0%) and Doomsday.\n\n**Where I differ from the 5-0 list:** It ran 4 Leyline of the Void, 3 Barrowgoyf and 2 Bloodchief's Thirst. I swapped the 4 Leyline for 2 Spellbomb and 1 Surgical. Reanimator, Hogaak and Lands add up to about 11% of the field. Leyline is only free in your opening hand, and it's a 4-mana card in a 19-land deck. That freed slots for Massacre and a second Hydroblast against Ocelot, which is much more common. This is a judgment call. If your local field has a lot of Reanimator, go back to Leyline over Massacre.\n\n**Mana (unchanged; measured)**\ncheck_deck shows 19 lands, 15 blue sources and 13 black. Real Dimir Tempo lists average 18.94 lands, 13.8 blue and 12.1 black, so no problems. In 5,000 simulated games:\n- **Mulligans:** 8.7%.\n- **Colors:** you have the colors you need by turn 1 in 69.3% of games and by turn 2 in 86.5%.\n- **Lands:** about 1.83 lands in play on turn 2.\n- **Screw:** the simulator reports 29.2%. That's too high for this deck, because the simulator doesn't cast Brainstorm, Ponder or Flow State.\n\n**Sideboarding guide (all judgment)**\n- **Mirror:** +2 Barrowgoyf, +1 Edict; −2 Daze, −1 Flow State.\n- **Ocelot Aggro:** +2 Massacre, +2 Hydroblast, +2 Barrowgoyf; −4 Thoughtseize (costs life against aggro), −2 Daze. Voice of Victory stops you casting spells on their turn, which makes Daze worse.\n- **Tron:** +3 Consign, +2 Force of Negation; −4 Fatal Push, −1 Brazen Borrower.\n- **Eldrazi:** +3 Consign, +2 Barrowgoyf, +1 Edict; −4 Daze, −2 Flow State. Daze is weak against Ancient Tomb and Lotus Petal. Creatures cast with Cavern of Souls can't be countered, so aim Consign at Chalice, Kozilek's Command and triggers.\n- **Doomsday, Storm, OmniTell, Sneak and Show:** +2 Force of Negation, +3 Consign (+1 Surgical against Doomsday); −4 Fatal Push, −1 Borrower or −1 Bowmasters.\n- **Lands:** +2 Spellbomb, +1 Surgical, +1 Edict, +2 Force of Negation; −4 Fatal Push, −2 Daze.\n- **Reanimator and Hogaak:** +2 Spellbomb, +1 Surgical, +2 Consign; −4 Fatal Push, −1 Kaito.\n- **Izzet Tempo:** +2 Hydroblast, +2 Barrowgoyf; −2 Daze, −2 Thoughtseize.\n- **Death and Taxes:** +2 Massacre, +1 Edict; −2 Daze, −1 Thoughtseize.\n\n**Label:** This is a \"tuned\" build. The main deck is the latest 5-0 Dimir Tempo list unchanged, and the sideboard is built from cards that are common in real Dimir Tempo sideboards. Things I didn't check with the tools: that Plateau counts as a Plains (I'm confident it does, but I didn't look up its type line), and the specific cards inside the combo decks. The in/out counts above are my judgment, not tested results.",
+   "toolCalls": [
+    {
+     "name": "meta",
+     "isError": false,
+     "stage": "tune"
+    },
+    {
+     "name": "archetype",
+     "isError": false,
+     "stage": "tune"
+    },
+    {
+     "name": "card_info",
+     "isError": false,
+     "stage": "tune"
+    },
+    {
+     "name": "card_info",
+     "isError": false,
+     "stage": "tune"
+    },
+    {
+     "name": "reference_list",
+     "isError": false,
+     "stage": "tune"
+    },
+    {
+     "name": "archetype",
+     "isError": false,
+     "stage": "tune"
+    },
+    {
+     "name": "archetype",
+     "isError": false,
+     "stage": "tune"
+    },
+    {
+     "name": "archetype",
+     "isError": false,
+     "stage": "tune"
+    },
+    {
+     "name": "card_info",
+     "isError": false,
+     "stage": "tune"
+    },
+    {
+     "name": "archetype",
+     "isError": false,
+     "stage": "tune"
+    },
+    {
+     "name": "archetype",
+     "isError": false,
+     "stage": "tune"
+    },
+    {
+     "name": "card_info",
+     "isError": false,
+     "stage": "tune"
+    },
+    {
+     "name": "check_deck",
+     "isError": false,
+     "stage": "tune"
+    },
+    {
+     "name": "simulate",
+     "isError": false,
+     "stage": "tune"
+    },
+    {
+     "name": "submit_deck",
+     "ok": true,
+     "isError": false,
+     "stage": "tune"
+    }
+   ],
+   "intent": {
+    "type": "sideboard",
+    "format": "Legacy",
+    "archetype": "Dimir Tempo",
+    "namedCards": [],
+    "colors": {
+     "exactly": [
+      "U",
+      "B"
+     ],
+     "exclude": []
+    },
+    "constraints": [
+     "build only the 15-card sideboard; keep the supplied main deck unchanged",
+     "tuned for the current Legacy meta"
+    ],
+    "pastedList": true,
+    "goal": "Deliver a 15-card Legacy sideboard for the supplied Dimir Tempo main deck, aimed at the current Legacy metagame."
+   },
+   "path": "tune",
+   "facts": [],
+   "engine": null,
+   "deck": {
+    "main": [
+     {
+      "qty": 2,
+      "name": "Brazen Borrower"
+     },
+     {
+      "qty": 2,
+      "name": "Murktide Regent"
+     },
+     {
+      "qty": 4,
+      "name": "Orcish Bowmasters"
+     },
+     {
+      "qty": 4,
+      "name": "Tamiyo, Inquisitive Student"
+     },
+     {
+      "qty": 4,
+      "name": "Brainstorm"
+     },
+     {
+      "qty": 4,
+      "name": "Daze"
+     },
+     {
+      "qty": 4,
+      "name": "Fatal Push"
+     },
+     {
+      "qty": 4,
+      "name": "Force of Will"
+     },
+     {
+      "qty": 1,
+      "name": "Flooded Strand"
+     },
+     {
+      "qty": 1,
+      "name": "Island"
+     },
+     {
+      "qty": 1,
+      "name": "Marsh Flats"
+     },
+     {
+      "qty": 1,
+      "name": "Misty Rainforest"
+     },
+     {
+      "qty": 4,
+      "name": "Polluted Delta"
+     },
+     {
+      "qty": 1,
+      "name": "Scalding Tarn"
+     },
+     {
+      "qty": 1,
+      "name": "Swamp"
+     },
+     {
+      "qty": 1,
+      "name": "Undercity Sewers"
+     },
+     {
+      "qty": 4,
+      "name": "Underground Sea"
+     },
+     {
+      "qty": 4,
+      "name": "Wasteland"
+     },
+     {
+      "qty": 1,
+      "name": "Kaito, Bane of Nightmares"
+     },
+     {
+      "qty": 4,
+      "name": "Flow State"
+     },
+     {
+      "qty": 4,
+      "name": "Ponder"
+     },
+     {
+      "qty": 4,
+      "name": "Thoughtseize"
+     }
+    ],
+    "side": [
+     {
+      "qty": 3,
+      "name": "Consign to Memory"
+     },
+     {
+      "qty": 2,
+      "name": "Force of Negation"
+     },
+     {
+      "qty": 2,
+      "name": "Hydroblast"
+     },
+     {
+      "qty": 2,
+      "name": "Barrowgoyf"
+     },
+     {
+      "qty": 2,
+      "name": "Massacre"
+     },
+     {
+      "qty": 1,
+      "name": "Sheoldred's Edict"
+     },
+     {
+      "qty": 2,
+      "name": "Nihil Spellbomb"
+     },
+     {
+      "qty": 1,
+      "name": "Surgical Extraction"
+     }
+    ],
+    "commander": [],
+    "format": "legacy",
+    "strategy": "Dimir Tempo",
+    "badge": "tuned",
+    "warnings": []
+   },
+   "usage": {
+    "promptTokens": 163880,
+    "completionTokens": 10504,
+    "input": 1851,
+    "output": 10504,
+    "cacheRead": 124356,
+    "cacheWrite": 37673
+   },
+   "costUsd": 0.4253,
+   "steps": 6,
+   "stopReason": "end_turn",
+   "ms": 99569,
+   "errors": []
+  },
+  {
+   "id": "commander-atraxa-proliferate",
+   "format": "Commander",
+   "sentFormat": "Commander",
+   "prompt": "Build a Commander deck with Atraxa, Praetors' Voice that's all about proliferate.",
+   "text": "# Atraxa, Praetors' Voice: Proliferate (brew)\n\n**Plan.** Atraxa proliferates at every one of your end steps from the command zone. Around her are about 16 more proliferate cards, 8 cards that add extra counters, and creatures and planeswalkers that make counters, so each proliferate grows everything at once. You win by attacking with Atraxa (flying, lifelink, deathtouch) and creatures loaded with counters, by planeswalker ultimates (Teferi's emblem, Vraska's poison, Elspeth's angels), or by using a huge Walking Ballista to deal the last points of damage directly.\n\n## The changes in this revision\nThe tools have no tournament data for Commander, so I couldn't test this against a real field. Instead I reviewed it against the weaknesses the build already lists: fast combo, board wipes, and early pressure on planeswalkers. The main engine is unchanged. I made two swaps around it:\n- **Mana Drain → Fierce Guardianship.** Mana Drain needs two blue mana (UU), and the checker counted only 21 blue sources against about 34 wanted. Fierce Guardianship is free while you control your commander. It stops a combo piece or a board wipe even when you're tapped out from building your board.\n- **Supreme Verdict → Dovin's Veto.** A board wipe that hits everyone mostly destroys your own counters. You still have Toxic Deluge and Cyclonic Rift to reset a board. Dovin's Veto (one white, one blue) is easier to cast than UU and can't be countered, which matters most against fast combo, this deck's worst matchup.\n\n## Key cards\n- **Proliferate twice or more:** Tekuthal makes every proliferate happen twice. Ezuri draws a card each time you proliferate. Ichormoon Gauntlet gives every planeswalker a 0-cost proliferate ability.\n- **Extra counters:** Doubling Season, Vorinclex, Deepglow Skate, Hardened Scales, Ozolith, Kami of Whispered Hopes and Brokers Ascendancy make each counter you add worth more.\n- **Protection:** Mutational Advantage, Heroic Intervention, Teferi's Protection and Inspiring Call. Your board is the whole plan, so these are as important as the threats.\n\n## Mana (measured)\n36 lands (Karn's Bastion counted as one) plus 13 mana rocks, mana creatures and land-search spells. Average mana value is 2.79.\n- **Simulation (5,000 games):** mulligan rate 21.6%. You have about 3.5 lands in play by turn 4 on average. \"Missed a land drop\" shows up at 39%, but that number ignores ramp spells, so it overstates how often you'll actually be short. Your colors were all available 83% of the time on turn 2 and 86.6% on turn 4, up from 81.3% and 84.2% before the swaps.\n- **Draw odds (99-card library):**\n  - At least one of the 10 cheap ramp pieces by turn 2: 58.7%.\n  - At least one counter doubler by turn 4: 58.7%, before counting Demonic, Vampiric and Enlightened Tutor.\n  - At least one of the 4 counterspells by turn 4: 35.1%.\n- **Remaining warning:** Reject Imperfection (and Tekuthal) still need UU, and the checker says about 31 blue sources are wanted. I think it undercounts: about 7 fetchlands, Reflecting Pool and Exotic Orchard can all produce blue, which probably puts the real count near 30. That's my estimate, not a measurement.\n\n## Adjusting by table (Commander has no sideboard)\n- **Fast combo:** Keep hands with ramp. Hold Fierce Guardianship, Dovin's Veto and Swan Song for their win attempt rather than for value. Tutor for answers, not for doublers.\n- **Creature-heavy or midrange tables:** Use spot removal (Swords, Path, Trophy) on the biggest threats. Use Cyclonic Rift overloaded as a one-sided reset. Proliferate only your own permanents.\n- **Board wipes:** Don't overcommit. One counter doubler plus Atraxa usually rebuilds a board. Keep Teferi's Protection or Heroic Intervention ready before you go all in.\n- **Flyers attacking your planeswalkers:** Atraxa and Tekuthal can block. Raise loyalty with Teferi's −3 or proliferate before you use the minus abilities.\n\n## Label and borrowed parts\nThis is a **brew**. The shell (fetchlands and original dual lands, fast mana, free-spell interaction, tutors) comes from Aminatou, the Fateshifter lists, and the proliferate engine is new. Not verified: how it performs against real Commander results (the tools have no data for this format), and my estimate of the blue-source count.",
+   "toolCalls": [
+    {
+     "name": "card_info",
+     "isError": false,
+     "stage": "engine"
+    },
+    {
+     "name": "meta",
+     "isError": false,
+     "stage": "engine"
+    },
+    {
+     "name": "search_cards",
+     "isError": false,
+     "stage": "engine"
+    },
+    {
+     "name": "card_info",
+     "isError": false,
+     "stage": "engine"
+    },
+    {
+     "name": "search_cards",
+     "isError": false,
+     "stage": "engine"
+    },
+    {
+     "name": "draw_odds",
+     "isError": false,
+     "stage": "engine"
+    },
+    {
+     "name": "submit_engine",
+     "ok": true,
+     "isError": false,
+     "stage": "engine"
+    },
+    {
+     "name": "archetype",
+     "isError": false,
+     "stage": "shell"
+    },
+    {
+     "name": "reference_list",
+     "isError": false,
+     "stage": "shell"
+    },
+    {
+     "name": "meta",
+     "isError": false,
+     "stage": "shell"
+    },
+    {
+     "name": "meta",
+     "isError": false,
+     "stage": "shell"
+    },
+    {
+     "name": "archetype",
+     "isError": false,
+     "stage": "shell"
+    },
+    {
+     "name": "reference_list",
+     "isError": false,
+     "stage": "shell"
+    },
+    {
+     "name": "card_info",
+     "isError": false,
+     "stage": "shell"
+    },
+    {
+     "name": "card_info",
+     "isError": false,
+     "stage": "shell"
+    },
+    {
+     "name": "card_info",
+     "isError": false,
+     "stage": "shell"
+    },
+    {
+     "name": "search_cards",
+     "isError": false,
+     "stage": "shell"
+    },
+    {
+     "name": "check_deck",
+     "isError": false,
+     "stage": "shell"
+    },
+    {
+     "name": "card_info",
+     "isError": false,
+     "stage": "shell"
+    },
+    {
+     "name": "simulate",
+     "isError": false,
+     "stage": "shell"
+    },
+    {
+     "name": "simulate",
+     "isError": false,
+     "stage": "shell"
+    },
+    {
+     "name": "draw_odds",
+     "isError": false,
+     "stage": "shell"
+    },
+    {
+     "name": "draw_odds",
+     "isError": false,
+     "stage": "shell"
+    },
+    {
+     "name": "submit_deck",
+     "ok": true,
+     "isError": false,
+     "stage": "shell"
+    },
+    {
+     "name": "meta",
+     "isError": false,
+     "stage": "critique"
+    },
+    {
+     "name": "archetype",
+     "isError": false,
+     "stage": "critique"
+    },
+    {
+     "name": "check_deck",
+     "isError": false,
+     "stage": "critique"
+    },
+    {
+     "name": "card_info",
+     "isError": false,
+     "stage": "critique"
+    },
+    {
+     "name": "simulate",
+     "isError": false,
+     "stage": "critique"
+    },
+    {
+     "name": "card_info",
+     "isError": false,
+     "stage": "critique"
+    },
+    {
+     "name": "simulate",
+     "isError": false,
+     "stage": "critique"
+    },
+    {
+     "name": "draw_odds",
+     "isError": false,
+     "stage": "critique"
+    },
+    {
+     "name": "draw_odds",
+     "isError": false,
+     "stage": "critique"
+    },
+    {
+     "name": "draw_odds",
+     "isError": false,
+     "stage": "critique"
+    },
+    {
+     "name": "submit_deck",
+     "ok": true,
+     "isError": false,
+     "stage": "critique"
+    }
+   ],
+   "intent": {
+    "type": "brew",
+    "format": "Commander",
+    "archetype": "proliferate",
+    "namedCards": [
+     "Atraxa, Praetors' Voice"
+    ],
+    "colors": {
+     "exactly": null,
+     "exclude": []
+    },
+    "constraints": [
+     "Atraxa, Praetors' Voice as commander",
+     "focused on proliferate"
+    ],
+    "pastedList": false,
+    "goal": "Deliver a Commander decklist led by Atraxa, Praetors' Voice that is built around proliferate synergies and counter-based strategies."
+   },
+   "path": "brew",
+   "facts": [
+    "Atraxa, Praetors' Voice is legal in commander."
+   ],
+   "engine": {
+    "format": "commander",
+    "thesis": "Atraxa (always available from the command zone) proliferates every end step. Around her sit about 16 more proliferate cards, counter doublers and counter-making creatures and planeswalkers, so every proliferate grows +1/+1 counters and loyalty all at once. It wins by attacking with big counter-loaded creatures and Atraxa, by planeswalker ultimates (Teferi, Elspeth, Vraska's poison −9) and with Walking Ballista as a direct-damage finisher. Commander fits because one commander that proliferates every turn plus a 99-card singleton pool of proliferate effects can only be built in that format.",
+    "winCondition": "Combat with counter-pumped creatures and lifelink/deathtouch Atraxa, backed by planeswalker ultimates (Elspeth Resplendent angels, Teferi emblem, Vraska poison) and Walking Ballista pings once doublers have grown it.",
+    "targetTurn": 4,
+    "beats": [
+     "Fair midrange and creature decks that can't keep up with compounding counters every turn",
+     "Slower battlecruiser tables where planeswalkers can go unattacked",
+     "Spot-removal-heavy decks, since counters are spread over many permanents"
+    ],
+    "losesTo": [
+     "Fast combo that wins before turn 5-6, when the counters compound",
+     "Board wipes, mass bounce and counter-removal effects",
+     "Heavy flying/aggressive pressure on planeswalkers early",
+     "Commander tax lockout if Atraxa is repeatedly removed"
+    ],
+    "cards": [
+     {
+      "name": "Atraxa, Praetors' Voice",
+      "qty": 1,
+      "role": "payoff"
+     },
+     {
+      "name": "Tekuthal, Inquiry Dominus",
+      "qty": 1,
+      "role": "payoff"
+     },
+     {
+      "name": "Ezuri, Stalker of Spheres",
+      "qty": 1,
+      "role": "payoff"
+     },
+     {
+      "name": "Evolution Sage",
+      "qty": 1,
+      "role": "redundancy"
+     },
+     {
+      "name": "Flux Channeler",
+      "qty": 1,
+      "role": "redundancy"
+     },
+     {
+      "name": "Inexorable Tide",
+      "qty": 1,
+      "role": "redundancy"
+     },
+     {
+      "name": "Norn's Choirmaster",
+      "qty": 1,
+      "role": "redundancy"
+     },
+     {
+      "name": "Karn's Bastion",
+      "qty": 1,
+      "role": "redundancy"
+     },
+     {
+      "name": "Contentious Plan",
+      "qty": 1,
+      "role": "redundancy"
+     },
+     {
+      "name": "Experimental Augury",
+      "qty": 1,
+      "role": "redundancy"
+     },
+     {
+      "name": "Tezzeret's Gambit",
+      "qty": 1,
+      "role": "redundancy"
+     },
+     {
+      "name": "Atomize",
+      "qty": 1,
+      "role": "redundancy"
+     },
+     {
+      "name": "Vraska, Betrayal's Sting",
+      "qty": 1,
+      "role": "redundancy"
+     },
+     {
+      "name": "Grateful Apparition",
+      "qty": 1,
+      "role": "redundancy"
+     },
+     {
+      "name": "Cankerbloom",
+      "qty": 1,
+      "role": "redundancy"
+     },
+     {
+      "name": "Ichormoon Gauntlet",
+      "qty": 1,
+      "role": "redundancy"
+     },
+     {
+      "name": "Mutational Advantage",
+      "qty": 1,
+      "role": "protection"
+     },
+     {
+      "name": "Doubling Season",
+      "qty": 1,
+      "role": "enabler"
+     },
+     {
+      "name": "Vorinclex, Monstrous Raider",
+      "qty": 1,
+      "role": "enabler"
+     },
+     {
+      "name": "Deepglow Skate",
+      "qty": 1,
+      "role": "enabler"
+     },
+     {
+      "name": "Hardened Scales",
+      "qty": 1,
+      "role": "enabler"
+     },
+     {
+      "name": "Ozolith, the Shattered Spire",
+      "qty": 1,
+      "role": "enabler"
+     },
+     {
+      "name": "Kami of Whispered Hopes",
+      "qty": 1,
+      "role": "enabler"
+     },
+     {
+      "name": "Rishkar, Peema Renegade",
+      "qty": 1,
+      "role": "enabler"
+     },
+     {
+      "name": "Brokers Ascendancy",
+      "qty": 1,
+      "role": "enabler"
+     },
+     {
+      "name": "Walking Ballista",
+      "qty": 1,
+      "role": "payoff"
+     },
+     {
+      "name": "Kalonian Hydra",
+      "qty": 1,
+      "role": "payoff"
+     },
+     {
+      "name": "Teferi, Hero of Dominaria",
+      "qty": 1,
+      "role": "payoff"
+     },
+     {
+      "name": "Elspeth Resplendent",
+      "qty": 1,
+      "role": "payoff"
+     },
+     {
+      "name": "Ajani, the Greathearted",
+      "qty": 1,
+      "role": "enabler"
+     }
+    ]
+   },
+   "deck": {
+    "main": [
+     {
+      "qty": 1,
+      "name": "Tekuthal, Inquiry Dominus"
+     },
+     {
+      "qty": 1,
+      "name": "Ezuri, Stalker of Spheres"
+     },
+     {
+      "qty": 1,
+      "name": "Evolution Sage"
+     },
+     {
+      "qty": 1,
+      "name": "Flux Channeler"
+     },
+     {
+      "qty": 1,
+      "name": "Inexorable Tide"
+     },
+     {
+      "qty": 1,
+      "name": "Norn's Choirmaster"
+     },
+     {
+      "qty": 1,
+      "name": "Karn's Bastion"
+     },
+     {
+      "qty": 1,
+      "name": "Contentious Plan"
+     },
+     {
+      "qty": 1,
+      "name": "Experimental Augury"
+     },
+     {
+      "qty": 1,
+      "name": "Tezzeret's Gambit"
+     },
+     {
+      "qty": 1,
+      "name": "Atomize"
+     },
+     {
+      "qty": 1,
+      "name": "Vraska, Betrayal's Sting"
+     },
+     {
+      "qty": 1,
+      "name": "Grateful Apparition"
+     },
+     {
+      "qty": 1,
+      "name": "Cankerbloom"
+     },
+     {
+      "qty": 1,
+      "name": "Ichormoon Gauntlet"
+     },
+     {
+      "qty": 1,
+      "name": "Mutational Advantage"
+     },
+     {
+      "qty": 1,
+      "name": "Doubling Season"
+     },
+     {
+      "qty": 1,
+      "name": "Vorinclex, Monstrous Raider"
+     },
+     {
+      "qty": 1,
+      "name": "Deepglow Skate"
+     },
+     {
+      "qty": 1,
+      "name": "Hardened Scales"
+     },
+     {
+      "qty": 1,
+      "name": "Ozolith, the Shattered Spire"
+     },
+     {
+      "qty": 1,
+      "name": "Kami of Whispered Hopes"
+     },
+     {
+      "qty": 1,
+      "name": "Rishkar, Peema Renegade"
+     },
+     {
+      "qty": 1,
+      "name": "Brokers Ascendancy"
+     },
+     {
+      "qty": 1,
+      "name": "Walking Ballista"
+     },
+     {
+      "qty": 1,
+      "name": "Kalonian Hydra"
+     },
+     {
+      "qty": 1,
+      "name": "Teferi, Hero of Dominaria"
+     },
+     {
+      "qty": 1,
+      "name": "Elspeth Resplendent"
+     },
+     {
+      "qty": 1,
+      "name": "Ajani, the Greathearted"
+     },
+     {
+      "qty": 1,
+      "name": "Sol Ring"
+     },
+     {
+      "qty": 1,
+      "name": "Arcane Signet"
+     },
+     {
+      "qty": 1,
+      "name": "Fellwar Stone"
+     },
+     {
+      "qty": 1,
+      "name": "Everflowing Chalice"
+     },
+     {
+      "qty": 1,
+      "name": "Coalition Relic"
+     },
+     {
+      "qty": 1,
+      "name": "Glistening Sphere"
+     },
+     {
+      "qty": 1,
+      "name": "Chromatic Lantern"
+     },
+     {
+      "qty": 1,
+      "name": "Birds of Paradise"
+     },
+     {
+      "qty": 1,
+      "name": "Noble Hierarch"
+     },
+     {
+      "qty": 1,
+      "name": "Bloom Tender"
+     },
+     {
+      "qty": 1,
+      "name": "Farseek"
+     },
+     {
+      "qty": 1,
+      "name": "Nature's Lore"
+     },
+     {
+      "qty": 1,
+      "name": "Three Visits"
+     },
+     {
+      "qty": 1,
+      "name": "Swords to Plowshares"
+     },
+     {
+      "qty": 1,
+      "name": "Path to Exile"
+     },
+     {
+      "qty": 1,
+      "name": "Anguished Unmaking"
+     },
+     {
+      "qty": 1,
+      "name": "Assassin's Trophy"
+     },
+     {
+      "qty": 1,
+      "name": "Beast Within"
+     },
+     {
+      "qty": 1,
+      "name": "Generous Gift"
+     },
+     {
+      "qty": 1,
+      "name": "Fierce Guardianship"
+     },
+     {
+      "qty": 1,
+      "name": "Swan Song"
+     },
+     {
+      "qty": 1,
+      "name": "Reject Imperfection"
+     },
+     {
+      "qty": 1,
+      "name": "Cyclonic Rift"
+     },
+     {
+      "qty": 1,
+      "name": "Toxic Deluge"
+     },
+     {
+      "qty": 1,
+      "name": "Dovin's Veto"
+     },
+     {
+      "qty": 1,
+      "name": "Rhystic Study"
+     },
+     {
+      "qty": 1,
+      "name": "Guardian Project"
+     },
+     {
+      "qty": 1,
+      "name": "Inspiring Call"
+     },
+     {
+      "qty": 1,
+      "name": "Sylvan Library"
+     },
+     {
+      "qty": 1,
+      "name": "Smothering Tithe"
+     },
+     {
+      "qty": 1,
+      "name": "Demonic Tutor"
+     },
+     {
+      "qty": 1,
+      "name": "Vampiric Tutor"
+     },
+     {
+      "qty": 1,
+      "name": "Enlightened Tutor"
+     },
+     {
+      "qty": 1,
+      "name": "Reflecting Pool"
+     },
+     {
+      "qty": 1,
+      "name": "Heroic Intervention"
+     },
+     {
+      "qty": 1,
+      "name": "Teferi's Protection"
+     },
+     {
+      "qty": 1,
+      "name": "Command Tower"
+     },
+     {
+      "qty": 1,
+      "name": "Flooded Strand"
+     },
+     {
+      "qty": 1,
+      "name": "Polluted Delta"
+     },
+     {
+      "qty": 1,
+      "name": "Windswept Heath"
+     },
+     {
+      "qty": 1,
+      "name": "Verdant Catacombs"
+     },
+     {
+      "qty": 1,
+      "name": "Misty Rainforest"
+     },
+     {
+      "qty": 1,
+      "name": "Marsh Flats"
+     },
+     {
+      "qty": 1,
+      "name": "Prismatic Vista"
+     },
+     {
+      "qty": 1,
+      "name": "Tundra"
+     },
+     {
+      "qty": 1,
+      "name": "Underground Sea"
+     },
+     {
+      "qty": 1,
+      "name": "Scrubland"
+     },
+     {
+      "qty": 1,
+      "name": "Bayou"
+     },
+     {
+      "qty": 1,
+      "name": "Savannah"
+     },
+     {
+      "qty": 1,
+      "name": "Tropical Island"
+     },
+     {
+      "qty": 1,
+      "name": "Hallowed Fountain"
+     },
+     {
+      "qty": 1,
+      "name": "Watery Grave"
+     },
+     {
+      "qty": 1,
+      "name": "Godless Shrine"
+     },
+     {
+      "qty": 1,
+      "name": "Overgrown Tomb"
+     },
+     {
+      "qty": 1,
+      "name": "Temple Garden"
+     },
+     {
+      "qty": 1,
+      "name": "Breeding Pool"
+     },
+     {
+      "qty": 1,
+      "name": "Indatha Triome"
+     },
+     {
+      "qty": 1,
+      "name": "Zagoth Triome"
+     },
+     {
+      "qty": 1,
+      "name": "Spara's Headquarters"
+     },
+     {
+      "qty": 1,
+      "name": "Raffine's Tower"
+     },
+     {
+      "qty": 1,
+      "name": "Exotic Orchard"
+     },
+     {
+      "qty": 1,
+      "name": "Mana Confluence"
+     },
+     {
+      "qty": 1,
+      "name": "City of Brass"
+     },
+     {
+      "qty": 1,
+      "name": "Otawara, Soaring City"
+     },
+     {
+      "qty": 1,
+      "name": "Boseiju, Who Endures"
+     },
+     {
+      "qty": 2,
+      "name": "Forest"
+     },
+     {
+      "qty": 1,
+      "name": "Island"
+     },
+     {
+      "qty": 1,
+      "name": "Plains"
+     },
+     {
+      "qty": 1,
+      "name": "Swamp"
+     }
+    ],
+    "side": [],
+    "commander": [
+     {
+      "qty": 1,
+      "name": "Atraxa, Praetors' Voice"
+     }
+    ],
+    "format": "commander",
+    "strategy": "Aminatou, the Fateshifter",
+    "badge": "brew",
+    "warnings": [
+     "21 U sources; Reject Imperfection wants about 31 to cast on curve."
+    ]
+   },
+   "usage": {
+    "promptTokens": 571973,
+    "completionTokens": 38731,
+    "input": 1673,
+    "output": 38731,
+    "cacheRead": 466467,
+    "cacheWrite": 103833
+   },
+   "costUsd": 1.3889,
+   "steps": 23,
+   "stopReason": "end_turn",
+   "ms": 328615,
+   "errors": []
+  }
+ ]
+}

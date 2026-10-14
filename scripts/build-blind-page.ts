@@ -61,7 +61,8 @@ for (const file of argv) {
   const m = path.basename(file, ".json").match(/^(.*)-p(\d+)$/);
   if (!m) continue;
   const [, base, pass] = m;
-  const label = file.includes("harness-v2") ? `v2-${base}` : base;
+  const harness = file.match(/harness-(v\d+)/)?.[1];
+  const label = harness ? `${harness}-${base}` : base;
   const run = JSON.parse(readFileSync(file, "utf8")) as RunFile;
   for (const r of run.results) {
     if (r.unsupported || !r.sentFormat) continue;

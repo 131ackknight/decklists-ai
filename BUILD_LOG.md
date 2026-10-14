@@ -13,12 +13,12 @@ A running record of how decklists.ai gets built: decisions, findings, numbers, a
 
 | Item | Total |
 | --- | --- |
-| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40. Total about $35.87. Plus one 17-token test call. |
+| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71. Total about $67.66. Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
 | Automated tests | 41 passing |
 | Decklist Data PRs merged | 4 (#181 export, #182 baseline eval, #183 baseline on `main`, #184 model comparison) |
-| Plan steps done | 1, 4, 5, 6; step 2 rubric baseline done (108 + 48 rated, 36 pairwise judged); next: step 8 |
+| Plan steps done | 1, 4, 5, 6; step 8 pipeline built and run (48 decks, all legal); round 3 pairwise open |
 
 ## The story so far (for the post)
 
@@ -45,6 +45,23 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - Lesson to apply: any prompt or claim that names a card gets checked against the card index before it is used.
 - ~~Switch to pairwise~~: done; 36 pairs judged (v1 8 wins, v2 6, 22 ties; v2 100% faithful vs. 92%).
 - ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
+
+---
+
+## 2026-10-14 · v3 objective results and round 3 judging
+
+Opus 5.5 finished the full v3 run at $18.28 (above the ~$15 estimate: its brews run long, up to $1.48 and 7.7 minutes for Dream Halls), with 22 of 24 decks; its two failures were the same lock bugs. Every failed prompt for both models (2 for Opus, 3 for Sonnet) was rerun on the fixed code ($3.69) and all produced decks. The merged results (`evals/results/harness-v3/merged/`, each noting which answers are reruns) give **24 of 24 decks for both models, all passing the checker, no invented cards.**
+
+| Model | Harness | Decks | Mana warnings | Lands off real archetype | "Something new": avg copy rate | 80%+ copies | Cost (24 prompts) | Median time |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Opus 5.5 | v2 | 24 | 6 | 0.60 | 76% | 6 of 14 | $9.31 | 93 s |
+| Opus 5.5 | **v3** | 24 | **3** | 1.09 | **65%** | **4 of 14** | $18.40 | 105 s |
+| Sonnet 5.5 | v2 | 24 | 5 | 1.34 | 69% | 5 of 14 | $5.21 | 66 s |
+| Sonnet 5.5 | **v3** | 24 | **4** | **0.85** | **62%** | **3 of 14** | $9.39 | 138 s |
+
+Copying fell again (Opus 87% in v1, 76% in v2, 65% in v3), and fewer mana warnings despite more original decks, which is the simulator and the shell stage at work. Cost about doubled. A scoring-script slip along the way: the scorer and novelty scripts only recognized v2's folder, so v3 first showed up unlabeled with costs recomputed without caching ($44); fixed to recognize any harness version. Caveat: decks accepted before the lock fixes may have been steered away from cards the over-strict color lock rejected; only the color-locked prompts could be affected.
+
+**Round 3 published: Brew Head-to-Head, Round 3**, 48 blind pairs (v2 vs. v3 for Opus and Sonnet on all 24 prompts; v3 on the left in 25, v2 in 23), same three questions as round 2. v2's Old School answers are its reruns on the fixed card index. Pick store checked reachable and empty.
 
 ---
 

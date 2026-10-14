@@ -82,7 +82,7 @@ for (const f of new Set(lists.map((l) => l.format))) {
 const rows: Record<string, unknown>[] = [];
 for (const file of process.argv.slice(2)) {
   const base = path.basename(file, ".json");
-  const label = (file.includes("harness-v2") ? "v2-" : "v1-") + base.replace(/-p\d+$/, "");
+  const label = (file.match(/harness-(v\d+)/)?.[1] ?? "v1") + "-" + base.replace(/-p\d+$/, "");
   const run = JSON.parse(readFileSync(file, "utf8")) as {
     results: { id: string; sentFormat: string | null; deck?: { main: Line[]; format?: string } | null }[];
   };

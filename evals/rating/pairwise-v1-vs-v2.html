@@ -66,6 +66,7 @@ details summary { cursor: pointer; color: var(--accent); font-size: 0.9rem; }
 .deck pre { margin: 0; font: 0.8rem/1.45 var(--font-mono); padding: 10px 12px; background: var(--bg); border-radius: 8px; overflow-x: auto; min-width: 0; }
 .deck h3 { font: 600 0.78rem var(--font-body); text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin-bottom: 6px; }
 .qs { display: grid; gap: 8px; border-top: 1px solid var(--line); padding-top: 12px; }
+.hint { display: block; color: var(--muted); font-size: 0.8rem; }
 .q { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 12px; align-items: center; font-size: 0.92rem; }
 .yn { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
 .yn button { font: 600 0.9rem var(--font-body); padding: 6px 14px; border: 0; border-left: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
@@ -198,6 +199,10 @@ textarea { width: 100%; min-height: 56px; font: 0.92rem var(--font-body); color:
       box.append(deck);
     }
     const qs = el("div", { class: "qs" });
+    const HINTS = {
+      Asked: "Format, colors, named cards and the kind of answer honored, or an impossible part explained with the closest real version. Not about deck strength.",
+      Play: "Is the deck itself good enough to sleeve up, maybe after a swap or two? Not about whether it matches the request.",
+    };
     for (const [k, label] of [["Asked", "Did it do what was asked?"], ["Play", "Would you play this deck, or something close?"]]) {
       const field = prefix + k;
       const id = `q-${field}`;
@@ -209,7 +214,8 @@ textarea { width: 100%; min-height: 56px; font: 0.92rem var(--font-body); color:
         yn.append(b);
       }
       yn.dataset.field = field;
-      qs.append(el("div", { class: "q" }, el("span", { id, text: label }), yn));
+      const labelBox = el("span", { id }, label, el("span", { class: "hint", text: HINTS[k] }));
+      qs.append(el("div", { class: "q" }, labelBox, yn));
     }
     box.append(qs);
     return box;

@@ -76,6 +76,8 @@ Judging the Pauper red aggro pairs, the owner noticed both bots called Mono-Red 
 
 **The owner: "A lot of the good stuff is in the replies of the bot, should I read that?"** Yes, selectively: the reply is part of the product (plan, card reasons, sideboard plan, honesty about limits) and decides tuning, sideboard and impossible-request pairs; on stock requests the deck is the answer. The page now shows the opening of each reply by default (where answers put the plan and caveats) with the rest one click away, and the guide says when to expand.
 
+**The owner asked what "Did it do what was asked?" means.** Defined as faithfulness, separate from strength: Yes when every explicit part of the request is honored (format, colors, named cards, the kind of answer: stock, brew, tune, sideboard only), or when an impossible part is explained and the closest real version built, or when small changes are explained; No when a constraint is quietly dropped, the answer is a different kind than asked (an existing deck with the requested card as a 2-of for a brew request), or it asks a question instead of building. "Would you play it?" judges the deck alone. The split exists so a faithful-but-weak brew and a strong-but-unfaithful stock deck show up as different things. One-line hints now sit under both questions on the page.
+
 ---
 
 ## 2026-10-14 · Reset: where we are and what's next

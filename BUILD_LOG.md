@@ -42,6 +42,23 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-10-14 · Peter Parker's Camera: variety where the data runs out
+
+The owner, rating: "The Peter Parker prompt was most interesting, there were 3 viable options that came out." The answers (still blind):
+
+| Answer | Shell | Cameras | What it copies |
+| --- | --- | --- | --- |
+| A | Eldrazi Tron | 3 | Cast triggers and activated abilities (Ugin, Karn, Devourer of Destiny); Tron mana pays the {2} |
+| C, D, F | Esper Blink | 2 | Enter-the-battlefield triggers (a second Solitude exile, another Flickerwisp blink, Overlord of the Balemurk) |
+| E | Amulet Titan | 2 | Land and Titan triggers (Primeval Titan, Urza's Saga, Amulet of Vigor) |
+| B | no deck | | |
+
+**The mirror image of the identical-decks finding.** Where a winning list existed (Merfolk, Goblins, Mono-Red), every model returned the same 60. There is no Camera deck to copy, so the models had to reason, and five answers produced three different viable shells. **Variety appears exactly where the data runs out.** Each answer also followed the "proven shell plus a new payoff" approach from Fable's plan without being told to.
+
+Rating guidance: reward "best utilizes" over "tacked on" (all are 2-3 Cameras added to an existing deck; the best answer explains which abilities are worth copying three times); no format penalty, because the prompt names none but v1 forces Modern, a harness limit that hits every answer equally. For the new harness: the format choice should belong to the model when the request leaves it open.
+
+---
+
 ## 2026-10-14 · An AI judge on the tuning prompt
 
 Unsure how to rate the Psychatog tunes, the owner asked: "can you score them for me?" Claude Code agreed with a caveat for the post: it is not a neutral judge, because Opus 5.5 is one of the models under test and models tend to prefer answers that sound like their own. So the scores are labeled an AI judgment, made without opening the answer key, and the post can either drop this prompt from the headline or disclose it.

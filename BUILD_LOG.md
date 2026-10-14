@@ -18,7 +18,32 @@ A running record of how decklists.ai gets built: decisions, findings, numbers, a
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
 | Automated tests | 27 passing |
 | Decklist Data PRs merged | 4 (#181 export, #182 baseline eval, #183 baseline on `main`, #184 model comparison) |
-| Plan steps done | 1, 4, 5 (5 waits on generated decks from step 6); step 2: v1 baseline run, owner rating pending |
+| Plan steps done | 1, 4, 5 (5 waits on generated decks from step 6); step 2: pass 1 of the model comparison run, owner rating it blind |
+
+## The story so far (for the post)
+
+1. **The question.** Decklist Data scrapes public MTGO decklists. Its v1 AI deck builder was "okay" at tuning but bad at sideboards and could not brew decks that don't exist yet. What would make a really good one? (Oct 6, with Fable)
+2. **The diagnosis.** Sideboards fail for lack of data (what is each card for?); brews fail for lack of search and verification (no way to find cards by function, nothing to check against). Principle: the model proposes, data and code decide.
+3. **The decision to make it its own thing.** decklists.ai: a showcase of an AI harness, separate repo and brand, built on Decklist Data through a read-only data boundary. Rule: coherent brews in any format, with or without data.
+4. **Card knowledge.** 32,870 cards and 4,577 Scryfall function tags, searchable by what cards do. "Premodern green storm" returns exactly the two real cards.
+5. **The checker, and the best finding so far.** Calibrated on 30,102 real tournament lists: zero errors on every real list in 8 formats. Karsten's land formulas flagged most real decks; refitting per format was the wrong shape; the right answer was the archetype itself, where land counts agree to about ±1 land (Premodern Goblins 24.0 ±0.3). The right mana base comes from the closest real deck, not a formula.
+6. **Measuring v1 honestly.** The baseline first hit the owner's own takedown (my stale-checkout mistake), then ran: 9 decks for 18 prompts at $0.63, and the memory failure in one line: "Storm is not legal in Premodern" (it is).
+7. **Same harness, five models.** v1 on Haiku 4.5, Haiku 5.5, Sonnet 5.5, Opus 5.5 and Fable 5.1, blind-rated by the owner. Pass 1: bigger models finish (17-18 decks vs. 7-9), Haiku 5.5 is the value pick ($0.11), Fable builds the closest mana, and every model leans on the meta data in ways that hurt brews: "not in results" read as "doesn't exist," and brews pulled back toward existing decks (mono green storm built as Elves plus Hunting Pack).
+8. **Where it goes next.** The new harness: card search decides what exists, data only informs mana, interaction and the meta, then the same five models again to separate what the model buys from what the harness buys.
+
+Recurring theme for the post: the owner's pushback improved the work at nearly every turn (no bracket scraping, no new database, no Neon credentials, use our own data instead of re-scraping MTGO, every list instead of a sample, fix `main` instead of running an old build, compare models).
+
+## Open decisions
+
+- Passes 2 and 3 of the model comparison: about $36 more (roughly $55 total) and 180 more answers to rate.
+- A one-line PR so v1 logs the real error behind the four "An error occurred." builds.
+- Adding the "distance from the nearest real deck" score to the objective scorer.
+
+---
+
+## 2026-10-14 · Owner starts the blind rating
+
+The owner began rating pass 1 on the Blind Brew Scorecard: 18 prompts, 108 anonymous answers across six sets, scored 1-5 on plan, legality, mana and shell using the page's "How to rate" anchors. Ratings save to the page's store and will be unblinded with `evals/results/model-comparison/blind-key.json` once pass 1 is complete.
 
 ---
 

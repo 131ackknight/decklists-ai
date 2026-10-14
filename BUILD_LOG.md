@@ -42,6 +42,12 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-10-14 · Rating rule: sideboard-only prompts
+
+For the Legacy Dimir Tempo sideboard prompt, the owner planned to give every answer Mana 1, since the owner supplied the main deck. It would not change rankings, but it would drag every model's headline average down for work none of them was asked to do. Ruling: on sideboard-only prompts, Mana means "can the deck cast this sideboard?" (5 all castable in blue-black, 3 awkward costs, 1 off-color cards), and changing the supplied main deck costs points on Plan and Legal unless a small swap is explained. Added to the page's guide along with the general constraint rule from the mono-white prompt.
+
+---
+
 ## 2026-10-14 · Rating rule: when the answer changes the colors
 
 On "Make a fun mono white control deck for Modern leagues," the owner asked how to rate an answer that turned it into blue-white. Ruling: changing an explicit color constraint means the answer didn't do what was asked. Legal 1-2 (2 if it explained the switch or only splashed, 1 if it silently became a real two-color deck); Plan 2 ("an idea, but it misses the request"); Mana and Shell judged on the deck itself, keeping "followed instructions" separate from "is the deck good."

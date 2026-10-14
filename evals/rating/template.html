@@ -1,0 +1,369 @@
+<title>Brew Scorecard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a judge's scoresheet. Sticky run bar with the headline score, then one card per prompt: request, reply, deck, and four 1-5 rows. */
+:root {
+  --bg: #f4f6fa;
+  --surface: #ffffff;
+  --ink: #1b2236;
+  --muted: #5d667d;
+  --line: #dde2ec;
+  --accent: #2459a6;
+  --accent-ink: #ffffff;
+  --score: #b5650d;
+  --ok: #1f7a4d;
+  --warn: #a35a00;
+  --bad: #b3261e;
+  --chip: #e8edf6;
+  --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #10141d; --surface: #181e2b; --ink: #e5e9f2; --muted: #9aa4ba; --line: #2a3346;
+    --accent: #6f9fe0; --accent-ink: #0d1422; --score: #e2a04f; --ok: #5cc28e; --warn: #e3a24a; --bad: #f08a80; --chip: #222b3d;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #10141d; --surface: #181e2b; --ink: #e5e9f2; --muted: #9aa4ba; --line: #2a3346;
+  --accent: #6f9fe0; --accent-ink: #0d1422; --score: #e2a04f; --ok: #5cc28e; --warn: #e3a24a; --bad: #f08a80; --chip: #222b3d;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 16px/1.5 var(--font-body); }
+.wrap { max-width: 980px; margin: 0 auto; padding-inline: 16px; padding-block: 0 64px; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; }
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); border-bottom: 1px solid var(--line); }
+.bar-inner { max-width: 980px; margin: 0 auto; padding: 12px 16px; display: grid; gap: 10px; }
+.title-row { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 16px; }
+.title-row h1 { font-size: 1.5rem; }
+.title-row p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+.tabs { display: flex; flex-wrap: wrap; gap: 6px; }
+.tab { font: 600 0.9rem var(--font-body); border: 1px solid var(--line); background: var(--surface); color: var(--ink); padding: 6px 12px; border-radius: 999px; cursor: pointer; }
+.tab[aria-selected="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.tab:focus-visible, .seg button:focus-visible, .filter:focus-visible, textarea:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.summary { display: flex; flex-wrap: wrap; gap: 8px 20px; align-items: baseline; font-variant-numeric: tabular-nums; }
+.headline { font-family: var(--font-display); font-size: 1.6rem; color: var(--score); }
+.summary .dim { color: var(--muted); font-size: 0.9rem; }
+.summary .dim b { color: var(--ink); font-weight: 600; }
+.notice { margin: 16px 0 0; padding: 10px 14px; border: 1px solid var(--line); background: var(--surface); border-radius: 8px; color: var(--muted); font-size: 0.92rem; }
+.filters { display: flex; gap: 6px; margin: 18px 0 8px; flex-wrap: wrap; }
+.filter { font: 0.85rem var(--font-body); border: 1px solid var(--line); background: transparent; color: var(--muted); padding: 4px 10px; border-radius: 6px; cursor: pointer; }
+.filter[aria-pressed="true"] { color: var(--ink); border-color: var(--ink); }
+.list { display: grid; gap: 18px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 18px; display: grid; gap: 14px; min-width: 0; }
+.card-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.chip { font: 600 0.75rem var(--font-body); letter-spacing: 0.04em; text-transform: uppercase; background: var(--chip); color: var(--muted); padding: 3px 8px; border-radius: 4px; }
+.chip.ok { color: var(--ok); } .chip.warn { color: var(--warn); } .chip.bad { color: var(--bad); }
+.card-head .id { font-family: var(--font-mono); font-size: 0.8rem; color: var(--muted); margin-left: auto; }
+.prompt { font-family: var(--font-display); font-size: 1.15rem; font-weight: 600; margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.lookfor { margin: 0; color: var(--muted); font-size: 0.92rem; }
+.lookfor b { color: var(--ink); font-weight: 600; }
+details summary { cursor: pointer; color: var(--accent); font-size: 0.9rem; }
+.reply { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 20rem; overflow: auto; padding: 12px; border: 1px solid var(--line); border-radius: 8px; font-size: 0.95rem; }
+.deck { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+.deck pre { margin: 0; font: 0.82rem/1.45 var(--font-mono); padding: 10px 12px; background: var(--bg); border-radius: 8px; overflow-x: auto; min-width: 0; }
+.deck h3 { font: 600 0.8rem var(--font-body); text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin-bottom: 6px; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 0.85rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.warnings { margin: 0; padding-left: 1.2rem; font-size: 0.85rem; color: var(--warn); }
+.rate { display: grid; gap: 8px; border-top: 1px solid var(--line); padding-top: 14px; }
+.row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 12px; align-items: center; }
+.row label { font-size: 0.92rem; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.seg button { font: 600 0.95rem var(--font-body); width: 40px; height: 36px; border: 0; border-left: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; font-variant-numeric: tabular-nums; }
+.seg button:first-child { border-left: 0; }
+.seg button[aria-pressed="true"] { background: var(--score); color: var(--surface); }
+.seg button:disabled { cursor: not-allowed; opacity: 0.6; }
+textarea { width: 100%; min-height: 60px; font: 0.92rem var(--font-body); color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; resize: vertical; }
+.saved { font-size: 0.8rem; color: var(--muted); min-height: 1.2em; }
+.auto { margin: 0; color: var(--muted); font-size: 0.92rem; }
+@media (max-width: 560px) {
+  .row { grid-template-columns: 1fr; }
+  .seg button { width: 44px; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .seg button, .tab { transition: background 120ms ease, color 120ms ease; }
+}
+</style>
+
+<div class="bar">
+  <div class="bar-inner">
+    <div class="title-row">
+      <h1>Brew Scorecard</h1>
+      <p id="subtitle">decklists.ai step 2: rate each answer 1 to 5 on four checks.</p>
+    </div>
+    <div class="tabs" role="tablist" id="tabs"></div>
+    <div class="summary" id="summary"></div>
+  </div>
+</div>
+
+<div class="wrap">
+  <p class="notice" id="notice" hidden></p>
+  <div class="filters" id="filters">
+    <button class="filter" id="f-all" aria-pressed="true">All</button>
+    <button class="filter" id="f-unrated" aria-pressed="false">Not rated yet</button>
+    <button class="filter" id="f-rated" aria-pressed="false">Rated</button>
+  </div>
+  <div class="list" id="list"></div>
+</div>
+
+<script type="application/json" id="data">/*DATA*/</script>
+<script>
+(function () {
+  const DATA = JSON.parse(document.getElementById("data").textContent);
+  const DIMS = DATA.dimensions;
+  const ratings = new Map(); // `${run}--${prompt}` -> rating doc body
+  let db = null;
+  let canWrite = false;
+  let run = DATA.runs[0].id;
+  let filter = "all";
+  const writeChains = new Map();
+  const syncers = new Map(); // prompt id -> refresh that card's controls from `ratings`
+
+  const el = (tag, attrs, ...kids) => {
+    const n = document.createElement(tag);
+    for (const [k, v] of Object.entries(attrs || {})) {
+      if (k === "class") n.className = v;
+      else if (k === "text") n.textContent = v;
+      else if (v !== null && v !== undefined && v !== false) n.setAttribute(k, v);
+    }
+    for (const kid of kids) if (kid) n.append(kid);
+    return n;
+  };
+  const key = (r, p) => `${r}--${p}`;
+  const currentRun = () => DATA.runs.find((r) => r.id === run);
+
+  function deckLines(lines) {
+    return (lines || []).map((c) => `${c.qty} ${c.name}`).join("\n");
+  }
+
+  /** Unsupported prompts score 1 on every check; Commander prompts stay out of the headline. */
+  function scoreFor(result) {
+    if (result.unsupported) return Object.fromEntries(DIMS.map((d) => [d.key, 1]));
+    const r = ratings.get(key(run, result.id));
+    if (!r) return null;
+    if (!DIMS.every((d) => typeof r[d.key] === "number")) return null;
+    return r;
+  }
+
+  function renderSummary() {
+    const runData = currentRun();
+    const sum = document.getElementById("summary");
+    sum.replaceChildren();
+    const headlineSet = runData.results.filter((r) => !r.afterLaunch);
+    const toRate = runData.results.filter((r) => !r.unsupported);
+    const ratedCount = toRate.filter((r) => scoreFor(r)).length;
+    const scored = headlineSet.map(scoreFor).filter(Boolean);
+    const avg = (xs) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : null);
+    const headline = avg(scored.map((s) => avg(DIMS.map((d) => s[d.key]))));
+    sum.append(
+      el("span", { class: "headline", text: headline === null ? "–" : headline.toFixed(2) + " / 5" }),
+      el("span", { class: "dim", text: `Rated ${ratedCount} of ${toRate.length}` }),
+    );
+    for (const d of DIMS) {
+      const v = avg(scored.map((s) => s[d.key]));
+      const span = el("span", { class: "dim" });
+      span.append(d.short + " ", el("b", { text: v === null ? "–" : v.toFixed(2) }));
+      sum.append(span);
+    }
+  }
+
+  function save(result, patch, status) {
+    if (!db || !canWrite) return;
+    const k = key(run, result.id);
+    const body = { ...(ratings.get(k) || {}), ...patch, run, prompt: result.id, updatedAt: new Date().toISOString() };
+    ratings.set(k, body);
+    renderSummary();
+    status.textContent = "Saving…";
+    const prev = writeChains.get(k) || Promise.resolve();
+    const next = prev
+      .then(() => db.collection("ratings").doc(k).set(body))
+      .then(() => { status.textContent = "Saved"; })
+      .catch((e) => {
+        status.textContent = e && e.code === "invalid_argument"
+          ? "Only the owner can save ratings on this page."
+          : "Could not save. Try again in a moment.";
+      });
+    writeChains.set(k, next);
+  }
+
+  function renderCard(result) {
+    const card = el("article", { class: "card", id: result.id });
+    let status = el("span", { class: "chip ok", text: "Deck passed v1's check" });
+    if (result.unsupported) status = el("span", { class: "chip", text: "Format not supported by v1" });
+    else if (result.error) status = el("span", { class: "chip bad", text: "Request failed" });
+    else if (!result.deck) status = el("span", { class: "chip warn", text: "No deck produced" });
+    card.append(
+      el("div", { class: "card-head" },
+        el("span", { class: "chip", text: result.format }),
+        status,
+        result.afterLaunch ? el("span", { class: "chip", text: "Scored separately" }) : null,
+        el("span", { class: "id", text: result.id }),
+      ),
+    );
+
+    const promptText = result.prompt;
+    const firstLine = promptText.split("\n")[0];
+    if (promptText.length > 220 && promptText.includes("\n")) {
+      card.append(el("p", { class: "prompt", text: firstLine }));
+      const d = el("details", {}, el("summary", { text: "Show the pasted list" }));
+      d.append(el("div", { class: "deck" }, el("pre", { text: promptText.slice(firstLine.length).trim() })));
+      card.append(d);
+    } else {
+      card.append(el("p", { class: "prompt", text: promptText }));
+    }
+    const lf = el("p", { class: "lookfor" });
+    lf.append(el("b", { text: "A good answer: " }), result.lookFor);
+    card.append(lf);
+
+    if (result.unsupported) {
+      card.append(el("p", { class: "auto", text: `v1 only builds Premodern, Modern, Legacy, Vintage, Pauper, Standard and Pioneer, so this scores 1 on every check automatically.` }));
+      return card;
+    }
+
+    if (result.error) {
+      card.append(el("p", { class: "auto", text: result.error }));
+    }
+    if (result.text) {
+      card.append(el("div", { class: "reply", text: result.text }));
+    }
+    if (result.deck) {
+      const deck = el("div", { class: "deck" });
+      const main = el("div", {}, el("h3", { text: `Main deck (${result.deck.mainCount})` }), el("pre", { text: deckLines(result.deck.main) }));
+      deck.append(main);
+      if (result.deck.side && result.deck.side.length) {
+        deck.append(el("div", {}, el("h3", { text: `Sideboard (${result.deck.sideCount})` }), el("pre", { text: deckLines(result.deck.side) })));
+      }
+      card.append(deck);
+      const meta = el("div", { class: "meta" });
+      if (result.deck.strategy) meta.append(el("span", { text: `Classified as ${result.deck.strategy}` }));
+      if (result.deck.badge) meta.append(el("span", { text: `Labelled "${result.deck.badge}"` }));
+      card.append(meta);
+      if (result.deck.warnings && result.deck.warnings.length) {
+        const ul = el("ul", { class: "warnings" });
+        for (const w of result.deck.warnings.slice(0, 6)) ul.append(el("li", { text: w }));
+        card.append(ul);
+      }
+    }
+    const stats = el("div", { class: "meta" });
+    stats.append(
+      el("span", { text: `${result.toolCalls} tool calls` }),
+      el("span", { text: `${result.proposals} deck submissions, ${result.rejected} rejected` }),
+      el("span", { text: `${(result.tokensIn || 0).toLocaleString()} tokens in, ${(result.tokensOut || 0).toLocaleString()} out` }),
+      el("span", { text: `${Math.round((result.ms || 0) / 1000)} s` }),
+    );
+    card.append(stats);
+
+    const rate = el("div", { class: "rate" });
+    const statusLine = el("div", { class: "saved", "aria-live": "polite" });
+    const existing = ratings.get(key(run, result.id)) || {};
+    for (const d of DIMS) {
+      const row = el("div", { class: "row" });
+      const labelId = `${run}-${result.id}-${d.key}`;
+      row.append(el("label", { id: labelId, text: d.label }));
+      const seg = el("div", { class: "seg", role: "group", "aria-labelledby": labelId });
+      for (let v = 1; v <= 5; v++) {
+        const b = el("button", { type: "button", "aria-pressed": String(existing[d.key] === v), text: String(v) });
+        b.disabled = !canWrite;
+        b.addEventListener("click", () => {
+          for (const sib of seg.children) sib.setAttribute("aria-pressed", String(sib === b));
+          save(result, { [d.key]: v }, statusLine);
+          applyFilter();
+        });
+        seg.append(b);
+      }
+      row.append(seg);
+      rate.append(row);
+    }
+    syncers.set(result.id, () => {
+      const r = ratings.get(key(run, result.id)) || {};
+      const segs = rate.querySelectorAll(".seg");
+      DIMS.forEach((d, i) => {
+        for (const b of segs[i].children) b.setAttribute("aria-pressed", String(r[d.key] === Number(b.textContent)));
+      });
+      if (document.activeElement !== notes) notes.value = r.notes || "";
+    });
+    const notesId = `notes-${run}-${result.id}`;
+    const notes = el("textarea", { id: notesId, placeholder: "Notes (optional): what's wrong or right about this deck" });
+    notes.value = existing.notes || "";
+    notes.disabled = !canWrite;
+    notes.addEventListener("change", () => save(result, { notes: notes.value }, statusLine));
+    rate.append(notes, statusLine);
+    card.append(rate);
+    return card;
+  }
+
+  function applyFilter() {
+    for (const result of currentRun().results) {
+      const node = document.getElementById(result.id);
+      if (!node) continue;
+      const rated = Boolean(scoreFor(result));
+      node.hidden = (filter === "unrated" && (rated || result.unsupported)) || (filter === "rated" && !rated);
+    }
+  }
+
+  function render() {
+    const tabs = document.getElementById("tabs");
+    tabs.replaceChildren();
+    for (const r of DATA.runs) {
+      const t = el("button", { class: "tab", role: "tab", "aria-selected": String(r.id === run), text: r.label });
+      t.addEventListener("click", () => { run = r.id; render(); });
+      tabs.append(t);
+    }
+    document.getElementById("subtitle").textContent = currentRun().note;
+    const list = document.getElementById("list");
+    syncers.clear();
+    list.replaceChildren(...currentRun().results.map(renderCard));
+    renderSummary();
+    applyFilter();
+  }
+
+  for (const [id, f] of [["f-all", "all"], ["f-unrated", "unrated"], ["f-rated", "rated"]]) {
+    document.getElementById(id).addEventListener("click", () => {
+      filter = f;
+      for (const b of document.querySelectorAll(".filter")) b.setAttribute("aria-pressed", String(b.id === id));
+      applyFilter();
+    });
+  }
+
+  render();
+
+  const notice = document.getElementById("notice");
+  notice.hidden = false;
+  notice.textContent = "Loading saved ratings…";
+  (async () => {
+    const claude = window.claude;
+    const dbNs = claude && claude.use ? await claude.use("db") : null;
+    const user = claude && claude.use ? await claude.use("user") : null;
+    if (!dbNs) {
+      notice.textContent = "Ratings save only when this page is open on claude.ai and you're signed in. You can still read every answer.";
+      return;
+    }
+    db = dbNs;
+    canWrite = user ? (user.isOwner() ?? false) : false;
+    let first = true;
+    db.collection("ratings").onSnapshot(
+      (snap) => {
+        ratings.clear();
+        for (const d of snap.docs) ratings.set(d.id, d.data());
+        if (first) {
+          first = false;
+          notice.textContent = canWrite
+            ? "Your ratings save as you click. Commander prompts are scored separately and stay out of the headline."
+            : "Read-only: only the page owner can rate.";
+          render();
+          return;
+        }
+        for (const sync of syncers.values()) sync();
+        renderSummary();
+        applyFilter();
+      },
+      () => { notice.textContent = "Saved ratings could not be loaded. Reload the page to try again."; },
+    );
+  })();
+})();
+</script>

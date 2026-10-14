@@ -38,4 +38,6 @@ Each step ends by rerunning the tests. A step is done only when its number beats
 
 - [x] Step 1: repo and scaffold
 - [ ] Step 1: Anthropic API key in `.env.local` (owner)
-- [ ] Step 2
+- [ ] Step 2 (20 rubric prompts drafted)
+
+Build history: [BUILD_LOG.md](./BUILD_LOG.md)

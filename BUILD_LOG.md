@@ -17,8 +17,30 @@ A running record of how decklists.ai gets built: decisions, findings, numbers, a
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
 | Automated tests | 27 passing |
-| Decklist Data PRs merged | 3 (#181 export, #182 baseline eval, #183 baseline on `main`) |
+| Decklist Data PRs | 3 merged (#181 export, #182 baseline eval, #183 baseline on `main`); #184 open (model comparison) |
 | Plan steps done | 1, 4, 5 (5 waits on generated decks from step 6); step 2: v1 baseline run, owner rating pending |
+
+---
+
+## 2026-10-14 · Research design: comparing models
+
+The owner wants results compared across models as research for a blog post. Decisions (owner's choices from the options offered):
+
+| Choice | Decision |
+| --- | --- |
+| Models | Haiku 4.5, Haiku 5.5, Sonnet 5.5, Opus 5.5, Fable 5.1 |
+| Passes | 3 per model (model output varies run to run; one pass can flip a ranking) |
+| Rating | Owner rates everything, blind |
+
+**Making it fair.**
+- **Same harness, same settings.** v1's AI SDK always sends `temperature: 0`, which the newer models reject. [PR #184](https://github.com/131ackknight/mtgo-opponent-scout/pull/184) adds an eval-only request filter that drops sampling settings and gives every model the same 16k token limit (models that think by default spend output tokens before answering, and v1's ~4k default could cut them off). v1's prompt, tools, and loop are unchanged. Because this changes Haiku 4.5's settings too, Haiku 4.5 is rerun with the filter; the original run stays on record as "as shipped."
+- **Blind rating.** Answers are grouped by prompt and labeled only A, B, C... in random order. The key mapping letters to models lives in the repo, not in the page. The as-shipped Haiku 4.5 run joins as one more anonymous set, which also shows whether dropping temperature changed anything.
+- **Objective scores alongside the ratings**: deck produced, step 5 checker result, land count against the real archetype, invented cards, cost, and time.
+- **Pass 1 for every model first**, then check real costs and failure modes before spending on passes 2 and 3. Estimated total: $30-40, mostly Fable and Opus.
+
+**The two-part story for the post.** Part one (now): one harness, v1, across five models. Part two (after step 6): the new harness across the same models. Together they separate what better models buy from what a better harness buys.
+
+The workflow runs a model x pass matrix, at most three jobs at a time to keep load on the live database low.
 
 ---
 

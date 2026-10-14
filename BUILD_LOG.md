@@ -41,6 +41,35 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - A one-line PR so v1 logs the real error behind the four "An error occurred." builds.
 - Adding the "distance from the nearest real deck" score and a "copy rate" score to the objective scorer.
 - Lesson to apply: any prompt or claim that names a card gets checked against the card index before it is used.
+- Switch the next round to pairwise ratings plus two yes/no questions (proposed; awaiting the owner).
+- The owner's Tainted Pact ratings in round 2 (all 1s on answers that caught the illegal card): intended or a slip?
+
+---
+
+## 2026-10-14 · Round 2 results, rater drift, and a better eval method
+
+The owner rated 48 of the 54 round 2 answers (unrated: Penny Dreadful, the Psychatog tune, and the two Old School reruns), then said: "I think we need to come up with a different eval method next time, I am having a hard time really rating each metric on a 5 point scale."
+
+**Raw comparison on the 18 prompts both harnesses answered:** Opus 5.5 3.85 (v1, round 1) vs. 3.66 (v2, round 2); Sonnet 5.5 3.71 vs. 3.50.
+
+**The anchors say those columns aren't comparable.** The six v1 answers re-rated blind in round 2 scored **0.67 points lower on average** than the same answers in round 1 (mean absolute change 0.75): Opus's Replenish answer 4.75 to 3.50, its mono green storm 4.50 to 3.25. The owner's scale moved between sessions, normal for absolute 1-5 ratings. Without the anchors, the post would have reported "the new harness is worse" with no way to know it was partly drift. Including them was worth it.
+
+**What holds anyway:**
+- **Coverage:** v2 answered all 24 prompts; the six formats v1 couldn't attempt averaged 4.0 (Timeless, Historic, Penny Dreadful, Commander, Duel Commander).
+- **v2 gained:** Legacy "turn 1 every game" +0.88, Dream Halls without storm +1.5, Golgari midrange +0.5, Peter Parker's Camera +0.38.
+- **v2 lost on faithful brews:** mono green storm -1.38, Replenish without blue -1.50, Greasefang -1.00. Within round 2 itself (anchors vs. v2, same session), v1's storm and Replenish answers still outscored v2's.
+
+**The tension, now in the owner's own ratings:** a faithful brew (v2's real mono green storm) is usually weaker than a proven deck with the requested card added (v1's Elves plus Hunting Pack), and the 1-5 scores rewarded playability over doing what was asked. Neither preference is wrong; the eval has to say which it measures.
+
+**A ratings question raised with the owner:** both v2 Tainted Pact answers opened with "Tainted Pact isn't legal in Modern" and built the closest legal version (Opus: Inverter of Truth plus Thassa's Oracle; Sonnet: Spoils of the Vault plus Oracle and Laboratory Maniac). By the rule agreed in round 1 that is Legal 5, yet both were rated 1 on every row, the "no deck" pattern. Asked whether that was intended; the ratings are unchanged until the owner answers.
+
+**Proposed eval method for the next round:**
+1. **Pairwise, blind:** "Which answer is better for this request? A, B, or tie." Choosing between two side-by-side answers is easier and more consistent than placing each on a scale, and it doesn't drift between sessions. Results become win rates (and Elo ratings across many models).
+2. **Two yes/no questions per answer:** "Did it do what was asked?" (faithfulness) and "Would you play this deck or something close to it?" (quality), so the storm-vs-Elves tension shows up as two numbers instead of one blurred score.
+3. **Code scores everything objective:** legality, mana against the real archetype, copy rate, invented cards, cost, time.
+4. **An AI judge for volume,** calibrated against the owner's pairwise picks, so the owner rates a sample.
+
+About 10-15 seconds per prompt instead of four judgments per answer.
 
 ---
 

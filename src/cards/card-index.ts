@@ -13,7 +13,7 @@ export class CardIndex {
     this.cards = file.cards;
     for (const card of file.cards) {
       this.byName.set(normalizeName(card.name), card);
-      for (const face of card.faces ?? []) {
+      for (const face of [...(card.faces ?? []), ...(card.aliases ?? [])]) {
         const key = normalizeName(face);
         if (!this.byName.has(key)) this.byName.set(key, card);
       }

@@ -40,5 +40,6 @@ Each step ends by rerunning the tests. A step is done only when its number beats
 - [x] Step 1: Anthropic API key in `.env.local` (owner)
 - [ ] Step 2 (24 rubric prompts drafted, 2 Commander scored separately; database parts wait on a GitHub Actions query path)
 - [x] Step 4: card index (`pnpm cards:build`), format registry, `search_cards`
+- [x] Step 5: checker, mana report, odds, archetype mana profiles. Real lists: 100% error-free in 7 formats, 99.6% Duel Commander. "100 generated decks pass" waits on step 6.
 
 Build history: [BUILD_LOG.md](./BUILD_LOG.md)

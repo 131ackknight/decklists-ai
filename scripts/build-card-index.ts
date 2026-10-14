@@ -51,6 +51,15 @@ interface ScryfallFace {
   toughness?: string;
 }
 
+interface ScryfallPrinting {
+  oracle_id?: string;
+  name: string;
+  lang?: string;
+  printed_name?: string;
+  flavor_name?: string;
+  card_faces?: { printed_name?: string; flavor_name?: string }[];
+}
+
 interface ScryfallCard extends ScryfallFace {
   oracle_id?: string;
   cmc?: number;
@@ -73,7 +82,7 @@ interface ScryfallTag {
   taggings: { oracle_id: string }[];
 }
 
-function toCard(c: ScryfallCard, tags: string[]): Card | null {
+function toCard(c: ScryfallCard, tags: string[], aliases: string[]): Card | null {
   if (!c.oracle_id) return null;
   const legal: Record<string, Legality> = {};
   for (const [format, status] of Object.entries(c.legalities)) {
@@ -93,6 +102,7 @@ function toCard(c: ScryfallCard, tags: string[]): Card | null {
     oracleId: c.oracle_id,
     name: c.name,
     faces: faces.length > 1 ? faces.map((f) => f.name) : undefined,
+    aliases: aliases.length > 0 ? aliases : undefined,
     manaCost: c.mana_cost || join((f) => f.mana_cost),
     cmc: c.cmc ?? 0,
     typeLine: c.type_line || join((f) => f.type_line),
@@ -113,6 +123,22 @@ async function main() {
   mkdirSync(SCRYFALL_DIR, { recursive: true });
   const cardsFile = await download("oracle_cards");
   const tagsFile = await download("oracle_tags");
+  const printingsFile = await download("default_cards");
+
+  // Alternate English names from other printings, e.g. MTGO's "Through the
+  // Omenpaths" names for Universes Beyond cards ("Kavaero, Mind-Bitten" is
+  // Superior Spider-Man). Decklists from MTGO use these.
+  const aliasesByOracle = new Map<string, Set<string>>();
+  for await (const p of readJsonl<ScryfallPrinting>(printingsFile)) {
+    if (!p.oracle_id || (p.lang && p.lang !== "en")) continue;
+    const names = [p.printed_name, p.flavor_name, ...(p.card_faces ?? []).flatMap((f) => [f.printed_name, f.flavor_name])];
+    for (const alt of names) {
+      if (!alt || alt === p.name) continue;
+      const set = aliasesByOracle.get(p.oracle_id) ?? new Set<string>();
+      set.add(alt);
+      aliasesByOracle.set(p.oracle_id, set);
+    }
+  }
 
   const rawTags: ScryfallTag[] = [];
   for await (const t of readJsonl<ScryfallTag>(tagsFile)) rawTags.push(t);
@@ -136,7 +162,11 @@ async function main() {
 
   const cards: Card[] = [];
   for await (const raw of readJsonl<ScryfallCard>(cardsFile)) {
-    const card = toCard(raw, tagsByOracle.get(raw.oracle_id ?? "") ?? []);
+    const card = toCard(
+      raw,
+      tagsByOracle.get(raw.oracle_id ?? "") ?? [],
+      [...(aliasesByOracle.get(raw.oracle_id ?? "") ?? [])],
+    );
     if (card) cards.push(card);
   }
 
@@ -148,7 +178,8 @@ async function main() {
   };
   writeFileSync(CARD_INDEX_PATH, JSON.stringify(out));
   const tagged = cards.filter((c) => c.tags.length > 0).length;
-  console.log(`${cards.length} cards (${tagged} tagged), ${tags.length} tags -> ${CARD_INDEX_PATH}`);
+  const aliased = cards.filter((c) => c.aliases).length;
+  console.log(`${cards.length} cards (${tagged} tagged, ${aliased} with alternate names), ${tags.length} tags -> ${CARD_INDEX_PATH}`);
 }
 
 main().catch((err) => {

@@ -7,6 +7,8 @@ export interface Card {
   name: string;
   /** Face names for split, transform, adventure and MDFC cards. */
   faces?: string[];
+  /** Other English names from other printings, e.g. MTGO's Omenpaths names. */
+  aliases?: string[];
   manaCost: string;
   cmc: number;
   typeLine: string;

@@ -63,11 +63,13 @@ for (const file of files) {
   // Files are named <label>-p<pass>.json; the label keeps "as-shipped-claude-haiku-4-5" apart from the filtered rerun.
   const base = path.basename(file, ".json");
   const m = base.match(/^(.*)-p(\d+)$/);
-  const label = m ? m[1] : base;
+  const label = (file.includes("harness-v2") ? "v2-" : "") + (m ? m[1] : base);
   const pass = m ? m[2] : "1";
   const [pin, pout] = PRICES[run.model] ?? [0, 0];
+  const isV2 = file.includes("harness-v2");
   for (const r of run.results) {
     if (r.unsupported || !r.sentFormat) continue;
+    if (!r.deck && !r.usage && !r.ms) continue;
     const tokensIn = r.usage?.promptTokens ?? 0;
     const tokensOut = r.usage?.completionTokens ?? 0;
     const row: Record<string, unknown> = {
@@ -78,12 +80,18 @@ for (const file of files) {
       apiError: (r.errors ?? []).length > 0,
       tokensIn,
       tokensOut,
-      costUsd: +((tokensIn * pin + tokensOut * pout) / 1e6).toFixed(4),
+      costUsd: isV2 ? ((r as { costUsd?: number }).costUsd ?? 0) : +((tokensIn * pin + tokensOut * pout) / 1e6).toFixed(4),
       seconds: Math.round((r.ms ?? 0) / 1000),
     };
     if (r.deck) {
-      const format = getFormat(r.sentFormat)!;
-      const result = checkDeck(index, { format: format.key, main: r.deck.main, side: r.deck.side });
+      const deckFormat = (r.deck as { format?: string }).format ?? r.sentFormat;
+      const format = getFormat(deckFormat)!;
+      const result = checkDeck(index, {
+        format: format.key,
+        main: r.deck.main,
+        side: r.deck.side,
+        commander: (r.deck as { commander?: Line[] }).commander,
+      });
       row.checkerErrors = result.errors.length;
       row.checkerWarnings = result.warnings.length;
       row.unknownCards = result.errors.filter((e) => e.code === "unknown-card").length;

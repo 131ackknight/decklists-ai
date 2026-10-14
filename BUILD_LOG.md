@@ -74,6 +74,10 @@ The owner agreed with the recommendation: skip more v1 passes, build the new har
 
 **Owner's call: run harness v2 on Opus 5.5 and Sonnet 5.5 only** (estimated ~$21), the top two models from the v1 round. Haiku and Fable can be added later if the post needs them.
 
+**Runs started** in parallel, three prompts at a time per model (logs in `evals/results/harness-v2/*-run.log`). First result in: Sonnet 5.5 on stock Goblins, a 60 + 15 stock list in 5 tool calls for $0.05.
+
+**Prepared while they run:** round 2 of blind rating gets its own page and answer key, so round 1's ratings stay untouched. The page builder and objective scorer now tag harness v2 results with a "v2-" label (the result files share model names with v1), take v2's exact cost (cached tokens are priced correctly there), and check commander decks with their commander zone.
+
 ---
 
 ## 2026-10-14 · Pass 1 results, unblinded

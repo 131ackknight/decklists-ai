@@ -1,7 +1,10 @@
 /**
- * Build the Blind Brew Scorecard from model-comparison result files.
+ * Build the Blind Brew Scorecard from eval result files.
  *
- *   pnpm exec tsx scripts/build-blind-page.ts evals/results/model-comparison/*-p*.json
+ *   pnpm exec tsx scripts/build-blind-page.ts [--out page.html] [--key key.json] files...
+ *
+ * Files under evals/results/harness-v2/ get a "v2-" label prefix so they
+ * stay apart from v1 runs of the same model. Defaults: round 1 page and key.
  *
  * Every answer gets a random id and, per prompt, a shuffled letter. The
  * page shows only the reply and the deck: no model names, tokens or
@@ -15,8 +18,16 @@ import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { RUBRIC_DIMENSIONS, RUBRIC_PROMPTS } from "../evals/rubric/prompts";
 
-const KEY_PATH = "evals/results/model-comparison/blind-key.json";
-const OUT = "evals/rating/blind-scorecard.html";
+const argv = process.argv.slice(2);
+const flag = (name: string, fallback: string) => {
+  const i = argv.indexOf(`--${name}`);
+  if (i < 0) return fallback;
+  const value = argv[i + 1];
+  argv.splice(i, 2);
+  return value;
+};
+const KEY_PATH = flag("key", "evals/results/model-comparison/blind-key.json");
+const OUT = flag("out", "evals/rating/blind-scorecard.html");
 const SHORT: Record<string, string> = { plan: "Plan", legal: "Legal", mana: "Mana", shell: "Shell" };
 
 interface Line {
@@ -44,10 +55,11 @@ const key: Record<string, KeyEntry> = existsSync(KEY_PATH) ? JSON.parse(readFile
 const byOrigin = new Map(Object.entries(key).map(([aid, k]) => [`${k.label}|${k.pass}|${k.prompt}`, aid]));
 
 const answersByPrompt = new Map<string, { aid: string; text: string; error: boolean; deck: unknown }[]>();
-for (const file of process.argv.slice(2)) {
+for (const file of argv) {
   const m = path.basename(file, ".json").match(/^(.*)-p(\d+)$/);
   if (!m) continue;
-  const [, label, pass] = m;
+  const [, base, pass] = m;
+  const label = file.includes("harness-v2") ? `v2-${base}` : base;
   const run = JSON.parse(readFileSync(file, "utf8")) as RunFile;
   for (const r of run.results) {
     if (r.unsupported || !r.sentFormat) continue;

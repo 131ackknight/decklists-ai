@@ -42,6 +42,14 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-10-14 · Rating rule: when the answer changes the colors
+
+On "Make a fun mono white control deck for Modern leagues," the owner asked how to rate an answer that turned it into blue-white. Ruling: changing an explicit color constraint means the answer didn't do what was asked. Legal 1-2 (2 if it explained the switch or only splashed, 1 if it silently became a real two-color deck); Plan 2 ("an idea, but it misses the request"); Mana and Shell judged on the deck itself, keeping "followed instructions" separate from "is the deck good."
+
+Across the six pass 1 answers (still blind): 3 decks classified "Rogue," 1 classified "UW Control," and 2 no-deck answers. UW Control is a real archetype in the Modern data and mono-white control is not, so this looks like the same pull toward an existing deck seen with mono green storm (built as Elves).
+
+---
+
 ## 2026-10-14 · Five models, one Merfolk deck
 
 While rating "I want a Modern Merfolk deck that can beat the current top decks," the owner noticed: "they all produced identical decks basically." Measured without unblinding:

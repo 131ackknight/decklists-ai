@@ -56,7 +56,7 @@ Across the six pass 1 answers (still blind): 3 decks classified "Rogue," 1 class
 
 ---
 
-## 2026-10-14 · Five models, one Merfolk deck
+## 2026-10-14 · Five models, one deck (Merfolk, Mono-Red, Goblins)
 
 While rating "I want a Modern Merfolk deck that can beat the current top decks," the owner noticed: "they all produced identical decks basically." Measured without unblinding:
 
@@ -68,6 +68,16 @@ While rating "I want a Modern Merfolk deck that can beat the current top decks,"
 Copying a proven list is reasonable for a stock request, but this prompt asked for a deck that beats the current top decks, and only the sideboard adapted. Rating guidance given: Mana and Shell high, Legal 5, Plan about 4 unless a meaningful meta-aimed change was made; judge the differences by whether the sideboard answers the decks it names.
 
 **New metric for the new harness: copy rate,** the share of a deck identical to a list the model was handed. High copy rate is right for "give me stock Goblins" and wrong for "tune this for the meta" or a brew.
+
+**It is a pattern, not a one-off.** The owner then saw the same on Pauper red aggro. Across the three prompts that match a deck in the data:
+
+| Prompt | Decks | Called `reference_decklists` | Main deck overlap | Sideboard overlap | Classified as |
+| --- | --- | --- | --- | --- | --- |
+| Pauper fast red aggro | 6 | 6 of 6 | 91% | 81% | all Mono-Red Rally, stock |
+| Modern Merfolk | 5 | 5 of 6 | 100% | 77% | all Merfolk, stock |
+| Premodern stock Goblins | 6 | 6 of 6 | 93% | 78% | all Goblins, stock |
+
+**Finding for the post: when a request matches a deck in the data, every model from the cheapest Haiku to Fable fetches a winning list and returns roughly the same 60.** On those prompts the data and tools set the ceiling and the model barely matters; model differences live on the brews and twists, where there is nothing to copy. Rating guidance: near-identical decks can get near-identical scores; no need to invent differences.
 
 ---
 

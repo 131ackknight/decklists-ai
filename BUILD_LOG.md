@@ -47,6 +47,12 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-10-14 · Full v3 run started
+
+The owner asked whether round 3 uses the same eval questions. Yes: "did it do what was asked," "would you play it," and the A/B/tie pick, unchanged so v1 vs. v2 and v2 vs. v3 sit on the same yardstick. A fourth "is it really a brew" question was considered and dropped: "did it do what was asked" already counts an existing deck with the requested card tacked on as a No, and the copy rate measures it in code. **The owner chose to run both Opus 5.5 and Sonnet 5.5 again** (estimated ~$23) on all 24 prompts with the step 8 pipeline (v3), for a blind pairwise round against v2.
+
+---
+
 ## 2026-10-14 · Step 8: the pipeline, end to end
 
 **Built:**

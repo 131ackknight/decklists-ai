@@ -38,6 +38,7 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - Passes 2 and 3 of the model comparison: about $36 more (roughly $55 total) and 180 more answers to rate.
 - A one-line PR so v1 logs the real error behind the four "An error occurred." builds.
 - Adding the "distance from the nearest real deck" score to the objective scorer.
+- Lesson to apply: any prompt or claim that names a card gets checked against the card index before it is used.
 
 ---
 
@@ -46,6 +47,8 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 The owner began rating pass 1 on the Blind Brew Scorecard: 18 prompts, 108 anonymous answers across six sets, scored 1-5 on plan, legality, mana and shell using the page's "How to rate" anchors. Ratings save to the page's store and will be unblinded with `evals/results/model-comparison/blind-key.json` once pass 1 is complete.
 
 **Early pattern, three prompts in (13 answers rated, still blind):** stock Premodern Goblins scored 4-5 on every check for all six answers; mono green storm got three no-deck answers (all 1s) and decks rated 4, 2 and 4 on plan; the "Replenish without blue" twist opened with mana 1, plan 2. The owner: "starting to see it struggling." That is the predicted split: strong where the request matches a deck in the data, weak once it has to leave the data. Claude Code is holding off on judging specific answers until rating is done, so the ratings stay independent, and suggested one-line notes on standout answers as quotable examples for the post.
+
+**A prompt-writing mistake, found by the owner while rating.** The owner asked how to score an answer to "Build a Modern deck around Thassa's Oracle and Tainted Pact" that left out Tainted Pact. Checking: **Tainted Pact is not legal in Modern** (it is legal in Legacy). Claude Code wrote that prompt on day one without checking legality, the exact "from memory" failure this project exists to fix. The prompt text stays, since changing it mid-comparison would break the comparison, and it becomes an impossible-request test like "turn 1 every game." Its "A good answer" line now says a good answer catches the problem, then builds the closest legal Oracle deck or points to Legacy. Scoring guidance given: caught it and said so = Legal 5; dropped it silently = Legal 3 and Plan 2-3; mana and shell judged on the deck itself. Saved ratings were unaffected. Every other card named in the prompts was then checked against Scryfall legality: all legal where asked.
 
 ---
 

@@ -59,7 +59,9 @@ export const RUBRIC_PROMPTS: RubricPrompt[] = [
     format: "Modern",
     hasData: true,
     prompt: "Build a Modern deck around Thassa's Oracle and Tainted Pact.",
-    lookFor: "Recognizes the combo, builds singleton-friendly support, real interaction and mana.",
+    // Tainted Pact is not legal in Modern (legal in Legacy); this tests catching an impossible request.
+    lookFor:
+      "Tainted Pact is not legal in Modern. A good answer says so, then builds the closest legal Thassa's Oracle deck or points to Legacy, where the combo is legal.",
   },
   {
     id: "modern-tribal-brew",

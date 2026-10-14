@@ -42,6 +42,12 @@ The owner wants results compared across models as research for a blog post. Deci
 
 The workflow runs a model x pass matrix, at most three jobs at a time to keep load on the live database low.
 
+**Pass 1 started** after the owner merged #184: all five models, run 38581025630.
+
+**Built while it ran:**
+- `scripts/score-v1-runs.ts`: the objective scorer. On the as-shipped Haiku 4.5 run: 9 decks of 18 prompts, all 9 pass the decklists.ai checker, 2 carry mana warnings, 0 invented card names, land counts average 1.8 off the real archetype, $0.63, median 14 s per prompt.
+- **Blind Brew Scorecard** (`scripts/build-blind-page.ts`): one prompt at a time, every answer a lettered card in shuffled order. Hidden on purpose: model names, token counts, and timings, since speed and cost would give a model away. Each answer has a random id; the id-to-model key is a file in the repo, reused on rebuilds so ratings survive adding passes.
+
 ---
 
 ## 2026-10-14 · Step 2: the v1 baseline is in

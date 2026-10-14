@@ -46,6 +46,23 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-10-14 · "How does it know it's the fastest?"
+
+Judging the Pauper red aggro pairs, the owner noticed both bots called Mono-Red Rally the fastest deck in Pauper and asked how they could know. **They can't:** no tool or dataset measures speed. MTGO results record finishes, not game length.
+
+| Answer | Claim | What backs it |
+| --- | --- | --- |
+| v1 Opus | "the fastest red aggro deck in Pauper right now... You can win on turn 3 or 4" | meta share and trophies from tools; "fastest" and "turn 3 or 4" inferred from a curve of mostly 1-mana spells |
+| v1 Sonnet | "the fast red deck in the Pauper field" | meta share; a description, not a ranking |
+| v2 Opus | "currently Pauper's main fast red aggro deck... a big hasty attack around turn 2 or 3" | "main" backed by 3.5% share and 216 lists; the turn inferred |
+| v2 Sonnet | no speed claim | "32 cards cost 1 and 11 cost 2," from the checker's curve |
+
+**A gap in the harness:** the rule "every card fact must come from a tool" doesn't cover claims that aren't card facts, like speed, so the model fills them by reasoning and states them as fact. Rating guidance: unverified superlatives earn no credit; grounded or hedged claims win close pairs.
+
+**Fixes for step 8:** (1) a prompt rule to separate measured facts from inferences and mark inferences; (2) a goldfish simulator (Fable's tier 2 check) that plays a deck against no opponent thousands of times and reports its average kill turn, so "fastest" becomes a number the bot can cite.
+
+---
+
 ## 2026-10-14 · Owner's decisions; pairwise judging built
 
 **The owner's answers to the three open questions:**

@@ -54,6 +54,11 @@ button:focus-visible, summary:focus-visible, input:focus-visible { outline: 2px 
 .only h3 { font: 600 0.78rem var(--font-body); text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin-bottom: 4px; }
 .only pre { margin: 0; font: 0.84rem/1.5 var(--font-mono); padding: 10px 12px; background: var(--bg); border-radius: 8px; overflow-x: auto; white-space: pre-wrap; }
 .none { color: var(--muted); font-style: italic; }
+.full summary { font-size: 0.85rem; }
+.full h4 { font: 600 0.72rem var(--font-body); text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin: 8px 0 2px; }
+.full ul { list-style: none; margin: 0; padding: 0; font: 0.8rem/1.5 var(--font-mono); columns: 2 170px; column-gap: 14px; }
+.full li { break-inside: avoid; overflow-wrap: anywhere; }
+.full li.uniq { color: var(--accent); font-weight: 600; }
 details summary { cursor: pointer; color: var(--accent); font-size: 0.9rem; }
 .shared pre { margin: 6px 0 0; font: 0.8rem/1.45 var(--font-mono); padding: 10px 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; columns: 2 220px; }
 .reply { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 20rem; overflow: auto; padding: 10px; border: 1px solid var(--line); border-radius: 8px; font-size: 0.9rem; margin-top: 6px; }
@@ -195,13 +200,32 @@ button:disabled { cursor: not-allowed; opacity: 0.6; }
     }
   }
 
-  function side(letter, ans, only) {
+  /** The whole list, by zone; lines with more copies than the other deck are highlighted. */
+  function fullList(deck, other) {
+    const d = el("details", { class: "full", open: "" }, el("summary", { text: "Full decklist" }));
+    const theirs = counts(other);
+    for (const [zone, label] of [["commander", "Commander"], ["main", "Main"], ["side", "Sideboard"]]) {
+      const lines = deck[zone] || [];
+      if (!lines.length) continue;
+      const total = lines.reduce((n, c) => n + c.qty, 0);
+      const ul = el("ul");
+      for (const c of lines) {
+        const k = (zone === "side" ? "SB: " : "") + c.name;
+        ul.append(el("li", { class: c.qty > (theirs.get(k) || 0) ? "uniq" : null, text: `${c.qty} ${c.name}` }));
+      }
+      d.append(el("h4", { text: `${label} (${total})` }), ul);
+    }
+    return d;
+  }
+
+  function side(letter, ans, only, other) {
     const box = el("article", { class: "side" });
     box.append(el("div", { class: "side-head" }, el("span", { class: "letter", text: letter }), ans.deck ? null : el("span", { class: "fmt", text: "No deck" })));
     if (ans.text) box.append(el("p", { class: "lead", text: opening(ans.text) }));
     const o = el("div", { class: "only" }, el("h3", { text: `Only in ${letter}` }));
     o.append(only.length ? el("pre", { text: only.join("\n") }) : el("p", { class: "none", text: "Nothing: every card is also in the other deck." }));
     box.append(o);
+    if (ans.deck) box.append(fullList(ans.deck, other));
     if (ans.text) {
       const d = el("details", {}, el("summary", { text: "Full reply" }));
       d.append(el("div", { class: "reply", text: ans.text }));
@@ -234,7 +258,7 @@ button:disabled { cursor: not-allowed; opacity: 0.6; }
     }
     document.getElementById("request").replaceChildren(...req);
     const d = diff(counts(p.left.deck), counts(p.right.deck));
-    document.getElementById("duel").replaceChildren(side("A", p.left, d.onlyA), side("B", p.right, d.onlyB));
+    document.getElementById("duel").replaceChildren(side("A", p.left, d.onlyA, p.right.deck), side("B", p.right, d.onlyB, p.left.deck));
     const shared = document.getElementById("shared");
     shared.replaceChildren(el("summary", { text: `Both decks play ${d.both.length} of the same card lines` }), el("pre", { text: d.both.join("\n") || "None" }));
     shared.open = false;
@@ -303,7 +327,7 @@ button:disabled { cursor: not-allowed; opacity: 0.6; }
         if (first) {
           first = false;
           notice.textContent = canWrite
-            ? "Only the cards that differ are shown. Press 1, 2 or 3 (or click) and it moves on. The opening two sentences of each reply say what the deck is going for."
+            ? "The cards that differ are at the top; full lists are below, with those cards highlighted. Press 1, 2 or 3 (or click) and it moves on. The opening two sentences of each reply say what the deck is going for."
             : "Read-only: only the page owner can judge.";
           jumpToFirst();
           return;

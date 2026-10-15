@@ -27,7 +27,7 @@ Three things, and the third is turning out to be the most interesting.
 
 | Item | Total |
 | --- | --- |
-| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71. Total about $67.66. Plus one 17-token test call. |
+| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58. Total about $99.62. Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats); full history 143,721 (since 2025-07-01) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
 | Automated tests | 41 passing |
@@ -61,6 +61,30 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - Lesson to apply: any prompt or claim that names a card gets checked against the card index before it is used.
 - ~~Switch to pairwise~~: done; 36 pairs judged (v1 8 wins, v2 6, 22 ties; v2 100% faithful vs. 92%).
 - ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
+
+---
+
+## 2026-10-15 · Round 4, harness v3: the pipeline still doesn't help
+
+Same 30 items through the step 8 pipeline (intent routing, staged brews). Routing was right: all 20 fill-ins went to "tune", all 5 brew items to "brew"; 3 of the owner's 5 fresh prompts were judged to have a list to start from ("stock").
+
+**Fill in the blanks, average correct out of 12:**
+
+| | Overall | Legacy Tron | Modern Broodscale | Pauper Dimir | Premodern UW Aggro | Vintage Lurrus |
+| --- | --- | --- | --- | --- | --- | --- |
+| Most played (no AI) | 7.1 | 4.8 | 9.0 | 9.5 | 4.2 | 8.0 |
+| Sonnet v2 / v3 | 6.8 / 7.0 | 5.2 / 4.5 | 6.5 / 8.2 | 10.0 / 9.2 | 7.5 / 7.0 | 4.5 / 6.2 |
+| Opus v2 / v3 | **7.7** / 7.5 | 5.2 / 5.5 | 8.0 / 8.5 | 10.2 / 9.8 | **9.2** / 8.2 | 5.8 / 5.8 |
+
+No answer dropped a card it was given.
+
+**Brew to archetype** (overlap with the owner's linked list): v3 is close to v2 overall. v3 Opus is the best of all four on Frantic Storm (70% vs. 37% for anything in the data), but worse than v2 on Pauper Dimir Control (52% vs. 65%). Every run still landed below "the closest earlier list" on the four decks with data.
+
+**Reading:** the third time the same answer. The pipeline changes how the bot works, not how well it chooses cards: v2 and v3 are within half a card of each other on the fill-in test. The model is the lever (Opus beats Sonnet in both harnesses), and the data-rich vs. data-thin pattern from v2 holds.
+
+**Track 3 (owner judging):** the 5 fresh prompts, v2 vs. v3 for each model, are 10 Quick Pick pairs: https://claude.ai/artifact/QATiJtne8tTWHVM4zWiS3g (built by `build-pairwise-page.ts --track fresh`; key in `evals/results/round4/quickpick-key.json`).
+
+Cost: v3 Sonnet $6.77, v3 Opus $13.60. All four round 4 runs: $31.58.
 
 ---
 

@@ -7,6 +7,8 @@
  *     --pair v1-opus=evals/results/model-comparison/claude-opus-5-5-p1.json,v2-opus=evals/results/harness-v2/claude-opus-5-5-p1.json \
  *     --pair ...
  *
+ * --track fresh keeps only round 4 items of that track; --title renames the page.
+ *
  * The rater picks A, B or tie and answers two yes/no questions per answer.
  * The key (pair id -> which label is left and right) is written beside the
  * results, never into the page.
@@ -21,7 +23,11 @@ interface Line {
 }
 interface Result {
   id: string;
-  sentFormat: string | null;
+  /** Rounds 1-3 record the format sent; round 4 records `format`. */
+  sentFormat?: string | null;
+  format?: string;
+  prompt?: string;
+  track?: string;
   unsupported?: boolean;
   text?: string;
   errors?: string[];
@@ -36,6 +42,8 @@ const opt = (name: string) => {
 const out = opt("out") ?? "evals/rating/pairwise.html";
 const keyPath = opt("key") ?? "evals/results/pairwise-key.json";
 const template = opt("template") ?? "evals/rating/pairwise-template.html";
+const title = opt("title");
+const onlyTrack = opt("track");
 const pairSpecs = argv.flatMap((a, i) => (a === "--pair" ? [argv[i + 1]] : []));
 
 const sent = new Map(
@@ -70,16 +78,22 @@ const NOT_BREW = new Set([
 ]);
 
 const key: Record<string, { prompt: string; left: string; right: string }> = {};
+const extra = new Map<string, { format: string; prompt: string; lookFor: string }>();
 const pairs: unknown[] = [];
 for (const spec of pairSpecs) {
   const [[labelA, fileA], [labelB, fileB]] = spec.split(",").map((s) => s.split("=") as [string, string]);
   const load = (f: string) => new Map((JSON.parse(readFileSync(f, "utf8")).results as Result[]).map((r) => [r.id, r]));
   const a = load(fileA);
   const b = load(fileB);
-  for (const p of RUBRIC_PROMPTS) {
-    const ra = a.get(p.id);
-    const rb = b.get(p.id);
-    if (!ra || !rb || ra.unsupported || rb.unsupported || !ra.sentFormat || !rb.sentFormat) continue;
+  // Rubric prompts in rubric order, then any other ids (round 4) in file order.
+  const ids = [...RUBRIC_PROMPTS.map((p) => p.id), ...[...a.keys()].filter((id) => !meta.has(id))];
+  for (const pid of ids) {
+    const ra = a.get(pid);
+    const rb = b.get(pid);
+    if (!ra || !rb || ra.unsupported || rb.unsupported || !(ra.sentFormat ?? ra.format) || !(rb.sentFormat ?? rb.format)) continue;
+    if (onlyTrack && ra.track !== onlyTrack) continue;
+    if (!meta.has(pid)) extra.set(pid, { format: ra.format!, prompt: ra.prompt!, lookFor: "" });
+    const p = { id: pid };
     const id = createHash("sha256").update(`${labelA}|${labelB}|${p.id}`).digest("hex").slice(0, 12);
     // Side assignment from the id: stable across rebuilds, unrelated to which run is which.
     const swap = parseInt(id.slice(0, 2), 16) % 2 === 1;
@@ -93,11 +107,14 @@ for (const spec of pairSpecs) {
 const order = [...pairs].sort((x, y) => ((x as { id: string }).id < (y as { id: string }).id ? -1 : 1));
 const prompts = Object.fromEntries(
   [...new Set(order.map((p) => (p as { prompt: string }).prompt))].map((id) => {
-    const m = meta.get(id)!;
+    const m = meta.get(id);
+    if (!m) return [id, extra.get(id)!];
     return [id, { format: m.format, prompt: sent.get(id) ?? m.prompt, lookFor: m.lookFor }];
   }),
 );
 const json = JSON.stringify({ prompts, pairs: order }).replace(/</g, "\\u003c");
-writeFileSync(out, readFileSync(template, "utf8").replace("/*DATA*/", () => json));
+let page = readFileSync(template, "utf8").replace("/*DATA*/", () => json);
+if (title) page = page.replace(/<title>[^<]*<\/title>/, `<title>${title}</title>`).replace(/<h1>[^<]*<\/h1>/, `<h1>${title}</h1>`);
+writeFileSync(out, page);
 writeFileSync(keyPath, JSON.stringify(key, null, 1) + "\n");
 console.log(`wrote ${out}: ${order.length} pairs across ${Object.keys(prompts).length} prompts`);

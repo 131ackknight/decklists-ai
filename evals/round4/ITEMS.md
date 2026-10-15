@@ -15,11 +15,11 @@ Best picks: decks where card choice takes real judgment (flex slots, tech cards)
 
 | # | Format | Deck (archetype name, a Decklist Data link, or paste a list below) | Optional: cards you'd want hidden |
 | --- | --- | --- | --- |
-| 1 | Modern | Broodscale Combo: https://decklistdata.com/modern/decks/broodscale-combo/Arremangado-2026-10-03-cmuscc | |
-| 2 | Pauper | Dimir Control: https://decklistdata.com/pauper/decks/dimir-control/Lamela-2026-10-13-cmv6y8 | |
-| 3 | Vintage | Lurrus PO: https://decklistdata.com/vintage/decks/lurrus-po/Aced5-2026-10-11-cmv4pg | |
-| 4 | Legacy | Tron: https://decklistdata.com/legacy/decks/tron/djjankolive-2026-10-03-cmusth | |
-| 5 | Premodern | UW Aggro: https://decklistdata.com/premodern/decks/uw-aggro/K1LLKAUS3-2026-10-14-cmv8hu | |
+| 1 | Modern | Broodscale Combo: https://decklistdata.comhttps://decklistdata.com/deck/cmuscc7r10004w5w727kox05o | |
+| 2 | Pauper | Dimir Control: https://decklistdata.comhttps://decklistdata.com/deck/cmv6y8rjg00i8otilgribphgn | |
+| 3 | Vintage | Lurrus PO: https://decklistdata.comhttps://decklistdata.com/deck/cmv4pghsj0093roigyt2td159 | |
+| 4 | Legacy | Tron: https://decklistdata.comhttps://decklistdata.com/deck/cmusth9d10014uy30jm289nov | |
+| 5 | Premodern | UW Aggro: https://decklistdata.comhttps://decklistdata.com/deck/cmv8huf0g000g14euykajsvan | |
 
 ---
 
@@ -33,11 +33,11 @@ If one is too old for our data, I'll say so and you can swap it.
 
 | # | Format | Deck | Key cards the bot is given (2-3) | Roughly when it broke out |
 | --- | --- | --- | --- | --- |
-| 1 | Premodern | Frantic Storm: https://decklistdata.com/premodern/decks/frantic-storm/PNascimento-2025-12-18-cmpmhu | Sapphire Medallion, Helm of Awakening, Brain Freeze (proposed) | First list ever, 2025-12-18 (Premodern data starts 2025-12-08, so this is a near no-data brew) |
-| 2 | Pauper | Dimir Control: https://decklistdata.com/pauper/decks/dimir-control/andredoriaa-2026-09-13-cmu02v | Murmuring Mystic, Thorn of the Black Rose (proposed) | Breakout 2026-09-13 (9 scattered lists before; 88 after) |
-| 3 | Legacy | Tron: https://decklistdata.com/legacy/decks/tron/TrueFuturism-2026-08-22-cmt4n0 | Karn, the Great Creator, The One Ring (proposed) | Archetype existed since data began; this list's new tech: Petrified Hamlet (47% of lists before, 92% after), Chalice of the Void, Cityscape Leveler |
-| 4 | Modern | Soultrader Combo: https://decklistdata.com/modern/decks/soultrader-combo/aspiringspike-2026-10-07-cmuyvi | Warren Soultrader, Gravecrawler, Marionette Apprentice (proposed) | Archetype since 2025-07; this list's new tech: Darklight Phoenix, Buried Alive, Eyetwitch, The Sackville-Bagginses (newest list, none after) |
-| 5 | Modern | Fanatic Eldrazi: https://decklistdata.com/modern/decks/fanatic-eldrazi/aspiringspike-2026-05-15-cmpdf3 | Fanatic of Rhonas, Slumbering Trudge, Fight Rigging (proposed) | First list ever, 2026-05-15 (386 lists after) |
+| 1 | Premodern | Frantic Storm: https://decklistdata.comhttps://decklistdata.com/deck/cmpmhudbb09yh621jkm7zk1gg | Sapphire Medallion, Helm of Awakening, Brain Freeze (proposed) | First list ever, 2025-12-18 (Premodern data starts 2025-12-08, so this is a near no-data brew) |
+| 2 | Pauper | Dimir Control: https://decklistdata.comhttps://decklistdata.com/deck/cmu02v6mf001f2h80gwpb8t9h | Murmuring Mystic, Thorn of the Black Rose (proposed) | Breakout 2026-09-13 (9 scattered lists before; 88 after) |
+| 3 | Legacy | Tron: https://decklistdata.comhttps://decklistdata.com/deck/cmt4n0tib00wileht99fykdu4 | Karn, the Great Creator, The One Ring (proposed) | Archetype existed since data began; this list's new tech: Petrified Hamlet (47% of lists before, 92% after), Chalice of the Void, Cityscape Leveler |
+| 4 | Modern | Soultrader Combo: https://decklistdata.comhttps://decklistdata.com/deck/cmuyvioyz004wq96mt8pp9b9z | Warren Soultrader, Gravecrawler, Marionette Apprentice (proposed) | Archetype since 2025-07; this list's new tech: Darklight Phoenix, Buried Alive, Eyetwitch, The Sackville-Bagginses (newest list, none after) |
+| 5 | Modern | Fanatic Eldrazi: https://decklistdata.comhttps://decklistdata.com/deck/cmpdf381w0n4oj4ikuth14322 | Fanatic of Rhonas, Slumbering Trudge, Fight Rigging (proposed) | First list ever, 2026-05-15 (386 lists after) |
 
 ---
 

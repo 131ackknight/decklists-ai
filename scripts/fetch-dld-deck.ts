@@ -5,6 +5,7 @@
  *
  * Reads the deck's own snapshot and plain-text list from the page payload
  * (the page also embeds related decks, so the snapshot is matched by URL).
+ * Player names are dropped; the saved link is the name-free /deck/<id> form.
  */
 import { mkdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
@@ -43,7 +44,9 @@ for (const url of urls) {
   const text = page.slice(snapAt).match(/"decklistText":"((?:[^"\\]|\\.)*)"/);
   if (!text) throw new Error(`no decklist text for ${url}`);
   const [main, side = ""] = unescape(unescape(text[1])).split(/\n\nSideboard\n/);
-  const deck = { url, ...snapshot, main: parseLines(main), side: parseLines(side) };
+  // No player names in our files: keep the name-free link (redirects to the deck page).
+  const { handle: _handle, url: _url, ...rest } = snapshot;
+  const deck = { ...rest, url: `https://decklistdata.com/deck/${snapshot.deckId}`, main: parseLines(main), side: parseLines(side) };
   const file = path.join(outDir, `${pathname.split("/")[1]}-${pathname.split("/")[3]}-${snapshot.eventDate.slice(0, 10)}.json`);
   writeFileSync(file, JSON.stringify(deck, null, 1) + "\n");
   const n = (xs: Line[]) => xs.reduce((a, c) => a + c.qty, 0);

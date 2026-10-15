@@ -52,7 +52,8 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ## Open decisions
 
-- **Round 4 (fresh evals):** owner writes 5 items per track in `evals/round4/ITEMS.md`; then the harness is frozen and run.
+- ~~Round 4 (fresh evals)~~: done; v3 did not beat v2 on any track.
+- **v4 (agreed 2026-10-15):** two modes, fair decks (principles, best card per job) and specialist decks (model's engine, checked by simulation). First: brew to archetype at scale.
 - **Research direction (agreed in principle):** after round 3, build scorer v0 from the data, validate it against real records and the owner's picks, then add search to the pipeline.
 - ~~Passes 2 and 3 of the v1 comparison~~: skipped in favor of building the new harness (owner agreed).
 - Harness v2 across the five models: about $59 for one pass of 24 prompts (Fable ~$34 of it).
@@ -61,6 +62,27 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - Lesson to apply: any prompt or claim that names a card gets checked against the card index before it is used.
 - ~~Switch to pairwise~~: done; 36 pairs judged (v1 8 wins, v2 6, 22 ties; v2 100% faithful vs. 92%).
 - ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
+
+---
+
+## 2026-10-15 · v4 designed, and the owner redirected it twice
+
+After round 4 the owner asked for the clear takeaway. Claude Code's answer: **"we've made the AI reliable; next we have to make it informed."** Every fix that worked was a check the AI can't argue with (the card exists, the deck is legal, the land count matches real decks). Card choice has no such check, which is why it hasn't improved.
+
+**First proposal (Claude Code):** at each card choice, show what real players of similar decks chose and how many of them there are; follow the crowd when it's big, use judgment when it's small; justify any deviation. The best-of-both check on fill in the blanks suggested a cheaper model could beat Opus this way.
+
+**Owner, redirect 1:** "I don't want it to just be reading from the database though, we are trying to get it to brew not just copy from the lists." Correct, and it exposed a trap: fill in the blanks rewards matching existing lists, so a v4 that copies more would have "won" that test while getting worse at brewing. Fill in the blanks is now a diagnostic, not the target.
+
+**Second proposal:** teach what transfers to a new deck instead of lists: the shape of working decks by type (how many threats, removal, card draw; how combo decks find their pieces) and which cards are best at each job across all decks.
+
+**Owner, redirect 2:** "The principles approach might work for standard aggro and midrange, but not specialist stuff like prison, weird combo decks, and decks that require synergy between cards right?" Also correct. Averages describe fair decks; a prison deck is defined by a lock that hurts you less than the opponent, a combo deck by an exact engine. Round 4 already pointed the same way: on Frantic Storm, a synergy combo with almost no data, Opus got 70% of the real list against 37% for anything in the data. Understanding how cards interact is where the model is strongest.
+
+**Agreed design: two modes** (details in PLAN.md):
+- **Fair decks:** principles plus "which cards are best at each job."
+- **Specialist decks:** the model's own idea, checked in code: it states its engine or lock exactly, quotes the card text it relies on, and the simulator measures how often it assembles by a given turn. This is where brewed combo decks usually fail in practice (too few pieces, too many cute cards), and it's a number the model can't argue with.
+- **Both:** several drafts, keep the one that passes the checks best. The harness only checks; the brewing stays with the model.
+
+**Next:** before changing the harness, build brew to archetype at scale (every deck in Decklist Data's history that appeared from nothing) and measure v2 on it honestly.
 
 ---
 

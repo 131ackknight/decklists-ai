@@ -9,6 +9,7 @@ import { cardsSeen, probAtLeast, probEachGroup } from "@/checker/odds";
 import type { Card } from "@/cards/types";
 import type { DataSource, QtyName } from "@/data/source";
 import { goldfish } from "@/sim/goldfish";
+import { coachNotes, PlanInput, type CoachNote, type Plan } from "@/coach/coach";
 
 /** State shared by one brew's tool calls. */
 export interface ToolContext {
@@ -21,6 +22,11 @@ export interface ToolContext {
   engine?: EnginePlan | null;
   /** Rules submit_engine and submit_deck enforce in code. */
   lock?: DeckLock;
+  /** Harness v4: the declared plan, and how many times the coach has sent a deck back. */
+  plan?: Plan | null;
+  coachRounds?: number;
+  /** The player's message, so the coach never questions cards they named. */
+  request?: string;
 }
 
 export interface EnginePlan {
@@ -54,6 +60,9 @@ export interface SubmittedDeck {
   label: "stock" | "tuned" | "brew";
   donor: string | null;
   warnings: string[];
+  /** Harness v4: the plan, the coach's notes on the accepted deck, and the brewer's answers. */
+  plan?: Plan | null;
+  coach?: { notes: CoachNote[]; responses: { id: string; response: string }[]; rounds: number };
 }
 
 interface ToolDef<S extends z.ZodTypeAny> {
@@ -374,6 +383,79 @@ export const TOOLS = [
     },
   }),
   tool({
+    name: "declare_plan",
+    description:
+      "Harness v4: say what kind of deck you are building before you submit it. synergy: lots of similar pieces (tribal, artifacts, spells matter); combo: one build-around card or two cards that combine (prison locks too); fair: aggro, midrange or control. For synergy and combo, list the pieces that must come together and the turn. The coach measures the deck against this plan. Call it again to change the plan.",
+    schema: PlanInput,
+    run: (input, ctx) => {
+      const key = formatKey(input.format);
+      if ((input.kind === "synergy" || input.kind === "combo") && (!input.pieces?.length || !input.byTurn)) {
+        return { accepted: false, problems: [`A ${input.kind} plan needs pieces (with how many must be drawn) and byTurn.`] };
+      }
+      ctx.plan = { ...input, format: key };
+      return {
+        accepted: true,
+        checks:
+          input.kind === "fair"
+            ? "Counts of creatures, interaction, card advantage, mana value and lands against real decks of this style; cards real players choose far more often for the same job."
+            : "How often the pieces are drawn by the target turn, mulligans included.",
+      };
+    },
+  }),
+  tool({
+    name: "coach_check",
+    description: "Harness v4: the coach's notes on a draft against the declared plan, without submitting. Each note has an id; fix the deck or answer the note in submit_brew.",
+    schema: z.object({ format: z.string(), main: z.array(Line).min(1) }),
+    run: ({ format, main }, ctx) => {
+      if (!ctx.plan) return { notes: [], problem: "Call declare_plan first." };
+      const notes = coachNotes(ctx.index, ctx.data, formatKey(format), ctx.plan, main, ctx.request);
+      return { notes, satisfied: notes.length === 0 };
+    },
+  }),
+  tool({
+    name: "submit_brew",
+    description:
+      "Harness v4: submit the final deck. Same rules as a legal submission (every card looked up, no rule errors), and for tuned decks and brews the coach checks it against your declared plan. If the coach has notes, the deck comes back with them: fix the deck, or answer every note by id in coachResponses saying why it doesn't apply. Label it stock, tuned or brew.",
+    schema: DeckInput.extend({
+      label: z.enum(["stock", "tuned", "brew"]),
+      donor: z.string().optional().describe("The existing strategy this borrows its shell from, if any."),
+      coachResponses: z
+        .array(z.object({ id: z.string(), response: z.string().min(10) }))
+        .optional()
+        .describe("Your answer to each coach note you chose not to fix, by note id."),
+    }),
+    run: (input, ctx) => {
+      const key = formatKey(input.format);
+      const legal = legalSubmission(ctx, key, input);
+      if (!legal.ok) return { accepted: false, ...legal.body };
+      let notes: CoachNote[] = [];
+      const responses = input.coachResponses ?? [];
+      if (input.label !== "stock") {
+        if (!ctx.plan) return { accepted: false, errors: ["Call declare_plan first: the coach checks the deck against it."] };
+        notes = coachNotes(ctx.index, ctx.data, key, ctx.plan, input.main, ctx.request);
+        const answered = new Set(responses.map((r) => r.id));
+        const open = notes.filter((n) => !answered.has(n.id));
+        // The coach sends a deck back at most twice, so a disagreement can't loop forever.
+        if (open.length && (ctx.coachRounds ?? 0) < 2) {
+          ctx.coachRounds = (ctx.coachRounds ?? 0) + 1;
+          return { accepted: false, coachNotes: open, howToProceed: "Fix the deck, or answer each note by id in coachResponses." };
+        }
+      }
+      ctx.submitted = {
+        format: key,
+        main: input.main,
+        side: input.side,
+        commander: input.commander,
+        label: input.label,
+        donor: input.donor ?? null,
+        warnings: legal.warnings,
+        plan: ctx.plan ?? null,
+        coach: { notes, responses, rounds: ctx.coachRounds ?? 0 },
+      };
+      return { accepted: true, warnings: legal.warnings };
+    },
+  }),
+  tool({
     name: "submit_deck",
     description:
       "Submit the final deck. Rejected if it has rule errors or names a card no tool returned this session (look those up with card_info first). Label it stock (a proven list), tuned (a proven list with changes), or brew (built around new ideas).",
@@ -408,6 +490,25 @@ export const TOOLS = [
     },
   }),
 ];
+
+/** The submission rules every harness shares: every card looked up, no rule errors, locks respected. */
+function legalSubmission(
+  ctx: ToolContext,
+  key: string,
+  input: { main: QtyName[]; side: QtyName[]; commander: QtyName[] },
+): { ok: true; warnings: string[] } | { ok: false; body: Record<string, unknown> } {
+  const unseen = [...input.main, ...input.side, ...input.commander]
+    .filter((l) => !isBasic(ctx.index.getCard(l.name)))
+    .map((l) => ctx.index.getCard(l.name)?.name ?? l.name)
+    .filter((n) => !ctx.seen.has(normalizeName(n)));
+  if (unseen.length > 0) {
+    return { ok: false, body: { reason: "These cards were not returned by any tool yet; look them up with card_info.", cards: [...new Set(unseen)] } };
+  }
+  const result = checkDeck(ctx.index, { ...input, format: key });
+  const problems = lockProblems(ctx, key, input.main, input.side, input.commander);
+  if (!result.ok || problems.length) return { ok: false, body: { errors: [...result.errors.map((e) => e.message), ...problems] } };
+  return { ok: true, warnings: result.warnings.map((w) => w.message) };
+}
 
 export type ToolName = (typeof TOOLS)[number]["name"];
 

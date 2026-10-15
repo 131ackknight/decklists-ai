@@ -2,7 +2,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import type { CardIndex } from "@/cards/card-index";
 import type { DataSource } from "@/data/source";
 import { costUsd, type ModelConfig, type Usage } from "./models";
-import { SYSTEM_PROMPT } from "./prompt";
+import { SYSTEM_PROMPT, V4_SYSTEM_PROMPT } from "./prompt";
 import { runTool, toolParams, type SubmittedDeck, type ToolContext } from "./tools";
 
 export interface BrewRequest {
@@ -121,10 +121,17 @@ export async function runStage(opts: {
       const results: Anthropic.ToolResultBlockParam[] = uses.map((u) => {
         const r = runTool(u.name, u.input, ctx, opts.tools);
         const record: ToolCallRecord = { name: u.name, input: u.input, isError: r.isError, stage };
-        if ((u.name === "submit_deck" || u.name === "submit_engine") && !r.isError) {
+        if ((u.name === "submit_deck" || u.name === "submit_engine" || u.name === "submit_brew" || u.name === "declare_plan") && !r.isError) {
           const body = JSON.parse(r.content);
           record.accepted = body.accepted === true;
-          if (!record.accepted) record.rejected = [...(body.errors ?? []), ...(body.problems ?? []), ...(body.reason ? [body.reason, ...(body.cards ?? [])] : [])];
+          if (!record.accepted) {
+            record.rejected = [
+              ...(body.errors ?? []),
+              ...(body.problems ?? []),
+              ...(body.reason ? [body.reason, ...(body.cards ?? [])] : []),
+              ...(body.coachNotes ?? []).map((n: { id: string; message: string }) => `coach ${n.id}: ${n.message}`),
+            ];
+          }
         }
         if (r.isError) record.rejected = [r.content.slice(0, 300)];
         toolCalls.push(record);
@@ -155,6 +162,32 @@ export async function brew(
   // v2 never had the simulate tool; keep its toolset fixed so v2 runs stay comparable.
   const V2_TOOLS = ["search_cards", "find_tags", "card_info", "meta", "archetype", "reference_list", "draw_odds", "check_deck", "submit_deck"];
   const r = await runStage({ client, model, system: SYSTEM_PROMPT, userText, tools: V2_TOOLS, ctx, onStep });
+  return {
+    text: r.text,
+    deck: ctx.submitted,
+    toolCalls: r.toolCalls,
+    usage: r.usage,
+    costUsd: Math.round(costUsd(model, r.usage) * 10000) / 10000,
+    steps: r.steps,
+    stopReason: r.stopReason,
+    error: r.error,
+    ms: Date.now() - started,
+  };
+}
+
+/** Harness v4: v2's loop and tools, plus declare_plan and the coach (submit_brew in place of submit_deck). */
+export async function brewV4(
+  client: Anthropic,
+  model: ModelConfig,
+  req: BrewRequest,
+  deps: { index: CardIndex; data: DataSource },
+  onStep?: (step: number, note: string) => void,
+): Promise<BrewResult> {
+  const started = Date.now();
+  const ctx: ToolContext = { ...deps, seen: new Set(), submitted: null, plan: null, coachRounds: 0, request: req.prompt };
+  const userText = req.format ? `Format: ${req.format}\n\n${req.prompt}` : req.prompt;
+  const V4_TOOLS = ["search_cards", "find_tags", "card_info", "meta", "archetype", "reference_list", "draw_odds", "check_deck", "declare_plan", "coach_check", "submit_brew"];
+  const r = await runStage({ client, model, system: V4_SYSTEM_PROMPT, userText, tools: V4_TOOLS, ctx, onStep, maxSteps: 40 });
   return {
     text: r.text,
     deck: ctx.submitted,

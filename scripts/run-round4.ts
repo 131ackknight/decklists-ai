@@ -1,7 +1,7 @@
 /**
  * Run round 4 (owner-written evals) on one harness and model.
  *
- *   pnpm exec tsx scripts/run-round4.ts --harness v2|v3 --model claude-sonnet-5-5 [--track fill,brew,fresh|holdout] [--items id,id] [--concurrency 3] [--list]
+ *   pnpm exec tsx scripts/run-round4.ts --harness v2|v3|v4 --model claude-sonnet-5-5 [--track fill,brew,fresh|holdout] [--items id,id] [--concurrency 3] [--list]
  *
  * Fill in the blanks, brew to archetype and the brew holdout rebuild a past moment: lists from
  * the item's date on are cut from the data, and cards first printed after it
@@ -15,7 +15,7 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { loadCardIndex } from "../src/cards/load";
 import { FileDataSource } from "../src/data/source";
 import { MODELS } from "../src/harness/models";
-import { brew, type BrewResult } from "../src/harness/run";
+import { brew, brewV4, type BrewResult } from "../src/harness/run";
 import { runPipeline, type PipelineResult } from "../src/pipeline/run";
 import { isNearCopy, round4Items } from "../evals/round4/items";
 
@@ -59,7 +59,9 @@ async function main() {
       const pool = it.before ? index.asOf(it.before, history.cardsPlayedThrough(it.before)) : index;
       const data = it.before ? history.cut(it.before, pool, (l) => isNearCopy(index, it, l.main)) : today;
       const req = { prompt: it.prompt, format: it.format };
-      const r: BrewResult = harness === "v3" ? await runPipeline(client, model, req, { index: pool, data }) : await brew(client, model, req, { index: pool, data });
+      const deps = { index: pool, data };
+      const r: BrewResult =
+        harness === "v3" ? await runPipeline(client, model, req, deps) : harness === "v4" ? await brewV4(client, model, req, deps) : await brew(client, model, req, deps);
       const pipe = "path" in r ? (r as PipelineResult) : null;
       spent += r.costUsd;
       const sum = (xs: { qty: number }[]) => xs.reduce((n, c) => n + c.qty, 0);
@@ -74,7 +76,14 @@ async function main() {
         prompt: it.prompt,
         text: r.text,
         ...(pipe ? { intent: pipe.intent, path: pipe.path } : {}),
-        deck: r.deck && { main: r.deck.main, side: r.deck.side, commander: r.deck.commander, label: r.deck.label, warnings: r.deck.warnings },
+        deck: r.deck && {
+          main: r.deck.main,
+          side: r.deck.side,
+          commander: r.deck.commander,
+          label: r.deck.label,
+          warnings: r.deck.warnings,
+          ...(r.deck.plan ? { plan: r.deck.plan, coach: r.deck.coach } : {}),
+        },
         toolCalls: r.toolCalls.map((c) => ({ name: c.name, ok: c.accepted, isError: c.isError, stage: c.stage, rejected: c.rejected })),
         usage: r.usage,
         costUsd: r.costUsd,

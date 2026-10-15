@@ -11,8 +11,11 @@ import { COLORS, landColors, landWeight, pipsByFace, type Color } from "@/checke
 
 export interface SimInput {
   main: { qty: number; name: string }[];
-  /** Engine pieces: each group needs at least one card in hand, castable, by the target turn. */
-  engine?: { name: string; cards: string[] }[];
+  /**
+   * Engine pieces: each group needs at least one card in hand, castable, by the target turn.
+   * `need` (default 1) is how many cards of the group must have been drawn, for engineSeenByTarget.
+   */
+  engine?: { name: string; cards: string[]; need?: number }[];
   targetTurn?: number;
   onPlay?: boolean;
   games?: number;
@@ -32,6 +35,8 @@ export interface SimResult {
   colorOkByTurn: number[];
   engineReadyByTarget: number | null;
   engineInHandByTarget: number | null;
+  /** Every group has at least `need` of its cards drawn by the target turn (mulligans included; casting ignored). */
+  engineSeenByTarget: number | null;
   avgLandsInPlayByTurn: number[];
 }
 
@@ -107,6 +112,7 @@ export function goldfish(index: CardIndex, input: SimInput): SimResult {
   }
   const size = deck.length;
   const engine = (input.engine ?? []).map((g) => new Set(g.cards.map((c) => index.getCard(c)?.name ?? c)));
+  const needs = (input.engine ?? []).map((g) => g.need ?? 1);
   // Keep range follows the deck: a 16-land deck keeps one-landers, a 26-land deck wants three.
   const landCount = deck.filter((c) => c.land).length;
   const expected = (7 * landCount) / Math.max(1, size);
@@ -119,6 +125,7 @@ export function goldfish(index: CardIndex, input: SimInput): SimResult {
   let flood = 0;
   let engineInHand = 0;
   let engineReady = 0;
+  let engineSeen = 0;
   const colorOk = Array(turns).fill(0);
   const landsByTurn = Array(turns).fill(0);
 
@@ -153,9 +160,18 @@ export function goldfish(index: CardIndex, input: SimInput): SimResult {
     let landsSeenAtT6 = 0;
     let readyAt: number | null = null;
     let inHandAt: number | null = null;
+    let seenAt: number | null = null;
+    // Every card drawn this game, kept even after it leaves the hand.
+    const drawnCount = engine.map((grp) => hand.filter((c) => grp.has(c.name)).length);
 
     for (let t = 1; t <= turns; t++) {
-      if (!(t === 1 && onPlay)) hand.push(order[next++]);
+      if (!(t === 1 && onPlay)) {
+        const drawn = order[next++];
+        hand.push(drawn);
+        engine.forEach((grp, i) => {
+          if (grp.has(drawn.name)) drawnCount[i]++;
+        });
+      }
       for (const r of rocks) r.ready = true;
 
       // Play the land that adds a color the hand needs most, else any land.
@@ -194,6 +210,7 @@ export function goldfish(index: CardIndex, input: SimInput): SimResult {
         if (inHand && inHandAt == null) inHandAt = t;
         const castable = engine.every((grp) => hand.some((c) => grp.has(c.name) && canPay(pool, c)));
         if (castable && readyAt == null) readyAt = t;
+        if (seenAt == null && drawnCount.every((n, i) => n >= needs[i])) seenAt = t;
       }
     }
 
@@ -202,6 +219,7 @@ export function goldfish(index: CardIndex, input: SimInput): SimResult {
     if (landsSeenAtT6 >= (size >= 90 ? 11 : 8)) flood++;
     if (inHandAt != null) engineInHand++;
     if (readyAt != null) engineReady++;
+    if (seenAt != null) engineSeen++;
   }
 
   const r = (n: number) => Math.round((n / games) * 1000) / 10;
@@ -214,6 +232,7 @@ export function goldfish(index: CardIndex, input: SimInput): SimResult {
     colorOkByTurn: colorOk.map(r),
     engineReadyByTarget: engine.length ? r(engineReady) : null,
     engineInHandByTarget: engine.length ? r(engineInHand) : null,
+    engineSeenByTarget: engine.length ? r(engineSeen) : null,
     avgLandsInPlayByTurn: landsByTurn.map((n) => Math.round((n / games) * 100) / 100),
   };
 }

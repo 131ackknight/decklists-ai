@@ -20,6 +20,8 @@ export interface DataSource {
   cardPlayRate(format: string, cardName: string, opts?: Window): CardPlay | null;
   /** Highest share of this main deck found card for card in one real list. */
   copyRate(format: string, main: QtyName[], opts?: Window): CopyRate | null;
+  /** Every list in the window (default 90 days), for measuring what decks of a kind look like. */
+  recentLists(format: string, opts?: Window): RefList[];
 }
 
 export interface CopyRate {
@@ -185,6 +187,10 @@ export class FileDataSource implements DataSource {
       side: rate("side"),
       mana: reports.length >= 3 ? buildProfile(format, lists[0].strategy, reports) : null,
     };
+  }
+
+  recentLists(format: string, opts?: Window): RefList[] {
+    return this.window(format, { days: 90, ...opts });
   }
 
   referenceList(format: string, strategy: string, opts?: Window): RefList | null {

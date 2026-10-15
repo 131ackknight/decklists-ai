@@ -64,6 +64,26 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-10-15 · Round 4, Track 3: the owner's own prompts, judged blind: a coin flip
+
+The owner judged all 10 Quick Pick pairs (their 5 prompts x Sonnet and Opus, v2 vs. v3), this time with both full decklists on the page (the owner asked for them; differing cards highlighted).
+
+**Result: v2 4 wins, v3 3, 3 ties.** By model: Sonnet v2 2-1 (2 ties), Opus 2-2 (1 tie).
+
+| Prompt | Sonnet | Opus |
+| --- | --- | --- |
+| Mono red prison (Premodern) | v2 (stronger cards, clearer plan) | v2 (closer to the request) |
+| City of Traitors mono black (Premodern) | v2 (stronger cards, closer to the request) | v3 (clearer plan) |
+| Mono black Tron (Modern) | v3 | v2 |
+| 5 color Solution (Premodern) | tie | v3 (stronger cards) |
+| Non-power Vintage | tie | tie |
+
+**Reading:** the harness doesn't decide the outcome. On the same prompt, v3 wins with one model and loses with the other, which is what noise looks like. The reasons the owner gave were mostly "stronger cards" (3) and "clearer plan" (2): card quality, the thing neither harness changes. This matches tracks 1 and 2 and rounds 1-3: the pipeline changes the process, not the card choices.
+
+**What this sets up:** the owner pushed back on the obvious conclusion ("I don't want this to just be 'the answer is just bigger models'"). Round 4 points at a harness lever not yet tried: put the evidence (what real players chose, and how many of them) at the moment of each card choice, and tell the model how much to trust it. The best-of-both check on fill in the blanks says the room exists: Sonnet combined with the data rule would score 8.0 of 12, above Opus alone at 7.7. Success test for v4: a cheaper model with the better harness beating Opus on v2.
+
+---
+
 ## 2026-10-15 · Round 4, harness v3: the pipeline still doesn't help
 
 Same 30 items through the step 8 pipeline (intent routing, staged brews). Routing was right: all 20 fill-ins went to "tune", all 5 brew items to "brew"; 3 of the owner's 5 fresh prompts were judged to have a list to start from ("stock").

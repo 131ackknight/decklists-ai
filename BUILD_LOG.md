@@ -14,7 +14,7 @@ A running record of how decklists.ai gets built: decisions, findings, numbers, a
 | Item | Total |
 | --- | --- |
 | Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71. Total about $67.66. Plus one 17-token test call. |
-| Real decklists analyzed | 30,102 (last 90 days, 8 formats) |
+| Real decklists analyzed | 30,102 (last 90 days, 8 formats); full history 143,721 (since 2025-07-01) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
 | Automated tests | 41 passing |
 | Decklist Data PRs merged | 4 (#181 export, #182 baseline eval, #183 baseline on `main`, #184 model comparison) |
@@ -47,6 +47,26 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - Lesson to apply: any prompt or claim that names a card gets checked against the card index before it is used.
 - ~~Switch to pairwise~~: done; 36 pairs judged (v1 8 wins, v2 6, 22 ties; v2 100% faithful vs. 92%).
 - ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
+
+---
+
+## 2026-10-15 · Round 4 items are in (owner-written)
+
+The owner wrote all 15 items in one message: 5 Decklist Data links for fill in the blanks, 5 for brew to archetype, and 5 brew requests in their own words ("Mono red prison but in Premodern?", "Most competitive non-power nine vintage deck?", "Mono black tron in Modern?", "City of Traitors mono black premodern deck?", "Best 5 color Solution deck in premodern?"). Every named card was checked against the card index first (the Tainted Pact lesson): all legal where named.
+
+**Getting the lists.** `scripts/fetch-dld-deck.ts` reads a public deck page's own plain-text list (pages also embed related decks, so it matches the deck by URL). Saved under `evals/round4/lists/`.
+
+**A Decklist Data bug found on the way.** The 2026-05-15 Fanatic Eldrazi list stores five junk sideboard lines like "29 Cards (48%)", so the site shows a 100-card sideboard. None of the 30,102 lists from the last 90 days have it. Junk lines are dropped with a warning; the fix is queued as a separate Decklist Data task.
+
+**Full history export.** Brew to archetype needs data from before each deck existed, so the existing read-only export ran with `days=0`: 143,721 lists (from 2025-07-01; Premodern from 2025-12-08), gitignored. `scripts/archetype-history.ts` finds each archetype's first list, its breakout, and its signature cards.
+
+**What the owner's brew-to-archetype picks turned out to be:**
+- **Fanatic Eldrazi (Modern):** the linked list is the archetype's first ever (2026-05-15), with 386 after. The cleanest case.
+- **Frantic Storm (Premodern):** also the first ever (2025-12-18), but Premodern data starts only 10 days earlier, so it tests brewing with almost no data.
+- **Dimir Control (Pauper):** the linked list is exactly the breakout date (9 scattered lists before, 88 after).
+- **Tron (Legacy) and Soultrader Combo (Modern):** existing archetypes; the linked lists are new versions. Tron's added Petrified Hamlet (47% of Tron lists before, 92% in the next 3 weeks), Chalice of the Void and Cityscape Leveler. These test whether the bot finds the next step for a known deck, a different and useful question.
+
+The owner's links matched breakout dates without being told to look for them, which is a small sign their picks carry real knowledge the data can confirm.
 
 ---
 

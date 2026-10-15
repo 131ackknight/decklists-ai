@@ -49,6 +49,23 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-10-15 · Judging simplified again: Quick Pick
+
+After 23 of 48 round 3 pairs (v2 6 wins, v3 2, 15 ties; on brews v2 5, v3 1), the owner: "I think we need to simplify it even more for accurate scoring by me."
+
+**What made it tiring:** reading two full 75-card lists that are mostly the same, then answering five things (two yes/no per answer plus the pick).
+
+**Quick Pick** (`evals/rating/quickpick-template.html`, same page and link, same pair ids, so the 23 earlier picks carry over):
+- **Only the cards that differ:** "Only in A" and "Only in B" side by side; shared cards folded into one expandable line. A pair becomes 10-20 card lines to compare instead of about 150.
+- **One question:** "Which would you rather play for this request?" A, Same, or B. It is the same pick as before, so round 3 stays comparable; the yes/no questions are dropped for the remaining pairs.
+- **Each answer's opening two sentences** stay, so the rater sees what each deck is going for.
+- **Optional one-tap reasons:** closer to the request, better mana, stronger cards, clearer plan, fewer odd cards. Cheap qualitative data with no typing.
+- **Keys 1/2/3, auto-advance** to the next unjudged brew pair; Previous to change a pick.
+
+The lesson for the post: the judging interface is part of the measurement. Each simplification (1-5 scores, then pairwise with yes/no, then one diff-based question) traded detail for accuracy and stamina, and the owner's comfort was the right signal to follow.
+
+---
+
 ## 2026-10-15 · Scorer v0, part 1: card choice doesn't predict results (a negative result)
 
 While the owner judges the remaining brew pairs, the first piece of the scorer: does card choice within an archetype predict results? `scripts/scorer-card-performance.ts`.

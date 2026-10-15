@@ -1,0 +1,318 @@
+<title>Brew Quick Pick</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one question per screen. The request, each answer's opening, only the cards that differ, then A / Same / B. */
+:root {
+  --bg: #f4f6fa;
+  --surface: #ffffff;
+  --ink: #1b2236;
+  --muted: #5d667d;
+  --line: #dde2ec;
+  --accent: #2459a6;
+  --pick: #b5650d;
+  --chip: #e8edf6;
+  --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #10141d; --surface: #181e2b; --ink: #e5e9f2; --muted: #9aa4ba; --line: #2a3346;
+    --accent: #6f9fe0; --pick: #e2a04f; --chip: #222b3d;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #10141d; --surface: #181e2b; --ink: #e5e9f2; --muted: #9aa4ba; --line: #2a3346;
+  --accent: #6f9fe0; --pick: #e2a04f; --chip: #222b3d;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 16px/1.5 var(--font-body); }
+.wrap { max-width: 1100px; margin: 0 auto; padding-inline: 16px; padding-block: 16px 64px; display: grid; gap: 16px; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; }
+.top { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 16px; }
+.top h1 { font-size: 1.3rem; }
+.progress { color: var(--muted); font-size: 0.9rem; font-variant-numeric: tabular-nums; }
+.progress b { color: var(--pick); }
+.controls { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; font-size: 0.9rem; color: var(--muted); }
+.controls label { display: inline-flex; gap: 6px; align-items: center; }
+.btn { font: 600 0.88rem var(--font-body); border: 1px solid var(--line); background: var(--surface); color: var(--ink); padding: 6px 12px; border-radius: 8px; cursor: pointer; }
+.btn:disabled { opacity: 0.5; cursor: default; }
+button:focus-visible, summary:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.notice { margin: 0; color: var(--muted); font-size: 0.9rem; }
+.request { display: grid; gap: 6px; }
+.fmt { font: 600 0.75rem var(--font-body); letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); }
+.prompt { font-family: var(--font-display); font-size: 1.25rem; font-weight: 600; margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.duel { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); gap: 14px; }
+.side { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px; display: grid; gap: 10px; align-content: start; min-width: 0; }
+.side-head { display: flex; gap: 10px; align-items: center; }
+.letter { font: 700 1.2rem var(--font-display); width: 2.1rem; height: 2.1rem; display: grid; place-items: center; border-radius: 8px; background: var(--ink); color: var(--surface); }
+.lead { margin: 0; font-size: 0.94rem; overflow-wrap: anywhere; }
+.only h3 { font: 600 0.78rem var(--font-body); text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin-bottom: 4px; }
+.only pre { margin: 0; font: 0.84rem/1.5 var(--font-mono); padding: 10px 12px; background: var(--bg); border-radius: 8px; overflow-x: auto; white-space: pre-wrap; }
+.none { color: var(--muted); font-style: italic; }
+details summary { cursor: pointer; color: var(--accent); font-size: 0.9rem; }
+.shared pre { margin: 6px 0 0; font: 0.8rem/1.45 var(--font-mono); padding: 10px 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; columns: 2 220px; }
+.reply { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 20rem; overflow: auto; padding: 10px; border: 1px solid var(--line); border-radius: 8px; font-size: 0.9rem; margin-top: 6px; }
+.ask { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px; display: grid; gap: 12px; }
+.ask h2 { font-size: 1.1rem; }
+.picks { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.picks button { font: 700 1.05rem var(--font-display); padding: 16px 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); color: var(--ink); cursor: pointer; }
+.picks button kbd { display: block; font: 0.75rem var(--font-mono); color: var(--muted); margin-top: 2px; }
+.picks button[aria-pressed="true"] { background: var(--pick); color: var(--surface); border-color: var(--pick); }
+.picks button[aria-pressed="true"] kbd { color: var(--surface); }
+.why { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 0.85rem; color: var(--muted); }
+.why button { font: 0.85rem var(--font-body); border: 1px solid var(--line); background: var(--surface); color: var(--ink); padding: 4px 10px; border-radius: 999px; cursor: pointer; }
+.why button[aria-pressed="true"] { background: var(--chip); border-color: var(--accent); color: var(--accent); }
+button:disabled { cursor: not-allowed; opacity: 0.6; }
+.saved { font-size: 0.8rem; color: var(--muted); min-height: 1.2em; }
+@media (max-width: 560px) { .picks { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: no-preference) { .picks button, .why button { transition: background 120ms ease, color 120ms ease; } }
+</style>
+
+<div class="wrap">
+  <div class="top">
+    <h1>Brew Quick Pick</h1>
+    <span class="progress" id="progress"></span>
+  </div>
+  <div class="controls">
+    <button class="btn" id="prev" type="button">Previous</button>
+    <button class="btn" id="next" type="button">Next</button>
+    <label><input type="checkbox" id="brewsOnly" checked> Brews only</label>
+    <label><input type="checkbox" id="unjudgedOnly" checked> Not yet judged</label>
+  </div>
+  <p class="notice" id="notice">Loading saved picks…</p>
+  <section class="request" id="request"></section>
+  <div class="duel" id="duel"></div>
+  <details class="shared" id="shared"></details>
+  <section class="ask">
+    <h2>Which would you rather play for this request?</h2>
+    <div class="picks" id="picks">
+      <button type="button" data-w="A">A<kbd>1</kbd></button>
+      <button type="button" data-w="tie">Same<kbd>2</kbd></button>
+      <button type="button" data-w="B">B<kbd>3</kbd></button>
+    </div>
+    <div class="why" id="why">
+      <span>Why, if you like:</span>
+      <button type="button" data-r="request">Closer to the request</button>
+      <button type="button" data-r="mana">Better mana</button>
+      <button type="button" data-r="power">Stronger cards</button>
+      <button type="button" data-r="plan">Clearer plan</button>
+      <button type="button" data-r="odd">Fewer odd cards</button>
+    </div>
+    <div class="saved" id="saved" aria-live="polite"></div>
+  </section>
+</div>
+
+<script type="application/json" id="data">/*DATA*/</script>
+<script>
+(function () {
+  const DATA = JSON.parse(document.getElementById("data").textContent);
+  const picks = new Map();
+  let db = null;
+  let canWrite = false;
+  let current = 0;
+  let chain = Promise.resolve();
+  let advanceTimer = null;
+  const brewsOnly = document.getElementById("brewsOnly");
+  const unjudgedOnly = document.getElementById("unjudgedOnly");
+
+  const el = (tag, attrs, ...kids) => {
+    const n = document.createElement(tag);
+    for (const [k, v] of Object.entries(attrs || {})) {
+      if (k === "class") n.className = v;
+      else if (k === "text") n.textContent = v;
+      else if (v !== null && v !== undefined && v !== false) n.setAttribute(k, v);
+    }
+    for (const kid of kids) if (kid) n.append(kid);
+    return n;
+  };
+  const judged = (id) => Boolean(picks.get(id) && picks.get(id).winner);
+  const inView = (i) => (!brewsOnly.checked || DATA.pairs[i].brew) && (!unjudgedOnly.checked || !judged(DATA.pairs[i].id) || i === current);
+
+  /** Card -> copies across main, side and commander. */
+  function counts(deck) {
+    const m = new Map();
+    if (!deck) return m;
+    for (const zone of ["commander", "main", "side"]) {
+      for (const c of deck[zone] || []) {
+        const k = (zone === "side" ? "SB: " : "") + c.name;
+        m.set(k, (m.get(k) || 0) + c.qty);
+      }
+    }
+    return m;
+  }
+  function diff(a, b) {
+    const onlyA = [];
+    const onlyB = [];
+    const both = [];
+    for (const k of new Set([...a.keys(), ...b.keys()])) {
+      const x = a.get(k) || 0;
+      const y = b.get(k) || 0;
+      const shared = Math.min(x, y);
+      if (shared) both.push(`${shared} ${k}`);
+      if (x > shared) onlyA.push(`${x - shared} ${k}`);
+      if (y > shared) onlyB.push(`${y - shared} ${k}`);
+    }
+    const byMain = (s) => (s.includes("SB: ") ? 1 : 0);
+    const sort = (xs) => xs.sort((p, q) => byMain(p) - byMain(q) || p.replace(/^\d+ /, "").localeCompare(q.replace(/^\d+ /, "")));
+    return { onlyA: sort(onlyA), onlyB: sort(onlyB), both: sort(both) };
+  }
+  /** The reply's opening: its first two sentences, where answers put the plan. */
+  function opening(text) {
+    if (!text) return "";
+    const clean = text.replace(/\*\*/g, "").replace(/\s+/g, " ").trim();
+    const parts = clean.match(/[^.!?]+[.!?]+/g) || [clean];
+    const out = parts.slice(0, 2).join(" ").trim();
+    return out.length > 360 ? out.slice(0, 357) + "…" : out;
+  }
+
+  function renderProgress() {
+    const pool = DATA.pairs.filter((p) => !brewsOnly.checked || p.brew);
+    const done = pool.filter((p) => judged(p.id)).length;
+    document.getElementById("progress").replaceChildren(el("b", { text: `${done} of ${pool.length}` }), brewsOnly.checked ? " brew pairs judged" : " pairs judged");
+  }
+
+  function save(patch, advance) {
+    if (!db || !canWrite) return;
+    const p = DATA.pairs[current];
+    const body = { ...(picks.get(p.id) || {}), ...patch, pair: p.id, prompt: p.prompt, quick: true, updatedAt: new Date().toISOString() };
+    picks.set(p.id, body);
+    sync();
+    renderProgress();
+    const status = document.getElementById("saved");
+    status.textContent = "Saving…";
+    chain = chain
+      .then(() => db.collection("pairs").doc(p.id).set(body))
+      .then(() => { status.textContent = advance ? "Saved. Next pair in a moment (change your mind with Previous)." : "Saved"; })
+      .catch((e) => { status.textContent = e && e.code === "invalid_argument" ? "Only the owner can save picks on this page." : "Could not save. Try again in a moment."; });
+    if (advance) {
+      clearTimeout(advanceTimer);
+      advanceTimer = setTimeout(() => go(1), 900);
+    }
+  }
+
+  function side(letter, ans, only) {
+    const box = el("article", { class: "side" });
+    box.append(el("div", { class: "side-head" }, el("span", { class: "letter", text: letter }), ans.deck ? null : el("span", { class: "fmt", text: "No deck" })));
+    if (ans.text) box.append(el("p", { class: "lead", text: opening(ans.text) }));
+    const o = el("div", { class: "only" }, el("h3", { text: `Only in ${letter}` }));
+    o.append(only.length ? el("pre", { text: only.join("\n") }) : el("p", { class: "none", text: "Nothing: every card is also in the other deck." }));
+    box.append(o);
+    if (ans.text) {
+      const d = el("details", {}, el("summary", { text: "Full reply" }));
+      d.append(el("div", { class: "reply", text: ans.text }));
+      box.append(d);
+    }
+    return box;
+  }
+
+  function sync() {
+    const s = picks.get(DATA.pairs[current].id) || {};
+    for (const b of document.querySelectorAll("#picks button")) {
+      b.setAttribute("aria-pressed", String(s.winner === b.dataset.w));
+      b.disabled = !canWrite;
+    }
+    for (const b of document.querySelectorAll("#why button")) {
+      b.setAttribute("aria-pressed", String((s.reasons || []).includes(b.dataset.r)));
+      b.disabled = !canWrite;
+    }
+  }
+
+  function render() {
+    const p = DATA.pairs[current];
+    const pr = DATA.prompts[p.prompt];
+    const first = pr.prompt.split("\n")[0];
+    const req = [el("span", { class: "fmt", text: pr.format }), el("p", { class: "prompt", text: first })];
+    if (pr.prompt.includes("\n") && pr.prompt.length > 220) {
+      const d = el("details", {}, el("summary", { text: "Show the pasted list" }));
+      d.append(el("div", { class: "reply", text: pr.prompt.slice(first.length).trim() }));
+      req.push(d);
+    }
+    document.getElementById("request").replaceChildren(...req);
+    const d = diff(counts(p.left.deck), counts(p.right.deck));
+    document.getElementById("duel").replaceChildren(side("A", p.left, d.onlyA), side("B", p.right, d.onlyB));
+    const shared = document.getElementById("shared");
+    shared.replaceChildren(el("summary", { text: `Both decks play ${d.both.length} of the same card lines` }), el("pre", { text: d.both.join("\n") || "None" }));
+    shared.open = false;
+    document.getElementById("saved").textContent = "";
+    document.getElementById("prev").disabled = !DATA.pairs.some((_, i) => i < current && inView(i));
+    document.getElementById("next").disabled = !DATA.pairs.some((_, i) => i > current && inView(i));
+    sync();
+    renderProgress();
+  }
+
+  function go(dir) {
+    let i = current + dir;
+    while (i >= 0 && i < DATA.pairs.length && !inView(i)) i += dir;
+    if (i < 0 || i >= DATA.pairs.length) {
+      if (dir > 0) document.getElementById("saved").textContent = "That was the last one in this view. Thank you!";
+      return;
+    }
+    current = i;
+    try { localStorage.setItem("quick-pair", String(current)); } catch (e) {}
+    render();
+    window.scrollTo(0, 0);
+  }
+  function jumpToFirst() {
+    const i = DATA.pairs.findIndex((_, j) => (!brewsOnly.checked || DATA.pairs[j].brew) && (!unjudgedOnly.checked || !judged(DATA.pairs[j].id)));
+    if (i >= 0) { current = i; render(); }
+  }
+
+  document.getElementById("prev").addEventListener("click", () => go(-1));
+  document.getElementById("next").addEventListener("click", () => go(1));
+  brewsOnly.addEventListener("change", jumpToFirst);
+  unjudgedOnly.addEventListener("change", jumpToFirst);
+  for (const b of document.querySelectorAll("#picks button")) b.addEventListener("click", () => save({ winner: b.dataset.w }, true));
+  for (const b of document.querySelectorAll("#why button")) {
+    b.addEventListener("click", () => {
+      clearTimeout(advanceTimer);
+      const s = picks.get(DATA.pairs[current].id) || {};
+      const set = new Set(s.reasons || []);
+      set.has(b.dataset.r) ? set.delete(b.dataset.r) : set.add(b.dataset.r);
+      save({ reasons: [...set] }, false);
+    });
+  }
+  document.addEventListener("keydown", (e) => {
+    if (e.target && /input|textarea/i.test(e.target.tagName)) return;
+    const map = { "1": "A", "2": "tie", "3": "B" };
+    if (map[e.key] && canWrite) save({ winner: map[e.key] }, true);
+    if (e.key === "ArrowRight") go(1);
+    if (e.key === "ArrowLeft") go(-1);
+  });
+
+  try { current = Math.min(Number(localStorage.getItem("quick-pair") || 0), DATA.pairs.length - 1) || 0; } catch (e) {}
+  render();
+
+  (async () => {
+    const notice = document.getElementById("notice");
+    const claude = window.claude;
+    const dbNs = claude && claude.use ? await claude.use("db") : null;
+    const user = claude && claude.use ? await claude.use("user") : null;
+    if (!dbNs) { notice.textContent = "Picks save only when this page is open on claude.ai and you're signed in."; return; }
+    db = dbNs;
+    canWrite = user ? (user.isOwner() ?? false) : false;
+    let first = true;
+    db.collection("pairs").onSnapshot(
+      (snap) => {
+        picks.clear();
+        for (const d of snap.docs) picks.set(d.id, d.data());
+        if (first) {
+          first = false;
+          notice.textContent = canWrite
+            ? "Only the cards that differ are shown. Press 1, 2 or 3 (or click) and it moves on. The opening two sentences of each reply say what the deck is going for."
+            : "Read-only: only the page owner can judge.";
+          jumpToFirst();
+          return;
+        }
+        sync();
+        renderProgress();
+      },
+      () => { notice.textContent = "Saved picks could not be loaded. Reload the page to try again."; },
+    );
+  })();
+})();
+</script>

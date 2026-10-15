@@ -35,6 +35,7 @@ const opt = (name: string) => {
 };
 const out = opt("out") ?? "evals/rating/pairwise.html";
 const keyPath = opt("key") ?? "evals/results/pairwise-key.json";
+const template = opt("template") ?? "evals/rating/pairwise-template.html";
 const pairSpecs = argv.flatMap((a, i) => (a === "--pair" ? [argv[i + 1]] : []));
 
 const sent = new Map(
@@ -97,6 +98,6 @@ const prompts = Object.fromEntries(
   }),
 );
 const json = JSON.stringify({ prompts, pairs: order }).replace(/</g, "\\u003c");
-writeFileSync(out, readFileSync("evals/rating/pairwise-template.html", "utf8").replace("/*DATA*/", () => json));
+writeFileSync(out, readFileSync(template, "utf8").replace("/*DATA*/", () => json));
 writeFileSync(keyPath, JSON.stringify(key, null, 1) + "\n");
 console.log(`wrote ${out}: ${order.length} pairs across ${Object.keys(prompts).length} prompts`);

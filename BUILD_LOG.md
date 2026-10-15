@@ -9,6 +9,20 @@ A running record of how decklists.ai gets built: decisions, findings, numbers, a
 - Mistakes and dead ends stay in, including when the owner overruled Claude Code. They are the interesting part of the story.
 - Corrections to earlier entries are added in place as notes, so the original claim stays visible.
 
+## What we're building (Claude Code's answer, 2026-10-15)
+
+The owner asked, mid-round 4: "What are we building, would you say? overall." The answer, kept because the owner found it interesting:
+
+Three things, and the third is turning out to be the most interesting.
+
+1. **The product: a brewer.** Ask for any deck in any format ("mono black City of Traitors in Premodern") and get a legal, playable 75 with a plan you could take to a League. That's decklists.ai, the visible part.
+2. **The harness under it.** The day one rule was "the model proposes; data and code decide." So most of what got built is checking, not prompting: the card pool (what exists and is legal), the checker and mana model fit to 143k real lists, the goldfish simulator, and data that can be rewound to any date. Every claim the model makes is checked against something real.
+3. **A way to measure deck-building skill.** This has become the core of the project. Rounds 1-3 kept giving the same result: better tools and more structure make the bot more reliable and more original, but not better. Faithfulness went to 100% and copy rate fell from 87% to 65%, yet "would you play it" didn't move. The owner's judgment caught that, but it can't scale. Round 4 grades against what real players actually did, with the future and near-copies hidden, plus no-AI baselines the bot has to beat.
+
+**In one line:** a lab that tests whether a harness can give a model judgment it doesn't have. The answer so far: the harness buys reliability, not judgment, and judgment has to come from search plus a scorer grounded in real results. Round 4 is the first test that can show whether that's true.
+
+**A side effect worth a paragraph:** building this keeps improving Decklist Data itself. On the day of this answer, 34k lists got their junk sideboard lines removed.
+
 ## Running totals (as of 2026-10-14)
 
 | Item | Total |

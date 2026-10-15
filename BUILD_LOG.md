@@ -64,6 +64,31 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-10-15 · Round 4, harness v2: the AI wins where the data is thin
+
+**The test, plainly.** Take a real winning list, remove 12 of its spells, and ask the AI to put 12 back. Count how many it gets right. To know whether that number is good, the same slots are also filled with no AI: "add the cards most other players of this deck use" (most played), and "copy from the closest earlier list" (nearest list). Earlier near-copies of the list are hidden from everyone.
+
+**Average correct, out of 12** (5 decks x 4 different sets of hidden cards):
+
+| | Overall | Legacy Tron | Modern Broodscale | Pauper Dimir | Premodern UW Aggro | Vintage Lurrus |
+| --- | --- | --- | --- | --- | --- | --- |
+| Most played (no AI) | 7.1 | 4.8 | **9.0** | 9.5 | 4.2 | **8.0** |
+| Nearest list (no AI) | 6.5 | 5.8 | 6.5 | 5.8 | 8.0 | 6.8 |
+| Sonnet 5.5, v2 | 6.8 | 5.2 | 6.5 | 10.0 | 7.5 | 4.5 |
+| **Opus 5.5, v2** | **7.7** | 5.2 | 8.0 | **10.2** | **9.2** | 5.8 |
+
+**What it means.** Opus beats the no-AI rule slightly overall (7.7 vs. 7.1), Sonnet doesn't (6.8). The interesting part is where each wins:
+- **Popular decks: the crowd wins.** Broodscale has about 1,000 lists; "copy what most people play" gets 9 of 12. The AI gets 8, probably by second-guessing the crowd. Sonnet does worst on Vintage (4.5 vs. 8.0).
+- **Rare decks: the AI wins.** Premodern UW Aggro had only 9 earlier lists, too few for the rule (4.2). Opus got 9.2 by knowing which cards make sense.
+
+**Brew to archetype agrees.** Both models landed below "the closest earlier list" on 4 of 5 decks; the exception is Frantic Storm, brewed with almost no data, where they got 58-65% of the real list against 37% for anything in the data.
+
+**Design consequence (first one round 4 has produced):** trust the data when many people play a deck; rely on the model when few do or the idea is new. The second case is exactly when people ask for a brew. This also answers part of "is it even possible": the model's judgment is real, but it is worth most exactly where data runs out.
+
+Cost: Sonnet v2 $3.89, Opus v2 $7.32 (30 items each). Small sample: 20 fill-in items on 5 decks, 5 brew items.
+
+---
+
 ## 2026-10-15 · Round 4 runner built, and the first design flaw it caught
 
 **Rebuilding a past moment.** Tracks 1 and 2 must not let the bot see the future. Added: first-printing dates in the card index (`CardIndex.asOf`), and a date cut on the data (`FileDataSource.cut`). A run dated May 15 sees no list from May 15 on and no card printed after it (1,208 of 32,901 cards hidden as of mid-May 2026). The data loader now also drops Decklist Data's "Cards (N%)" junk.

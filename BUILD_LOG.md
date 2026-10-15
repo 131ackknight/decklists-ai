@@ -38,7 +38,8 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ## Open decisions
 
-- **Round 4 (fresh evals):** owner writes 5 items per track in `evals/round4/ITEMS.md`; then the harness is frozen and run.\n- **Research direction (agreed in principle):** after round 3, build scorer v0 from the data, validate it against real records and the owner's picks, then add search to the pipeline.
+- **Round 4 (fresh evals):** owner writes 5 items per track in `evals/round4/ITEMS.md`; then the harness is frozen and run.
+- **Research direction (agreed in principle):** after round 3, build scorer v0 from the data, validate it against real records and the owner's picks, then add search to the pipeline.
 - ~~Passes 2 and 3 of the v1 comparison~~: skipped in favor of building the new harness (owner agreed).
 - Harness v2 across the five models: about $59 for one pass of 24 prompts (Fable ~$34 of it).
 - A one-line PR so v1 logs the real error behind the four "An error occurred." builds.

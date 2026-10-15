@@ -30,7 +30,7 @@ Three things, and the third is turning out to be the most interesting.
 | Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81. Total about $125.59. Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats); full history 143,721 (since 2025-07-01) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
-| Automated tests | 41 passing |
+| Automated tests | 45 passing |
 | Decklist Data PRs merged | 4 (#181 export, #182 baseline eval, #183 baseline on `main`, #184 model comparison) |
 | Plan steps done | 1, 4, 5, 6; step 8 pipeline built and run (48 decks, all legal); round 3 pairwise open |
 
@@ -62,6 +62,29 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - Lesson to apply: any prompt or claim that names a card gets checked against the card index before it is used.
 - ~~Switch to pairwise~~: done; 36 pairs judged (v1 8 wins, v2 6, 22 ties; v2 100% faithful vs. 92%).
 - ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
+
+---
+
+## 2026-10-15 · v4 built: the coach is code, and it had to learn not to fight the brew
+
+The owner asked whether the coach is another AI. No, deliberately: v3's AI critique step didn't help, an AI judge shares the brewer's blind spots, and the brewer can argue with an opinion but not with a number. Everything that has worked so far (legality, mana) is a check in code. Owner: "Ok, lets go for it."
+
+**What v4 is:** v2's loop and prompt, word for word, plus three tools (`src/coach/coach.ts`, `declare_plan`, `coach_check`, `submit_brew`):
+- **declare_plan:** the brewer says which of the owner's three kinds it is building. Synergy and combo plans list the pieces that must come together, how many must be drawn, and by which turn.
+- **The coach**, by kind:
+  - *Combo and synergy:* the simulator (now counting cards drawn, with a `need` per piece) measures how often the pieces come together by the target turn, mulligans included. Bars: combo 50%, synergy 60%, stated so they can be argued with.
+  - *Fair:* shortfalls against real decks of the same style in the format (too little interaction, too little card advantage for midrange and control, too few creatures for aggro and midrange), and cards real players choose far more often for the same job at a similar cost in the deck's colors.
+- **submit_brew:** if the coach has notes, the deck comes back with them. The brewer fixes it or answers each note by id. The coach sends a deck back at most twice.
+
+**Smoke test (Sonnet, 2 decks, $0.59):** Living Death was measured at 49% by turn 4 against the 50% bar; the brewer kept its build and argued its case (Reanimate is another payoff; real Reanimator lists run about 14 lands). That is the intended "fix it or explain it" loop.
+
+**Two coach problems caught before the full run, by replaying the coach on v2's fair decks for free:**
+1. **It questioned the cards the deck was built around.** New cards have 0% play share before they exist, so the coach told the brewer to swap Ashling and Resonating Lute for older staples: the opposite of brewing. Fix: never question a card printed in the last 90 days (no track record) or a card the player named. Compare like with like (creatures with creatures).
+2. **Style comparisons were noise.** Rough style labels put spell-based combo decks in "control," producing "control decks average 4 creatures and mana value 2.0." Fix: only flag shortfalls with a clear meaning; drop "too many" and mana value comparisons.
+
+After the fixes, the fair coach is quiet and specific: e.g. Lightning Helix (2% of Standard decks) vs. Burst Lightning (35%); Syncopate (0%) vs. Spell Snare (21%). Honest expectation: it fires rarely on fair decks, so it may not close v2's biggest gap (fair decks, 39% vs. 50%).
+
+45 tests pass (4 new: drawn-count odds, combo note, fair card note and named-card protection, the submit_brew loop).
 
 ---
 

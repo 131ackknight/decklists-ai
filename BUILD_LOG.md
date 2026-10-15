@@ -38,7 +38,7 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ## Open decisions
 
-- **Research direction (agreed in principle):** after round 3, build scorer v0 from the data, validate it against real records and the owner's picks, then add search to the pipeline.
+- **Round 4 (fresh evals):** owner writes 5 items per track in `evals/round4/ITEMS.md`; then the harness is frozen and run.\n- **Research direction (agreed in principle):** after round 3, build scorer v0 from the data, validate it against real records and the owner's picks, then add search to the pipeline.
 - ~~Passes 2 and 3 of the v1 comparison~~: skipped in favor of building the new harness (owner agreed).
 - Harness v2 across the five models: about $59 for one pass of 24 prompts (Fable ~$34 of it).
 - A one-line PR so v1 logs the real error behind the four "An error occurred." builds.
@@ -46,6 +46,25 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - Lesson to apply: any prompt or claim that names a card gets checked against the card index before it is used.
 - ~~Switch to pairwise~~: done; 36 pairs judged (v1 8 wins, v2 6, 22 ties; v2 100% faithful vs. 92%).
 - ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
+
+---
+
+## 2026-10-15 · Round 4 planned: a fresh eval set, written by the owner
+
+**Why start over.** Four lessons from rounds 1-3:
+- Stock requests carry no signal: every model returns the same list, so they end as ties and spend judging time.
+- Brews are where models differ, and where quality is still unsolved.
+- The owner's judging time is the scarce resource (about 50 pairs per sitting; simpler questions give more accurate picks).
+- **We were tuning on the test.** v3's rules were written to fix failures on the same 24 prompts used to judge it. Results on those prompts no longer count as evidence.
+
+**The new set: three tracks, 5 items each, all written by the owner** (owner: "5 evals each, and I can come up with them"). Claude Code doesn't see them before the harness is frozen.
+1. **Fill in the blanks (automatic).** Take a winning list, hide 12 nonland cards, and have the bot finish it. Score the hidden cards it restores (partial credit for the same function tag) against a dumb baseline that adds the archetype's most-played cards. If the bot can't beat the baseline, its card judgment adds nothing. About 4 hide patterns per deck, so 5 decks give about 20 tests.
+2. **Brew to archetype (automatic).** Decks that began as brews and became archetypes. The bot sees only data from before the deck existed, plus 2-3 key cards; score is closeness to the list players settled on. The only objective test of brewing itself. Needs an export reaching back before each breakout.
+3. **Fresh brews (owner-judged).** 5 new brew requests, v2 vs. v3, 10 Quick Pick pairs.
+
+Tracks 1 and 2 grade construction against what real players did without using the owner's time; track 3 keeps a human check on what scores can't see. Template: `evals/round4/ITEMS.md`.
+
+Round 3 (v2 vs. v3 on the old prompts) can still be finished for the record, but it is no longer the deciding test.
 
 ---
 

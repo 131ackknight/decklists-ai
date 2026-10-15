@@ -24,6 +24,11 @@ export class CardIndex {
     }
   }
 
+  /** The same index without cards first printed after `date`, for evals rebuilt as of a past day. */
+  asOf(date: string): CardIndex {
+    return new CardIndex({ cards: this.cards.filter((c) => !c.released || c.released <= date), tags: [...this.tagsBySlug.values()] });
+  }
+
   getCard(name: string): Card | undefined {
     return this.byName.get(normalizeName(name));
   }

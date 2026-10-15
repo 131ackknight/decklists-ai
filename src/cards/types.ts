@@ -22,6 +22,8 @@ export interface Card {
   toughness?: string;
   producedMana?: string[];
   edhrecRank?: number;
+  /** Earliest printing date (YYYY-MM-DD), any English printing. */
+  released?: string;
   /** Direct Scryfall Tagger oracle tags (slugs). Parents are not expanded. */
   tags: string[];
 }

@@ -53,6 +53,7 @@ interface ScryfallFace {
 
 interface ScryfallPrinting {
   oracle_id?: string;
+  released_at?: string;
   legalities?: Record<string, string>;
   name: string;
   lang?: string;
@@ -90,6 +91,7 @@ function toCard(
   tags: string[],
   aliases: string[],
   printingLegal: Record<string, Legality> = {},
+  released?: string,
 ): Card | null {
   if (!c.oracle_id) return null;
   const legal: Record<string, Legality> = { ...printingLegal };
@@ -125,6 +127,7 @@ function toCard(
     toughness: c.toughness ?? faces[0]?.toughness,
     producedMana: c.produced_mana,
     edhrecRank: c.edhrec_rank,
+    released,
     tags,
   };
 }
@@ -143,8 +146,12 @@ async function main() {
   // printings), and the Oracle file keeps one modern printing. A card is legal
   // in a format if any printing is.
   const legalByOracle = new Map<string, Record<string, Legality>>();
+  // First printing date, so a historical eval can hide cards that didn't exist yet.
+  const releasedByOracle = new Map<string, string>();
   for await (const p of readJsonl<ScryfallPrinting>(printingsFile)) {
     if (!p.oracle_id || (p.lang && p.lang !== "en")) continue;
+    const first = releasedByOracle.get(p.oracle_id);
+    if (p.released_at && (!first || p.released_at < first)) releasedByOracle.set(p.oracle_id, p.released_at);
     for (const [format, status] of Object.entries(p.legalities ?? {})) {
       if (status !== "legal" && status !== "restricted" && status !== "banned") continue;
       const row = legalByOracle.get(p.oracle_id) ?? {};
@@ -187,6 +194,7 @@ async function main() {
       tagsByOracle.get(raw.oracle_id ?? "") ?? [],
       [...(aliasesByOracle.get(raw.oracle_id ?? "") ?? [])],
       legalByOracle.get(raw.oracle_id ?? ""),
+      releasedByOracle.get(raw.oracle_id ?? ""),
     );
     if (card) cards.push(card);
   }

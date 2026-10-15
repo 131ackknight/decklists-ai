@@ -89,11 +89,14 @@ export class FileDataSource implements DataSource {
     private readonly newest: string,
   ) {}
 
-  static async load(file: string, index: CardIndex): Promise<FileDataSource> {
+  /** `before` (YYYY-MM-DD) drops every list from that day on, so nothing after a past moment can leak into an eval. */
+  static async load(file: string, index: CardIndex, opts: { before?: string } = {}): Promise<FileDataSource> {
     const lists: RefList[] = [];
     if (existsSync(file)) {
       for await (const line of createInterface({ input: createReadStream(file) })) {
-        if (line.trim()) lists.push(JSON.parse(line) as RefList);
+        if (!line.trim()) continue;
+        const list = JSON.parse(line) as RefList;
+        if (!opts.before || list.date < opts.before) lists.push(list);
       }
     }
     const newest = lists.reduce((d, l) => (l.date > d ? l.date : d), "0000-00-00");

@@ -52,11 +52,14 @@ Each step ends by rerunning the tests. A step is done only when its number beats
 
 ## Harness v4 design (2026-10-15)
 
-What every test so far agrees on: the harness made the bot reliable (real cards, legal decks, does what was asked) but not better at choosing cards. v4 targets card choice without turning brewing into copying. Two modes, chosen by the kind of deck:
+What every test so far agrees on: the harness made the bot reliable (real cards, legal decks, does what was asked) but not better at choosing cards. v4 targets card choice without turning brewing into copying. Starting line: Opus v2 40.6% on the brew holdout.
 
-- **Fair decks (aggro, midrange):** principles measured across all real lists (how many threats, removal, card draw; how low the curve runs for this kind of deck) and which cards real players prefer for each job, across decks and formats. Principles and card quality, never a list to copy.
-- **Specialist decks (combo, prison, synergy):** the model's own idea, checked in code. It states its engine exactly ("wins with Helm of Awakening + 2 Medallions + Brain Freeze"; "the lock is Winter Orb + Icy Manipulator, and my deck works under it because..."), quotes the card text it relies on, and the simulator measures how often the engine or lock is assembled by a given turn.
-- **Both:** several drafts, keep the one that best passes the checks.
+Three kinds of deck (the owner's split, 2026-10-15), each with its own check. The model declares which kind it is building (decks can mix):
+
+- **Synergy** (tribal, Lessons, artifacts, sacrifice): works when there is *enough* of the theme. Check: density against similar synergy decks, and how often the payoff plus enough enablers show up by a given turn.
+- **Combo** (one build-around card, or two cards that combine; prison locks fit here): works when the right pieces are found and protected. Check: the model states its combo or lock exactly and quotes the card text it relies on; the simulator measures how often it assembles by turn 3-4, counting tutors and card draw.
+- **Fair** (aggro, midrange, control): works on good cards and a good curve. Check: principles measured across real lists (threats, removal, card draw, curve for this kind of deck) and which cards real players prefer for each job. Never a list to copy.
+- **All:** several drafts, keep the one that best passes its checks.
 
 Main test: brew to archetype at scale (every deck that appeared from nothing in Decklist Data's history, with that deck and its near-copies hidden). Fill in the blanks is a diagnostic only: it rewards matching existing lists. Final word: the owner's Quick Pick on new brew prompts.
 

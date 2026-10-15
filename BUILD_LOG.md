@@ -65,6 +65,21 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-10-15 · Owner: three kinds of deck, not two
+
+Asked what Claude Code needed from them, the owner refined the v4 design: "I think there might be 3 categories. 1) Synergy - a lot of similar stuff needs to be grouped. 2) Combo - 1 build around me, or 2 cards that need to be combined. 3) Fair (aggro and midrange)."
+
+This splits Claude Code's "specialist" bucket where it should be split, because the two fail differently:
+- **Synergy fails on density:** too few of the theme (11 Dwarves where the deck needs 18+). Check: density and "payoff plus enough enablers by turn N."
+- **Combo fails on assembly:** the right pieces not found or not protected. Check: the stated combo, quoted card text, and simulated assembly odds by turn 3-4.
+- **Fair fails on card quality and curve.** Check: principles and the best card for each job.
+
+The model declares the kind it's building as part of its plan. PLAN.md updated. Claude Code's first labels for the 21 holdout decks (9 synergy, 9 combo, 3 fair, 3 uncertain) are with the owner to correct.
+
+Also explained to the owner, in plain terms, what the holdout's comparison means: the hindsight oracle is the old deck most like what the new deck became, which you could only pick by seeing the future. Opus v2 matches it (40.6% vs. 42.6%): okay, not great, and the first point on a line, not a trend.
+
+---
+
 ## 2026-10-15 · Brew holdout, v2 baseline: as close as the best existing list picked with hindsight
 
 21 decks that appeared from nothing, rebuilt from the day each first appeared (corrected run; every signature card was used). Score: how much of the bot's deck matches the lists players settled on 1-3 months later.

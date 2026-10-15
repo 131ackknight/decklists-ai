@@ -20,11 +20,14 @@ interface RefList {
 
 const [file, ...targets] = process.argv.slice(2);
 const index = loadCardIndex();
+// Decklist Data rows from Dec 2025 - May 2026 can carry junk "Cards (48%)" lines (MTGO's sideboard widget).
+const JUNK = /^Cards?\s*\(\d+%?\)\s*$/i;
 const isLand = (n: string) => /\bLand\b/.test(index.getCard(n)?.typeLine.split(" // ")[0] ?? "");
 const all = readFileSync(file, "utf8")
   .split("\n")
   .filter(Boolean)
-  .map((l) => JSON.parse(l) as RefList);
+  .map((l) => JSON.parse(l) as RefList)
+  .map((l) => ({ ...l, main: l.main.filter((c) => !JUNK.test(c.name)) }));
 
 const DAY = 86_400_000;
 for (const t of targets) {

@@ -27,7 +27,7 @@ Three things, and the third is turning out to be the most interesting.
 
 | Item | Total |
 | --- | --- |
-| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug). Total about $112.78. Plus one 17-token test call. |
+| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81. Total about $125.59. Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats); full history 143,721 (since 2025-07-01) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
 | Automated tests | 41 passing |
@@ -62,6 +62,31 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - Lesson to apply: any prompt or claim that names a card gets checked against the card index before it is used.
 - ~~Switch to pairwise~~: done; 36 pairs judged (v1 8 wins, v2 6, 22 ties; v2 100% faithful vs. 92%).
 - ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
+
+---
+
+## 2026-10-15 · Brew holdout, v2 baseline: as close as the best existing list picked with hindsight
+
+21 decks that appeared from nothing, rebuilt from the day each first appeared (corrected run; every signature card was used). Score: how much of the bot's deck matches the lists players settled on 1-3 months later.
+
+| | All 21 | Specialist (10: combo, reanimator, synergy engines) | Other (11) |
+| --- | --- | --- | --- |
+| Best existing list, picked with hindsight | 42.6% | 38.2% | 46.6% |
+| Sonnet 5.5, v2 | 37.8% | 37.8% | 37.8% |
+| Opus 5.5, v2 | **40.6%** | 38.6% | 42.5% |
+
+(Specialist vs. other is Claude Code's first guess at labels, pending the owner's.)
+
+**What it means:**
+- **Opus brews land about as close to the final deck as the best list that already existed, and that list could only be found with hindsight.** It beats that oracle on 9 of 21 decks. So v2 isn't just copying: its decks share about half their cards with any one earlier list.
+- **About 40% overlap means roughly 24 of 60 cards match what players settled on.** There's a lot of room. That is the number v4 has to move.
+- **Clear wins:** Boros Dwarves (50-54% vs. 29%), Pauper Metalcraft (59% vs. 42%), Legacy Creative Technique (30% vs. 13%), Vintage Sewer-Cam (43% vs. 31%). These are decks built around a clear new card or engine, where knowing how cards work matters most.
+- **Clear misses:** Standard Aang (22%), Jund Sacrifice (21%), Dimir Excruciator (31% vs. 63%), Fanatic Eldrazi (33%). Worth reading these answers: likely the bot built a different deck around the same cards, which is a brewing choice, not necessarily a mistake.
+- **Model gap is small here:** Opus 40.6% vs. Sonnet 37.8%, smaller than in the owner's ratings.
+
+**This is the v4 starting line:** v2 Opus 40.6%, Sonnet 37.8% on the holdout. Success for v4 is moving this number, especially on specialist decks, without the decks becoming copies of existing lists.
+
+Cost: Sonnet $4.15, Opus $8.66.
 
 ---
 

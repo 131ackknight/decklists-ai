@@ -49,6 +49,22 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-10-15 · Scorer v0, part 1: card choice doesn't predict results (a negative result)
+
+While the owner judges the remaining brew pairs, the first piece of the scorer: does card choice within an archetype predict results? `scripts/scorer-card-performance.ts`.
+
+**Method, built to avoid fooling ourselves:** train on Challenge and qualifier lists from days 31-90 before the newest event (11,846 lists): for each format, strategy and main deck card with at least 8 lists on each side, the match win rate with the card minus without, shrunk toward zero for small samples. Test on the last 30 days (5,533 lists, 109 archetypes with 10+ lists): within each archetype, does the sum of a list's card effects rank lists by their actual win rate? Baseline: "stockness," the share of the archetype's core a list plays. Leagues are excluded because only 5-0 League lists are published, so they carry no result variance.
+
+**Result: nothing.** Card-effect score vs. actual win rate: weighted Spearman **-0.002**, positive in 50 of 109 archetypes, a coin flip. Stockness: **-0.011**, 51 of 109. The largest training effects (Forth Eorlingas! +6.1 points in Legacy Ocelot Aggro, Dress Down -5.4 in Vintage Lurrus PO) did not carry over and are almost certainly noise.
+
+**Why:** a Challenge list plays about six matches, so one list's win rate swings by roughly 20 points from variance and pilot skill; with about 20 lists on each side, only effects of about 6 points or more are detectable. Real card choices within an archetype likely move results by 1-3 points.
+
+**What it changes:** published MTGO records can't teach card quality within an archetype at this scale. The quality signal has to come from what the field converges on (adoption), structural checks (simulation, roles, synergy), and the owner's judgments, which now carry more weight. Records still help at the archetype level, where samples run to hundreds of lists. A more powerful test would need all history (`--days 0` export) or per-match data MTGO doesn't publish.
+
+**Next scorer pieces:** synergy (co-occurrence across 30,102 lists) and role coverage, validated against the owner's "would play" answers once round 3 is complete.
+
+---
+
 ## 2026-10-15 · Round 3, partial: v3 did not beat v2
 
 The owner judged 17 of the 48 round 3 pairs, then: "I did 16 pairs and got a little tired." Unblinded (the analysis script was also generalized: it had hard-coded v1 vs. v2 as the two sides):

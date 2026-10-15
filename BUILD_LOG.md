@@ -27,7 +27,7 @@ Three things, and the third is turning out to be the most interesting.
 
 | Item | Total |
 | --- | --- |
-| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58. Total about $99.62. Plus one 17-token test call. |
+| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug). Total about $112.78. Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats); full history 143,721 (since 2025-07-01) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
 | Automated tests | 41 passing |
@@ -62,6 +62,22 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - Lesson to apply: any prompt or claim that names a card gets checked against the card index before it is used.
 - ~~Switch to pairwise~~: done; 36 pairs judged (v1 8 wins, v2 6, 22 ties; v2 100% faithful vs. 92%).
 - ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
+
+---
+
+## 2026-10-15 · The brew holdout: every deck that appeared from nothing (and a bug that voided the first run)
+
+**The test.** `scripts/find-new-archetypes.ts` searched all 143,721 lists for decks that appeared from nothing: first lists sharing at most 40 of 60 cards with anything earlier, 15+ lists in the first 90 days, first seen at least 45 days into the format's data, and a strategy label rather than a bare color. 24 qualify; 21 have enough settled lists (days 30-90) to score against. The bot gets the data and cards that existed the day the deck first appeared, plus its signature cards, and is scored by overlap with the lists players settled on. Pioneer Lessons is a port of the Standard deck from two months earlier: it tests porting, not pure brewing, and is flagged rather than dropped. The owner's Frantic Storm doesn't qualify (Premodern data starts 10 days before it) and stays in the round 4 set.
+
+**The baseline is an oracle.** "Closest earlier list" is the best list that existed, chosen with hindsight against what the deck became. No brewer could pick it. It ranges from 13% to 64%.
+
+**Bug, caught in the first results.** v2 left out 8 signature cards it was told to build around; for Boros Dwarves, all three. Two causes, both Claude Code's:
+1. The card pool hid cards printed after the cutoff using Scryfall's paper release date, but sets reach MTGO days earlier. The Dwarves deck appeared on MTGO on August 12; its cards' paper date was August 14, so the bot was asked to build around cards it couldn't find.
+2. Signature cards were taken from a deck's first 90 days, not its first lists. Sear joined Temur Harmonizer two months after the deck appeared.
+
+**Fix:** a card exists on a date if it's printed by then *or* already played in an MTGO list by then (`CardIndex.asOf(date, seen)`, `FileDataSource.cardsPlayedThrough`). Signature cards come from a deck's first 10 lists and must exist on the cutoff day. The first run (Sonnet $4.04, Opus $9.12) is discarded and rerun. The owner's round 4 items were checked and were not affected.
+
+**Lesson for the post:** rebuilding the past has traps that only show up in results. "Did the bot use the cards it was asked to use?" is now a check worth running on every historical eval.
 
 ---
 

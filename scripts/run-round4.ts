@@ -56,7 +56,7 @@ async function main() {
   async function worker() {
     for (let i = next++; i < items.length; i = next++) {
       const it = items[i];
-      const pool = it.before ? index.asOf(it.before) : index;
+      const pool = it.before ? index.asOf(it.before, history.cardsPlayedThrough(it.before)) : index;
       const data = it.before ? history.cut(it.before, pool, (l) => isNearCopy(index, it, l.main)) : today;
       const req = { prompt: it.prompt, format: it.format };
       const r: BrewResult = harness === "v3" ? await runPipeline(client, model, req, { index: pool, data }) : await brew(client, model, req, { index: pool, data });

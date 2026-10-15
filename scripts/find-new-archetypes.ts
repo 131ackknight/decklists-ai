@@ -12,8 +12,8 @@
  *     lists share at most NEW_MAX of 60 main deck cards with any earlier list,
  *   - its label is a strategy, not a bare color fallback ("Mono-Black", "Jund").
  *
- * For each, records the cutoff date, signature cards (in most of its lists,
- * rare in the format before it), whether those cards were newly printed, and
+ * For each, records the cutoff date, signature cards (in 80% of its first 10
+ * lists, rare in the format before it, and existing on the cutoff day), whether those cards were newly printed, and
  * the settled lists (days 30-90 after it appeared) that brews are scored against.
  * Writes evals/brew-holdout/candidates.json. Commander formats are skipped.
  */
@@ -108,10 +108,15 @@ for (const [format, lists] of byFormat) {
       for (const l of ls) for (const k of l.counts.keys()) if (!isLand(k)) m.set(k, (m.get(k) ?? 0) + 1 / ls.length);
       return m;
     };
-    const inA = share(in90);
+    // Signature cards come from the deck as it first appeared (its first 10 lists),
+    // not as it ended up: a card added months later is not what it was brewed around.
+    const inA = share(mine.slice(0, 10));
     const pre = share(before);
+    const playedByCutoff = new Set(lists.filter((l) => l.date <= mine[0].date).flatMap((l) => [...l.counts.keys()]));
     const signature = [...inA]
-      .map(([card, s]) => ({ card: index.getCard(card)?.name ?? card, inArchetype: s, before: pre.get(card) ?? 0 }))
+      // It must exist on the cutoff day: printed by then, or already played on MTGO (sets reach MTGO before paper).
+      .filter(([key]) => (index.getCard(key)?.released ?? "") <= mine[0].date || playedByCutoff.has(key))
+      .map(([key, s]) => ({ card: index.getCard(key)?.name ?? key, inArchetype: s, before: pre.get(key) ?? 0 }))
       .filter((c) => c.inArchetype >= 0.8 && c.before <= 0.05)
       .sort((a, b) => b.inArchetype - b.before - (a.inArchetype - a.before))
       .slice(0, 3)

@@ -24,9 +24,14 @@ export class CardIndex {
     }
   }
 
-  /** The same index without cards first printed after `date`, for evals rebuilt as of a past day. */
-  asOf(date: string): CardIndex {
-    return new CardIndex({ cards: this.cards.filter((c) => !c.released || c.released <= date), tags: [...this.tagsBySlug.values()] });
+  /**
+   * The same index without cards that didn't exist yet on `date`, for evals rebuilt as of a past day.
+   * `released` is the paper date and MTGO often gets a set days earlier, so cards in `seen`
+   * (normalized names already played on MTGO by then) count as existing too.
+   */
+  asOf(date: string, seen: Set<string> = new Set()): CardIndex {
+    const exists = (c: Card) => !c.released || c.released <= date || seen.has(normalizeName(c.name));
+    return new CardIndex({ cards: this.cards.filter(exists), tags: [...this.tagsBySlug.values()] });
   }
 
   getCard(name: string): Card | undefined {

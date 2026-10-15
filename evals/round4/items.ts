@@ -178,7 +178,8 @@ interface Candidate {
   settledLists: number;
 }
 
-const naturalList = (cards: string[]) => (cards.length === 2 ? cards.join(" and ") : `${cards.slice(0, -1).join(", ")} and ${cards.at(-1)}`);
+const naturalList = (cards: string[]) =>
+  cards.length <= 2 ? cards.join(" and ") : `${cards.slice(0, -1).join(", ")} and ${cards.at(-1)}`;
 const titleCase = (f: string) => f[0].toUpperCase() + f.slice(1);
 
 /**
@@ -190,9 +191,10 @@ function holdoutItems(): Round4Item[] {
   const file = "evals/brew-holdout/candidates.json";
   const candidates = JSON.parse(readFileSync(file, "utf8")) as Candidate[];
   return candidates
-    .filter((c) => c.settledLists >= 5 && c.signature.length >= 2)
+    .filter((c) => c.settledLists >= 5 && c.signature.length >= 1)
     .map((c) => {
-      const keyCards = c.signature.map((s) => s.card);
+      // Front face only, as a player would say it ("Ashling, Rekindled", not both faces).
+      const keyCards = c.signature.map((s) => s.card.split(" // ")[0]);
       const format = titleCase(c.format);
       return {
         id: `holdout-${c.format}-${c.strategy.toLowerCase().replace(/\W+/g, "-")}`,

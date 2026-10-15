@@ -115,6 +115,16 @@ export class FileDataSource implements DataSource {
     return new FileDataSource(lists, index, lists.reduce((d, l) => (l.date > d ? l.date : d), "0000-00-00"));
   }
 
+  /** Normalized names of every card in a list dated `date` or earlier, any format: proof a card was on MTGO by then. */
+  cardsPlayedThrough(date: string): Set<string> {
+    const out = new Set<string>();
+    for (const l of this.lists) {
+      if (l.date > date) continue;
+      for (const c of [...l.main, ...l.side, ...(l.commander ?? [])]) out.add(normalizeName(this.index.getCard(c.name)?.name ?? c.name));
+    }
+    return out;
+  }
+
   hasFormat(format: string): boolean {
     return this.lists.some((l) => l.format === format);
   }

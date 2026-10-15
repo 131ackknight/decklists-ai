@@ -15,6 +15,10 @@
  *
  * Earlier near-copies of the owner's list are hidden, exactly as in the run.
  *
+ * Brew holdout: mean overlap with the settled lists of an archetype that did
+ * not exist yet, against the closest list that did (--holdout prints the
+ * baseline without results).
+ *
  * With no result files, prints only the baselines. Writes summary.json.
  */
 import { readFileSync, writeFileSync } from "node:fs";
@@ -124,7 +128,7 @@ function nearestList(it: Round4Item): Map<string, number> {
   return added;
 }
 
-const files = process.argv.slice(2);
+const files = process.argv.slice(2).filter((a) => !a.startsWith("--"));
 const runs = files.map((f) => ({ file: f, results: new Map((JSON.parse(readFileSync(f, "utf8")).results as Result[]).filter(Boolean).map((r) => [r.id, r])) }));
 const fillRows: Record<string, unknown>[] = [];
 const brewRows: Record<string, unknown>[] = [];
@@ -172,8 +176,40 @@ for (const it of items.filter((i) => i.track === "brew")) {
   brewRows.push(row);
 }
 
+// Brew holdout: no list of the archetype exists before the cutoff. Score is mean main deck
+// overlap with its settled lists (days 30-90 after it appeared, up to 50 sampled evenly).
+const holdoutRows: Record<string, unknown>[] = [];
+const holdoutItems = items.filter((i) => i.track === "holdout");
+if (runs.some((r) => holdoutItems.some((i) => r.results.has(i.id))) || process.argv.includes("--holdout")) {
+  for (const it of holdoutItems) {
+    const t = it.target!;
+    const first = Date.parse(t.firstSeen);
+    const window = history.filter(
+      (l) => l.format === t.format && l.strategy === t.strategy && Date.parse(l.date) >= first + 30 * DAY && Date.parse(l.date) < first + 90 * DAY,
+    );
+    const step = Math.max(1, Math.floor(window.length / 50));
+    const settled = window.filter((_, i) => i % step === 0).slice(0, 50).map((l) => toCounts(index, l.main));
+    const meanOverlap = (m: Map<string, number>) => settled.reduce((a, l) => a + overlap(m, l), 0) / settled.length;
+    const prior = history.filter((l) => l.format === t.format && Date.parse(l.date) < first);
+    let floor = 0;
+    for (const l of prior) floor = Math.max(floor, meanOverlap(toCounts(index, l.main)));
+    const pct = (n: number) => `${Math.round((n / 60) * 100)}%`;
+    const row: Record<string, unknown> = { item: it.id, settled: settled.length, "closest earlier list": pct(floor) };
+    for (const run of runs) {
+      const r = run.results.get(it.id);
+      if (!r) continue;
+      row[run.file] = r.deck ? pct(meanOverlap(toCounts(index, r.deck.main))) : "no deck";
+    }
+    holdoutRows.push(row);
+  }
+}
+
 console.log("Fill in the blanks: exact restores + same-job replacements, out of 12");
 console.table(fillRows);
 console.log("Brew to archetype: overlap with the linked list / mean overlap with lists in the 60 days after");
 console.table(brewRows);
-writeFileSync("evals/results/round4/summary.json", JSON.stringify({ files, fillRows, brewRows }, null, 1));
+if (holdoutRows.length) {
+  console.log("Brew holdout: mean overlap with the archetype's settled lists");
+  console.table(holdoutRows);
+}
+writeFileSync("evals/results/round4/summary.json", JSON.stringify({ files, fillRows, brewRows, holdoutRows }, null, 1));

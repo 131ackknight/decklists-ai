@@ -27,7 +27,7 @@ export interface SavedList {
 
 export interface Round4Item {
   id: string;
-  track: "fill" | "brew" | "fresh";
+  track: "fill" | "brew" | "fresh" | "holdout";
   format: string;
   prompt: string;
   /** Data and cards are cut to before this date (YYYY-MM-DD); null = today's data. */
@@ -39,6 +39,8 @@ export interface Round4Item {
   partial?: Line[];
   /** Brew to archetype: cards the bot is given. */
   keyCards?: string[];
+  /** Brew holdout: the archetype whose settled lists the brew is scored against. */
+  target?: { format: string; strategy: string; firstSeen: string };
 }
 
 const DIR = "evals/round4/lists";
@@ -146,7 +148,7 @@ function brewItems(): Round4Item[] {
   return loadLists("brew-to-archetype").map((list) => {
     const keyCards = KEY_CARDS[list.strategy];
     if (!keyCards) throw new Error(`no key cards for ${list.strategy}`);
-    const named = keyCards.length === 2 ? keyCards.join(" and ") : `${keyCards.slice(0, -1).join(", ")} and ${keyCards.at(-1)}`;
+    const named = naturalList(keyCards);
     return {
       id: `brew-${list.format.toLowerCase()}-${list.strategy.toLowerCase().replace(/\W+/g, "-")}`,
       track: "brew" as const,
@@ -168,10 +170,47 @@ const FRESH: { id: string; format: string; prompt: string }[] = [
   { id: "fresh-premodern-5c-solution", format: "Premodern", prompt: "Best 5 color Solution deck in premodern?" },
 ];
 
+interface Candidate {
+  format: string;
+  strategy: string;
+  firstSeen: string;
+  signature: { card: string }[];
+  settledLists: number;
+}
+
+const naturalList = (cards: string[]) => (cards.length === 2 ? cards.join(" and ") : `${cards.slice(0, -1).join(", ")} and ${cards.at(-1)}`);
+const titleCase = (f: string) => f[0].toUpperCase() + f.slice(1);
+
+/**
+ * Brew holdout: every deck that appeared from nothing in Decklist Data's
+ * history (scripts/find-new-archetypes.ts), rebuilt from the day it first
+ * appeared. No list of the archetype exists before that day, so it can't be copied.
+ */
+function holdoutItems(): Round4Item[] {
+  const file = "evals/brew-holdout/candidates.json";
+  const candidates = JSON.parse(readFileSync(file, "utf8")) as Candidate[];
+  return candidates
+    .filter((c) => c.settledLists >= 5 && c.signature.length >= 2)
+    .map((c) => {
+      const keyCards = c.signature.map((s) => s.card);
+      const format = titleCase(c.format);
+      return {
+        id: `holdout-${c.format}-${c.strategy.toLowerCase().replace(/\W+/g, "-")}`,
+        track: "holdout" as const,
+        format,
+        prompt: `Brew me a ${format} deck built around ${naturalList(keyCards)}.`,
+        before: c.firstSeen,
+        keyCards,
+        target: { format: c.format, strategy: c.strategy, firstSeen: c.firstSeen },
+      };
+    });
+}
+
 export function round4Items(index: CardIndex): Round4Item[] {
   return [
     ...fillItems(index),
     ...brewItems(),
     ...FRESH.map((f) => ({ ...f, track: "fresh" as const, before: null })),
+    ...holdoutItems(),
   ];
 }

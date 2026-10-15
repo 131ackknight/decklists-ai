@@ -1,9 +1,9 @@
 /**
  * Run round 4 (owner-written evals) on one harness and model.
  *
- *   pnpm exec tsx scripts/run-round4.ts --harness v2|v3 --model claude-sonnet-5-5 [--track fill,brew,fresh] [--items id,id] [--concurrency 3] [--list]
+ *   pnpm exec tsx scripts/run-round4.ts --harness v2|v3 --model claude-sonnet-5-5 [--track fill,brew,fresh|holdout] [--items id,id] [--concurrency 3] [--list]
  *
- * Fill in the blanks and brew to archetype rebuild a past moment: lists from
+ * Fill in the blanks, brew to archetype and the brew holdout rebuild a past moment: lists from
  * the item's date on are cut from the data, and cards first printed after it
  * are hidden from the card pool, and so are earlier near-copies of the
  * owner's list (see NEAR_COPY). Fresh brews use today's 90-day data, like
@@ -87,7 +87,7 @@ async function main() {
 
   await Promise.all(Array.from({ length: Math.max(1, concurrency) }, worker));
   mkdirSync("evals/results/round4", { recursive: true });
-  const out = `evals/results/round4/${harness}-${modelId}${only ? "-partial" : ""}.json`;
+  const out = `evals/results/round4/${tracks.join("+")}-${harness}-${modelId}${only ? "-partial" : ""}.json`.replace("fill+brew+fresh-", "");
   writeFileSync(out, JSON.stringify({ ranAt: new Date().toISOString(), harness, model: modelId, tracks, results }, null, 1));
   console.log(`wrote ${out}, total $${spent.toFixed(2)}`);
 }

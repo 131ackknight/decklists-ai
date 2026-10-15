@@ -58,6 +58,8 @@ The owner wrote all 15 items in one message: 5 Decklist Data links for fill in t
 
 **A Decklist Data bug found on the way.** The 2026-05-15 Fanatic Eldrazi list stores five junk sideboard lines like "29 Cards (48%)", so the site shows a 100-card sideboard. None of the 30,102 lists from the last 90 days have it. Junk lines are dropped with a warning; the fix is queued as a separate Decklist Data task.
 
+> **Update, same day:** the full-history export showed it was far bigger than one list: **34,450 of 143,721 lists (24%)**, every format, Dec 2025 - May 2026. The scraper was fixed in May and duplicate rows were removed then, but the surviving rows kept the junk in stored cards and in the copy/export text. Decklist Data PR #188 adds a dry-run-first cleanup. For decklists.ai this matters directly: any analysis over full history must filter these names (the round 4 scripts do).
+
 **Full history export.** Brew to archetype needs data from before each deck existed, so the existing read-only export ran with `days=0`: 143,721 lists (from 2025-07-01; Premodern from 2025-12-08), gitignored. `scripts/archetype-history.ts` finds each archetype's first list, its breakout, and its signature cards.
 
 **What the owner's brew-to-archetype picks turned out to be:**

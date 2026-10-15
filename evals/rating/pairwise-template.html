@@ -46,6 +46,7 @@ h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; }
 .nav select { flex: 1 1 260px; min-width: 0; font: 0.95rem var(--font-body); color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 7px 10px; }
 .btn { font: 600 0.9rem var(--font-body); border: 1px solid var(--line); background: var(--surface); color: var(--ink); padding: 7px 14px; border-radius: 8px; cursor: pointer; }
 .btn:disabled { opacity: 0.5; cursor: default; }
+.only { display: inline-flex; align-items: center; gap: 6px; font-size: 0.9rem; color: var(--muted); }
 button:focus-visible, select:focus-visible, textarea:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .notice { margin: 16px 0 0; padding: 10px 14px; border: 1px solid var(--line); background: var(--surface); border-radius: 8px; color: var(--muted); font-size: 0.92rem; }
 .guide { margin: 12px 0 0; color: var(--muted); font-size: 0.92rem; max-width: 80ch; }
@@ -96,6 +97,7 @@ textarea { width: 100%; min-height: 56px; font: 0.92rem var(--font-body); color:
       <button class="btn" id="prev" type="button">Previous</button>
       <select id="picker" aria-label="Pair"></select>
       <button class="btn" id="next" type="button">Next</button>
+      <label class="only"><input type="checkbox" id="brewsOnly"> Brews only, not yet judged</label>
     </div>
   </div>
 </div>
@@ -264,7 +266,23 @@ textarea { width: 100%; min-height: 56px; font: 0.92rem var(--font-body); color:
   const picker = document.getElementById("picker");
   DATA.pairs.forEach((p, i) => picker.append(el("option", { value: String(i), text: String(i + 1) })));
   picker.addEventListener("change", () => { current = Number(picker.value); render(); window.scrollTo(0, 0); });
-  const go = (d) => { current = Math.max(0, Math.min(DATA.pairs.length - 1, current + d)); render(); window.scrollTo(0, 0); };
+  // With "Brews only" on, Previous/Next skip to brew pairs not yet judged.
+  const brewsOnly = document.getElementById("brewsOnly");
+  const eligible = (i) => !brewsOnly.checked || (DATA.pairs[i].brew && !complete(DATA.pairs[i].id)) || i === current;
+  const go = (d) => {
+    let i = current + d;
+    while (i >= 0 && i < DATA.pairs.length && !eligible(i)) i += d;
+    if (i < 0 || i >= DATA.pairs.length) return;
+    current = i;
+    render();
+    window.scrollTo(0, 0);
+  };
+  brewsOnly.addEventListener("change", () => {
+    if (brewsOnly.checked && !(DATA.pairs[current].brew && !complete(DATA.pairs[current].id))) {
+      const i = DATA.pairs.findIndex((p) => p.brew && !complete(p.id));
+      if (i >= 0) { current = i; render(); window.scrollTo(0, 0); }
+    }
+  });
   for (const id of ["prev", "prev2"]) document.getElementById(id).addEventListener("click", () => go(-1));
   for (const id of ["next", "next2"]) document.getElementById(id).addEventListener("click", () => go(1));
   for (const b of document.querySelectorAll("#picks button")) b.addEventListener("click", () => save({ winner: b.dataset.w }));

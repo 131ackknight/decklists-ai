@@ -67,7 +67,9 @@ v3 lost Dream Halls without storm (Opus), Old School (Opus), Peter Parker's Came
 
 **The owner's fatigue is a finding too:** about 50 judged pairs, roughly an hour of expert time, is the practical limit for one person. Human judgment doesn't scale; a scorer validated on real results has to carry most of the evaluation.
 
-**Next:** the owner can judge the remaining pairs in short sittings, ideally the brew pairs where the signal is; meanwhile build scorer v0 (card performance, synergy, role coverage from Decklist Data) and validate it against real records (5-0 vs. worse lists within an archetype) and the owner's picks.
+**Owner's call: finish the brews only.** The remaining 31 pairs are 24 brews and 7 stock/tune/impossible pairs (mostly ties so far). The page gained a "Brews only, not yet judged" toggle that makes Previous/Next skip to unjudged brew pairs; pair ids are unchanged, so earlier picks stayed attached. The scorer's data check started meanwhile: 29,910 of the 30,102 exported lists carry a win-loss record; League lists are all 5-0 (only 5-0s are published), while Challenge lists span 0-3 to 10-0, which is the variance a card-performance measure needs.
+
+**Next:** the owner judges the remaining brew pairs; meanwhile build scorer v0 (card performance, synergy, role coverage from Decklist Data) and validate it against real records (5-0 vs. worse lists within an archetype) and the owner's picks.
 
 ---
 

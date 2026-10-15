@@ -56,6 +56,18 @@ const answer = (r: Result) => ({
     : null,
 });
 
+/** Prompts where a proven list, the player's own list, or an impossibility frames the answer; the rest are brews. */
+const NOT_BREW = new Set([
+  "premodern-stock-goblins",
+  "modern-tribal-brew",
+  "pauper-budget-aggro",
+  "vintage-restricted",
+  "legacy-sideboard-only",
+  "premodern-paste-and-tune",
+  "legacy-impossible",
+  "modern-named-two-cards",
+]);
+
 const key: Record<string, { prompt: string; left: string; right: string }> = {};
 const pairs: unknown[] = [];
 for (const spec of pairSpecs) {
@@ -72,7 +84,7 @@ for (const spec of pairSpecs) {
     const swap = parseInt(id.slice(0, 2), 16) % 2 === 1;
     const [left, right] = swap ? [[labelB, rb], [labelA, ra]] as const : [[labelA, ra], [labelB, rb]] as const;
     key[id] = { prompt: p.id, left: left[0], right: right[0] };
-    pairs.push({ id, prompt: p.id, left: answer(left[1]), right: answer(right[1]) });
+    pairs.push({ id, prompt: p.id, brew: !NOT_BREW.has(p.id), left: answer(left[1]), right: answer(right[1]) });
   }
 }
 

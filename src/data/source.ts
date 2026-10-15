@@ -82,6 +82,9 @@ export interface CardPlay {
 
 const DAY = 86_400_000;
 
+/** MTGO's sideboard breakdown widget ("Cards (48%)"), stored as cards in some Dec 2025 - May 2026 lists. */
+const WIDGET_ROW = /^Cards?\s*\(\d+%?\)\s*$/i;
+
 export class FileDataSource implements DataSource {
   private constructor(
     private readonly lists: RefList[],
@@ -96,11 +99,20 @@ export class FileDataSource implements DataSource {
       for await (const line of createInterface({ input: createReadStream(file) })) {
         if (!line.trim()) continue;
         const list = JSON.parse(line) as RefList;
-        if (!opts.before || list.date < opts.before) lists.push(list);
+        if (opts.before && list.date >= opts.before) continue;
+        list.side = list.side.filter((c) => !WIDGET_ROW.test(c.name));
+        list.main = list.main.filter((c) => !WIDGET_ROW.test(c.name));
+        lists.push(list);
       }
     }
     const newest = lists.reduce((d, l) => (l.date > d ? l.date : d), "0000-00-00");
     return new FileDataSource(lists, index, newest);
+  }
+
+  /** The same data without lists from `before` (YYYY-MM-DD) on, and without any list `drop` matches. */
+  cut(before: string, index: CardIndex = this.index, drop: (l: RefList) => boolean = () => false): FileDataSource {
+    const lists = this.lists.filter((l) => l.date < before && !drop(l));
+    return new FileDataSource(lists, index, lists.reduce((d, l) => (l.date > d ? l.date : d), "0000-00-00"));
   }
 
   hasFormat(format: string): boolean {

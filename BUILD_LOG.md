@@ -50,6 +50,22 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-10-15 · Round 4 runner built, and the first design flaw it caught
+
+**Rebuilding a past moment.** Tracks 1 and 2 must not let the bot see the future. Added: first-printing dates in the card index (`CardIndex.asOf`), and a date cut on the data (`FileDataSource.cut`). A run dated May 15 sees no list from May 15 on and no card printed after it (1,208 of 32,901 cards hidden as of mid-May 2026). The data loader now also drops Decklist Data's "Cards (N%)" junk.
+
+**Owner's privacy call (via Claude's own note):** player names were dropped from the saved lists; decks are linked by id (`decklistdata.com/deck/<id>`), which redirects to the deck page. Earlier commits still contain names; the history scan before going public will cover it.
+
+**The flaw, caught by the baselines before any money was spent.** Two no-model baselines for fill in the blanks: "most played" (add the copies most of the archetype's recent lists run) and "nearest list" (fill from the earlier list closest to what's left). On the first version, "nearest list" restored **all 12 hidden cards** for Tron and Broodscale: near-identical lists had been posted before the owner's picks (429 earlier Broodscale lists within 6 cards of it; Legacy Tron's "new" list had an identical twin 6 days earlier). The test would have measured whether the bot can look up a list, not whether it can choose cards.
+
+**Fix:** every earlier list sharing 54+ of 60 main deck cards with the owner's list is hidden from the bot and from the baselines (`NEAR_COPY`). After that, baselines restore about 4-10 of 12 (Tron and UW Aggro hardest), so there is room to measure judgment.
+
+**Scoring** (`scripts/score-round4.ts`): fill in the blanks counts exact restores plus same-job replacements (sharing a function tag carried by under 2% of cards); brew to archetype measures overlap with the owner's list and with lists posted in the 60 days after, against the closest visible earlier list.
+
+**Smoke test (Sonnet 5.5, harness v2, $0.38):** UW Aggro fill-in restored 9 of 12 (most played 5, nearest list 8). Fanatic Eldrazi brew overlapped the real list 28%, below the 55% the closest earlier list already had. Two items are not a result; they show the runner works.
+
+---
+
 ## 2026-10-15 · Round 4 items are in (owner-written)
 
 The owner wrote all 15 items in one message: 5 Decklist Data links for fill in the blanks, 5 for brew to archetype, and 5 brew requests in their own words ("Mono red prison but in Premodern?", "Most competitive non-power nine vintage deck?", "Mono black tron in Modern?", "City of Traitors mono black premodern deck?", "Best 5 color Solution deck in premodern?"). Every named card was checked against the card index first (the Tainted Pact lesson): all legal where named.

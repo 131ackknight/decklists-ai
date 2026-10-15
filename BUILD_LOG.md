@@ -31,7 +31,8 @@ A running record of how decklists.ai gets built: decisions, findings, numbers, a
 7. **Same harness, five models.** v1 on Haiku 4.5, Haiku 5.5, Sonnet 5.5, Opus 5.5 and Fable 5.1, blind-rated by the owner. Pass 1: bigger models finish (17-18 decks vs. 7-9), Haiku 5.5 is the value pick ($0.11), Fable builds the closest mana, and every model leans on the meta data in ways that hurt brews: "not in results" read as "doesn't exist," and brews pulled back toward existing decks (mono green storm built as Elves plus Hunting Pack).
 8. **The ratings.** The owner blind-rated all 108 answers. When a list exists, every model scores about 4 and Haiku 4.5 ties Sonnet 5.5; on brews the spread grows to 2.4 points (Haiku 4.5 1.52, Opus 5.5 3.88). Opus 5.5 ranks first overall (3.85), and the most expensive model, Fable 5.1, ranks third at more than twice the cost.
 9. **The new harness, judged head to head.** 36 blind pairs: a draw on quality (v1 8 wins, v2 6, 22 ties) but v2 did what was asked every time (100% vs. 92%) and handled impossible requests honestly. Better tools close the faithfulness gap; they don't close the quality gap.
-10. **Where it goes next.** The new harness: card search decides what exists, data only informs mana, interaction and the meta, then the same five models again to separate what the model buys from what the harness buys.
+10. **Structure isn't skill.** The step 8 pipeline (intent routing, staged brews, simulator, novelty rules) made brews more original (copy rate 87% in v1, 76% in v2, 65% in v3) but, in 17 judged pairs, not better: on brews v2 was "would play" 86% vs. v3 50%. The pipeline knows how to brew, not what is good.
+11. **Where it goes next.** A scorer built from real tournament results, validated against real records, so construction becomes search judged by data rather than guesses. The new harness: card search decides what exists, data only informs mana, interaction and the meta, then the same five models again to separate what the model buys from what the harness buys.
 
 Recurring theme for the post: the owner's pushback improved the work at nearly every turn (no bracket scraping, no new database, no Neon credentials, use our own data instead of re-scraping MTGO, every list instead of a sample, fix `main` instead of running an old build, compare models).
 
@@ -45,6 +46,28 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - Lesson to apply: any prompt or claim that names a card gets checked against the card index before it is used.
 - ~~Switch to pairwise~~: done; 36 pairs judged (v1 8 wins, v2 6, 22 ties; v2 100% faithful vs. 92%).
 - ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
+
+---
+
+## 2026-10-15 · Round 3, partial: v3 did not beat v2
+
+The owner judged 17 of the 48 round 3 pairs, then: "I did 16 pairs and got a little tired." Unblinded (the analysis script was also generalized: it had hard-coded v1 vs. v2 as the two sides):
+
+| | v2 | v3 (step 8 pipeline) |
+| --- | --- | --- |
+| Pairs won | **4** | 1 |
+| Ties | 12 | 12 |
+| Did what was asked | 100% | 94% |
+| Would play | **81%** | 71% |
+| Brews only (8 pairs) | 3 wins, 86% would play | 0 wins, **50% would play** |
+
+v3 lost Dream Halls without storm (Opus), Old School (Opus), Peter Parker's Camera (Sonnet) and Legacy "turn 1" (Sonnet); won Vintage artifact aggro (Sonnet); the rest tied. The owner marked v3's mono green storm "did not do what was asked."
+
+**Reading, with the caveat that 5 decisive pairs can't settle anything:** pushing for originality made brews more original (copy rate 76% to 65% for Opus) but weaker. The novelty rules (at most 60% one list, engine at least 25% of spells) push the deck away from proven cards, and without a judge of quality the model can't tell a good original choice from a bad one. The pipeline knows *how* to brew but has nothing telling it *what is good*. That is the gap the scorer in the research plan targets, and the honest result for the post: structure alone made brews more faithful and more original, not better.
+
+**The owner's fatigue is a finding too:** about 50 judged pairs, roughly an hour of expert time, is the practical limit for one person. Human judgment doesn't scale; a scorer validated on real results has to carry most of the evaluation.
+
+**Next:** the owner can judge the remaining pairs in short sittings, ideally the brew pairs where the signal is; meanwhile build scorer v0 (card performance, synergy, role coverage from Decklist Data) and validate it against real records (5-0 vs. worse lists within an archetype) and the owner's picks.
 
 ---
 

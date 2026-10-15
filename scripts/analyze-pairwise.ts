@@ -67,8 +67,11 @@ function summarize(rows: typeof answers) {
   };
 }
 
+// The two harnesses being compared, e.g. v1 vs v2 or v2 vs v3; the newer one is "new".
+const harnesses = [...new Set(answers.map((a) => a.harness))].sort();
+const [oldH, newH] = harnesses;
 const groups: Record<string, unknown> = {};
-for (const h of ["v1", "v2"]) {
+for (const h of harnesses) {
   groups[h] = summarize(answers.filter((a) => a.harness === h));
   for (const m of [...new Set(answers.map((a) => a.model))]) {
     groups[`${h} ${m}`] = summarize(answers.filter((a) => a.harness === h && a.model === m));
@@ -80,15 +83,16 @@ for (const h of ["v1", "v2"]) {
 console.table(groups);
 
 const perPrompt = [...new Set(picks.map((p) => p.prompt))].map((prompt) => {
-  const rows = answers.filter((a) => a.prompt === prompt && a.harness === "v2");
+  const rows = answers.filter((a) => a.prompt === prompt && a.harness === newH);
+  const olds = answers.filter((a) => a.prompt === prompt && a.harness === oldH);
   return {
     prompt,
     type: typeOf(prompt),
-    v2: rows.map((r) => `${r.model}:${r.outcome}`).join(" "),
-    v1Asked: answers.filter((a) => a.prompt === prompt && a.harness === "v1").map((a) => (a.asked ? "Y" : "N")).join(""),
-    v2Asked: rows.map((a) => (a.asked ? "Y" : "N")).join(""),
-    v1Play: answers.filter((a) => a.prompt === prompt && a.harness === "v1").map((a) => (a.play ? "Y" : "N")).join(""),
-    v2Play: rows.map((a) => (a.play ? "Y" : "N")).join(""),
+    [`${newH} outcome`]: rows.map((r) => `${r.model}:${r.outcome}`).join(" "),
+    [`${oldH} asked`]: olds.map((a) => (a.asked ? "Y" : "N")).join(""),
+    [`${newH} asked`]: rows.map((a) => (a.asked ? "Y" : "N")).join(""),
+    [`${oldH} play`]: olds.map((a) => (a.play ? "Y" : "N")).join(""),
+    [`${newH} play`]: rows.map((a) => (a.play ? "Y" : "N")).join(""),
   };
 });
 console.table(perPrompt);

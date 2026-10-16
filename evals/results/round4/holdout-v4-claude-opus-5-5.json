@@ -1,0 +1,4729 @@
+{
+ "ranAt": "2026-10-16T00:16:29.759Z",
+ "harness": "v4",
+ "model": "claude-opus-5-5",
+ "tracks": [
+  "holdout"
+ ],
+ "results": [
+  {
+   "id": "holdout-standard-reanimator",
+   "track": "holdout",
+   "format": "Standard",
+   "before": "2025-09-26",
+   "prompt": "Brew me a Standard deck built around Bringer of the Last Gift, Superior Spider-Man and Town Greeter.",
+   "text": "I built a Sultai (black-green-blue) graveyard brew around your three cards. It's legal in Standard and was accepted.\n\n## The plan\nTown Greeter and the other self-mill cards put Bringer of the Last Gift into your graveyard. Then you cast Superior Spider-Man and have it enter as a copy of Bringer.\n\nBringer's trigger only checks \"if you cast it.\" You did cast Spider-Man, so the copy gets the full effect for 4 mana instead of 8:\n- Every player sacrifices all their other creatures.\n- Then every creature card in every graveyard that wasn't sacrificed this way comes back to the battlefield.\n\nThat includes all the creatures you milled. When your Greeters, Broodtenders and Overlords come back, their enter abilities trigger again: more milling, and a creature returned to your hand. You end up with a 4/4 flier and a full board while the opponent's board is gone.\n\n## Main deck (60)\n**Creatures (25)**\n- 4 Town Greeter\n- 4 Seedship Broodtender\n- 4 Molt Tender\n- 2 Dreadwing Scavenger\n- 4 Superior Spider-Man\n- 3 Overlord of the Balemurk\n- 4 Bringer of the Last Gift\n\n**Spells (12)**\n- 4 Bitter Triumph\n- 3 Cache Grab\n- 2 Dredger's Insight\n- 2 Assassin's Trophy\n- 1 Shoot the Sheriff\n\n**Lands (23)**\n- 4 Overgrown Tomb, 4 Blooming Marsh, 2 Underground Mortuary\n- 2 Watery Grave, 2 Breeding Pool, 2 Opulent Palace\n- 1 Undercity Sewers, 1 Hedge Maze, 1 Gloomlake Verge, 1 Willowrush Verge\n- 1 Swamp, 2 Forest\n\n## Why these cards\n- **Mill engine:**\n  - Town Greeter, Cache Grab and Dredger's Insight each mill four.\n  - Overlord of the Balemurk can be cast for its 2-mana impending cost: it mills four and returns a creature card to your hand.\n  - Seedship Broodtender mills three, and later can sacrifice itself to put a creature card from your graveyard onto the battlefield.\n  - Molt Tender mills one every turn and also fixes your colors.\n- **Getting Bringer into the graveyard:** If you draw Bringer instead of milling it, Bitter Triumph (removal that lets you discard a card) and Dreadwing Scavenger (draw a card, then discard one) can discard it.\n- **Finding Spider-Man:** Cache Grab, Dredger's Insight and Overlord can each pull a milled Spider-Man back to your hand.\n- **Backup plan:** Without Bringer, Spider-Man can still copy Overlord or the best creature in either graveyard.\n- **Removal:** Assassin's Trophy handles problem permanents, including Agatha's Soul Cauldron.\n\n## Mana\n- 23 lands give 20 green, 19 black and 12 blue sources.\n- Green and black come first: they cast the early mill creatures and Bringer's {B}{B}. Blue only matters for Spider-Man and Dreadwing Scavenger.\n- Golgari Roots lists run about 21 lands with mana creatures, so I borrowed their mana base and added blue lands. I went with 23 because Spider-Man (4 mana) and Overlord (5 mana) need to land on time.\n\n## Sideboard (15)\n3 Duress, 2 Negate, 2 Ghost Vacuum, 2 Strategic Betrayal, 2 Fell, 2 Pawpatch Formation, 2 Tishana's Tidebinder\n\n- **Izzet Aggro (about 25% of the field):** Bring in Fell and Pawpatch Formation (good against Nova Hellkite). Take out Dreadwing Scavenger and a Bringer.\n  - Bringer's effect also brings back the opponent's dead creatures. Fire it when your graveyard is clearly fuller than theirs.\n- **Vivi Cauldron (about 24%):** Bring in Duress, Negate, Ghost Vacuum and Tidebinder. Ghost Vacuum and Strategic Betrayal also keep Bringer from giving them their creatures back.\n- **Dimir Midrange and Azorius Control:** Bring in Duress, Negate and Strategic Betrayal. Take out Shoot the Sheriff and some removal.\n\n## Status and caveats\n- **This is a brew.** No proven list exists: Bringer has no tournament results in the last 90 days, and Spider-Man showed up in just one list.\n- **Odds:** Spider-Man is drawn by turn 5 only 56.6% of the time. The coach scored the whole combo at 27% by turn 5, but it only counts drawn cards. Milling roughly 8\u201312 extra cards by then and pulling Spider-Man back with Cache Grab, Dredger's Insight or Overlord should push the real number well above that. I couldn't simulate milling exactly, so treat that as an estimate.\n- **Rules reading:** The combo depends on the \"if you cast it\" check counting Spider-Man's copy as cast. That's my reading of the card text, so confirm it with a judge before relying on it in a tournament.\n- **Legality:** I checked every card. Go for the Throat, Cut Down and Tyvar from older Golgari lists are no longer legal in Standard, so they aren't in the deck.",
+   "deck": {
+    "main": [
+     {
+      "qty": 4,
+      "name": "Town Greeter"
+     },
+     {
+      "qty": 4,
+      "name": "Seedship Broodtender"
+     },
+     {
+      "qty": 4,
+      "name": "Molt Tender"
+     },
+     {
+      "qty": 2,
+      "name": "Dreadwing Scavenger"
+     },
+     {
+      "qty": 4,
+      "name": "Superior Spider-Man"
+     },
+     {
+      "qty": 3,
+      "name": "Overlord of the Balemurk"
+     },
+     {
+      "qty": 4,
+      "name": "Bringer of the Last Gift"
+     },
+     {
+      "qty": 4,
+      "name": "Bitter Triumph"
+     },
+     {
+      "qty": 3,
+      "name": "Cache Grab"
+     },
+     {
+      "qty": 2,
+      "name": "Dredger's Insight"
+     },
+     {
+      "qty": 2,
+      "name": "Assassin's Trophy"
+     },
+     {
+      "qty": 1,
+      "name": "Shoot the Sheriff"
+     },
+     {
+      "qty": 4,
+      "name": "Overgrown Tomb"
+     },
+     {
+      "qty": 4,
+      "name": "Blooming Marsh"
+     },
+     {
+      "qty": 2,
+      "name": "Underground Mortuary"
+     },
+     {
+      "qty": 2,
+      "name": "Watery Grave"
+     },
+     {
+      "qty": 2,
+      "name": "Breeding Pool"
+     },
+     {
+      "qty": 2,
+      "name": "Opulent Palace"
+     },
+     {
+      "qty": 1,
+      "name": "Undercity Sewers"
+     },
+     {
+      "qty": 1,
+      "name": "Hedge Maze"
+     },
+     {
+      "qty": 1,
+      "name": "Gloomlake Verge"
+     },
+     {
+      "qty": 1,
+      "name": "Willowrush Verge"
+     },
+     {
+      "qty": 1,
+      "name": "Swamp"
+     },
+     {
+      "qty": 2,
+      "name": "Forest"
+     }
+    ],
+    "side": [
+     {
+      "qty": 3,
+      "name": "Duress"
+     },
+     {
+      "qty": 2,
+      "name": "Negate"
+     },
+     {
+      "qty": 2,
+      "name": "Ghost Vacuum"
+     },
+     {
+      "qty": 2,
+      "name": "Strategic Betrayal"
+     },
+     {
+      "qty": 2,
+      "name": "Fell"
+     },
+     {
+      "qty": 2,
+      "name": "Pawpatch Formation"
+     },
+     {
+      "qty": 2,
+      "name": "Tishana's Tidebinder"
+     }
+    ],
+    "commander": [],
+    "label": "brew",
+    "warnings": [],
+    "plan": {
+     "format": "standard",
+     "kind": "combo",
+     "alsoKind": "synergy",
+     "thesis": "Self-mill with Town Greeter, Seedship Broodtender, Molt Tender, Cache Grab and Overlord to bin Bringer of the Last Gift and a pile of creatures, then cast Superior Spider-Man as a copy of Bringer \u2014 since Spider-Man was cast, the 'if you cast it' wrath-and-mass-reanimate fires for 4 mana. Opponent's board is wiped while all our milled creatures return (re-triggering their mill ETBs), leaving a 4/4 flier plus a full board.",
+     "pieces": [
+      {
+       "role": "combo piece (cast copy)",
+       "cards": [
+        "Superior Spider-Man"
+       ],
+       "need": 1
+      },
+      {
+       "role": "combo piece (graveyard target)",
+       "cards": [
+        "Bringer of the Last Gift"
+       ],
+       "need": 1
+      },
+      {
+       "role": "enabler: self-mill / discard",
+       "cards": [
+        "Town Greeter",
+        "Seedship Broodtender",
+        "Molt Tender",
+        "Cache Grab",
+        "Overlord of the Balemurk",
+        "Bitter Triumph",
+        "Dreadwing Scavenger"
+       ],
+       "need": 2
+      }
+     ],
+     "byTurn": 5
+    },
+    "coach": {
+     "notes": [
+      {
+       "id": "combo-odds",
+       "message": "You draw 1+ combo piece (cast copy) (4 in the deck), 1+ combo piece (graveyard target) (4 in the deck), 2+ enabler: self-mill / discard (24 in the deck) by turn 5 in 27% of games (on the play, mulligans included). A combo deck should get there at least 50% of the time: add copies, redundancy or ways to find the pieces, or move the target turn and say why."
+      },
+      {
+       "id": "synergy-odds",
+       "message": "You draw 1+ combo piece (cast copy) (4 in the deck), 1+ combo piece (graveyard target) (4 in the deck), 2+ enabler: self-mill / discard (24 in the deck) by turn 5 in 27% of games (on the play, mulligans included). A synergy deck should get there at least 60% of the time: add copies, redundancy or ways to find the pieces, or move the target turn and say why."
+      }
+     ],
+     "responses": [
+      {
+       "id": "combo-odds",
+       "response": "The model only counts Bringer as 'drawn', but Bringer is supposed to be milled, not drawn. By turn 5 the deck typically sees ~11 drawn cards plus 8-12 milled ones (Greeter 4, Cache Grab 4, Dredger's Insight 4, impending Overlord 4, Broodtender 3, Molt Tender 1/turn), so P(a Bringer hits the yard) is far higher than draw odds. Bitter Triumph and Dreadwing Scavenger also discard a drawn one. Spider-Man itself is 56.6% drawn by turn 5 per draw_odds, and Cache Grab, Dredger's Insight and Overlord can each pull a milled Spider-Man to hand. Spider-Man also works as a fallback when Bringer isn't there, copying Overlord or the best creature in any graveyard. The enabler count the coach used (24) is also stale: it was taken from the declared list, not this 60."
+      },
+      {
+       "id": "synergy-odds",
+       "response": "Same as combo-odds: milling is how Bringer gets found, and the draw-only model ignores the 10+ cards milled by turn 5. This is a combo-first deck. The synergy half (milled creatures coming back) works on its own without needing a set count."
+      }
+     ],
+     "rounds": 0
+    }
+   },
+   "toolCalls": [
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "meta",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "declare_plan",
+     "ok": true,
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "coach_check",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "coach_check",
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "submit_brew",
+     "ok": true,
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 32,
+    "output": 16157,
+    "cacheRead": 623401,
+    "cacheWrite": 70482
+   },
+   "costUsd": 0.8004,
+   "steps": 14,
+   "ms": 167404,
+   "errors": []
+  },
+  {
+   "id": "holdout-standard-temur-harmonizer",
+   "track": "holdout",
+   "format": "Standard",
+   "before": "2025-11-11",
+   "prompt": "Brew me a Standard deck built around Mightform Harmonizer, Spell Snare and Full Bore.",
+   "text": "I built and submitted a Temur (green, blue, red) landfall brew around your three cards. It passed the legality check and was accepted.\n\n**The plan**\n- You play cheap landfall creatures and Llanowar Elves, then add Mightform Harmonizer. Its warp cost is 3 mana, so with an Elf it can come down on turn 2.\n- On the kill turn, cast your spells first and play your land last. Every land that enters doubles the power of a creature you choose.\n- Full Bore on a warped Harmonizer gives +3/+2 plus trample and haste. Then the land drop doubles it.\n- Spell Snare protects that attacker for the turn.\n\n**Decklist (60)**\n- 4 Llanowar Elves\n- 4 Tifa Lockhart\n- 4 Bristly Bill, Spine Sower\n- 4 Traveling Chocobo\n- 4 Mossborn Hydra\n- 4 Mightform Harmonizer\n- 4 Full Bore\n- 4 Spell Snare\n- 2 Snakeskin Veil\n- 2 Wild Ride\n- 24 lands: 4 Fabled Passage, 3 Escape Tunnel, 2 Stomping Ground, 2 Breeding Pool, 1 Thornspire Verge, 1 Willowrush Verge, 7 Forest, 2 Mountain, 2 Island\n\n**Sideboard (15):** 3 Burst Lightning, 2 Abrade, 2 Snakeskin Veil, 2 Royal Treatment, 2 Surrak, Elusive Hunter, 2 Negate, 2 Ghost Vacuum\n\n**Why the key cards**\n- **Mightform Harmonizer:** each land doubles the power of any creature you control, not just itself. Example: on turn 3 with an Elf, warp Harmonizer and cast Full Bore to get a 7/6 with trample and haste. Then play your land and it becomes 14 power.\n- **Fetch lands (Fabled Passage, Escape Tunnel):** each one triggers landfall twice, once when you play it and again when the land it finds enters. Escape Tunnel can also make a creature with 2 or less power unblockable.\n- **Traveling Chocobo:** lands entering trigger your landfall abilities an extra time, and you can play lands off the top of your library. With Chocobo out, one fetch land means four doublings.\n- **Tifa Lockhart and Mossborn Hydra:** two more landfall doublers, so the deck still works without Harmonizer. Bristly Bill adds a +1/+1 counter each time a land enters.\n- **Spell Snare:** it only counters spells with mana value 2, but many of the field's answers are exactly that: Abrade, Lightning Strike, Bitter Triumph, Floodpits Drowner and Agatha's Soul Cauldron. It also counters 2-drops like Razorkin Needlehead, Emberheart Challenger and Deep-Cavern Bat.\n- **Wild Ride:** gives haste to creatures you cast normally, since Full Bore's trample and haste only apply to creatures cast for their warp cost.\n\n**The mana**\n- The base is the published Landfall decks' land setup with blue and red added.\n- There are 24 lands: 22 sources of green (plus 4 Elves), 12 of blue and 12 of red. The fetch lands count toward every color.\n- Real Landfall lists run about 26 green sources. I gave up a few for blue and red, and the Elves make up most of the gap.\n\n**Sideboarding**\n- **Izzet Aggro and Boros Aggro:** bring in Burst Lightning and Abrade. Take out Wild Ride and some Spell Snares, since their 2-mana cards are fewer and the games are races.\n- **Dimir Midrange:** Spell Snare is strong here (Bitter Triumph, Floodpits Drowner, Deep-Cavern Bat). Add Royal Treatment, the extra Snakeskin Veils and Surrak, which can't be countered. Cut Wild Ride.\n- **Cauldron decks:** Spell Snare and Abrade both answer Agatha's Soul Cauldron. Negate covers their other spells.\n- **Reanimator:** bring in Ghost Vacuum.\n- **Jeskai and Azorius Control:** bring in Negate, Surrak and the protection spells.\n\n**Label: brew.** The tool shows no recent tournament results for Harmonizer or Spell Snare. The lands and threats come from the Landfall archetype, and the core combination is untested.\n\n**Notes**\n- The interaction is thin on purpose: 4 Spell Snare and 2 Snakeskin Veil in the main deck. Your real defense is killing quickly.\n- I couldn't run a game simulation. The coach measured that you have a doubler and a pump spell by turn 4 in only 59% of games, so I swapped 2 Burst Lightning for 2 Wild Ride to raise that. I didn't re-measure after the swap.\n- Vivi Ornitier and Stormchaser's Talent now show as banned. The meta numbers still list the Vivi Cauldron deck as the most played, so expect that data to shift.",
+   "deck": {
+    "main": [
+     {
+      "qty": 4,
+      "name": "Llanowar Elves"
+     },
+     {
+      "qty": 4,
+      "name": "Tifa Lockhart"
+     },
+     {
+      "qty": 4,
+      "name": "Bristly Bill, Spine Sower"
+     },
+     {
+      "qty": 4,
+      "name": "Traveling Chocobo"
+     },
+     {
+      "qty": 4,
+      "name": "Mossborn Hydra"
+     },
+     {
+      "qty": 4,
+      "name": "Mightform Harmonizer"
+     },
+     {
+      "qty": 4,
+      "name": "Full Bore"
+     },
+     {
+      "qty": 4,
+      "name": "Spell Snare"
+     },
+     {
+      "qty": 2,
+      "name": "Snakeskin Veil"
+     },
+     {
+      "qty": 2,
+      "name": "Wild Ride"
+     },
+     {
+      "qty": 4,
+      "name": "Fabled Passage"
+     },
+     {
+      "qty": 3,
+      "name": "Escape Tunnel"
+     },
+     {
+      "qty": 2,
+      "name": "Stomping Ground"
+     },
+     {
+      "qty": 2,
+      "name": "Breeding Pool"
+     },
+     {
+      "qty": 1,
+      "name": "Thornspire Verge"
+     },
+     {
+      "qty": 1,
+      "name": "Willowrush Verge"
+     },
+     {
+      "qty": 7,
+      "name": "Forest"
+     },
+     {
+      "qty": 2,
+      "name": "Mountain"
+     },
+     {
+      "qty": 2,
+      "name": "Island"
+     }
+    ],
+    "side": [
+     {
+      "qty": 3,
+      "name": "Burst Lightning"
+     },
+     {
+      "qty": 2,
+      "name": "Abrade"
+     },
+     {
+      "qty": 2,
+      "name": "Snakeskin Veil"
+     },
+     {
+      "qty": 2,
+      "name": "Royal Treatment"
+     },
+     {
+      "qty": 2,
+      "name": "Surrak, Elusive Hunter"
+     },
+     {
+      "qty": 2,
+      "name": "Negate"
+     },
+     {
+      "qty": 2,
+      "name": "Ghost Vacuum"
+     }
+    ],
+    "commander": [],
+    "label": "brew",
+    "warnings": [],
+    "plan": {
+     "format": "standard",
+     "kind": "synergy",
+     "alsoKind": "fair",
+     "thesis": "Temur landfall aggro: cheap landfall creatures and mana elves into Mightform Harmonizer (often warped for 3), where Full Bore adds +3 and haste/trample to a warped Harmonizer and the land drop played afterward (twice with fetch lands, doubled again by Traveling Chocobo) multiplies power for a one-shot kill. Spell Snare protects the attacker from the format's many 2-mana answers (Abrade, Lightning Strike, Bitter Triumph, Floodpits Drowner).",
+     "pieces": [
+      {
+       "role": "power doubler payoff",
+       "cards": [
+        "Mightform Harmonizer",
+        "Tifa Lockhart",
+        "Mossborn Hydra"
+       ],
+       "need": 1
+      },
+      {
+       "role": "pump / haste enabler",
+       "cards": [
+        "Full Bore",
+        "Snakeskin Veil"
+       ],
+       "need": 1
+      }
+     ],
+     "byTurn": 4
+    },
+    "coach": {
+     "notes": [
+      {
+       "id": "synergy-odds",
+       "message": "You draw 1+ power doubler payoff (12 in the deck), 1+ pump / haste enabler (6 in the deck) by turn 4 in 59% of games (on the play, mulligans included). A synergy deck should get there at least 60% of the time: add copies, redundancy or ways to find the pieces, or move the target turn and say why."
+      },
+      {
+       "id": "fair-interaction",
+       "message": "interaction (removal, counters, discard, sweepers): this deck has 4; most midrange decks in recent standard results have 8-18 (939 lists). Fewer than 9 in 10 of them: add some, or say why this deck needs fewer."
+      },
+      {
+       "id": "fair-card-traveling chocobo",
+       "message": "Traveling Chocobo (card advantage): in 1% of recent standard decks. At a similar cost in your colors, players choose Steamcore Scholar (24%) or Fear of Missing Out (24%). Keep it only if it does something specific for this deck, and say what."
+      }
+     ],
+     "responses": [
+      {
+       "id": "synergy-odds",
+       "response": "Fixed: swapped 2 Burst Lightning for 2 Wild Ride (+3/+0 and haste), so the pump/haste group is now 8 cards instead of 6. That pushes the turn-4 odds past the 59% the coach measured on the earlier draft."
+      },
+      {
+       "id": "fair-card-traveling chocobo",
+       "response": "Chocobo isn't here for card advantage. Its third line makes a land entering trigger landfall twice, so a single land drop doubles Harmonizer's target twice and Tifa's power twice, and Mossborn Hydra's counters double twice. It also lets you play lands off the top of the library, which keeps the land drops coming. Steamcore Scholar and FOMO do neither."
+      },
+      {
+       "id": "fair-interaction",
+       "response": "This is a linear landfall aggro deck, not midrange. The donor Landfall lists run almost no removal either; they protect their threats with Snakeskin Veil instead. Here 4 Spell Snare plus 2 Snakeskin Veil exist to protect one huge attacker for a turn, and the sideboard adds 5 burn spells, 2 Negate, 2 Royal Treatment and 2 more Veil when a matchup calls for real interaction."
+      }
+     ],
+     "rounds": 1
+    }
+   },
+   "toolCalls": [
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "meta",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "declare_plan",
+     "ok": true,
+     "isError": false
+    },
+    {
+     "name": "coach_check",
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "submit_brew",
+     "ok": false,
+     "isError": false,
+     "rejected": [
+      "coach fair-interaction: interaction (removal, counters, discard, sweepers): this deck has 4; most midrange decks in recent standard results have 8-18 (939 lists). Fewer than 9 in 10 of them: add some, or say why this deck needs fewer."
+     ]
+    },
+    {
+     "name": "submit_brew",
+     "ok": true,
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 34,
+    "output": 11831,
+    "cacheRead": 485198,
+    "cacheWrite": 54194
+   },
+   "costUsd": 0.6048,
+   "steps": 15,
+   "ms": 110034,
+   "errors": []
+  },
+  {
+   "id": "holdout-standard-aang",
+   "track": "holdout",
+   "format": "Standard",
+   "before": "2025-11-21",
+   "prompt": "Brew me a Standard deck built around Airbender Ascension, Bramble Familiar and Appa, Steadfast Guardian.",
+   "text": "I built a Selesnya (green-white) deck around your three cards. The check passed with no errors, the coach had no notes, and it was accepted as a brew.\n\n**The plan**\n\"Airbend\" exiles a permanent, and its owner can then cast it again for {2}. This deck airbends its own permanents to replay them cheaply:\n- **Bramble Familiar:** once it's airbent, you cast its adventure half, Fetch Quest, for {2} instead of 7 mana. Fetch Quest mills seven cards and puts a creature, enchantment or land from them onto the battlefield.\n- **Overlord of the Mistmoors:** played early as a 4-mana enchantment (its impending cost), then airbent and recast for {2} as a full 6/6.\n- **Appa, Steadfast Guardian:** has flash and airbends any number of your other permanents when it enters. It also makes a 1/1 Ally token every time you cast a spell from exile.\n- **Airbender Ascension:** once it has four quest counters, it blinks (exiles and returns) one of your creatures at each of your end steps. Blinking Appa or an Overlord every turn wins long games.\n\n**Main deck (60)**\n- 4 Llanowar Elves\n- 4 Bramble Familiar\n- 4 Airbender Ascension\n- 3 Airbender's Reversal\n- 4 Get Lost\n- 3 Unwanted Remake\n- 4 Appa, Steadfast Guardian\n- 3 Beza, the Bounding Spring\n- 2 Aang, the Last Airbender\n- 3 Starfield Shepherd\n- 4 Overlord of the Mistmoors\n- Lands (22): 4 Temple Garden, 4 Overgrown Farmland, 2 Lush Portico, 6 Plains, 6 Forest\n\n**Sideboard (15)**\n- 3 Heritage Reclamation\n- 2 Sentinel of Lost Lore\n- 2 Exorcise\n- 2 Split Up\n- 2 Pick Your Poison\n- 2 Valorous Stance\n- 2 Stroke of Midnight\n\n**Why these cards**\n- **Bramble + any airbend card** is the main engine. With Appa out, a {2} Fetch Quest makes one Ally token. Casting Bramble back from its adventure exile makes a second. Fetch Quest's best hits are Overlord (it isn't cast, so it arrives as a 6/6 plus two 2/1 flying Insects), Appa, Beza, Ascension or a land.\n- **Overlord of the Mistmoors** is the main payoff. When it enters as a 4-mana enchantment it makes two flying Insects. When you airbend it and recast it for {2}, it comes back as a 6/6 creature with two more.\n- **Airbend enablers:** 4 Appa, 4 Ascension (it airbends when it enters, then blinks), 3 Airbender's Reversal and 2 Aang. Reversal is an instant that either destroys an attacking creature or saves your own creature from removal and resets it. Aang can also airbend an opponent's permanent for tempo.\n- **Starfield Shepherd** can be cast for 2 (its warp cost) to find a Llanowar Elves or a Plains. If Ascension blinks it at end step, it stays for good. Recasting it from exile also makes an Appa token.\n- **Removal:** 4 Get Lost and 3 Unwanted Remake (1-mana instant creature removal) keep you alive against the aggressive decks.\n\n**Mana**\n- 22 lands plus 8 creatures that tap for mana. The checker suggested about 23.7 lands; I stayed at 22 because the mana creatures do that job.\n- 16 white sources for the double-white cards on turn 4 (Appa, Beza, impending Overlord). 16 green lands plus the elves for a turn-1 or turn-2 mana creature.\n- The checker compared green sources to the Selesnya Offense archetype I borrowed the shell from. That deck is really green-blue, so that comparison doesn't fit here.\n\n**Sideboarding**\n- **Vivi Cauldron (12%) and Reanimator:** bring in Heritage Reclamation, Exorcise and Sentinel of Lost Lore. Sentinel can exile a graveyard or return Bramble from exile to your hand. Cut Unwanted Remake and 1 Beza.\n- **Izzet and Boros Aggro:** bring in Split Up and Pick Your Poison. Cut Starfield Shepherd and Aang.\n- **Dimir Midrange and Jeskai Control:** bring in Valorous Stance (protects a creature or kills a big one) and Stroke of Midnight. Cut Unwanted Remake. Keep Reversal so you can answer removal by airbending your own creature.\n- **Simic Ouroboroid:** bring in Valorous Stance and Exorcise for the big creatures.\n\n**Brew status**\nThis is a new deck, not a proven list. Your three cards barely show up in recent results (Appa in 6 lists, Bramble in 2, Ascension in 1). Only the land and mana-creature count is borrowed from Selesnya Offense; I didn't test the matchups.\n\n**What I couldn't verify**\n- **Biggest risk:** I'm relying on rules knowledge that casting Fetch Quest from airbend exile for {2} is allowed. Normally you can choose to cast an adventure card's adventure half, and the airbend cost should apply to it, but no tool confirmed this.\n- The tools also didn't confirm that Overlord put onto the battlefield by Fetch Quest arrives as a full creature rather than with impending counters.\n- If the Fetch Quest ruling is wrong, Bramble is just a mana creature with a 7-mana spell. In that case, swap Bramble for more Starfield Shepherds or Beza.",
+   "deck": {
+    "main": [
+     {
+      "qty": 4,
+      "name": "Llanowar Elves"
+     },
+     {
+      "qty": 4,
+      "name": "Bramble Familiar"
+     },
+     {
+      "qty": 3,
+      "name": "Starfield Shepherd"
+     },
+     {
+      "qty": 4,
+      "name": "Appa, Steadfast Guardian"
+     },
+     {
+      "qty": 3,
+      "name": "Beza, the Bounding Spring"
+     },
+     {
+      "qty": 2,
+      "name": "Aang, the Last Airbender"
+     },
+     {
+      "qty": 4,
+      "name": "Overlord of the Mistmoors"
+     },
+     {
+      "qty": 4,
+      "name": "Airbender Ascension"
+     },
+     {
+      "qty": 3,
+      "name": "Airbender's Reversal"
+     },
+     {
+      "qty": 4,
+      "name": "Get Lost"
+     },
+     {
+      "qty": 3,
+      "name": "Unwanted Remake"
+     },
+     {
+      "qty": 4,
+      "name": "Temple Garden"
+     },
+     {
+      "qty": 4,
+      "name": "Overgrown Farmland"
+     },
+     {
+      "qty": 2,
+      "name": "Lush Portico"
+     },
+     {
+      "qty": 6,
+      "name": "Plains"
+     },
+     {
+      "qty": 6,
+      "name": "Forest"
+     }
+    ],
+    "side": [
+     {
+      "qty": 3,
+      "name": "Heritage Reclamation"
+     },
+     {
+      "qty": 2,
+      "name": "Sentinel of Lost Lore"
+     },
+     {
+      "qty": 2,
+      "name": "Exorcise"
+     },
+     {
+      "qty": 2,
+      "name": "Split Up"
+     },
+     {
+      "qty": 2,
+      "name": "Pick Your Poison"
+     },
+     {
+      "qty": 2,
+      "name": "Valorous Stance"
+     },
+     {
+      "qty": 2,
+      "name": "Stroke of Midnight"
+     }
+    ],
+    "commander": [],
+    "label": "brew",
+    "warnings": [],
+    "plan": {
+     "format": "standard",
+     "kind": "synergy",
+     "alsoKind": "fair",
+     "thesis": "Selesnya value midrange that airbends its own permanents to recast them for {2}: Bramble Familiar becomes a 2-mana Fetch Quest that puts Overlords or Appa into play, and impending Overlords come back as full 6/6s with more fliers. Appa makes an Ally for every spell cast from exile, and Airbender Ascension adds an end-step blink of Appa or an Overlord each turn.",
+     "style": "midrange",
+     "pieces": [
+      {
+       "role": "airbend enabler",
+       "cards": [
+        "Appa, Steadfast Guardian",
+        "Airbender's Reversal",
+        "Aang, the Last Airbender",
+        "Airbender Ascension"
+       ],
+       "need": 1
+      },
+      {
+       "role": "recast payoff",
+       "cards": [
+        "Bramble Familiar",
+        "Overlord of the Mistmoors",
+        "Starfield Shepherd"
+       ],
+       "need": 1
+      }
+     ],
+     "byTurn": 4
+    },
+    "coach": {
+     "notes": [],
+     "responses": [],
+     "rounds": 0
+    }
+   },
+   "toolCalls": [
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "meta",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "declare_plan",
+     "ok": true,
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "coach_check",
+     "isError": false
+    },
+    {
+     "name": "submit_brew",
+     "ok": true,
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 22,
+    "output": 10418,
+    "cacheRead": 231591,
+    "cacheWrite": 43126
+   },
+   "costUsd": 0.4704,
+   "steps": 9,
+   "ms": 106288,
+   "errors": []
+  },
+  {
+   "id": "holdout-standard-lessons",
+   "track": "holdout",
+   "format": "Standard",
+   "before": "2025-11-22",
+   "prompt": "Brew me a Standard deck built around Abandon Attachments, Firebending Lesson and Combustion Technique.",
+   "text": "Your deck is accepted. It's an **Izzet Lessons** brew: blue-red tempo-aggro built around your three Lessons.\n\n**Main deck (60)**\n- *Creatures (19):* 4 Fire Nation Cadets, 3 Sokka, Bold Boomeranger, 4 First-Time Flyer, 4 Dragonfly Swarm, 2 Tersa Lightshatter, 2 Ran and Shaw\n- *Spells (19):* 4 Firebending Lesson, 4 Combustion Technique, 4 Abandon Attachments, 3 Iroh's Demonstration, 1 Accumulate Wisdom, 3 Burst Lightning\n- *Lands (22):* 4 Steam Vents, 4 Spirebluff Canal, 4 Riverpyre Verge, 2 Island, 8 Mountain\n\n**Sideboard (15):** 2 Abrade, 2 Obliterating Bolt, 2 Spell Pierce, 2 Disdainful Stroke, 2 It'll Quench Ya!, 2 Soul-Guide Lantern, 2 Magebane Lizard, 1 Boomerang Basics\n\n**The plan**\nYou play cheap creatures that get better once a Lesson is in your graveyard, then use cheap instant Lessons to kill blockers and fill that graveyard. Combustion Technique gets bigger as the game goes on. Burn and flying creatures finish the opponent.\n\n**Why these cards**\n- **Your three Lessons:**\n  - Firebending Lesson costs one red mana and deals 2 damage, or 5 if you pay 4 more.\n  - Combustion Technique deals 2 damage plus 1 for each Lesson in your graveyard, and exiles what it kills.\n  - Abandon Attachments lets you discard a card to draw two. Its cost can be paid with blue or red. Discarding a spare Lesson also makes Combustion Technique stronger.\n- **More Lessons:** Iroh's Demonstration (4 damage to a creature, or 1 to each of the opponent's creatures) and one Accumulate Wisdom bring the deck to 16 Lessons.\n- **Creatures that want Lessons in the graveyard:**\n  - First-Time Flyer becomes a 2/3 flier.\n  - Fire Nation Cadets adds two red mana when it attacks. That mana lasts through combat, so you can use it to cast instant Lessons mid-fight.\n  - Sokka gets a +1/+1 counter every time you cast a Lesson.\n  - Dragonfly Swarm's power equals the number of noncreature, nonland cards in your graveyard, and it draws you a card when it dies.\n  - Ran and Shaw makes a copy of itself if there are three or more Lessons or Dragons in your graveyard when you cast it.\n- **Card filtering:** Tersa and Sokka let you discard and redraw cards when they enter, which also puts Lessons in the graveyard.\n- **Burst Lightning** can hit players, so you have reach to finish games.\n\n**How often it works**\nThe deck-check tool says that by turn 3, about 60% of games have at least two Lessons plus one of those creatures (on the play, mulligans included). My first draft, with 14 Lessons, only got there 58% of the time. So I cut a Tersa and a Burst Lightning for a third Iroh's Demonstration and an Accumulate Wisdom.\n\n**The mana**\n- 22 lands: 14 blue sources and all 22 make red.\n- The usual Izzet Aggro decks run about 24 lands, but they need the extra mana for 5-mana Nova Hellkites and creature-lands. This deck's average spell costs 2.03, and the checker recommends 22.3 lands, so 22 is enough. Firebending Lesson's 4-mana upgrade uses up extra lands late in the game.\n\n**Sideboarding against the main decks**\n- **Dimir Midrange (18% of the field) and Jeskai Control:** bring in Spell Pierce, It'll Quench Ya! and Disdainful Stroke. Take out Iroh's Demonstration and the weaker 1-drops.\n- **Izzet and Boros Aggro (about 20% combined):** bring in Abrade, Obliterating Bolt and Magebane Lizard. Take out Accumulate Wisdom, Tersa and Ran and Shaw.\n- **Vivi Cauldron and Reanimator:** bring in Soul-Guide Lantern, Spell Pierce and Disdainful Stroke.\n- **Simic Ouroboroid:** bring in Obliterating Bolt and Disdainful Stroke.\n- **Artifacts:** bring in Abrade.\n\n**Stock, tuned or brew?**\nThis is a brew. The only recent list using these three cards is one Mono-Red deck that finished 13th at a November 2025 Standard Challenge. This version uses blue for more Lesson payoffs, and its land setup is adapted from Izzet Aggro.\n\n**What I couldn't verify**\nSokka, Dragonfly Swarm, First-Time Flyer, Ran and Shaw and Steam Vents show no recent tournament results, so their strength here is untested. The odds above come from the tool's math, not from games played.",
+   "deck": {
+    "main": [
+     {
+      "qty": 4,
+      "name": "Fire Nation Cadets"
+     },
+     {
+      "qty": 3,
+      "name": "Sokka, Bold Boomeranger"
+     },
+     {
+      "qty": 4,
+      "name": "First-Time Flyer"
+     },
+     {
+      "qty": 4,
+      "name": "Dragonfly Swarm"
+     },
+     {
+      "qty": 2,
+      "name": "Tersa Lightshatter"
+     },
+     {
+      "qty": 2,
+      "name": "Ran and Shaw"
+     },
+     {
+      "qty": 4,
+      "name": "Firebending Lesson"
+     },
+     {
+      "qty": 4,
+      "name": "Combustion Technique"
+     },
+     {
+      "qty": 4,
+      "name": "Abandon Attachments"
+     },
+     {
+      "qty": 3,
+      "name": "Burst Lightning"
+     },
+     {
+      "qty": 3,
+      "name": "Iroh's Demonstration"
+     },
+     {
+      "qty": 1,
+      "name": "Accumulate Wisdom"
+     },
+     {
+      "qty": 4,
+      "name": "Steam Vents"
+     },
+     {
+      "qty": 4,
+      "name": "Spirebluff Canal"
+     },
+     {
+      "qty": 4,
+      "name": "Riverpyre Verge"
+     },
+     {
+      "qty": 2,
+      "name": "Island"
+     },
+     {
+      "qty": 8,
+      "name": "Mountain"
+     }
+    ],
+    "side": [
+     {
+      "qty": 2,
+      "name": "Abrade"
+     },
+     {
+      "qty": 2,
+      "name": "Obliterating Bolt"
+     },
+     {
+      "qty": 2,
+      "name": "Spell Pierce"
+     },
+     {
+      "qty": 2,
+      "name": "Disdainful Stroke"
+     },
+     {
+      "qty": 2,
+      "name": "It'll Quench Ya!"
+     },
+     {
+      "qty": 2,
+      "name": "Soul-Guide Lantern"
+     },
+     {
+      "qty": 2,
+      "name": "Magebane Lizard"
+     },
+     {
+      "qty": 1,
+      "name": "Boomerang Basics"
+     }
+    ],
+    "commander": [],
+    "label": "brew",
+    "warnings": [],
+    "plan": {
+     "format": "standard",
+     "kind": "synergy",
+     "alsoKind": "fair",
+     "thesis": "Izzet Lessons tempo: cheap instant-speed Lessons (Firebending Lesson, Combustion Technique, Abandon Attachments, Iroh's Demonstration) clear blockers while filling the graveyard, which turns on First-Time Flyer, Fire Nation Cadets, Dragonfly Swarm, Sokka and Ran and Shaw. Combustion Technique scales with the Lessons in the yard, and burn plus evasive threats close the game.",
+     "style": "aggro",
+     "pieces": [
+      {
+       "role": "Lesson theme (fuel)",
+       "cards": [
+        "Firebending Lesson",
+        "Combustion Technique",
+        "Abandon Attachments",
+        "Iroh's Demonstration"
+       ],
+       "need": 2
+      },
+      {
+       "role": "payoff creature",
+       "cards": [
+        "First-Time Flyer",
+        "Fire Nation Cadets",
+        "Dragonfly Swarm",
+        "Sokka, Bold Boomeranger",
+        "Ran and Shaw"
+       ],
+       "need": 1
+      }
+     ],
+     "byTurn": 3
+    },
+    "coach": {
+     "notes": [],
+     "responses": [],
+     "rounds": 0
+    }
+   },
+   "toolCalls": [
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "meta",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "reference_list",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "declare_plan",
+     "ok": true,
+     "isError": false
+    },
+    {
+     "name": "coach_check",
+     "isError": false
+    },
+    {
+     "name": "coach_check",
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "submit_brew",
+     "ok": true,
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 26,
+    "output": 8479,
+    "cacheRead": 260483,
+    "cacheWrite": 34472
+   },
+   "costUsd": 0.3941,
+   "steps": 11,
+   "ms": 87072,
+   "errors": []
+  },
+  {
+   "id": "holdout-standard-elementals",
+   "track": "holdout",
+   "format": "Standard",
+   "before": "2026-01-25",
+   "prompt": "Brew me a Standard deck built around Ashling, Rekindled, Sunderflock and Bounce Off.",
+   "text": "I built **Izzet Elementals Flock**, a brew. All 60 main deck cards are Elementals or spells that support them, so Sunderflock's mass bounce sends back only your opponent's creatures.\n\n**The plan:** Ashling and Flamebraider ramp into a cheap Sunderflock, sometimes as early as turn 4. Sunderflock costs {X} less, where X is the highest mana value among your Elementals, and when you cast it, it returns every non-Elemental creature to its owner's hand. Every creature here is an Elemental, so your board stays put while theirs goes back. Bounce Off and Rimekin Recluse can return your own Sunderflock to your hand so you can cast it again for another bounce. Each extra Sunderflock you cast while one is in play costs just {U}{U}.\n\n**Deck (60)**\n- 4 Ashling, Rekindled\n- 4 Flamebraider\n- 3 Explosive Prodigy\n- 4 Eclipsed Flamekin\n- 3 Rimekin Recluse\n- 4 Twinflame Travelers\n- 3 Tanufel Rimespeaker\n- 2 Ice Flan\n- 4 Sunderflock\n- 4 Bounce Off\n- 2 Ashling's Command\n- 4 Riverpyre Verge\n- 4 Spirebluff Canal\n- 2 Thundering Falls\n- 3 Multiversal Passage\n- 6 Island\n- 4 Mountain\n\n**Sideboard (15)**\n- 3 Pyroclasm\n- 2 Spell Pierce\n- 2 Disdainful Stroke\n- 2 Negate\n- 2 Abrade\n- 2 Soul-Guide Lantern\n- 2 Lightning Strike\n\n**Why these cards**\n- **Ashling, Rekindled:** Pay {U} at the start of your main phase to flip it to Ashling, Rimebound. Flipping it and every main phase after that adds two mana, which can only be spent on spells with mana value 4 or more. Sunderflock's mana value is 9 even after the discount, so that mana can pay for it.\n  - The usual line: Ashling on turn 2. On turn 3, flip it and cast a 4-drop Elemental. That makes Sunderflock cost 5, which four lands plus Ashling's two mana cover on turn 4.\n  - When you don't need the ramp, pay {R} to flip back and get Ashling's discard-and-draw again.\n- **Twinflame Travelers:** A 4-mana flyer that lowers Sunderflock's cost. It also makes your other Elementals' triggered abilities trigger twice, so Rimebound makes four mana instead of two.\n- **Flamebraider:** Makes two mana for Elemental spells only, which here is almost everything.\n- **Tanufel Rimespeaker and Ice Flan:** Higher mana values to discount Sunderflock. Tanufel draws a card whenever you cast a spell with mana value 4 or more. Ice Flan makes Sunderflock cost just 3, or you can cycle it for {2} to find an Island.\n- **Eclipsed Flamekin:** Shows you four cards and takes an Elemental (Sunderflock included) or a land. With 4 Sunderflock and 4 Flamekin, you have about an 81% chance on the play to see one of them plus a ramp or discount piece by turn 5 (draw_odds, no mulligans).\n- **Bounce Off, Rimekin Recluse and Jill-style loops:** Early on they slow down opposing creatures. Late, they return your own Sunderflock so you can cast it again.\n- **Explosive Prodigy and Ashling's Command:** Removal that fits the theme. Prodigy is an Elemental that deals damage on entering. Command can deal 2 damage to each of an opponent's creatures, draw two, or copy one of your Elementals.\n\n**The mana:** 23 lands, giving 16 blue and 14 red sources. The Izzet lands come from the Izzet Aggro shell. That's one land under Izzet Aggro's average of about 24, because Flamebraider, Ashling, Ice Flan's land search and Eclipsed Flamekin's land option all add mana or find lands. check_deck passed with no warnings.\n\n**Sideboarding against the current field**\n- **Landfall, Simic Ouroboroid (about 34% of the field combined):** Your best matchups. Sunderflock resets their +1/+1 counters and lands-matter creatures. Bring in Abrade and Lightning Strike. Take out Rimekin Recluse and Ashling's Command if you need room.\n- **Izzet Aggro, Boros Aggro:** Bring in Pyroclasm, Abrade and Lightning Strike. Ashling (1/3) and Eclipsed Flamekin (1/4) survive Pyroclasm. Take out Ice Flan and 1\u20132 Sunderflock.\n- **Jeskai Control, Dimir Midrange, Lessons:** Bring in Spell Pierce, Negate and Disdainful Stroke to protect your Sunderflock turn. Take out Explosive Prodigy, Bounce Off and Command, which are weak against decks with few creatures.\n- **Reanimator:** Bring in Soul-Guide Lantern. Bounce Off and Sunderflock also answer reanimated creatures, since a creature returned to hand has to be cast again.\n\n**What I couldn't verify**\n- The deck has never been tested in tournaments. Sunderflock appears in only 7 recent lists and Ashling in 3, so the matchup advice is my reasoning, not results.\n- Explosive Prodigy deals 2 damage only if you control both a blue and a red permanent (lands count as colorless), so early it may only deal 1.",
+   "deck": {
+    "main": [
+     {
+      "qty": 4,
+      "name": "Ashling, Rekindled"
+     },
+     {
+      "qty": 4,
+      "name": "Flamebraider"
+     },
+     {
+      "qty": 3,
+      "name": "Explosive Prodigy"
+     },
+     {
+      "qty": 4,
+      "name": "Eclipsed Flamekin"
+     },
+     {
+      "qty": 3,
+      "name": "Rimekin Recluse"
+     },
+     {
+      "qty": 4,
+      "name": "Twinflame Travelers"
+     },
+     {
+      "qty": 3,
+      "name": "Tanufel Rimespeaker"
+     },
+     {
+      "qty": 2,
+      "name": "Ice Flan"
+     },
+     {
+      "qty": 4,
+      "name": "Sunderflock"
+     },
+     {
+      "qty": 4,
+      "name": "Bounce Off"
+     },
+     {
+      "qty": 2,
+      "name": "Ashling's Command"
+     },
+     {
+      "qty": 4,
+      "name": "Riverpyre Verge"
+     },
+     {
+      "qty": 4,
+      "name": "Spirebluff Canal"
+     },
+     {
+      "qty": 2,
+      "name": "Thundering Falls"
+     },
+     {
+      "qty": 3,
+      "name": "Multiversal Passage"
+     },
+     {
+      "qty": 6,
+      "name": "Island"
+     },
+     {
+      "qty": 4,
+      "name": "Mountain"
+     }
+    ],
+    "side": [
+     {
+      "qty": 3,
+      "name": "Pyroclasm"
+     },
+     {
+      "qty": 2,
+      "name": "Spell Pierce"
+     },
+     {
+      "qty": 2,
+      "name": "Disdainful Stroke"
+     },
+     {
+      "qty": 2,
+      "name": "Negate"
+     },
+     {
+      "qty": 2,
+      "name": "Abrade"
+     },
+     {
+      "qty": 2,
+      "name": "Soul-Guide Lantern"
+     },
+     {
+      "qty": 2,
+      "name": "Lightning Strike"
+     }
+    ],
+    "commander": [],
+    "label": "brew",
+    "warnings": [],
+    "plan": {
+     "format": "standard",
+     "kind": "combo",
+     "alsoKind": "fair",
+     "thesis": "Ramp into a cheap Sunderflock with Ashling's Rimebound mana, Flamebraider and 4-6 MV Elementals that shrink its cost, bouncing every non-Elemental creature while our all-Elemental board keeps attacking. Bounce Off, Rimekin Recluse and extra Sunderflocks (which cost just UU once one is out) rebuy the cast trigger for repeated one-sided mass bounces.",
+     "style": "midrange",
+     "pieces": [
+      {
+       "role": "payoff",
+       "cards": [
+        "Sunderflock",
+        "Eclipsed Flamekin"
+       ],
+       "need": 1
+      },
+      {
+       "role": "ramp or cost reducer",
+       "cards": [
+        "Ashling, Rekindled",
+        "Flamebraider",
+        "Twinflame Travelers",
+        "Tanufel Rimespeaker",
+        "Ice Flan"
+       ],
+       "need": 1
+      }
+     ],
+     "byTurn": 5
+    },
+    "coach": {
+     "notes": [],
+     "responses": [],
+     "rounds": 0
+    }
+   },
+   "toolCalls": [
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "meta",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "reference_list",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "declare_plan",
+     "ok": true,
+     "isError": false
+    },
+    {
+     "name": "coach_check",
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "submit_brew",
+     "ok": true,
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 22,
+    "output": 9854,
+    "cacheRead": 180394,
+    "cacheWrite": 29606
+   },
+   "costUsd": 0.3813,
+   "steps": 9,
+   "ms": 102161,
+   "errors": []
+  },
+  {
+   "id": "holdout-standard-dimir-excruciator",
+   "track": "holdout",
+   "format": "Standard",
+   "before": "2026-01-30",
+   "prompt": "Brew me a Standard deck built around Insatiable Avarice, Doomsday Excruciator and Archenemy's Charm.",
+   "text": "I built **Mono-Black \"Doomsday\"**, a brew: a black removal deck that ends the game with Doomsday Excruciator.\n\n**How it wins**\nYou play like a normal mono-black removal deck until you cast Doomsday Excruciator. When it enters, both players exile all but the bottom six cards of their library. After that you push the opponent to run out of cards. Insatiable Avarice's draw-three mode, Desperate Bloodseeker's mill 2 and Unscrupulous Contractor's forced draw 2 all aim at their six-card library, while the 6/6 flier attacks. Bloodletter of Aclazotz makes them lose twice as much life on your turn.\n\n**Why these cards**\n- **Doomsday Excruciator:** You need to count cards. Excruciator also makes you draw at your upkeep, so you draw two cards a turn and the opponent draws one. If you do nothing else, you run out first, about four turns after casting it. So only cast it when you can follow up. A typical line:\n  - Turn X: cast it. Each player has six cards left. They draw to five.\n  - Next turn: cast Avarice's draw-three mode on them (3 mana). They go down to two cards.\n  - Any second forced draw or mill after that makes them draw from an empty library, which loses the game. That can be another Avarice, a Bloodseeker or a Contractor.\n- **Insatiable Avarice (4 copies):** Early, pay all 5 mana for both modes. You search for Excruciator, it goes on top of your library, and then you draw three cards with it. After Excruciator is out, aim the draw mode at the opponent only. They draw three and lose 3 life, or 6 with Bloodletter out. Never aim it at yourself once libraries are small.\n- **Archenemy's Charm (3 copies):** It exiles a creature or planeswalker. It can return Excruciator from your graveyard if it gets killed. Or it gives Excruciator two +1/+1 counters and lifelink, making it an 8/8 lifelinker to close a race.\n- **Finishers:** Desperate Bloodseeker and Unscrupulous Contractor both target a player, so they work either way. Before Excruciator, Bloodseeker can mill yourself to stock Charm targets, and Contractor can sacrifice a Bloodseeker that already used its ability to draw you two. After Excruciator, both point at the opponent.\n- **The rest:** Deep-Cavern Bat, Qarsi Revenant and the 1\u20132 mana removal come from the proven Mono-Black lists and keep you alive until the late game.\n- **Odds:** By turn 7 you have Excruciator or Avarice 83.7% of the time, and both a piece and a finisher 79.1% of the time. That's without mulligans; the coach said the plan comes together often enough.\n\n**Mana**\n21 Swamp and 3 Realm of Koh, all producing black. I left out Soulstone Sanctuary because it only makes colorless, and Excruciator costs six black. The 24 lands match real Mono-Black lists (24.08 on average), and check_deck found no problems.\n\n**Sideboarding**\n- **Simic Ouroboroid (18%) and Landfall:** bring in Nowhere to Run, Deathmark and Intimidation Tactics. Take out Stab and Long Goodbye.\n- **Izzet, Boros and other aggro decks:** bring in Day of Black Sun and Nowhere to Run. Take out Unscrupulous Contractor and one Excruciator. Charm's lifelink mode gets better here.\n- **Jeskai Control and Lessons:** bring in Duress and Feldon's Cane. Cane shuffles your graveyard back into your library, so you can't run out of cards in a long game. Take out Stab, Long Goodbye and Shoot the Sheriff.\n- **Reanimator:** bring in Soul-Guide Lantern, Strategic Betrayal and Intimidation Tactics.\n- **Dimir Midrange:** bring in Duress and Strategic Betrayal. Take out Stab.\n\n**What I couldn't check**\nThis is a brew. All three of your cards are rarely played (Avarice appeared in just 2 lists in the last 90 days), and Bloodseeker, Contractor and Feldon's Cane had no recent results. So I have no tournament data on whether this works. The turn-by-turn card counting above follows the rules text I looked up, but nothing tested it.\n\n**Two risks**\n- Counterspells on Excruciator are your worst problem, so Duress matters a lot against blue decks.\n- Once both libraries are small, a removal spell on Excruciator still leaves you drawing only one card a turn, but every extra draw you make brings you closer to running out yourself.",
+   "deck": {
+    "main": [
+     {
+      "qty": 4,
+      "name": "Deep-Cavern Bat"
+     },
+     {
+      "qty": 4,
+      "name": "Desperate Bloodseeker"
+     },
+     {
+      "qty": 3,
+      "name": "Unscrupulous Contractor"
+     },
+     {
+      "qty": 3,
+      "name": "Qarsi Revenant"
+     },
+     {
+      "qty": 4,
+      "name": "Bloodletter of Aclazotz"
+     },
+     {
+      "qty": 3,
+      "name": "Doomsday Excruciator"
+     },
+     {
+      "qty": 4,
+      "name": "Insatiable Avarice"
+     },
+     {
+      "qty": 3,
+      "name": "Archenemy's Charm"
+     },
+     {
+      "qty": 3,
+      "name": "Bitter Triumph"
+     },
+     {
+      "qty": 2,
+      "name": "Shoot the Sheriff"
+     },
+     {
+      "qty": 2,
+      "name": "Stab"
+     },
+     {
+      "qty": 1,
+      "name": "Long Goodbye"
+     },
+     {
+      "qty": 21,
+      "name": "Swamp"
+     },
+     {
+      "qty": 3,
+      "name": "Realm of Koh"
+     }
+    ],
+    "side": [
+     {
+      "qty": 3,
+      "name": "Duress"
+     },
+     {
+      "qty": 2,
+      "name": "Intimidation Tactics"
+     },
+     {
+      "qty": 2,
+      "name": "Day of Black Sun"
+     },
+     {
+      "qty": 2,
+      "name": "Soul-Guide Lantern"
+     },
+     {
+      "qty": 2,
+      "name": "Strategic Betrayal"
+     },
+     {
+      "qty": 2,
+      "name": "Nowhere to Run"
+     },
+     {
+      "qty": 1,
+      "name": "Feldon's Cane"
+     },
+     {
+      "qty": 1,
+      "name": "Deathmark"
+     }
+    ],
+    "commander": [],
+    "label": "brew",
+    "warnings": [],
+    "plan": {
+     "format": "standard",
+     "kind": "combo",
+     "alsoKind": "fair",
+     "thesis": "Mono-black removal midrange that casts Doomsday Excruciator to cut both libraries to six cards, then forces the opponent to deck out with Insatiable Avarice's draw-three mode, Desperate Bloodseeker's mill and Unscrupulous Contractor's forced draw, while the 6/6 flier and Bloodletter-doubled life loss race. Archenemy's Charm protects the plan as removal, rebuys Excruciator, or makes it an 8/8 lifelinker.",
+     "style": "midrange",
+     "pieces": [
+      {
+       "role": "build-around (or tutor for it)",
+       "cards": [
+        "Doomsday Excruciator",
+        "Insatiable Avarice"
+       ],
+       "need": 1
+      },
+      {
+       "role": "finisher that empties the opponent's six-card library",
+       "cards": [
+        "Insatiable Avarice",
+        "Desperate Bloodseeker",
+        "Unscrupulous Contractor"
+       ],
+       "need": 1
+      }
+     ],
+     "byTurn": 7
+    },
+    "coach": {
+     "notes": [],
+     "responses": [],
+     "rounds": 0
+    }
+   },
+   "toolCalls": [
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "meta",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "reference_list",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "declare_plan",
+     "ok": true,
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "coach_check",
+     "isError": false
+    },
+    {
+     "name": "submit_brew",
+     "ok": true,
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 22,
+    "output": 10390,
+    "cacheRead": 163625,
+    "cacheWrite": 29634
+   },
+   "costUsd": 0.3888,
+   "steps": 9,
+   "ms": 115929,
+   "errors": []
+  },
+  {
+   "id": "holdout-standard-mardu-discard",
+   "track": "holdout",
+   "format": "Standard",
+   "before": "2026-02-01",
+   "prompt": "Brew me a Standard deck built around Iron-Shield Elf, Bloodthorn Flail and Flamewake Phoenix.",
+   "text": "I built a Rakdos (black-red) discard-aggro deck for you. This is a **brew**: none of your three cards shows up in recent winning lists. Iron-Shield Elf has 0 lists and the other two have 1 each.\n\n## The plan\nYou curve out with cheap creatures and treat extra cards as fuel. Iron-Shield Elf, Bloodthorn Flail's discard equip, Scarlet Spider, Ultimate Green Goblin and Bitter Triumph all let you discard. That turns spare cards into damage and puts Flamewake Phoenix into the graveyard. Then, at the start of each combat, any creature with 4 or more power lets you pay {R} to bring the Phoenix back for free. That makes it a hasty flier the opponent can never really get rid of.\n\n## Decklist (60)\n**Creatures (25)**\n- 4 Marauding Mako\n- 4 Iron-Shield Elf\n- 4 Scarlet Spider, Kaine\n- 4 Tiger-Dillo\n- 4 Flamewake Phoenix\n- 3 Ultimate Green Goblin\n- 2 Carnage, Crimson Chaos\n\n**Spells (13)**\n- 4 Bloodthorn Flail\n- 4 Bitter Triumph\n- 3 Burst Lightning\n- 2 Electro's Bolt\n\n**Lands (22)**\n- 4 Blood Crypt\n- 4 Haunted Ridge\n- 2 Restless Vents\n- 7 Mountain\n- 5 Swamp\n\n## Why these cards\n- **Iron-Shield Elf + Bloodthorn Flail:** The Flail gives +2/+1 and you can equip it by discarding instead of paying {3}. On the Elf that makes a 5/2 on turn 2, which is enough power to bring back the Phoenix. The Elf's \"discard: gain indestructible\" also taps it. So use it after it's already attacking, or on the opponent's turn, not before you attack.\n- **Ways to reach 4 power (13 cards):**\n  - Ultimate Green Goblin is a 5/4 for three.\n  - Tiger-Dillo is a 4/3 for two. It can't attack unless you have another 4-power creature, but it still counts for the Phoenix.\n  - Carnage is a 4/3 trampler. When it enters it returns a creature with mana value 3 or less (a Phoenix or a Goblin) from your graveyard to play.\n  - Marauding Mako gets a +1/+1 counter every time you discard.\n- **Cards that use the graveyard (mayhem):** Mayhem lets you cast a card from your graveyard on the turn you discarded it.\n  - Ultimate Green Goblin forces you to discard each upkeep and gives you a Treasure.\n  - Scarlet Spider can be recast for one mana with mayhem.\n  - Electro's Bolt (4 damage to a creature) can be recast for {1}{R} with mayhem.\n  \n  Discarding these cards often costs you nothing.\n- **Removal:** Bitter Triumph destroys a creature or planeswalker, and its extra cost can be a discard. Burst Lightning handles cheap creatures like Llanowar Elves and opposing aggro creatures.\n\n## Mana\n- 22 lands with 17 red and 15 black sources. The deck's average mana value is 2.05 and the Goblin makes Treasures.\n- check_deck suggested about 23 lands, and the Izzet Aggro lists I compared against run about 24. I stayed at 22 because the curve tops out at four. If you flood less than you get stuck on lands, go up to 23.\n- Red is the heavier color because of Phoenix ({1}{R}{R}) and paying {R} each time you bring it back.\n\n## Sideboard (15) and plan\n- 3 Duress\n- 3 Tectonic Hazard\n- 2 Soul-Guide Lantern\n- 2 Abrade\n- 2 Feed the Swarm\n- 2 Heartless Act\n- 1 Withering Torment\n\nHow to use it against the top decks:\n- **Simic Ouroboroid (18.4% of the field):** Bring in Tectonic Hazard and Heartless Act. Tectonic Hazard deals 1 damage to each of their creatures only, which wipes out Llanowar Elves and the other small creatures. Feed the Swarm answers Innkeeper's Talent. Take out Electro's Bolt.\n- **Jeskai Control / Lessons:** Bring in Duress, plus Soul-Guide Lantern against Lessons. Take out Electro's Bolt and some Burst Lightning.\n- **Izzet and Boros Aggro:** Bring in Abrade and Withering Torment. Abrade can also destroy an artifact. Feed the Swarm can kill Stormchaser's Talent.\n- **Reanimator:** Bring in Soul-Guide Lantern and Heartless Act.\n- **Dimir Midrange:** Bring in Duress and Heartless Act.\n\n## Honest odds\nI asked the coach (an automated checker) to measure the deck against turn 3. It found that all three parts (a Phoenix, a 4-power creature and a discard card) are in hand together only 38% of the time. The limit is the Phoenix, which is already at four copies. By turn 4 you'll have a 4-power creature 93% of the time and a discard card 98.5% of the time, but a Phoenix only 52.8% of the time. So most games this plays as an aggressive deck with big creatures early, and the Phoenix makes your later turns stronger.\n\n## Not verified\nNone of these cards' win rates together could be checked, because nobody has played this combination in results. Ultimate Green Goblin, Scarlet Spider and Carnage are legendary, so I kept the Goblin at three and Carnage at two. If you draw a second copy of a legendary card, it's a natural discard.",
+   "deck": {
+    "main": [
+     {
+      "qty": 4,
+      "name": "Marauding Mako"
+     },
+     {
+      "qty": 4,
+      "name": "Iron-Shield Elf"
+     },
+     {
+      "qty": 4,
+      "name": "Scarlet Spider, Kaine"
+     },
+     {
+      "qty": 4,
+      "name": "Tiger-Dillo"
+     },
+     {
+      "qty": 4,
+      "name": "Flamewake Phoenix"
+     },
+     {
+      "qty": 3,
+      "name": "Ultimate Green Goblin"
+     },
+     {
+      "qty": 2,
+      "name": "Carnage, Crimson Chaos"
+     },
+     {
+      "qty": 4,
+      "name": "Bloodthorn Flail"
+     },
+     {
+      "qty": 4,
+      "name": "Bitter Triumph"
+     },
+     {
+      "qty": 2,
+      "name": "Electro's Bolt"
+     },
+     {
+      "qty": 3,
+      "name": "Burst Lightning"
+     },
+     {
+      "qty": 4,
+      "name": "Blood Crypt"
+     },
+     {
+      "qty": 4,
+      "name": "Haunted Ridge"
+     },
+     {
+      "qty": 2,
+      "name": "Restless Vents"
+     },
+     {
+      "qty": 7,
+      "name": "Mountain"
+     },
+     {
+      "qty": 5,
+      "name": "Swamp"
+     }
+    ],
+    "side": [
+     {
+      "qty": 3,
+      "name": "Duress"
+     },
+     {
+      "qty": 2,
+      "name": "Soul-Guide Lantern"
+     },
+     {
+      "qty": 3,
+      "name": "Tectonic Hazard"
+     },
+     {
+      "qty": 2,
+      "name": "Abrade"
+     },
+     {
+      "qty": 2,
+      "name": "Feed the Swarm"
+     },
+     {
+      "qty": 2,
+      "name": "Heartless Act"
+     },
+     {
+      "qty": 1,
+      "name": "Withering Torment"
+     }
+    ],
+    "commander": [],
+    "label": "brew",
+    "warnings": [],
+    "plan": {
+     "format": "standard",
+     "kind": "synergy",
+     "alsoKind": "fair",
+     "thesis": "Rakdos discard-aggro: Iron-Shield Elf, Bloodthorn Flail, Scarlet Spider and Ultimate Green Goblin turn extra cards into damage and pitch Flamewake Phoenix and mayhem cards to the graveyard. A creature with 4+ power (Flailed Elf, Goblin, Tiger-Dillo, grown Mako, Carnage) brings Phoenix back every combat for R.",
+     "style": "aggro",
+     "pieces": [
+      {
+       "role": "recursive payoff",
+       "cards": [
+        "Flamewake Phoenix"
+       ],
+       "need": 1
+      },
+      {
+       "role": "power-4 enabler",
+       "cards": [
+        "Ultimate Green Goblin",
+        "Tiger-Dillo",
+        "Bloodthorn Flail",
+        "Carnage, Crimson Chaos"
+       ],
+       "need": 1
+      },
+      {
+       "role": "discard outlet",
+       "cards": [
+        "Iron-Shield Elf",
+        "Bloodthorn Flail",
+        "Scarlet Spider, Kaine",
+        "Ultimate Green Goblin",
+        "Bitter Triumph"
+       ],
+       "need": 1
+      }
+     ],
+     "byTurn": 3
+    },
+    "coach": {
+     "notes": [
+      {
+       "id": "synergy-odds",
+       "message": "You draw 1+ recursive payoff (4 in the deck), 1+ power-4 enabler (13 in the deck), 1+ discard outlet (19 in the deck) by turn 3 in 38% of games (on the play, mulligans included). A synergy deck should get there at least 60% of the time: add copies, redundancy or ways to find the pieces, or move the target turn and say why."
+      }
+     ],
+     "responses": [
+      {
+       "id": "synergy-odds",
+       "response": "The only piece holding the number down is Flamewake Phoenix, and it is already at the 4-copy maximum. The engine underneath it, a 4-power creature plus a discard outlet, is in place by turn 3-4 more than 90% of the time (93% and 98.5% by turn 4 per draw_odds), and that engine wins on its own as an aggro deck. Phoenix is a bonus that doesn't have to be drawn on schedule: it is a 2/2 hasty flier when cast and value when discarded later. Cutting interaction for looters to chase one 4-of would make the deck worse against Ouroboroid and Izzet."
+      }
+     ],
+     "rounds": 0
+    }
+   },
+   "toolCalls": [
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "meta",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "declare_plan",
+     "ok": true,
+     "isError": false
+    },
+    {
+     "name": "coach_check",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "submit_brew",
+     "ok": true,
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 28,
+    "output": 10156,
+    "cacheRead": 328343,
+    "cacheWrite": 41972
+   },
+   "costUsd": 0.4788,
+   "steps": 12,
+   "ms": 127372,
+   "errors": []
+  },
+  {
+   "id": "holdout-standard-4c-control",
+   "track": "holdout",
+   "format": "Standard",
+   "before": "2026-04-23",
+   "prompt": "Brew me a Standard deck built around Resonating Lute, Inevitable Defeat and Jeskai Revelation.",
+   "text": "I built this as a four-color brew: a Jeskai control deck with a light black splash for Inevitable Defeat. Resonating Lute is what ties all three of your cards together.\n\n**The plan**\n- **Early game:** Survive with 2-mana interaction: No More Lies, Lightning Helix, Get Lost and Spell Snare, plus Seam Rip and Day of Judgment.\n- **Digging:** Consult the Star Charts and Stock Up dig for Lute.\n- **Once Lute lands:** Every land taps for two mana of any one color for instants and sorceries. A 7-mana Jeskai Revelation then costs only four lands, Inevitable Defeat costs two, and both work off any land. Lute also draws a card each turn if you hold seven or more.\n- **Winning:** The deck has no creatures in the main. You win with Revelation's damage and Monk tokens, Helix burn, and the 3-life drain on each Inevitable Defeat.\n\n**Main deck (60)**\n- 4 Resonating Lute\n- 3 Inevitable Defeat\n- 3 Jeskai Revelation\n- 4 Lightning Helix\n- 4 No More Lies\n- 2 Spell Snare\n- 2 Get Lost\n- 2 Seam Rip\n- 2 Day of Judgment\n- 4 Consult the Star Charts\n- 4 Stock Up\n- 26 lands:\n  - 4 Great Hall of the Biblioplex\n  - 4 Hallowed Fountain\n  - 4 Steam Vents\n  - 3 Floodfarm Verge\n  - 2 Sacred Foundry\n  - 2 Godless Shrine\n  - 2 Starting Town\n  - 1 Watery Grave\n  - 1 Blood Crypt\n  - 1 Riverpyre Verge\n  - 1 Meticulous Archive\n  - 1 Plains\n\n**Sideboard (15)**\n- 2 Pyroclasm\n- 2 Fire Magic\n- 2 Rest in Peace\n- 2 Negate\n- 2 Disdainful Stroke\n- 2 Duress\n- 2 Voice of Victory\n- 1 Beza, the Bounding Spring\n\n**Why these cards**\n- **The shell:** It comes from Jeskai Control (76 recent lists). A 5-0 league list of that deck already ran 3 Resonating Lute and 3 Revelation, so the core is tested.\n- **Inevitable Defeat:** It can't be countered, so it's a clean answer in counterspell mirrors. It's been in 28 lists in the last 90 days, almost all filed as \"Rogue.\"\n- **Lightning Helix over Burst Lightning:** The deck checker suggested Burst Lightning, but Helix is in 80% of Jeskai Control lists. Its 3 life matters against Prowess and Boros, which are the top of the field.\n\n**The mana**\n- **Black splash:** Black is only needed for Inevitable Defeat, which is an instant. That makes Great Hall (any color for instants and sorceries, for 1 life) a near-free black source. The deck has 10 black sources: 4 Great Hall, 2 Starting Town, and one each of Godless Shrine \u00d72, Watery Grave and Blood Crypt.\n- **Color counts:** 19 white, 20 blue and 14 red sources, all at or above what real Jeskai Control lists run. The land checker passed with no warnings.\n- **Life cost:** Shocklands, Starting Town and Great Hall all cost life. Against aggro, play your shocklands tapped when you can.\n- **Odds:** You naturally draw Lute by turn 5 on the play 56.6% of the time, and Consult and Stock Up raise that. Drawing Lute plus Revelation or Defeat by turn 5 is about 37%. That's fine, because both payoffs can be cast without Lute; it only makes them faster.\n\n**Sideboarding**\n- **Prowess (20.8% of the field) and Boros Aggro:** Bring in Pyroclasm, Fire Magic and Beza. Take out Spell Snare and a Stock Up or Lute.\n- **Landfall and Elementals:** Bring in Pyroclasm and Disdainful Stroke. Take out a Seam Rip.\n- **Dimir Excruciator, Lessons and other control decks:** Bring in Duress, Negate, Voice of Victory and Disdainful Stroke. Take out Day of Judgment, Seam Rip and Get Lost. Voice of Victory stops them casting spells on your turn, which protects Lute and Revelation.\n- **Graveyard-heavy decks:** Bring in Rest in Peace.\n\n**What I couldn't verify**\n- None of the Inevitable Defeat lists I found were broken out as their own archetype, so I couldn't compare this exact four-color mana against a proven list. The black-splash land count is my own judgment.\n- The sideboard plans are reasoning from the card text, not tested results.",
+   "deck": {
+    "main": [
+     {
+      "qty": 4,
+      "name": "Resonating Lute"
+     },
+     {
+      "qty": 3,
+      "name": "Inevitable Defeat"
+     },
+     {
+      "qty": 3,
+      "name": "Jeskai Revelation"
+     },
+     {
+      "qty": 4,
+      "name": "Lightning Helix"
+     },
+     {
+      "qty": 4,
+      "name": "No More Lies"
+     },
+     {
+      "qty": 4,
+      "name": "Consult the Star Charts"
+     },
+     {
+      "qty": 4,
+      "name": "Stock Up"
+     },
+     {
+      "qty": 2,
+      "name": "Spell Snare"
+     },
+     {
+      "qty": 2,
+      "name": "Seam Rip"
+     },
+     {
+      "qty": 2,
+      "name": "Day of Judgment"
+     },
+     {
+      "qty": 2,
+      "name": "Get Lost"
+     },
+     {
+      "qty": 4,
+      "name": "Great Hall of the Biblioplex"
+     },
+     {
+      "qty": 2,
+      "name": "Starting Town"
+     },
+     {
+      "qty": 4,
+      "name": "Hallowed Fountain"
+     },
+     {
+      "qty": 4,
+      "name": "Steam Vents"
+     },
+     {
+      "qty": 2,
+      "name": "Sacred Foundry"
+     },
+     {
+      "qty": 2,
+      "name": "Godless Shrine"
+     },
+     {
+      "qty": 1,
+      "name": "Watery Grave"
+     },
+     {
+      "qty": 1,
+      "name": "Blood Crypt"
+     },
+     {
+      "qty": 3,
+      "name": "Floodfarm Verge"
+     },
+     {
+      "qty": 1,
+      "name": "Riverpyre Verge"
+     },
+     {
+      "qty": 1,
+      "name": "Meticulous Archive"
+     },
+     {
+      "qty": 1,
+      "name": "Plains"
+     }
+    ],
+    "side": [
+     {
+      "qty": 2,
+      "name": "Pyroclasm"
+     },
+     {
+      "qty": 2,
+      "name": "Fire Magic"
+     },
+     {
+      "qty": 2,
+      "name": "Rest in Peace"
+     },
+     {
+      "qty": 2,
+      "name": "Negate"
+     },
+     {
+      "qty": 2,
+      "name": "Disdainful Stroke"
+     },
+     {
+      "qty": 2,
+      "name": "Duress"
+     },
+     {
+      "qty": 2,
+      "name": "Voice of Victory"
+     },
+     {
+      "qty": 1,
+      "name": "Beza, the Bounding Spring"
+     }
+    ],
+    "commander": [],
+    "label": "brew",
+    "warnings": [],
+    "plan": {
+     "format": "standard",
+     "kind": "fair",
+     "alsoKind": "combo",
+     "thesis": "Four-color Jeskai control splashing black: cheap counters, Helix and sweepers survive the early game while Consult/Stock Up dig for Resonating Lute. Once Lute lands, every land makes two mana of any color for spells, so Inevitable Defeat and Jeskai Revelation (often two per turn) bury the opponent, with Lute drawing extra cards off a full grip.",
+     "style": "control",
+     "pieces": [
+      {
+       "role": "engine (doubles land mana for instants/sorceries, fixes black)",
+       "cards": [
+        "Resonating Lute"
+       ],
+       "need": 1
+      },
+      {
+       "role": "payoff spells",
+       "cards": [
+        "Jeskai Revelation",
+        "Inevitable Defeat"
+       ],
+       "need": 1
+      }
+     ],
+     "byTurn": 5
+    },
+    "coach": {
+     "notes": [
+      {
+       "id": "fair-card-lightning helix",
+       "message": "Lightning Helix (removal): in 2% of recent standard decks. At a similar cost in your colors, players choose Burst Lightning (35%) or Boomerang Basics (22%). Keep it only if it does something specific for this deck, and say what."
+      },
+      {
+       "id": "combo-odds",
+       "message": "You draw 1+ engine (doubles land mana for instants/sorceries, fixes black) (4 in the deck), 1+ payoff spells (6 in the deck) by turn 5 in 37% of games (on the play, mulligans included). A combo deck should get there at least 50% of the time: add copies, redundancy or ways to find the pieces, or move the target turn and say why."
+      }
+     ],
+     "responses": [
+      {
+       "id": "fair-card-lightning helix",
+       "response": "Helix is the stock 2-drop removal in Jeskai Control (80% of 76 lists, 3.8 copies). The 3 life matters against Prowess and Boros (the top of the meta), and with no creatures in the main deck it also adds reach to finish games. Burst Lightning gains no life, and Boomerang Basics isn't removal."
+      },
+      {
+       "id": "combo-odds",
+       "response": "This is a control deck first, not a combo deck that has to assemble its pieces by turn 5. Revelation and Defeat are both castable off normal lands (10 black sources for Defeat counting Great Hall), and Lute only speeds them up. I'm also running 8 dig spells (Consult, Stock Up) that the raw odds don't count toward finding Lute. The real plan is to survive with 2-mana interaction and take over around turns 5-7."
+      }
+     ],
+     "rounds": 0
+    }
+   },
+   "toolCalls": [
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "meta",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "reference_list",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "declare_plan",
+     "ok": true,
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "coach_check",
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "submit_brew",
+     "ok": true,
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 22,
+    "output": 8587,
+    "cacheRead": 175187,
+    "cacheWrite": 31167
+   },
+   "costUsd": 0.3627,
+   "steps": 9,
+   "ms": 105035,
+   "errors": []
+  },
+  {
+   "id": "holdout-standard-boros-dwarves",
+   "track": "holdout",
+   "format": "Standard",
+   "before": "2026-08-12",
+   "prompt": "Brew me a Standard deck built around D\u00e1in's Company, Dwarven Mauler and K\u00edli the Resourceful.",
+   "text": "I built a Boros (red-white) Dwarf Equipment aggro deck. It's a **brew**: none of the three cards you named shows up in recent Standard results (0 lists in the last 90 days for each). The deck passed the legality check and the coach check with no notes.\n\n**The plan:** Play two cheap Dwarves a turn starting on turn 1, then put Equipment on them. D\u00e1in's Company finds more Dwarves or Equipment. K\u00edli draws a card when they enter, and once you control 3 artifacts or legendary permanents (its \"storied\" condition), K\u00edli makes your first equip each turn free. Burn spells and Mj\u00f6lnir clear blockers, and the gear makes small Dwarves win combat.\n\n**Main deck (60)**\n- **Creatures (23):** 4 Dwarven Mauler, 4 K\u00edli the Resourceful, 4 D\u00e1in's Company, 4 Thorin Oakenshield, 3 Giott, King of the Dwarves, 2 D\u00e1in Ironfoot, 2 F\u00edli the Pathfinder\n- **Equipment (8):** 4 Dwarven Mattock, 2 Lost Jitte, 2 Mj\u00f6lnir, Hammer of Thor\n- **Burn (6):** 4 Burst Lightning, 2 Lightning Helix\n- **Lands (23):** 4 Sacred Foundry, 4 Inspiring Vantage, 4 Sunbillow Verge, 2 Sundown Pass, 2 The Lonely Mountain, 4 Mountain, 3 Plains\n\n**Sideboard (15):** 2 Abrade, 2 Scorching Shot, 2 Torch the Tower, 2 Authority of the Consuls, 2 Dawn's Truce, 2 Shattered Acolyte, 2 Ghost Vacuum, 1 Thorin, Mountain-king\n\n**Why these cards**\n- **Dwarven Mauler:** A 2/1 for {R} that makes equips targeting it cost {2} less. Dwarven Mattock's equip {3} becomes {1} on it, and Lost Jitte's equip {1} becomes free.\n- **D\u00e1in's Company:** Looks at the top 4 cards for a Dwarf or Equipment. Every creature and every piece of gear in the deck is a hit. It also has lifelink while you control another Dwarf.\n- **K\u00edli:** Most of your plays trigger its draw (once per turn). The storied condition comes up fast because K\u00edli, Thorin, Giott, D\u00e1in Ironfoot, F\u00edli, Jitte and Mj\u00f6lnir are all legendary, and Mattock, Jitte and Mj\u00f6lnir are artifacts.\n- **Dwarven Mattock:** Attaches itself to a Dwarf when it enters, giving +2/+2 and ward {1}, so you don't pay to equip it the first time.\n- **Giott:** A double striker that lets you discard and draw whenever a Dwarf or Equipment enters. It's a strong carrier for gear.\n- **Thorin Oakenshield:** A 3/2 trampler for 2. With storied active, your artifacts and creatures get ward {1}.\n- **Mj\u00f6lnir:** Deals 4 damage to a creature when it enters, doubles the damage of the creature carrying it, and costs only {1} to equip on your legendary red or white Dwarves (K\u00edli, Thorin, Giott, D\u00e1in, F\u00edli).\n- **D\u00e1in Ironfoot and F\u00edli:** Extra reach at 3 and 4 mana. D\u00e1in makes an Axe token and gives equipped attackers double strike. F\u00edli makes a 2/2 Dwarf token whenever a nontoken Dwarf enters.\n\n**How often it comes together**\nBy turn 3 on the play, you see K\u00edli or D\u00e1in's Company 75% of the time and an Equipment 75% of the time. You see both together 55% of the time, not counting mulligans. That 55% doesn't count D\u00e1in's Company finding an Equipment for you, so the real rate is somewhat higher.\n\n**Mana**\nThe lands are borrowed from real Boros lists. The deck has 20 red sources and 17 white; the gold two-drops need both colors early. I used only 2 Sundown Pass because it enters tapped in the early turns. The Lonely Mountain enters untapped once you have an Equipment, and later turns spare mana into 2/2 Dwarves (it costs {1} less per Equipment you control). 23 lands is in line with real Boros Aggro decks, which run about 23.4.\n\n**Sideboarding against the main decks**\n- **Prowess (21.7%) and Elementals (8%):** Bring in Abrade, Torch the Tower and Scorching Shot. Take out F\u00edli and Lightning Helix if you need room. Ghost Vacuum (also an artifact, so it counts toward storied) helps against their graveyard plans.\n- **Selesnya Offense (13.5%) and Landfall (9.6%):** Bring in Scorching Shot for their big creatures. Authority of the Consuls makes their creatures enter tapped, so they can't block right away and haste creatures lose their surprise attack.\n- **Lessons, 4C Control and Dimir Excruciator:** Bring in Dawn's Truce to protect your board from Day of Judgment and Slagstorm, plus Ghost Vacuum and Thorin, Mountain-king. Cut some burn.\n- **Artifact or enchantment decks (Boros Weapons, Rest in Peace players):** Shattered Acolyte is a Dwarf with lifelink that can sacrifice itself to destroy an artifact or enchantment.\n\n**What I couldn't check**\n- These Dwarves have no tournament results, so the card counts are reasoned, not proven. The places I'd tune first are 2 vs. 4 Lost Jitte and 3 vs. 4 Giott.\n- I didn't look up how Lessons, Selesnya, Landfall or the control decks are built. The plans above for those matchups go by deck name, plus their use of Ghost Vacuum, Slagstorm and Day of Judgment from the card lookups.",
+   "deck": {
+    "main": [
+     {
+      "qty": 4,
+      "name": "Dwarven Mauler"
+     },
+     {
+      "qty": 4,
+      "name": "K\u00edli the Resourceful"
+     },
+     {
+      "qty": 4,
+      "name": "D\u00e1in's Company"
+     },
+     {
+      "qty": 4,
+      "name": "Thorin Oakenshield"
+     },
+     {
+      "qty": 3,
+      "name": "Giott, King of the Dwarves"
+     },
+     {
+      "qty": 2,
+      "name": "D\u00e1in Ironfoot"
+     },
+     {
+      "qty": 2,
+      "name": "F\u00edli the Pathfinder"
+     },
+     {
+      "qty": 4,
+      "name": "Dwarven Mattock"
+     },
+     {
+      "qty": 2,
+      "name": "Lost Jitte"
+     },
+     {
+      "qty": 2,
+      "name": "Mj\u00f6lnir, Hammer of Thor"
+     },
+     {
+      "qty": 4,
+      "name": "Burst Lightning"
+     },
+     {
+      "qty": 2,
+      "name": "Lightning Helix"
+     },
+     {
+      "qty": 4,
+      "name": "Sacred Foundry"
+     },
+     {
+      "qty": 4,
+      "name": "Inspiring Vantage"
+     },
+     {
+      "qty": 4,
+      "name": "Sunbillow Verge"
+     },
+     {
+      "qty": 2,
+      "name": "Sundown Pass"
+     },
+     {
+      "qty": 2,
+      "name": "The Lonely Mountain"
+     },
+     {
+      "qty": 4,
+      "name": "Mountain"
+     },
+     {
+      "qty": 3,
+      "name": "Plains"
+     }
+    ],
+    "side": [
+     {
+      "qty": 2,
+      "name": "Abrade"
+     },
+     {
+      "qty": 2,
+      "name": "Scorching Shot"
+     },
+     {
+      "qty": 2,
+      "name": "Torch the Tower"
+     },
+     {
+      "qty": 2,
+      "name": "Authority of the Consuls"
+     },
+     {
+      "qty": 2,
+      "name": "Dawn's Truce"
+     },
+     {
+      "qty": 2,
+      "name": "Shattered Acolyte"
+     },
+     {
+      "qty": 2,
+      "name": "Ghost Vacuum"
+     },
+     {
+      "qty": 1,
+      "name": "Thorin, Mountain-king"
+     }
+    ],
+    "commander": [],
+    "label": "brew",
+    "warnings": [],
+    "plan": {
+     "format": "standard",
+     "kind": "synergy",
+     "alsoKind": "fair",
+     "thesis": "Boros Dwarf-Equipment aggro: cheap Dwarves curve out, D\u00e1in's Company digs for more Dwarves or gear, K\u00edli draws off every Dwarf/Equipment drop and makes equips free once storied (3 artifacts/legends), and Dwarven Mauler wears Mattocks/Jittes for cheap. Burn clears blockers and Mj\u00f6lnir doubles as removal and a finisher on legendary Dwarves.",
+     "style": "aggro",
+     "pieces": [
+      {
+       "role": "engine (card flow / cheap equip)",
+       "cards": [
+        "K\u00edli the Resourceful",
+        "D\u00e1in's Company",
+        "Dwarven Mauler",
+        "Giott, King of the Dwarves"
+       ],
+       "need": 1
+      },
+      {
+       "role": "Dwarf bodies",
+       "cards": [
+        "Dwarven Mauler",
+        "K\u00edli the Resourceful",
+        "D\u00e1in's Company",
+        "Thorin Oakenshield",
+        "Giott, King of the Dwarves",
+        "D\u00e1in Ironfoot",
+        "F\u00edli the Pathfinder"
+       ],
+       "need": 2
+      },
+      {
+       "role": "Equipment",
+       "cards": [
+        "Dwarven Mattock",
+        "Lost Jitte",
+        "Mj\u00f6lnir, Hammer of Thor",
+        "D\u00e1in's Company"
+       ],
+       "need": 1
+      }
+     ],
+     "byTurn": 3
+    },
+    "coach": {
+     "notes": [],
+     "responses": [],
+     "rounds": 0
+    }
+   },
+   "toolCalls": [
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "meta",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "declare_plan",
+     "ok": true,
+     "isError": false
+    },
+    {
+     "name": "coach_check",
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "submit_brew",
+     "ok": true,
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 22,
+    "output": 8772,
+    "cacheRead": 223457,
+    "cacheWrite": 37318
+   },
+   "costUsd": 0.4068,
+   "steps": 9,
+   "ms": 93673,
+   "errors": []
+  },
+  {
+   "id": "holdout-standard-jund-sacrifice",
+   "track": "holdout",
+   "format": "Standard",
+   "before": "2026-08-22",
+   "prompt": "Brew me a Standard deck built around Greedy Freebooter, The Sackville-Bagginses and Umbral Collar Zealot.",
+   "text": "I built this as **Orzhov Aristocrats (white-black)**, and it's a **brew**: no proven list exists for it. Each of your three cards shows up in only one recent tournament list.\n\n**Main deck (60)**\n- 4 Greedy Freebooter\n- 3 The Sackville-Bagginses\n- 4 Umbral Collar Zealot\n- 4 Bloodghast\n- 3 Voice of Victory\n- 4 Tolls of War\n- 1 Bartolom\u00e9 del Presidio\n- 3 Popular Egotist\n- 2 Kambal, Profiteering Mayor\n- 3 Vito, Fanatic of Aclazotz\n- 2 Requiting Hex\n- 3 Bitter Triumph\n- 2 Get Lost\n- **Lands (22):** 4 Godless Shrine, 4 Concealed Courtyard, 3 Shattered Sanctum, 3 Bleachbone Verge, 2 Starting Town, 4 Swamp, 2 Plains\n\n**Sideboard (15)**\n- 3 Seam Rip\n- 3 Duress\n- 2 Strategic Betrayal\n- 2 Leyline of the Void\n- 2 Deathmark\n- 1 Requiting Hex\n- 2 Pyrrhic Strike\n\n**The plan**\nPlay cheap creatures that leave tokens behind when they go, and sacrifice them for value. Every sacrifice drains the opponent, which finishes off games that your early attackers start.\n\n**Why these cards**\n- **Umbral Collar Zealot** lets you sacrifice a creature or artifact for free (you surveil 1), as often as you like. That makes your death and sacrifice triggers happen whenever you want.\n- **Greedy Freebooter** is the ideal thing to sacrifice. When it dies you scry 1 and get a Treasure. Sacrificing that Treasure for mana is sacrificing a token, so **The Sackville-Bagginses** makes the opponent lose 1 life. Sackville-Bagginses' own enter trigger also sacrifices something to draw a card and make another Treasure. It's legendary, so I run 3 copies instead of 4.\n- **More tokens:**\n  - **Tolls of War** makes a Clue when it enters, then a 1/1 Ally the first time you sacrifice something on your turn.\n  - **Voice of Victory** makes two 1/1 Warriors each time it attacks, and they're sacrificed at end of turn. Those are two token sacrifices per attack. It also stops opponents from casting spells during your turn.\n  - **Bloodghast** comes back from the graveyard every time you play a land, so you can sacrifice it again and again.\n- **The payoffs:**\n  - **Popular Egotist:** the opponent loses 1 and you gain 1 on every sacrifice.\n  - **Vito:** your first sacrifice each turn gains 2 life, the second drains 2, and the third makes a 4/3 flyer.\n  - **Kambal:** drains 1 whenever your tokens enter.\n- **Removal:** Requiting Hex can use a -1/-1 counter on a Freebooter you were happy to lose anyway. Bitter Triumph and Get Lost are clean answers. I left out Erode because it gives the opponent a land, which helps the Landfall decks.\n- **The coach's check:** it measured how often you have something to sacrifice, a sacrifice outlet and a drain card by turn 3. It had no concerns.\n\n**Mana**\nI copied the land setup from the Lifegain deck (72 recent lists), which is also white-black. That's 22 lands: dual lands, Shattered Sanctum, Bleachbone Verge and Starting Town. The deck has 22 black sources and 20 white sources. The deck checker passed it against real Lifegain lists with no warnings. The curve is very low (average mana value 2.13, with 24 two-drops), and Treasures act as extra mana.\n\n**Sideboarding against the field**\n- **Prowess (17.4%) and Boros or Gruul aggro:** bring in Seam Rip and the third Requiting Hex. Take out Kambal and Bartolom\u00e9.\n- **Landfall (14.7%) and Selesnya Offense (8.1%):** bring in Deathmark (it kills green or white creatures), Seam Rip and Pyrrhic Strike. Take out Kambal and a Voice of Victory.\n- **Lessons and 4C Control:** bring in Duress. Voice of Victory stays in, since it stops them casting spells on your turn. Take out Requiting Hex and Get Lost. Watch out for Day of Judgment: Bloodghast and Tolls of War help you rebuild after it.\n- **Dimir Excruciator, Dimir Midrange and Reanimator:** bring in Strategic Betrayal and Leyline of the Void. Add Duress if they have key noncreature spells.\n\n**What I couldn't verify**\nNone of these sacrifice cards show up in recent results, so I can't tell you how this does against the real meta. The card lines and odds hold up on paper, but it hasn't been tested. Pyrrhic Strike's blight cost needs a creature to put the counters on; I'm assuming you'll usually have a spare token. I deliberately left Clarion Conqueror out of the sideboard because it would shut off your own Zealot and Treasures.",
+   "deck": {
+    "main": [
+     {
+      "qty": 4,
+      "name": "Greedy Freebooter"
+     },
+     {
+      "qty": 3,
+      "name": "The Sackville-Bagginses"
+     },
+     {
+      "qty": 4,
+      "name": "Umbral Collar Zealot"
+     },
+     {
+      "qty": 4,
+      "name": "Bloodghast"
+     },
+     {
+      "qty": 3,
+      "name": "Voice of Victory"
+     },
+     {
+      "qty": 4,
+      "name": "Tolls of War"
+     },
+     {
+      "qty": 1,
+      "name": "Bartolom\u00e9 del Presidio"
+     },
+     {
+      "qty": 3,
+      "name": "Popular Egotist"
+     },
+     {
+      "qty": 2,
+      "name": "Kambal, Profiteering Mayor"
+     },
+     {
+      "qty": 3,
+      "name": "Vito, Fanatic of Aclazotz"
+     },
+     {
+      "qty": 2,
+      "name": "Requiting Hex"
+     },
+     {
+      "qty": 3,
+      "name": "Bitter Triumph"
+     },
+     {
+      "qty": 2,
+      "name": "Get Lost"
+     },
+     {
+      "qty": 4,
+      "name": "Godless Shrine"
+     },
+     {
+      "qty": 4,
+      "name": "Concealed Courtyard"
+     },
+     {
+      "qty": 3,
+      "name": "Shattered Sanctum"
+     },
+     {
+      "qty": 3,
+      "name": "Bleachbone Verge"
+     },
+     {
+      "qty": 2,
+      "name": "Starting Town"
+     },
+     {
+      "qty": 4,
+      "name": "Swamp"
+     },
+     {
+      "qty": 2,
+      "name": "Plains"
+     }
+    ],
+    "side": [
+     {
+      "qty": 3,
+      "name": "Seam Rip"
+     },
+     {
+      "qty": 3,
+      "name": "Duress"
+     },
+     {
+      "qty": 2,
+      "name": "Strategic Betrayal"
+     },
+     {
+      "qty": 2,
+      "name": "Leyline of the Void"
+     },
+     {
+      "qty": 2,
+      "name": "Deathmark"
+     },
+     {
+      "qty": 1,
+      "name": "Requiting Hex"
+     },
+     {
+      "qty": 2,
+      "name": "Pyrrhic Strike"
+     }
+    ],
+    "commander": [],
+    "label": "brew",
+    "warnings": [],
+    "plan": {
+     "format": "standard",
+     "kind": "synergy",
+     "thesis": "Orzhov aristocrats: cheap fodder that leaves tokens behind (Freebooter Treasures, Tolls of War Clues/Allies, Voice of Victory's mobilize Warriors, recurring Bloodghast) feeds free sac outlets, and every sacrifice drains through The Sackville-Bagginses, Popular Egotist, Vito and Kambal. Creatures beat down early, then the drain finishes.",
+     "style": "aggro",
+     "pieces": [
+      {
+       "role": "sac outlet",
+       "cards": [
+        "Umbral Collar Zealot",
+        "Bartolom\u00e9 del Presidio",
+        "Popular Egotist",
+        "The Sackville-Bagginses"
+       ],
+       "need": 1
+      },
+      {
+       "role": "drain payoff",
+       "cards": [
+        "The Sackville-Bagginses",
+        "Popular Egotist",
+        "Vito, Fanatic of Aclazotz",
+        "Kambal, Profiteering Mayor"
+       ],
+       "need": 1
+      },
+      {
+       "role": "fodder",
+       "cards": [
+        "Greedy Freebooter",
+        "Bloodghast",
+        "Voice of Victory",
+        "Tolls of War"
+       ],
+       "need": 1
+      }
+     ],
+     "byTurn": 3
+    },
+    "coach": {
+     "notes": [],
+     "responses": [],
+     "rounds": 0
+    }
+   },
+   "toolCalls": [
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "meta",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "declare_plan",
+     "ok": true,
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "coach_check",
+     "isError": false
+    },
+    {
+     "name": "submit_brew",
+     "ok": true,
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 22,
+    "output": 8704,
+    "cacheRead": 264368,
+    "cacheWrite": 47196
+   },
+   "costUsd": 0.463,
+   "steps": 9,
+   "ms": 94348,
+   "errors": []
+  },
+  {
+   "id": "holdout-pioneer-golgari-midrange",
+   "track": "holdout",
+   "format": "Pioneer",
+   "before": "2026-01-11",
+   "prompt": "Brew me a Pioneer deck built around Sentinel of the Nameless City, Abrupt Decay and Tear Asunder.",
+   "text": "I built a Golgari (black-green) explore midrange deck in Pioneer. It's a brew: Sentinel of the Nameless City showed up in only 2 recent lists, both filed as \"Rogue.\"\n\n## Golgari Explore \u2014 Pioneer (brew)\n\n**Creatures (19)**\n- 4 Wildgrowth Walker\n- 4 Jadelight Ranger\n- 4 Sentinel of the Nameless City\n- 2 Tireless Tracker\n- 2 Glissa Sunslayer\n- 3 Sheoldred, the Apocalypse\n- 1 Deep-Cavern Bat\n\n**Spells (17)**\n- 4 Fatal Push\n- 4 Abrupt Decay\n- 3 Tear Asunder\n- 3 Cut Down\n- 2 Thoughtseize\n- 1 Vraska, Golgari Queen\n\n**Lands (23)**\n- 4 Overgrown Tomb\n- 4 Blooming Marsh\n- 4 Darkbore Pathway\n- 3 Llanowar Wastes\n- 2 Wastewood Verge\n- 1 Restless Cottage\n- 1 Urborg, Tomb of Yawgmoth\n- 1 Takenuma, Abandoned Mire\n- 1 Boseiju, Who Endures\n- 1 Swamp\n- 1 Forest\n\n**Sideboard (15)**\n- 2 The Meathook Massacre\n- 1 Extinction Event\n- 2 Duress\n- 1 Thoughtseize\n- 1 Liliana of the Veil\n- 2 Unlicensed Hearse\n- 1 Damping Sphere\n- 2 Pick Your Poison\n- 1 Graveyard Trespasser\n- 2 Go for the Throat\n\n**The plan:** Trade one-for-one with cheap instant-speed removal while explore creatures pull in lands and grow. Wildgrowth Walker gains you life along the way. Sheoldred, Glissa and the Map tokens Sentinel keeps making close out the game.\n\n**Why the key cards**\n- **Sentinel of the Nameless City:** A 3/4 with vigilance that makes a Map token when it enters and every time it attacks. A Map lets one of your creatures explore. Each explore either puts a land in your hand or a +1/+1 counter on the creature, so the Maps give you extra cards or extra size.\n- **Explore support:**\n  - Jadelight Ranger explores twice when it enters.\n  - Wildgrowth Walker gets a +1/+1 counter and gains you 3 life every time one of your creatures explores. That life matters a lot against Izzet Prowess.\n- **Abrupt Decay and Tear Asunder:** Decay can't be countered, which matters against UW Control. Tear Asunder exiles an artifact or enchantment for 2 mana. Kicked for 4 total, it exiles any nonland permanent, which answers what Decay can't (anything costing 4 or more).\n- **Cheap removal:** Fatal Push and Cut Down each cost one mana at instant speed, aimed at Prowess's small creatures.\n- **Card advantage:** The coach flagged my first draft for too little card advantage, so I added 2 Tireless Tracker and 1 Vraska, Golgari Queen. Vraska's \u22123 is a third Decay-style removal spell. Sheoldred makes them lose 2 life every time they draw and gains you 2 every time you draw.\n\n**The mana:** 23 lands, with 22 black sources and 20 green, so Jadelight on turn 3 and Sheoldred on turn 4 are reliable. I borrowed the dual-land setup from Jund Sacrifice, the most-played deck in the current results that uses Abrupt Decay. check_deck recommended about 24 lands. I went one lower because the curve tops out at 4 and explore keeps finding lands. Wastewood Verge needs a Swamp or Forest to make black. Overgrown Tomb, the basics and Urborg all count, so it's almost always active.\n\n**Sideboarding**\n- **Izzet Prowess (35%):** Bring in Meathook Massacre, Pick Your Poison and Go for the Throat. Take out the 2 Thoughtseize, Deep-Cavern Bat and Vraska.\n- **Selesnya Company (13%):** Bring in Meathook, Extinction Event and Go for the Throat. Take out the discard spells.\n- **UW Control and Dimir Bounce:** Bring in Duress, the third Thoughtseize, Liliana of the Veil and Graveyard Trespasser. Take out Cut Down and some Fatal Push.\n- **Greasefang:** Bring in Unlicensed Hearse, Pick Your Poison and Thoughtseize. Tear Asunder already handles its vehicles.\n- **Scapeshift and Mono-Green Devotion:** Bring in Damping Sphere and the discard spells.\n\n**Coach note I didn't follow:** The coach pointed out that recent decks almost never play Cut Down and usually choose Go for the Throat instead. I kept Cut Down because a one-mana instant lines up better against Prowess's cheap threats, and Prowess is over a third of the field. The 2 Go for the Throat in the sideboard cover decks with bigger creatures.\n\n**Unverified:** The overall plan has no tournament results behind it. The matchup reasoning is my estimate, not data. The card counts haven't been tested in games, so expect to adjust them.",
+   "deck": {
+    "main": [
+     {
+      "qty": 4,
+      "name": "Wildgrowth Walker"
+     },
+     {
+      "qty": 4,
+      "name": "Jadelight Ranger"
+     },
+     {
+      "qty": 4,
+      "name": "Sentinel of the Nameless City"
+     },
+     {
+      "qty": 2,
+      "name": "Glissa Sunslayer"
+     },
+     {
+      "qty": 3,
+      "name": "Sheoldred, the Apocalypse"
+     },
+     {
+      "qty": 1,
+      "name": "Deep-Cavern Bat"
+     },
+     {
+      "qty": 2,
+      "name": "Tireless Tracker"
+     },
+     {
+      "qty": 1,
+      "name": "Vraska, Golgari Queen"
+     },
+     {
+      "qty": 4,
+      "name": "Fatal Push"
+     },
+     {
+      "qty": 4,
+      "name": "Abrupt Decay"
+     },
+     {
+      "qty": 3,
+      "name": "Tear Asunder"
+     },
+     {
+      "qty": 3,
+      "name": "Cut Down"
+     },
+     {
+      "qty": 2,
+      "name": "Thoughtseize"
+     },
+     {
+      "qty": 4,
+      "name": "Overgrown Tomb"
+     },
+     {
+      "qty": 4,
+      "name": "Blooming Marsh"
+     },
+     {
+      "qty": 4,
+      "name": "Darkbore Pathway"
+     },
+     {
+      "qty": 3,
+      "name": "Llanowar Wastes"
+     },
+     {
+      "qty": 2,
+      "name": "Wastewood Verge"
+     },
+     {
+      "qty": 1,
+      "name": "Restless Cottage"
+     },
+     {
+      "qty": 1,
+      "name": "Urborg, Tomb of Yawgmoth"
+     },
+     {
+      "qty": 1,
+      "name": "Takenuma, Abandoned Mire"
+     },
+     {
+      "qty": 1,
+      "name": "Boseiju, Who Endures"
+     },
+     {
+      "qty": 1,
+      "name": "Swamp"
+     },
+     {
+      "qty": 1,
+      "name": "Forest"
+     }
+    ],
+    "side": [
+     {
+      "qty": 2,
+      "name": "The Meathook Massacre"
+     },
+     {
+      "qty": 1,
+      "name": "Extinction Event"
+     },
+     {
+      "qty": 2,
+      "name": "Duress"
+     },
+     {
+      "qty": 1,
+      "name": "Thoughtseize"
+     },
+     {
+      "qty": 1,
+      "name": "Liliana of the Veil"
+     },
+     {
+      "qty": 2,
+      "name": "Unlicensed Hearse"
+     },
+     {
+      "qty": 1,
+      "name": "Damping Sphere"
+     },
+     {
+      "qty": 2,
+      "name": "Pick Your Poison"
+     },
+     {
+      "qty": 1,
+      "name": "Graveyard Trespasser"
+     },
+     {
+      "qty": 2,
+      "name": "Go for the Throat"
+     }
+    ],
+    "commander": [],
+    "label": "brew",
+    "warnings": [],
+    "plan": {
+     "format": "pioneer",
+     "kind": "fair",
+     "thesis": "Golgari explore midrange: Sentinel of the Nameless City, Jadelight Ranger and Wildgrowth Walker build card advantage and life gain, while Abrupt Decay, Tear Asunder, Fatal Push and Cut Down trade 1-for-1 with everything. Sheoldred and Glissa close games once the opponent runs out of threats.",
+     "style": "midrange"
+    },
+    "coach": {
+     "notes": [
+      {
+       "id": "fair-card-cut down",
+       "message": "Cut Down (removal): in 0% of recent pioneer decks. At a similar cost in your colors, players choose Go for the Throat (15%). Keep it only if it does something specific for this deck, and say what."
+      }
+     ],
+     "responses": [
+      {
+       "id": "fair-card-cut down",
+       "response": "Izzet Prowess is 35% of the field and its threats are cheap, low-stat creatures. Cut Down costs one mana at instant speed, so it trades with them on curve and lets me double-spell next to Fatal Push. Go for the Throat costs two and is in the sideboard (2 copies) for decks with bigger creatures."
+      }
+     ],
+     "rounds": 0
+    }
+   },
+   "toolCalls": [
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "meta",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "declare_plan",
+     "ok": true,
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "coach_check",
+     "isError": false
+    },
+    {
+     "name": "coach_check",
+     "isError": false
+    },
+    {
+     "name": "submit_brew",
+     "ok": true,
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 22,
+    "output": 9476,
+    "cacheRead": 185574,
+    "cacheWrite": 32805
+   },
+   "costUsd": 0.3907,
+   "steps": 9,
+   "ms": 89923,
+   "errors": []
+  },
+  {
+   "id": "holdout-pioneer-lessons",
+   "track": "holdout",
+   "format": "Pioneer",
+   "before": "2026-01-13",
+   "prompt": "Brew me a Pioneer deck built around Igneous Inspiration, Combustion Technique and Abandon Attachments.",
+   "text": "I built and submitted an **Izzet Lessons Phoenix brew** for Pioneer.\n\n**The plan:** Learn spells (Igneous Inspiration, Academic Dispute) either grab a Lesson from your sideboard or let you discard a card to draw one. Meanwhile, 16 Lessons in the main deck fill the graveyard and power up the cards that count them. The hidden engine is Retriever Phoenix. Abandon Attachments, Sokka and Gran-Gran can all discard it, and while it's in the graveyard, any Learn can return it to the battlefield instead. So every Igneous Inspiration becomes 3 damage plus a 2/2 flier with haste.\n\n**Main deck (60)**\n- **Creatures (14):** 4 Gran-Gran, 4 Sokka, Bold Boomeranger, 3 Dragonfly Swarm, 3 Retriever Phoenix\n- **Spells (26):** 4 Igneous Inspiration, 4 Combustion Technique, 4 Abandon Attachments, 4 Accumulate Wisdom, 3 Academic Dispute, 3 Fiery Impulse, 2 Boomerang Basics, 2 Firebending Lesson\n- **Lands (20):** 4 Steam Vents, 4 Spirebluff Canal, 4 Shivan Reef, 4 Riverpyre Verge, 2 Island, 2 Mountain\n\n**Sideboard (15)**\n- **Lessons you can Learn (6):** 1 Iroh's Demonstration, 1 It'll Quench Ya!, 1 Octopus Form, 1 Price of Freedom, 1 Firebending Lesson, 1 Boomerang Basics\n- **Other cards (9):** 3 Pyroclasm, 2 Spell Pierce, 2 Soul-Guide Lantern, 2 Torch the Tower\n\n**Why these cards**\n- **Your three cards:**\n  - **Igneous Inspiration** ({2}{R}): 3 damage to any target, then Learn.\n  - **Combustion Technique** ({1}{R}): deals 2 damage plus 1 for each Lesson in your graveyard, and exiles the creature instead of letting it die. With 16 Lessons, it soon kills almost anything.\n  - **Abandon Attachments** ({1}{U/R}): discard a card to draw two, which bins Phoenix and adds another Lesson to the graveyard.\n- **Payoffs:**\n  - **Accumulate Wisdom** puts all three cards it looks at into your hand once you have 3+ Lessons in the graveyard.\n  - **Gran-Gran** draws and discards whenever it becomes tapped. With 3+ Lessons in the graveyard, your noncreature spells cost 1 less.\n  - **Dragonfly Swarm** is a flier with ward whose power equals the noncreature, nonland cards in your graveyard. It draws a card when it dies if there's a Lesson in your graveyard.\n  - **Sokka** discards up to two cards and draws that many when it enters, and gets a +1/+1 counter every time you cast a Lesson. The coach flagged Sokka for appearing in 0% of recent decks. I kept it on purpose because it does both jobs this deck needs: binning Phoenix and growing from Lessons.\n- **Odds:** you'll see at least one Learn card (Igneous, Dispute or Phoenix) by turn 3 in 83% of games. You'll see a Lesson by then 95% of the time, and both together 79% of the time. These numbers ignore mulligans.\n\n**Mana:** I copied the Izzet Prowess mana base: 20 lands, which matches the 20.06 average in real lists. Steam Vents, Spirebluff Canal, Shivan Reef and Riverpyre Verge give 18 blue and 18 red sources. That's more blue than Prowess runs, to cast Gran-Gran on turn 1 and Sokka on turn 2. The deck checker suggested about 21 lands, but the average spell costs only 1.98 and you have lots of looting, so I stayed at 20.\n\n**Sideboarding:** Remember that cards you board in also become Learn targets, so keep 4\u20136 Lessons in the sideboard every game.\n- **Izzet Prowess (36% of the field):** bring in 3 Pyroclasm and 2 Torch the Tower, and take out Academic Dispute and Boomerang Basics. Iroh's Demonstration and Firebending Lesson are always one Learn away.\n- **Selesnya Company:** Pyroclasm, plus Torch the Tower as extra removal.\n- **UW Control and Dimir Bounce:** bring in Spell Pierce, and It'll Quench Ya! can be learned. Take out Fiery Impulse.\n- **Graveyard decks (Greasefang, Izzet Phoenix):** Soul-Guide Lantern.\n- **Price of Freedom** handles artifacts and annoying lands, and you only fetch it when you need it.\n\n**This is a brew.** Nobody runs this exact list in recent results: Dragonfly Swarm and Retriever Phoenix show up in 0 lists. I only borrowed the mana base and some sideboard ideas from Izzet Prowess. I haven't playtested it, and I couldn't check how it actually performs against the meta. Treat the Phoenix count (3) and the Fiery Impulse slots as the first things to adjust.",
+   "deck": {
+    "main": [
+     {
+      "qty": 4,
+      "name": "Gran-Gran"
+     },
+     {
+      "qty": 4,
+      "name": "Sokka, Bold Boomeranger"
+     },
+     {
+      "qty": 3,
+      "name": "Dragonfly Swarm"
+     },
+     {
+      "qty": 3,
+      "name": "Retriever Phoenix"
+     },
+     {
+      "qty": 4,
+      "name": "Igneous Inspiration"
+     },
+     {
+      "qty": 4,
+      "name": "Combustion Technique"
+     },
+     {
+      "qty": 4,
+      "name": "Abandon Attachments"
+     },
+     {
+      "qty": 4,
+      "name": "Accumulate Wisdom"
+     },
+     {
+      "qty": 3,
+      "name": "Academic Dispute"
+     },
+     {
+      "qty": 2,
+      "name": "Boomerang Basics"
+     },
+     {
+      "qty": 2,
+      "name": "Firebending Lesson"
+     },
+     {
+      "qty": 3,
+      "name": "Fiery Impulse"
+     },
+     {
+      "qty": 4,
+      "name": "Steam Vents"
+     },
+     {
+      "qty": 4,
+      "name": "Spirebluff Canal"
+     },
+     {
+      "qty": 4,
+      "name": "Shivan Reef"
+     },
+     {
+      "qty": 4,
+      "name": "Riverpyre Verge"
+     },
+     {
+      "qty": 2,
+      "name": "Island"
+     },
+     {
+      "qty": 2,
+      "name": "Mountain"
+     }
+    ],
+    "side": [
+     {
+      "qty": 1,
+      "name": "Iroh's Demonstration"
+     },
+     {
+      "qty": 1,
+      "name": "It'll Quench Ya!"
+     },
+     {
+      "qty": 1,
+      "name": "Octopus Form"
+     },
+     {
+      "qty": 1,
+      "name": "Price of Freedom"
+     },
+     {
+      "qty": 1,
+      "name": "Firebending Lesson"
+     },
+     {
+      "qty": 1,
+      "name": "Boomerang Basics"
+     },
+     {
+      "qty": 3,
+      "name": "Pyroclasm"
+     },
+     {
+      "qty": 2,
+      "name": "Spell Pierce"
+     },
+     {
+      "qty": 2,
+      "name": "Soul-Guide Lantern"
+     },
+     {
+      "qty": 2,
+      "name": "Torch the Tower"
+     }
+    ],
+    "commander": [],
+    "label": "brew",
+    "warnings": [],
+    "plan": {
+     "format": "pioneer",
+     "kind": "synergy",
+     "alsoKind": "fair",
+     "thesis": "Izzet Lessons midrange: Learn spells (Igneous Inspiration, Academic Dispute) fetch situational Lessons from the sideboard, while cheap Lessons fill the graveyard to power Combustion Technique, Accumulate Wisdom, Gran-Gran and Dragonfly Swarm. Discard outlets (Abandon Attachments, Sokka, Gran-Gran) bin Retriever Phoenix, which every later Learn returns as a hasty flier.",
+     "style": "midrange",
+     "pieces": [
+      {
+       "role": "learn enabler",
+       "cards": [
+        "Igneous Inspiration",
+        "Academic Dispute",
+        "Retriever Phoenix"
+       ],
+       "need": 1
+      },
+      {
+       "role": "lesson fuel",
+       "cards": [
+        "Combustion Technique",
+        "Abandon Attachments",
+        "Accumulate Wisdom",
+        "Boomerang Basics",
+        "Firebending Lesson"
+       ],
+       "need": 2
+      },
+      {
+       "role": "payoff",
+       "cards": [
+        "Combustion Technique",
+        "Accumulate Wisdom",
+        "Gran-Gran",
+        "Dragonfly Swarm",
+        "Sokka, Bold Boomeranger",
+        "Retriever Phoenix"
+       ],
+       "need": 1
+      }
+     ],
+     "byTurn": 4
+    },
+    "coach": {
+     "notes": [
+      {
+       "id": "fair-card-sokka, bold boomeranger",
+       "message": "Sokka, Bold Boomeranger (card advantage): in 0% of recent pioneer decks. At a similar cost in your colors, players choose Emberheart Challenger (26%). Keep it only if it does something specific for this deck, and say what."
+      }
+     ],
+     "responses": [
+      {
+       "id": "fair-card-sokka, bold boomeranger",
+       "response": "Sokka does a job Emberheart Challenger can't do here. Its ETB discards up to two cards, which puts Retriever Phoenix in the graveyard for the Learn loop. It also gets a +1/+1 counter for each Lesson cast, and 16 main-deck Lessons plus the ones Learn fetches feed it. Emberheart wants prowess and a stack of pump spells, and this deck doesn't run those."
+      }
+     ],
+     "rounds": 0
+    }
+   },
+   "toolCalls": [
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "meta",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "reference_list",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "declare_plan",
+     "ok": true,
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "coach_check",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "submit_brew",
+     "ok": true,
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 18,
+    "output": 8609,
+    "cacheRead": 166117,
+    "cacheWrite": 38434
+   },
+   "costUsd": 0.3976,
+   "steps": 7,
+   "ms": 83257,
+   "errors": []
+  },
+  {
+   "id": "holdout-modern-cosmogoyf",
+   "track": "holdout",
+   "format": "Modern",
+   "before": "2025-11-30",
+   "prompt": "Brew me a Modern deck built around Thud, Plunge into Darkness and Spoils of the Vault.",
+   "text": "# Rakdos \"Thud Shadow\": Modern brew\n\n## The plan\nThis deck pays its own life on purpose. Fetchlands, shocklands, Thoughtseize, Street Wraith cycling, Spoils of the Vault and Plunge into Darkness all lower your life. Death's Shadow is a 13/13 that gets -X/-X, where X is your life total, so every point you lose makes it bigger. At 4 life it's a 9/9. You can attack with it, or sacrifice it to Thud (\"deals damage equal to the sacrificed creature's power to any target\") for 1 mana and hit the opponent's face for 8\u201312 out of nowhere. Spoils and Plunge are both ways to lose life and ways to find whichever half of the combo you're missing.\n\n## Decklist (60)\n**Creatures (16)**\n- 4 Death's Shadow\n- 4 Street Wraith\n- 3 Ragavan, Nimble Pilferer\n- 3 Nethergoyf\n- 2 Scourge of the Skyclaves\n\n**Spells (26)**\n- 4 Thud\n- 4 Spoils of the Vault\n- 3 Plunge into Darkness\n- 4 Thoughtseize\n- 4 Mishra's Bauble\n- 3 Lightning Bolt\n- 3 Unholy Heat\n- 1 Fatal Push\n\n**Lands (18)**\n- 4 Bloodstained Mire\n- 2 Marsh Flats\n- 1 Arid Mesa\n- 1 Polluted Delta\n- 1 Verdant Catacombs\n- 1 Wooded Foothills\n- 2 Blood Crypt\n- 2 Sulfurous Springs\n- 3 Swamp\n- 1 Mountain\n\n**Sideboard (15)**\n- 3 Leyline of the Void\n- 2 Kolaghan's Command\n- 2 Damping Sphere\n- 2 Blood Moon\n- 2 Collective Brutality\n- 2 Terminate\n- 1 Duress\n- 1 Meltdown\n\n## Why these cards\n- **Spoils of the Vault** (1 mana, instant): you name a card, then reveal cards until you find it, losing 1 life for each other card revealed. That life loss feeds Shadow.\n  - With Shadow already in play, name Thud. With Thud in hand, name Shadow.\n  - **Warning:** it can kill you. With 4 copies of the named card, expect to reveal about 10 cards. Cast it at a healthy life total, and don't cast it below about 8 life unless it wins on the spot.\n- **Plunge into Darkness** (2 mana, instant):\n  - Its \"pay X life, look at X cards, take one\" mode digs for Thud or Shadow and shrinks your life at the end of the opponent's turn.\n  - Its sacrifice mode gains 3 life per creature. That's an emergency reset if you've dropped too low, for example by sacrificing a Ragavan or Nethergoyf.\n- **Scourge of the Skyclaves**: its power and toughness equal 20 minus the highest life total among players. It's a second big creature to Thud once both players are low. It's weaker when the opponent's life is still high, so there are only 2.\n- **Street Wraith and Mishra's Bauble**: these are almost free cards that thin the deck, so 18 lands is enough. Wraith cycles for 2 life, which also grows Shadow.\n- **Ragavan, Nethergoyf, Bolt, Unholy Heat and Thoughtseize**: this is the Death's Shadow archetype's proven support (the tool showed Thoughtseize \u00d74, Bolt \u00d74 and Heat \u00d74 in its list), so the deck can win normally when the combo doesn't come together.\n\n**Odds:** with no mulligans, you'll see at least one of Shadow, Scourge or Spoils plus at least one Thud or Plunge by turn 4 on the play **63.1%** of the time. That number doesn't count the extra cards from Street Wraith, Bauble or Plunge's digging, so the real figure is higher.\n\n## The mana\n- There are 18 lands and the average mana value is 1.4.\n- Every fetchland can find Blood Crypt, so all ten count as both black and red sources. Fetch for basics when you can, to stay safe from Blood Moon.\n- Sulfurous Springs pings you for colored mana, which suits this deck.\n- Black is the main color (Shadow, Spoils, Plunge, Thoughtseize). Red covers Thud, Bolt, Heat and Ragavan.\n\n## Sideboarding against the field\nThe meta tool showed Energy 14.5%, Blink 14.4%, Prowess 9.8%, Affinity 8.6%, Domain Zoo 8.2%, Storm 4.9% and Goryo's Vengeance 3.3%.\n- **Prowess, Energy and Zoo:** these decks attack your low life total. Bring in Terminate and Collective Brutality, which can drain 2 life back to you. Take out a Spoils and a Plunge, play Shadow less aggressively, and count on Plunge's sacrifice mode to gain life back.\n- **Affinity:** bring in Kolaghan's Command, Meltdown and Terminate. Take out Thoughtseize.\n- **Storm and Goryo's Vengeance:** bring in Duress and Damping Sphere against Storm, and Leyline of the Void against Goryo's. Take out removal.\n- **Blink, Amulet Titan and Eldrazi:** bring in Blood Moon and Damping Sphere. Keep the hand disruption in.\n\n## Label and caveats\n**This is a brew.** No tournament list in the results runs Thud, Spoils or Plunge; all three show 0 lists in the last 90 days. I took the shell (discard, burn, Ragavan, Wraith, Bauble, fetches) from the Death's Shadow archetype data, but that data is based on **only one list**. Treat the land count and the exact numbers as a starting point, not tested results. The sideboard is my own choice for the current meta, not copied from any list.",
+   "deck": {
+    "main": [
+     {
+      "qty": 4,
+      "name": "Death's Shadow"
+     },
+     {
+      "qty": 4,
+      "name": "Street Wraith"
+     },
+     {
+      "qty": 3,
+      "name": "Ragavan, Nimble Pilferer"
+     },
+     {
+      "qty": 3,
+      "name": "Nethergoyf"
+     },
+     {
+      "qty": 2,
+      "name": "Scourge of the Skyclaves"
+     },
+     {
+      "qty": 4,
+      "name": "Thud"
+     },
+     {
+      "qty": 4,
+      "name": "Spoils of the Vault"
+     },
+     {
+      "qty": 3,
+      "name": "Plunge into Darkness"
+     },
+     {
+      "qty": 4,
+      "name": "Thoughtseize"
+     },
+     {
+      "qty": 4,
+      "name": "Mishra's Bauble"
+     },
+     {
+      "qty": 3,
+      "name": "Lightning Bolt"
+     },
+     {
+      "qty": 3,
+      "name": "Unholy Heat"
+     },
+     {
+      "qty": 1,
+      "name": "Fatal Push"
+     },
+     {
+      "qty": 4,
+      "name": "Bloodstained Mire"
+     },
+     {
+      "qty": 2,
+      "name": "Marsh Flats"
+     },
+     {
+      "qty": 1,
+      "name": "Arid Mesa"
+     },
+     {
+      "qty": 1,
+      "name": "Polluted Delta"
+     },
+     {
+      "qty": 1,
+      "name": "Verdant Catacombs"
+     },
+     {
+      "qty": 1,
+      "name": "Wooded Foothills"
+     },
+     {
+      "qty": 2,
+      "name": "Blood Crypt"
+     },
+     {
+      "qty": 2,
+      "name": "Sulfurous Springs"
+     },
+     {
+      "qty": 3,
+      "name": "Swamp"
+     },
+     {
+      "qty": 1,
+      "name": "Mountain"
+     }
+    ],
+    "side": [
+     {
+      "qty": 3,
+      "name": "Leyline of the Void"
+     },
+     {
+      "qty": 2,
+      "name": "Kolaghan's Command"
+     },
+     {
+      "qty": 2,
+      "name": "Damping Sphere"
+     },
+     {
+      "qty": 2,
+      "name": "Blood Moon"
+     },
+     {
+      "qty": 2,
+      "name": "Collective Brutality"
+     },
+     {
+      "qty": 1,
+      "name": "Duress"
+     },
+     {
+      "qty": 1,
+      "name": "Meltdown"
+     },
+     {
+      "qty": 2,
+      "name": "Terminate"
+     }
+    ],
+    "commander": [],
+    "label": "brew",
+    "warnings": [],
+    "plan": {
+     "format": "modern",
+     "kind": "combo",
+     "alsoKind": "fair",
+     "thesis": "Fetches, shocks, Thoughtseize, Street Wraith, Spoils of the Vault and Plunge into Darkness push our own life total down, so Death's Shadow (and late Scourge of the Skyclaves) becomes a huge creature. We either attack with it or Thud it at the opponent's face for 8-12 damage out of nowhere, using Spoils/Plunge to find whichever half is missing.",
+     "style": "aggro",
+     "pieces": [
+      {
+       "role": "big body",
+       "cards": [
+        "Death's Shadow",
+        "Scourge of the Skyclaves",
+        "Spoils of the Vault"
+       ],
+       "need": 1
+      },
+      {
+       "role": "fling effect / dig",
+       "cards": [
+        "Thud",
+        "Plunge into Darkness"
+       ],
+       "need": 1
+      }
+     ],
+     "byTurn": 4
+    },
+    "coach": {
+     "notes": [],
+     "responses": [],
+     "rounds": 0
+    }
+   },
+   "toolCalls": [
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "meta",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "declare_plan",
+     "ok": true,
+     "isError": false
+    },
+    {
+     "name": "coach_check",
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "submit_brew",
+     "ok": true,
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 22,
+    "output": 8653,
+    "cacheRead": 163580,
+    "cacheWrite": 25936
+   },
+   "costUsd": 0.3355,
+   "steps": 9,
+   "ms": 91102,
+   "errors": [],
+   "rerun": true
+  },
+  {
+   "id": "holdout-modern-persist",
+   "track": "holdout",
+   "format": "Modern",
+   "before": "2026-04-23",
+   "prompt": "Brew me a Modern deck built around Eyetwitch, Stitcher's Supplier and Flare of Malice.",
+   "text": "",
+   "deck": null,
+   "toolCalls": [
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "meta",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "reference_list",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 12,
+    "output": 3675,
+    "cacheRead": 40520,
+    "cacheWrite": 17611
+   },
+   "costUsd": 0.1697,
+   "steps": 5,
+   "ms": 126902,
+   "errors": [
+    "terminated"
+   ]
+  },
+  {
+   "id": "holdout-modern-fanatic-eldrazi",
+   "track": "holdout",
+   "format": "Modern",
+   "before": "2026-05-15",
+   "prompt": "Brew me a Modern deck built around Fight Rigging, Turntimber Symbiosis and Slumbering Trudge.",
+   "text": "",
+   "deck": null,
+   "toolCalls": [
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "meta",
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 4,
+    "output": 407,
+    "cacheRead": 0,
+    "cacheWrite": 5296
+   },
+   "costUsd": 0.0346,
+   "steps": 1,
+   "ms": 77287,
+   "errors": [
+    "terminated"
+   ]
+  },
+  {
+   "id": "holdout-legacy-creative-technique",
+   "track": "holdout",
+   "format": "Legacy",
+   "before": "2025-09-11",
+   "prompt": "Brew me a Legacy deck built around Apex Devastator, Call Forth the Tempest and Creative Technique.",
+   "text": "I built a mono-red-mana deck that ramps into big free spells. The submission was accepted as a **brew**, with no errors and no notes from the coach.\n\n**The deck (60)**\n- **Lands (21):** 4 Ancient Tomb, 4 City of Traitors, 12 Mountain, 1 Sokenzan, Crucible of Defiance\n- **Fast mana (8):** 4 Chrome Mox, 4 Simian Spirit Guide\n- **The three cards you asked for (12):** 4 Creative Technique, 4 Apex Devastator, 4 Call Forth the Tempest\n- **Big cards that are great to cast for free (11):** 4 Fury, 3 Etali, Primal Conqueror, 2 Inferno Titan, 1 Ugin, the Spirit Dragon, 1 Emrakul, the Aeons Torn\n- **Card flow and protection (8):** 3 The One Ring, 3 Fable of the Mirror-Breaker, 2 Gamble\n\n**Sideboard (15):** 4 Pyroblast, 4 Leyline of the Void, 3 Blood Moon, 2 Chalice of the Void, 2 Fiery Confluence\n\n**The plan**\n- Ancient Tomb and City of Traitors each make two mana. With help from Chrome Mox and Simian Spirit Guide, you reach five mana on turn 2 or 3 for Creative Technique.\n- Creative Technique turns over cards until it finds one that isn't a land, and you cast that card for free. Nearly every non-land card in this deck is a bomb, so one Technique usually snowballs.\n- Don't make the extra copy (demonstrate). It would give your opponent a free spell too.\n\n**Why these cards**\n- **Apex Devastator** has cascade four times. Each cascade casts a free card costing less than 10, which can be Call Forth, another Technique, Etali or Fury. You almost never pay for Apex yourself, so its green cost doesn't matter. That's why the mana is all red.\n- **Call Forth the Tempest** cascades twice. It then deals damage to each opposing creature equal to the total mana value of the other spells you cast that turn. After Apex and the free spells, that kills the whole board. You can also pay for it late: Tomb + City + 3 Mountains makes exactly 8 mana with the three red it needs.\n- **Etali** casts more free spells when it enters. **Fury** is free removal. **Inferno Titan** and **Ugin** are strong free hits.\n- **Emrakul** can only be found by Technique, since cascade only finds cheaper cards. When cast, though, it gives you an extra turn, and Technique shuffles first, so it's always live.\n- **Gamble** costs one mana and finds Technique. Counting Gamble, you have a 64% chance to have Technique or Gamble by turn 3 on the play, before mulligans.\n- Fable and The One Ring help you dig, and the Ring protects you for a turn.\n\n**The mana**\n- I took the fast-mana base from Mono-Red Prison: 4 Tomb, 4 City, 4 Mox and 4 Spirit Guide, all of which nearly every list of that deck plays.\n- The checker noted that Mono-Red Prison runs about 17 lands, and I kept 21 on purpose. The deck's average card cost is 5.21. Also, Technique and cascade skip lands, so more lands means each hit is more likely to be a bomb.\n- I left Chalice of the Void out of the main deck. If Technique or cascade hits it, it comes in at zero, which is a dead spell.\n\n**Sideboarding**\n- **Esper, Izzet and Dimir Tempo** (the top three decks, about 32% of the field together): bring in Pyroblast and Chalice of the Void set to 1. Cut Gamble and Fable.\n- **Cephalid Breakfast, Oops All Spells, Doomsday:** bring in Leyline of the Void, which you can start the game with for free from your opening hand even though it's black. Chalice also helps against Oops. Cut the Rings and Inferno Titans.\n- **Lands, Tron:** bring in Blood Moon. Be careful, because it also turns your Tomb and City into plain Mountains, so bring in only as many as you need.\n- **Affinity, Ocelot Aggro, Eldrazi Aggro:** bring in Fiery Confluence.\n\n**Honest caveats**\n- No tournament results include this deck. Apex, Call Forth and Technique all show zero recent appearances in Legacy, so this is untested.\n- Some hits are weak. About 11 of the 35 non-land cards Technique can flip (other than another Technique) are Moxes, Spirit Guides or Gamble. A single Technique finds Apex only about 11% of the time. Most of the time it finds some other big card, and that's the actual plan.\n- Force of Will can counter Technique itself. Apex's cascades still happen even if Apex is countered, because they trigger when it's cast.",
+   "deck": {
+    "main": [
+     {
+      "qty": 4,
+      "name": "Ancient Tomb"
+     },
+     {
+      "qty": 4,
+      "name": "City of Traitors"
+     },
+     {
+      "qty": 12,
+      "name": "Mountain"
+     },
+     {
+      "qty": 1,
+      "name": "Sokenzan, Crucible of Defiance"
+     },
+     {
+      "qty": 4,
+      "name": "Creative Technique"
+     },
+     {
+      "qty": 4,
+      "name": "Apex Devastator"
+     },
+     {
+      "qty": 4,
+      "name": "Call Forth the Tempest"
+     },
+     {
+      "qty": 4,
+      "name": "Chrome Mox"
+     },
+     {
+      "qty": 4,
+      "name": "Simian Spirit Guide"
+     },
+     {
+      "qty": 4,
+      "name": "Fury"
+     },
+     {
+      "qty": 3,
+      "name": "Etali, Primal Conqueror"
+     },
+     {
+      "qty": 2,
+      "name": "Inferno Titan"
+     },
+     {
+      "qty": 1,
+      "name": "Ugin, the Spirit Dragon"
+     },
+     {
+      "qty": 1,
+      "name": "Emrakul, the Aeons Torn"
+     },
+     {
+      "qty": 2,
+      "name": "Gamble"
+     },
+     {
+      "qty": 3,
+      "name": "The One Ring"
+     },
+     {
+      "qty": 3,
+      "name": "Fable of the Mirror-Breaker"
+     }
+    ],
+    "side": [
+     {
+      "qty": 4,
+      "name": "Pyroblast"
+     },
+     {
+      "qty": 4,
+      "name": "Leyline of the Void"
+     },
+     {
+      "qty": 3,
+      "name": "Blood Moon"
+     },
+     {
+      "qty": 2,
+      "name": "Chalice of the Void"
+     },
+     {
+      "qty": 2,
+      "name": "Fiery Confluence"
+     }
+    ],
+    "commander": [],
+    "label": "brew",
+    "warnings": [],
+    "plan": {
+     "format": "legacy",
+     "kind": "combo",
+     "alsoKind": "fair",
+     "thesis": "Ancient Tomb, City of Traitors, Chrome Mox and Simian Spirit Guide get to five mana on turns 2-3 for Creative Technique, which flips a random nonland card. Nearly every nonland card is a free-cast bomb (Apex Devastator's four cascades, Call Forth's two cascades plus a sweep, Etali, Fury, Titans, Emrakul's extra turn), so one Technique chains into an unbeatable board.",
+     "pieces": [
+      {
+       "role": "build-around (or tutor for it)",
+       "cards": [
+        "Creative Technique",
+        "Gamble"
+       ],
+       "need": 1
+      },
+      {
+       "role": "fast mana",
+       "cards": [
+        "Ancient Tomb",
+        "City of Traitors",
+        "Chrome Mox",
+        "Simian Spirit Guide"
+       ],
+       "need": 1
+      }
+     ],
+     "byTurn": 3
+    },
+    "coach": {
+     "notes": [],
+     "responses": [],
+     "rounds": 0
+    }
+   },
+   "toolCalls": [
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "meta",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "declare_plan",
+     "ok": true,
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "coach_check",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "submit_brew",
+     "ok": true,
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 22,
+    "output": 12893,
+    "cacheRead": 149930,
+    "cacheWrite": 27146
+   },
+   "costUsd": 0.4237,
+   "steps": 9,
+   "ms": 141938,
+   "errors": []
+  },
+  {
+   "id": "holdout-legacy-phoenix",
+   "track": "holdout",
+   "format": "Legacy",
+   "before": "2026-05-10",
+   "prompt": "Brew me a Legacy deck built around Arclight Phoenix, Buried Alive and Flow State.",
+   "text": "# Grixis Buried Phoenix (Legacy brew)\n\n**The plan:** Put Arclight Phoenixes into your graveyard, then cast three instants or sorceries in one turn so they come back at the beginning of combat. Buried Alive does the first job on its own: \"Search your library for up to three creature cards, put them into your graveyard.\" That means all three can be Phoenixes. The fastest line is Dark Ritual, then Buried Alive, then any one-mana spell, which is three spells in one turn. That returns three 3/2 flying, hasty Phoenixes for 9 damage, possibly on turn 1 with Lotus Petal and usually by turn 2. Flow State and the cantrips (cheap spells that draw a card) restock your hand, and Force of Will protects the key turn.\n\n**Main deck (60)**\n- 4 Arclight Phoenix\n- 4 Buried Alive\n- 4 Faithless Looting\n- 4 Dark Ritual\n- 4 Lava Dart\n- 2 Manamorphose\n- 4 Flow State\n- 4 Brainstorm\n- 4 Ponder\n- 4 Force of Will\n- 3 Lotus Petal\n- 2 Thoughtseize\n- 1 Lightning Bolt\n- 4 Polluted Delta\n- 4 Bloodstained Mire\n- 2 Scalding Tarn\n- 2 Underground Sea\n- 2 Volcanic Island\n- 1 Badlands\n- 1 Swamp\n\n**Sideboard (15)**\n- 3 Pyroblast\n- 2 Force of Negation\n- 2 Fatal Push\n- 2 Chain of Vapor\n- 2 Surgical Extraction\n- 2 Abrade\n- 2 Thoughtseize\n\n**Why these cards**\n- **Buried Alive:** It's both your tutor and your setup. You only need the one card, not a Phoenix plus a way to discard it. Faithless Looting is the second way to bin Phoenixes. You can discard one you drew, and its flashback gives you an extra spell on a later turn.\n- **Dark Ritual:** It's an instant that adds BBB, so it pays for Buried Alive and also counts as one of your three spells.\n- **Free or near-free spells:**\n  - Lava Dart's flashback costs only \"Sacrifice a Mountain.\" Volcanic Island and Badlands count as Mountains, so it's a free third spell.\n  - Manamorphose costs 2 and gives back two mana plus a card, so it's a free spell when you have the mana.\n  - Lotus Petal makes the turn-1 kill possible.\n- **Flow State:** Once the graveyard has an instant and a sorcery (it almost always will), it picks two of your top three cards instead of one. That refills your hand after you spend it on a combo turn.\n- **Two cards you might expect are missing:** I checked Entomb and Gitaxian Probe, and both are banned in Legacy.\n\n**Odds (on the play, no mulligans):**\n- 75% to have Buried Alive or Looting by turn 3.\n- 49% to have Buried Alive itself by turn 3.\n- 30% to have both a binning card and Dark Ritual by turn 2.\n\nBrainstorm and Ponder push all of these numbers higher.\n\n**The mana:** 16 lands, with the fetch lands and dual lands taken from the Reanimator shell. Every fetch can find every dual. The deck has 13 blue, 15 black and 12 red sources. The deck checker noted that Reanimator decks run about 18 black sources. That's fine here, because those decks are almost mono-black and this one needs three colors.\n\n**Sideboarding against the most-played decks**\n- **Dimir Tempo and Izzet Tempo (the two most common decks):** Bring in Pyroblast against their blue threats and counterspells. Fatal Push and Abrade also come in against Izzet. Take out Thoughtseize and Manamorphose.\n- **Sneak and Show, Oops All Spells, Doomsday:** Bring in Force of Negation and both extra Thoughtseizes. Pyroblast also comes in against Sneak and Show. Take out Lightning Bolt and Manamorphose.\n- **Reanimator:** Bring in Surgical Extraction and Thoughtseize.\n- **Ocelot Aggro, Eldrazi Aggro, Death and Taxes:** Bring in Fatal Push and Abrade. Cut Thoughtseize.\n- **Graveyard hate:** Leyline of the Void shows up in a lot of decks (33% of results), including Tron, Ocelot Aggro, The Epic Storm and Oops All Spells. Chain of Vapor bounces it back to their hand, which makes them pay 4 mana to replay it, and it counts toward your three spells. Expect Surgical Extraction from tempo decks too. This hate is the deck's biggest weakness.\n\n**Things to know:**\n- This is a brew. Arclight Phoenix appears in 0 recent Legacy lists, so there's no tournament evidence that this beats the field.\n- The mana base and interaction are borrowed from proven decks: Reanimator for the mana, and the blue tempo decks for Force of Will and the cantrips. Flow State shows up in 338 recent lists.\n- The coach (an automated checker that measures how often the deck draws its combo pieces) passed the deck with no notes. The deck check also found no errors.",
+   "deck": {
+    "main": [
+     {
+      "qty": 4,
+      "name": "Arclight Phoenix"
+     },
+     {
+      "qty": 4,
+      "name": "Buried Alive"
+     },
+     {
+      "qty": 4,
+      "name": "Faithless Looting"
+     },
+     {
+      "qty": 4,
+      "name": "Dark Ritual"
+     },
+     {
+      "qty": 4,
+      "name": "Lava Dart"
+     },
+     {
+      "qty": 2,
+      "name": "Manamorphose"
+     },
+     {
+      "qty": 4,
+      "name": "Flow State"
+     },
+     {
+      "qty": 4,
+      "name": "Brainstorm"
+     },
+     {
+      "qty": 4,
+      "name": "Ponder"
+     },
+     {
+      "qty": 4,
+      "name": "Force of Will"
+     },
+     {
+      "qty": 3,
+      "name": "Lotus Petal"
+     },
+     {
+      "qty": 2,
+      "name": "Thoughtseize"
+     },
+     {
+      "qty": 1,
+      "name": "Lightning Bolt"
+     },
+     {
+      "qty": 4,
+      "name": "Polluted Delta"
+     },
+     {
+      "qty": 4,
+      "name": "Bloodstained Mire"
+     },
+     {
+      "qty": 2,
+      "name": "Scalding Tarn"
+     },
+     {
+      "qty": 2,
+      "name": "Underground Sea"
+     },
+     {
+      "qty": 2,
+      "name": "Volcanic Island"
+     },
+     {
+      "qty": 1,
+      "name": "Badlands"
+     },
+     {
+      "qty": 1,
+      "name": "Swamp"
+     }
+    ],
+    "side": [
+     {
+      "qty": 3,
+      "name": "Pyroblast"
+     },
+     {
+      "qty": 2,
+      "name": "Force of Negation"
+     },
+     {
+      "qty": 2,
+      "name": "Fatal Push"
+     },
+     {
+      "qty": 2,
+      "name": "Chain of Vapor"
+     },
+     {
+      "qty": 2,
+      "name": "Surgical Extraction"
+     },
+     {
+      "qty": 2,
+      "name": "Abrade"
+     },
+     {
+      "qty": 2,
+      "name": "Thoughtseize"
+     }
+    ],
+    "commander": [],
+    "label": "brew",
+    "warnings": [],
+    "plan": {
+     "format": "legacy",
+     "kind": "combo",
+     "thesis": "Bin Arclight Phoenixes with Buried Alive (up to three at once) or Faithless Looting, then cast three instants/sorceries in one turn \u2014 Dark Ritual into Buried Alive into any one-mana spell or free Lava Dart flashback \u2014 to return them hasty for 6-12 flying damage a turn. Flow State and cantrips refuel the chain, Force of Will protects it.",
+     "pieces": [
+      {
+       "role": "Phoenix into graveyard",
+       "cards": [
+        "Buried Alive",
+        "Faithless Looting"
+       ],
+       "need": 1
+      },
+      {
+       "role": "spell chain (cheap/free instants & sorceries)",
+       "cards": [
+        "Dark Ritual",
+        "Lava Dart",
+        "Manamorphose",
+        "Brainstorm",
+        "Ponder",
+        "Thoughtseize",
+        "Lightning Bolt",
+        "Flow State"
+       ],
+       "need": 2
+      }
+     ],
+     "byTurn": 3
+    },
+    "coach": {
+     "notes": [],
+     "responses": [],
+     "rounds": 0
+    }
+   },
+   "toolCalls": [
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "meta",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "declare_plan",
+     "ok": true,
+     "isError": false
+    },
+    {
+     "name": "coach_check",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "submit_brew",
+     "ok": true,
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 24,
+    "output": 10390,
+    "cacheRead": 192356,
+    "cacheWrite": 30026
+   },
+   "costUsd": 0.3965,
+   "steps": 10,
+   "ms": 100882,
+   "errors": []
+  },
+  {
+   "id": "holdout-vintage-sewer-cam-combo",
+   "track": "holdout",
+   "format": "Vintage",
+   "before": "2026-03-05",
+   "prompt": "Brew me a Vintage deck built around Goblin Welder, Legion Extruder and Sewer-veillance Cam.",
+   "text": "I built a UR combo deck that turns your three cards into an infinite-damage loop with no other pieces needed. It's a **brew**: none of the three cards has shown up in any Vintage result in the last 90 days.\n\n## The plan\nYou need three things: Goblin Welder on the battlefield without summoning sickness, Sewer-veillance Cam on the battlefield, and Legion Extruder in your graveyard (it also works with Cam and Extruder the other way round). Then you loop:\n1. **Tap Welder:** sacrifice Cam and return Extruder at the same time. Cam's \"leaves the battlefield\" trigger untaps Welder. Extruder's \"enters\" trigger deals 2 damage to any target.\n2. **Tap Welder again:** sacrifice Extruder and return Cam. Cam's \"enters\" trigger untaps Welder.\n3. You're back where you started, 2 damage up. Repeat until the opponent is dead.\n\n## Key cards\n- **Getting a piece into the graveyard:**\n  - Goblin Engineer (4): when it enters, it puts any artifact from your library straight into your graveyard.\n  - Legion Extruder itself: {2}, tap, sacrifice another artifact (like Cam) to make a 3/3. That bins Cam, and you get a body too.\n  - Cam itself: {3}{U}, sacrifice it to draw two.\n  - Tinker and Transmute Artifact: sacrifice Cam and put Extruder onto the battlefield. That's 2 damage, and now Cam is in the graveyard.\n- **Backup loop:** Goblin Engineer can run the same swap without Welder, but it costs {R} each time.\n- **Finding Welder:** Imperial Recruiter (2) and Goblin Matron (2).\n- **Finding Cam** (it costs 1): Trinket Mage, Urza's Saga's chapter III, and Tezzeret, Cruel Captain's \u22123. Whir of Invention and Fabricate can find either artifact.\n- **Swiftfoot Boots, not Lightning Greaves:** Greaves gives shroud, which stops Cam's trigger from targeting your own Welder. Boots gives hexproof, which only stops opponents. Boots give Welder haste, so you can win the turn it comes down.\n- **Protection and speed:** 4 Force of Will, Force of Negation, Mental Misstep, plus the restricted blue cards (Ancestral Recall, Time Walk, Brainstorm).\n\n**Odds:** the coach measured about 50% of games having a Welder or Welder-finder, a Cam or Cam-finder, and an Extruder or Extruder-enabler by turn 4 on the play, mulligans included. I set turn 4 as the target because Welder normally has to survive a turn before it can tap. Turn 3 measured only about 40% with an earlier version of the list. Adding the second Goblin Matron is what got turn 4 over the line.\n\n## Mana\n- **15 lands:** 4 Volcanic Island, 6 fetchlands, 1 Island, 1 Mountain, Urza's Saga, Strip Mine and Ancient Tomb.\n- **9 fast-mana artifacts:** Black Lotus, all five Moxen, Sol Ring, Mana Crypt and Mana Vault. The off-colour Moxen are still useful as artifacts to sacrifice.\n- The deck has 12 blue and 10 red sources. That's a bit fewer blue sources than real Tinker lists (about 14), because this is a two-colour deck.\n- The checker suggests about 17.5 lands, but real Tinker lists run about 14, so 15 plus the fast mana is fine.\n\n## Sideboarding\n| Opponent | Bring in |\n|---|---|\n| Lurrus Control / Lurrus PO / Paradoxical Outcome (about 45% of the field) | Pyroblast, Flusterstorm \u00d72, Mindbreak Trap \u00d72 |\n| Raker Shops / Sphere Shops (21%) | Abrade \u00d72, Fiery Confluence \u00d72, Pithing Needle (on Walking Ballista or Tezzeret) |\n| Dredge (7%) | Tormod's Crypt \u00d72, Soul-Guide Lantern, Grafdigger's Cage, Pithing Needle (on Bazaar) |\n| Mono-White Initiative | Kozilek's Return, Fiery Confluence \u00d72, Abrade \u00d72 |\n| Oath | Grafdigger's Cage. Your own Welders and Engineers also stop Oath from triggering. |\n\nCut Trinket Mage, Tezzeret, Transmute Artifact and one Recruiter first.\n\n## Things I couldn't verify\n- Tezzeret's starting loyalty wasn't in the card text I got, so check that it can use its \u22123 right away.\n- Shops' Sphere effects and artifact removal hit this deck hard. That matchup is the biggest risk.",
+   "deck": {
+    "main": [
+     {
+      "qty": 4,
+      "name": "Goblin Welder"
+     },
+     {
+      "qty": 4,
+      "name": "Legion Extruder"
+     },
+     {
+      "qty": 4,
+      "name": "Sewer-veillance Cam"
+     },
+     {
+      "qty": 4,
+      "name": "Goblin Engineer"
+     },
+     {
+      "qty": 2,
+      "name": "Imperial Recruiter"
+     },
+     {
+      "qty": 2,
+      "name": "Goblin Matron"
+     },
+     {
+      "qty": 1,
+      "name": "Trinket Mage"
+     },
+     {
+      "qty": 1,
+      "name": "Tinker"
+     },
+     {
+      "qty": 1,
+      "name": "Whir of Invention"
+     },
+     {
+      "qty": 1,
+      "name": "Transmute Artifact"
+     },
+     {
+      "qty": 1,
+      "name": "Swiftfoot Boots"
+     },
+     {
+      "qty": 1,
+      "name": "Fabricate"
+     },
+     {
+      "qty": 1,
+      "name": "Tezzeret, Cruel Captain"
+     },
+     {
+      "qty": 1,
+      "name": "Black Lotus"
+     },
+     {
+      "qty": 1,
+      "name": "Mox Sapphire"
+     },
+     {
+      "qty": 1,
+      "name": "Mox Ruby"
+     },
+     {
+      "qty": 1,
+      "name": "Mox Jet"
+     },
+     {
+      "qty": 1,
+      "name": "Mox Pearl"
+     },
+     {
+      "qty": 1,
+      "name": "Mox Emerald"
+     },
+     {
+      "qty": 1,
+      "name": "Sol Ring"
+     },
+     {
+      "qty": 1,
+      "name": "Mana Crypt"
+     },
+     {
+      "qty": 1,
+      "name": "Mana Vault"
+     },
+     {
+      "qty": 1,
+      "name": "Ancestral Recall"
+     },
+     {
+      "qty": 1,
+      "name": "Time Walk"
+     },
+     {
+      "qty": 1,
+      "name": "Brainstorm"
+     },
+     {
+      "qty": 1,
+      "name": "Mental Misstep"
+     },
+     {
+      "qty": 4,
+      "name": "Force of Will"
+     },
+     {
+      "qty": 1,
+      "name": "Force of Negation"
+     },
+     {
+      "qty": 4,
+      "name": "Volcanic Island"
+     },
+     {
+      "qty": 2,
+      "name": "Scalding Tarn"
+     },
+     {
+      "qty": 1,
+      "name": "Flooded Strand"
+     },
+     {
+      "qty": 1,
+      "name": "Polluted Delta"
+     },
+     {
+      "qty": 1,
+      "name": "Bloodstained Mire"
+     },
+     {
+      "qty": 1,
+      "name": "Misty Rainforest"
+     },
+     {
+      "qty": 1,
+      "name": "Island"
+     },
+     {
+      "qty": 1,
+      "name": "Mountain"
+     },
+     {
+      "qty": 1,
+      "name": "Urza's Saga"
+     },
+     {
+      "qty": 1,
+      "name": "Strip Mine"
+     },
+     {
+      "qty": 1,
+      "name": "Ancient Tomb"
+     }
+    ],
+    "side": [
+     {
+      "qty": 2,
+      "name": "Tormod's Crypt"
+     },
+     {
+      "qty": 1,
+      "name": "Soul-Guide Lantern"
+     },
+     {
+      "qty": 1,
+      "name": "Grafdigger's Cage"
+     },
+     {
+      "qty": 2,
+      "name": "Fiery Confluence"
+     },
+     {
+      "qty": 2,
+      "name": "Abrade"
+     },
+     {
+      "qty": 1,
+      "name": "Kozilek's Return"
+     },
+     {
+      "qty": 2,
+      "name": "Mindbreak Trap"
+     },
+     {
+      "qty": 2,
+      "name": "Flusterstorm"
+     },
+     {
+      "qty": 1,
+      "name": "Pyroblast"
+     },
+     {
+      "qty": 1,
+      "name": "Pithing Needle"
+     }
+    ],
+    "commander": [],
+    "label": "brew",
+    "warnings": [],
+    "plan": {
+     "format": "vintage",
+     "kind": "combo",
+     "thesis": "With Sewer-veillance Cam on the battlefield and Legion Extruder in the graveyard (or the other way around), Goblin Welder swaps them back and forth: Cam leaving or entering untaps Welder each time and every Extruder entry deals 2 damage, so the loop deals infinite damage. Welder has to lose summoning sickness (or wear Swiftfoot Boots), so the realistic kill turn is 4, with Moxen, Force of Will and the restricted blue cards supplying speed and protection.",
+     "pieces": [
+      {
+       "role": "welder engine",
+       "cards": [
+        "Goblin Welder",
+        "Imperial Recruiter",
+        "Goblin Matron"
+       ],
+       "need": 1
+      },
+      {
+       "role": "untap piece (Cam)",
+       "cards": [
+        "Sewer-veillance Cam",
+        "Urza's Saga",
+        "Trinket Mage",
+        "Whir of Invention",
+        "Fabricate",
+        "Tezzeret, Cruel Captain"
+       ],
+       "need": 1
+      },
+      {
+       "role": "damage piece (Extruder)",
+       "cards": [
+        "Legion Extruder",
+        "Goblin Engineer",
+        "Tinker",
+        "Transmute Artifact"
+       ],
+       "need": 1
+      }
+     ],
+     "byTurn": 4
+    },
+    "coach": {
+     "notes": [],
+     "responses": [],
+     "rounds": 0
+    }
+   },
+   "toolCalls": [
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "meta",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "declare_plan",
+     "ok": true,
+     "isError": false
+    },
+    {
+     "name": "coach_check",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "declare_plan",
+     "ok": true,
+     "isError": false
+    },
+    {
+     "name": "coach_check",
+     "isError": false
+    },
+    {
+     "name": "declare_plan",
+     "ok": true,
+     "isError": false
+    },
+    {
+     "name": "coach_check",
+     "isError": false
+    },
+    {
+     "name": "declare_plan",
+     "ok": true,
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "coach_check",
+     "isError": false
+    },
+    {
+     "name": "declare_plan",
+     "ok": true,
+     "isError": false
+    },
+    {
+     "name": "coach_check",
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "submit_brew",
+     "ok": true,
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 30,
+    "output": 23154,
+    "cacheRead": 419544,
+    "cacheWrite": 47674
+   },
+   "costUsd": 0.7855,
+   "steps": 13,
+   "ms": 217243,
+   "errors": []
+  },
+  {
+   "id": "holdout-pauper-metalcraft",
+   "track": "holdout",
+   "format": "Pauper",
+   "before": "2026-04-19",
+   "prompt": "Brew me a Pauper deck built around Ardent Recruit, Search Party Captain and Springleaf Drum.",
+   "text": "I built a mono-white artifact weenie deck. The three cards you asked for drive it: Springleaf Drum, Ardent Recruit and Search Party Captain. The deck checks out as legal and the coach accepted it. **Label: brew.** None of your three cards has a winning tournament list right now, so this is not a copy of a proven deck. I borrowed the sideboard approach from the popular Mono-White Aggro deck and some artifact pieces from the Glintblade and Synthesizer decks.\n\n**Main deck (60)**\n- 4 Ardent Recruit\n- 4 Ornithopter\n- 4 Thraben Inspector\n- 3 Novice Inspector\n- 4 Court Homunculus\n- 4 Glint Hawk\n- 2 Kor Skyfisher\n- 4 Auriok Sunchaser\n- 4 Search Party Captain\n- 4 Springleaf Drum\n- 4 Dispatch\n- 2 Journey to Nowhere\n- 4 Ancient Den\n- 13 Plains\n\n**Sideboard (15)**\n- 3 Dust to Dust\n- 3 Prismatic Strands\n- 2 Journey to Nowhere\n- 2 Holy Light\n- 2 Relic of Progenitus\n- 2 Thraben Charm\n- 1 Destroy Evil\n\n**The plan**\nMany of your cards count \"metalcraft,\" which turns on when you control three or more artifacts. Cheap artifacts get you there fast: Ornithopter (free), Springleaf Drum, Ancient Den (an artifact land), Court Homunculus and the Clue tokens from the two Inspectors. Then Ardent Recruit is a 3/3 for one mana, Auriok Sunchaser is a 3/3 flier for two, and Dispatch exiles a creature for one mana. Once you're attacking with a wide board, Search Party Captain costs W or nothing and draws a card.\n\n**Why these cards**\n- **Springleaf Drum:** you can tap a creature that just came into play to pay for it, so turn-one creatures and Ornithopter become extra mana. It's also an easy artifact for metalcraft.\n- **Glint Hawk and Kor Skyfisher:** both must return a card you control to your hand. Bouncing Drum, Ornithopter or an Inspector costs you almost nothing, and replaying an Inspector makes another Clue.\n- **Search Party Captain:** costs 1 less for each creature you attacked with. With 27 one-drops and 4 free Ornithopters, it's often cheap on turns 3\u20134. It's the deck's card advantage, not something you need early.\n- **Odds:** the coach found you'll have three artifacts (Clues counted) plus a metalcraft card by turn 3 in at least 60% of games, mulligans included. That's the threshold it requires. Earlier drafts were at 51\u201352%, which is why I cut two Kor Skyfishers for three Novice Inspectors.\n\n**The mana**\n17 lands (4 Ancient Den, 13 Plains) plus 4 Drums. The checker suggested about 19 lands, which is what Mono-White Aggro lists play. I kept fewer because the average card cost is only 1.37, the Drums produce mana, and the only expensive card is the Captain, which gets cheaper. If you flood, cut a Plains for a fourth Kor Skyfisher. If you get stuck on lands, add the 18th land.\n\n**Sideboarding against the current field**\n- **Affinity (6.6% of the field), Synthesizer and Glintblade:** bring in Dust to Dust (exiles two artifacts) and Destroy Evil. Take out the Court Homunculi.\n- **Madness (16.6%) and Terror (13.9%):** bring in Relic of Progenitus, which also counts toward metalcraft, plus Journey to Nowhere. Take out Ornithopters.\n- **Elves (6.4%), Faeries and Mono-Red Rally:** bring in Holy Light, Prismatic Strands and Thraben Charm. Holy Light gives non-white creatures -1/-1, so it kills your own Ornithopters. Take those out first.\n- **Gates and Jeskai Control:** Thraben Charm destroys enchantments. Prismatic Strands helps against sweepers that deal damage.\n\n**What I couldn't verify**\n- Ardent Recruit, Search Party Captain, Auriok Sunchaser, Court Homunculus and Dispatch have 0 tournament lists in the last 90 days. Springleaf Drum has 7. How these cards perform against the current field is untested.\n- The card database lists Search Party Captain as a 2/2. Check your printing.\n- The Drum can make any color, so a red splash for Galvanic Blast is possible. I left it out to keep the mana consistent, and I haven't tested it.",
+   "deck": {
+    "main": [
+     {
+      "qty": 4,
+      "name": "Ardent Recruit"
+     },
+     {
+      "qty": 4,
+      "name": "Ornithopter"
+     },
+     {
+      "qty": 4,
+      "name": "Thraben Inspector"
+     },
+     {
+      "qty": 3,
+      "name": "Novice Inspector"
+     },
+     {
+      "qty": 4,
+      "name": "Court Homunculus"
+     },
+     {
+      "qty": 4,
+      "name": "Glint Hawk"
+     },
+     {
+      "qty": 2,
+      "name": "Kor Skyfisher"
+     },
+     {
+      "qty": 4,
+      "name": "Auriok Sunchaser"
+     },
+     {
+      "qty": 4,
+      "name": "Search Party Captain"
+     },
+     {
+      "qty": 4,
+      "name": "Springleaf Drum"
+     },
+     {
+      "qty": 4,
+      "name": "Dispatch"
+     },
+     {
+      "qty": 2,
+      "name": "Journey to Nowhere"
+     },
+     {
+      "qty": 4,
+      "name": "Ancient Den"
+     },
+     {
+      "qty": 13,
+      "name": "Plains"
+     }
+    ],
+    "side": [
+     {
+      "qty": 3,
+      "name": "Dust to Dust"
+     },
+     {
+      "qty": 2,
+      "name": "Journey to Nowhere"
+     },
+     {
+      "qty": 3,
+      "name": "Prismatic Strands"
+     },
+     {
+      "qty": 2,
+      "name": "Holy Light"
+     },
+     {
+      "qty": 2,
+      "name": "Relic of Progenitus"
+     },
+     {
+      "qty": 1,
+      "name": "Destroy Evil"
+     },
+     {
+      "qty": 2,
+      "name": "Thraben Charm"
+     }
+    ],
+    "commander": [],
+    "label": "brew",
+    "warnings": [],
+    "plan": {
+     "format": "pauper",
+     "kind": "synergy",
+     "alsoKind": "fair",
+     "thesis": "Mono-white artifact weenie: cheap artifacts (Ornithopter, Springleaf Drum, Ancient Den, Clues from the Inspectors, Court Homunculus) turn on metalcraft so Ardent Recruit and Auriok Sunchaser hit as 3/3s for one and two mana, while Springleaf Drum turns summoning-sick creatures into mana. Search Party Captain is the refuel top end, cast for W or free after a wide attack, rather than a piece the deck needs by turn 3.",
+     "pieces": [
+      {
+       "role": "artifact theme (metalcraft count)",
+       "cards": [
+        "Springleaf Drum",
+        "Ornithopter",
+        "Ancient Den",
+        "Court Homunculus",
+        "Thraben Inspector",
+        "Novice Inspector"
+       ],
+       "need": 3
+      },
+      {
+       "role": "metalcraft payoff",
+       "cards": [
+        "Ardent Recruit",
+        "Auriok Sunchaser",
+        "Dispatch"
+       ],
+       "need": 1
+      }
+     ],
+     "byTurn": 3
+    },
+    "coach": {
+     "notes": [],
+     "responses": [],
+     "rounds": 0
+    }
+   },
+   "toolCalls": [
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "meta",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "declare_plan",
+     "ok": true,
+     "isError": false
+    },
+    {
+     "name": "coach_check",
+     "isError": false
+    },
+    {
+     "name": "declare_plan",
+     "ok": true,
+     "isError": false
+    },
+    {
+     "name": "coach_check",
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "coach_check",
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "coach_check",
+     "isError": false
+    },
+    {
+     "name": "declare_plan",
+     "ok": true,
+     "isError": false
+    },
+    {
+     "name": "coach_check",
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "submit_brew",
+     "ok": true,
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 36,
+    "output": 13380,
+    "cacheRead": 431262,
+    "cacheWrite": 39641
+   },
+   "costUsd": 0.5522,
+   "steps": 16,
+   "ms": 121306,
+   "errors": []
+  },
+  {
+   "id": "holdout-pauper-inside-out",
+   "track": "holdout",
+   "format": "Pauper",
+   "before": "2026-04-21",
+   "prompt": "Brew me a Pauper deck built around Aurora Eidolon, Sandstorm Eidolon and Spirit Mascot.",
+   "text": "I built a Boros (red-white) brew around your three cards: **Boros Spirit Recursion**, 60 cards plus a 15-card sideboard. It's legal in Pauper and the checker accepted it.\n\n**The plan.** Aurora Eidolon and Sandstorm Eidolon are 4-mana 2/2s that come back from your graveyard to your hand whenever you cast a multicolored spell. That's why this list has 19 red-white spells. You can use them freely: sacrifice Sandstorm so a blocker can't block, sacrifice Aurora to prevent 3 damage, or discard them to Faithless Looting. Then cast your next red-white spell and get them back. Spirit Mascot gets a +1/+1 counter whenever one or more cards leave your graveyard. Rebuying an Eidolon, or casting any flashback card, grows it. You win by going wide and finishing with Rally the Peasants after Sandstorm sacrifices clear the blockers.\n\n**Deck**\n- **Creatures (22):** 4 Boros Recruit, 4 Spirit Mascot, 4 Dog Walker, 4 Skyknight Legionnaire, 3 Aurora Eidolon, 3 Sandstorm Eidolon\n- **Spells (20):** 4 Faithless Looting, 4 Lightning Bolt, 3 Battle Screech, 3 Fire at Will, 3 Rally the Peasants, 3 Prismatic Strands\n- **Lands (18):** 3 Boros Garrison, 2 Wind-Scarred Crag, 2 Thriving Heath, 6 Plains, 5 Mountain\n\n**Sideboard (15):** 3 Electrickery, 3 Red Elemental Blast, 2 Pyroblast, 3 Dust to Dust, 2 Thraben Charm, 2 Gorilla Shaman\n\n**Why these cards**\n- **Spells that bring the Eidolons back:**\n  - Boros Recruit (a 1-mana hybrid card, so it's both red and white)\n  - Spirit Mascot\n  - Dog Walker, but only when cast face up for {R}{W}. Cast face down through disguise it's colorless and won't bring anything back.\n  - Skyknight Legionnaire (flying, haste)\n  - Fire at Will (hybrid instant, 3 damage split among attacking or blocking creatures)\n\n  I searched for other playable red-white multicolored cards. Lightning Helix, Boros Charm and Boros Swiftblade are all **not legal** in Pauper. Arrows of Justice is also not legal.\n- **Cards that grow Spirit Mascot:** Faithless Looting, Rally the Peasants, Battle Screech and Prismatic Strands all have flashback, so casting them from the graveyard gives Mascot a counter. Looting is also how you put Eidolons in the graveyard early.\n- **Borrowed from the Boros Aggro decks that show up in results:** Bolt, Strands, Rally, Screech and Looting. Every white creature in this deck can help pay Screech's and Strands' flashback costs.\n\n**The mana.** 18 lands, with 13 white sources and 12 red. The checker found no warnings. Real Boros Aggro lists run about 19 lands and 16 white sources. I went a little lower because there are no 5-drops and Looting smooths out your draws. If you keep getting stuck on WW for Battle Screech, swap a Mountain for a Plains.\n\n**Sideboarding**\n- **Madness (16%) and Mono-Red Rally:** Prismatic Strands already shuts down a turn of their burn. Bring in Electrickery for their small creatures.\n- **Terror (13.5%) and Faeries:** +3 Red Elemental Blast, +2 Pyroblast, +Electrickery against Faeries. Take out Fire at Will (a weak removal spell against them) and a Strands.\n- **Affinity:** +3 Dust to Dust, +2 Gorilla Shaman.\n- **Golgari Gardens and other graveyard or enchantment decks:** Thraben Charm. Its graveyard-exile mode also triggers your own Mascot if it hits your graveyard.\n- **Elves and Mono-White Aggro:** Electrickery.\n\n**Label: brew.** Nobody in recent results plays any of your three cards (0 lists in the last 90 days). I borrowed the shell and mana from Boros Aggro, but the engine is new.\n\n**Honest odds and caveats**\n- The coach found you'll have an Eidolon (or a Looting to dig for one) plus a red-white spell by turn 5 often enough.\n- I first included Mascot as a required piece by turn 4. That combination came together in only about 33% of games, so treat a huge Mascot as a bonus, not the plan.\n- The Eidolons are weak cards by themselves. This deck will probably be weaker than the top meta decks.\n- The coach noted the deck has little card draw. I left it that way, because getting Eidolons back over and over, plus the flashback cards and Garrison, is the deck's card advantage.\n- I didn't test how the deck actually plays against the meta.",
+   "deck": {
+    "main": [
+     {
+      "qty": 4,
+      "name": "Boros Recruit"
+     },
+     {
+      "qty": 4,
+      "name": "Spirit Mascot"
+     },
+     {
+      "qty": 4,
+      "name": "Dog Walker"
+     },
+     {
+      "qty": 4,
+      "name": "Skyknight Legionnaire"
+     },
+     {
+      "qty": 3,
+      "name": "Aurora Eidolon"
+     },
+     {
+      "qty": 3,
+      "name": "Sandstorm Eidolon"
+     },
+     {
+      "qty": 4,
+      "name": "Faithless Looting"
+     },
+     {
+      "qty": 4,
+      "name": "Lightning Bolt"
+     },
+     {
+      "qty": 3,
+      "name": "Battle Screech"
+     },
+     {
+      "qty": 3,
+      "name": "Fire at Will"
+     },
+     {
+      "qty": 3,
+      "name": "Rally the Peasants"
+     },
+     {
+      "qty": 3,
+      "name": "Prismatic Strands"
+     },
+     {
+      "qty": 3,
+      "name": "Boros Garrison"
+     },
+     {
+      "qty": 2,
+      "name": "Wind-Scarred Crag"
+     },
+     {
+      "qty": 2,
+      "name": "Thriving Heath"
+     },
+     {
+      "qty": 6,
+      "name": "Plains"
+     },
+     {
+      "qty": 5,
+      "name": "Mountain"
+     }
+    ],
+    "side": [
+     {
+      "qty": 3,
+      "name": "Electrickery"
+     },
+     {
+      "qty": 3,
+      "name": "Red Elemental Blast"
+     },
+     {
+      "qty": 2,
+      "name": "Pyroblast"
+     },
+     {
+      "qty": 3,
+      "name": "Dust to Dust"
+     },
+     {
+      "qty": 2,
+      "name": "Thraben Charm"
+     },
+     {
+      "qty": 2,
+      "name": "Gorilla Shaman"
+     }
+    ],
+    "commander": [],
+    "label": "brew",
+    "warnings": [],
+    "plan": {
+     "format": "pauper",
+     "kind": "synergy",
+     "alsoKind": "fair",
+     "thesis": "Boros aggro where Aurora and Sandstorm Eidolon are recursive 4-drops: sacrifice them for a fog or to stop a blocker, or discard them to Faithless Looting, then rebuy them with any of the red-white spells, while Spirit Mascot grows every time an Eidolon or a flashback card leaves the graveyard. Win by going wide with Battle Screech, Skyknights and a big Mascot, then finishing with Rally the Peasants plus Sandstorm sacrifices to clear blockers.",
+     "pieces": [
+      {
+       "role": "recursive payoff (or Looting to find/discard it)",
+       "cards": [
+        "Aurora Eidolon",
+        "Sandstorm Eidolon",
+        "Faithless Looting"
+       ],
+       "need": 1
+      },
+      {
+       "role": "multicolored spell to rebuy Eidolons",
+       "cards": [
+        "Boros Recruit",
+        "Spirit Mascot",
+        "Dog Walker",
+        "Skyknight Legionnaire",
+        "Fire at Will"
+       ],
+       "need": 1
+      }
+     ],
+     "byTurn": 5
+    },
+    "coach": {
+     "notes": [
+      {
+       "id": "fair-cardAdvantage",
+       "message": "card advantage: this deck has 4; most midrange decks in recent pauper results have 12-22 (2243 lists). Fewer than 9 in 10 of them: add some, or say why this deck needs fewer."
+      }
+     ],
+     "responses": [
+      {
+       "id": "fair-cardAdvantage",
+       "response": "This is an aggro deck, not midrange, and its card advantage doesn't come from draw spells. Each Eidolon comes back to hand from the graveyard over and over (19 red-white spells rebuy them). Battle Screech and Rally have flashback, Faithless Looting turns extra lands into Eidolons in the graveyard, and Boros Garrison is a land that's worth two. Adding draw spells would mean cutting the threats the Eidolon loop needs."
+      }
+     ],
+     "rounds": 0
+    }
+   },
+   "toolCalls": [
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "meta",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "find_tags",
+     "isError": false
+    },
+    {
+     "name": "find_tags",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "declare_plan",
+     "ok": true,
+     "isError": false
+    },
+    {
+     "name": "coach_check",
+     "isError": false
+    },
+    {
+     "name": "declare_plan",
+     "ok": true,
+     "isError": false
+    },
+    {
+     "name": "coach_check",
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "submit_brew",
+     "ok": true,
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 32,
+    "output": 16544,
+    "cacheRead": 318095,
+    "cacheWrite": 40159
+   },
+   "costUsd": 0.5954,
+   "steps": 14,
+   "ms": 417720,
+   "errors": []
+  },
+  {
+   "id": "holdout-premodern-living-death",
+   "track": "holdout",
+   "format": "Premodern",
+   "before": "2026-02-17",
+   "prompt": "Brew me a Premodern deck built around Living Death.",
+   "text": "I built a black-green Living Death brew for Premodern. Here's the list.\n\n**Main deck (60)**\n- **Spells:** 4 Living Death, 4 Buried Alive, 4 Dark Ritual, 3 Duress, 2 Cabal Therapy, 2 Exhume\n- **Creatures:** 4 Putrid Imp, 4 Twisted Abomination, 3 Krosan Tusker, 2 Wirewood Guardian, 2 Nekrataal, 1 Bone Shredder, 1 Visara the Dreadful, 1 Deranged Hermit, 1 Uktabi Orangutan, 1 Gravedigger\n- **Lands:** 11 Swamp, 4 Forest, 4 Llanowar Wastes, 2 Tainted Wood\n\n**Sideboard (15):** 3 Smother, 3 Naturalize, 2 Engineered Plague, 2 Pernicious Deed, 2 Diabolic Edict, 2 Tormod's Crypt, 1 Withered Wretch\n\n**The plan**\nFill your graveyard with big creatures and creatures that kill things when they enter. Then cast Living Death: it exiles every creature card from both graveyards, has both players sacrifice their creatures, then puts the exiled cards onto the battlefield. Their board dies and your 6/5s and 6/6s come back. Dark Ritual can make it a turn-3 play. For example: turn 2, Ritual into Buried Alive; turn 3, Ritual into Living Death.\n\n**Why these cards**\n- **Getting creatures into the graveyard:**\n  - **Buried Alive** puts any three creatures there for 3 mana.\n  - **The cyclers** double as land searches. Twisted Abomination (Swampcycling {2}, 5/3 that regenerates) and Wirewood Guardian (Forestcycling {2}, 6/6) fetch a land. Krosan Tusker (cycling {2}{G}, 6/5) finds a basic land and draws a card. You can cycle them at the end of your opponent's turn.\n  - **Putrid Imp** lets you discard a card at no mana cost, so you can dump fatties from your hand.\n- **Creatures that are better coming back:**\n  - **Nekrataal and Bone Shredder** each destroy a nonblack creature when they enter.\n  - **Visara** destroys a creature each time she taps.\n  - **Deranged Hermit** brings four squirrels.\n  - **Uktabi Orangutan** destroys an artifact.\n  - **Gravedigger** returns a creature to your hand. Living Death has just put your old board into the graveyard, so there will be something to pick up.\n- **Backup and protection:** 2 Exhume give you a cheap second way to bring a creature back. Duress and Cabal Therapy strip counterspells and removal before your big turn.\n- **Odds** (on the play, no mulligans): by turn 4 you have about a 53% chance to have drawn Living Death and 68% to have Living Death or Exhume. You'll almost always have something to fill the graveyard (97.5%), and both together come to 66%.\n\n**The mana**\n21 lands with 17 black sources and 10 green. The 9 landcyclers and cyclers work as extra lands, which is why I stopped at 21. The checker compared this to the BG Survival decks I borrowed the land setup from, which run about 18.6 green sources. I kept green low on purpose: this deck is mostly black (Living Death needs BB, plus Ritual, Duress, Therapy and Imp). Green is mainly for Tusker's cycling, and Wirewood Guardian finds Forests when you need them.\n\n**Sideboarding against the current field**\n- **Tormod's Crypt is the biggest threat.** It shows up in about 43% of recent lists, including Sligh, Goblins and Zoo. Your discard spells can't take it once it's on the battlefield, so bring in Naturalize to destroy it before you go for Living Death. Also lean on Exhume and keep cycling at instant speed, so they have fewer good windows to use it.\n- **Stiflenought (15%, the most-played deck):** bring in Diabolic Edict and Naturalize. A Phyrexian Dreadnought that comes back with Living Death has to sacrifice 12 power of creatures or die, so their graveyard working against them is fine.\n- **Sligh and Goblins:** bring in Smother and Engineered Plague, and take out the Exhumes.\n- **Enchantress:** bring in Pernicious Deed and Naturalize.\n- **Opposing graveyard decks (Reanimator, Hermit Druid, Replenish):** bring in Tormod's Crypt and Withered Wretch. Crypt targets one player's graveyard, so it doesn't hurt you.\n\n**Label and caveats**\nThis is a **brew**. Living Death has appeared in only about 7 recent lists, mostly as a single copy in BG Survival, so no proven version exists. I took only the land setup and sideboard ideas from BG Survival. Living Death works for both players, so check their graveyard before you cast it. Your Nekrataals and Bone Shredder help when you get that wrong. Nekrataal, Wirewood Guardian and Gravedigger had no recent tournament results, so their strength here is untested.",
+   "deck": {
+    "main": [
+     {
+      "qty": 4,
+      "name": "Living Death"
+     },
+     {
+      "qty": 4,
+      "name": "Buried Alive"
+     },
+     {
+      "qty": 4,
+      "name": "Dark Ritual"
+     },
+     {
+      "qty": 3,
+      "name": "Duress"
+     },
+     {
+      "qty": 2,
+      "name": "Cabal Therapy"
+     },
+     {
+      "qty": 2,
+      "name": "Exhume"
+     },
+     {
+      "qty": 4,
+      "name": "Putrid Imp"
+     },
+     {
+      "qty": 4,
+      "name": "Twisted Abomination"
+     },
+     {
+      "qty": 3,
+      "name": "Krosan Tusker"
+     },
+     {
+      "qty": 2,
+      "name": "Wirewood Guardian"
+     },
+     {
+      "qty": 2,
+      "name": "Nekrataal"
+     },
+     {
+      "qty": 1,
+      "name": "Bone Shredder"
+     },
+     {
+      "qty": 1,
+      "name": "Visara the Dreadful"
+     },
+     {
+      "qty": 1,
+      "name": "Deranged Hermit"
+     },
+     {
+      "qty": 1,
+      "name": "Uktabi Orangutan"
+     },
+     {
+      "qty": 1,
+      "name": "Gravedigger"
+     },
+     {
+      "qty": 11,
+      "name": "Swamp"
+     },
+     {
+      "qty": 4,
+      "name": "Forest"
+     },
+     {
+      "qty": 4,
+      "name": "Llanowar Wastes"
+     },
+     {
+      "qty": 2,
+      "name": "Tainted Wood"
+     }
+    ],
+    "side": [
+     {
+      "qty": 3,
+      "name": "Smother"
+     },
+     {
+      "qty": 2,
+      "name": "Engineered Plague"
+     },
+     {
+      "qty": 2,
+      "name": "Pernicious Deed"
+     },
+     {
+      "qty": 3,
+      "name": "Naturalize"
+     },
+     {
+      "qty": 2,
+      "name": "Diabolic Edict"
+     },
+     {
+      "qty": 2,
+      "name": "Tormod's Crypt"
+     },
+     {
+      "qty": 1,
+      "name": "Withered Wretch"
+     }
+    ],
+    "commander": [],
+    "label": "brew",
+    "warnings": [],
+    "plan": {
+     "format": "premodern",
+     "kind": "combo",
+     "alsoKind": "synergy",
+     "thesis": "Fill the graveyard with fatties and ETB-removal creatures via Buried Alive, landcyclers/cyclers and Putrid Imp discards, then cast Living Death (Dark Ritual accelerates it to turn 3-4) to wipe the opponent's board and return a bigger army. Exhume is a cheap backup reanimation and Duress/Cabal Therapy protect the key turn.",
+     "pieces": [
+      {
+       "role": "mass reanimation",
+       "cards": [
+        "Living Death",
+        "Exhume"
+       ],
+       "need": 1
+      },
+      {
+       "role": "graveyard enabler",
+       "cards": [
+        "Buried Alive",
+        "Twisted Abomination",
+        "Krosan Tusker",
+        "Wirewood Guardian",
+        "Putrid Imp"
+       ],
+       "need": 1
+      }
+     ],
+     "byTurn": 4
+    },
+    "coach": {
+     "notes": [],
+     "responses": [
+      {
+       "id": "mana-G",
+       "response": "This deck is black-first (Living Death BB, Dark Ritual, Buried Alive, Duress, Therapy, Imp), unlike green-first BG Survival. Green is only needed for Krosan Tusker cycling and the odd hard-cast, and Wirewood Guardian forestcycling finds Forests on demand."
+      }
+     ],
+     "rounds": 0
+    }
+   },
+   "toolCalls": [
+    {
+     "name": "meta",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "declare_plan",
+     "ok": true,
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "coach_check",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "submit_brew",
+     "ok": true,
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 20,
+    "output": 12601,
+    "cacheRead": 174088,
+    "cacheWrite": 33208
+   },
+   "costUsd": 0.453,
+   "steps": 8,
+   "ms": 367942,
+   "errors": []
+  }
+ ],
+ "note": "Items with rerun=true were rerun alone after the batch run lost them to the Mac sleeping mid-request."
+}

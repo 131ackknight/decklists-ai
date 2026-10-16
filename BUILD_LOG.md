@@ -27,7 +27,7 @@ Three things, and the third is turning out to be the most interesting.
 
 | Item | Total |
 | --- | --- |
-| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81. Total about $125.59. Plus one 17-token test call. |
+| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76. Total about $141.35. Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats); full history 143,721 (since 2025-07-01) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
 | Automated tests | 45 passing |
@@ -62,6 +62,35 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - Lesson to apply: any prompt or claim that names a card gets checked against the card index before it is used.
 - ~~Switch to pairwise~~: done; 36 pairs judged (v1 8 wins, v2 6, 22 ties; v2 100% faithful vs. 92%).
 - ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
+
+---
+
+## 2026-10-15 · v4 on the brew holdout: no change, and the brewer argues with the coach
+
+Same 21 decks as the v2 baseline. Compared on the 18 decks where all four runs built a deck (3 v4 runs are still missing; see below):
+
+| | All (18) | Synergy (7) | Combo (5) | Fair (6) |
+| --- | --- | --- | --- | --- |
+| Best existing list, picked with hindsight | 43.5% | 44.6% | 34.0% | 50.2% |
+| Sonnet v2 → v4 | 38.2% → 36.2% | 41.3% → 36.9% | 36.6% → 35.2% | 36.0% → 36.3% |
+| Opus v2 → v4 | 42.0% → **42.7%** | 47.4% → 49.4% | 37.6% → 38.2% | 39.3% → 38.7% |
+
+**Reading: within noise.** Opus is up 0.7 points (better on 10 decks, worse on 4); Sonnet is down 2 points, mostly one deck (Pioneer Lessons, 47% → 18%, where it declared a fair prowess deck instead of the Lessons engine). The fair-deck gap is untouched.
+
+**What the coach actually did:**
+- The brewer used it a lot: about 1.5 `coach_check` calls per deck, and it declared kinds sensibly (mostly synergy and combo).
+- When the coach had notes, the brewer almost always **answered instead of changing the deck**: 11-12 written answers across 40 decks, and only one deck sent back (a fair deck short on interaction). "Fix it or explain" turned into "explain."
+- **Consistency did not change on a fair measure.** Measured against each v4 deck's own plan, v4 looked far more consistent (Sonnet 44% → 63%, Opus 49% → 63% of games where the pieces come together). But that comparison is rigged: the plan lists v4's own cards, so v2 is graded on cards it never chose. On a neutral measure, the signature cards both were told to build around (2+ drawn by turn 4), v2 and v4 are identical: 55% vs. 56% (Sonnet) and 58% vs. 58% (Opus), with the same number of copies.
+
+**Why, as far as we can tell:**
+1. v2's decks already mostly pass the coach's bars, so the coach has little to say, and when it does, the brewer's explanations are reasonable.
+2. The coach checks *consistency*; the score measures *similarity to what players settled on*. What separates the AI's brews from the settled lists is which of many reasonable cards to play, and the crowd settles that through weeks of games. None of v4's checks speak to it.
+
+**Fourth harness change, fourth null result on quality.** Structure keeps making the bot reliable; it doesn't make it choose like the players who refined these decks.
+
+**Infrastructure note:** six v4 runs died with "terminated." The cause was the Mac sleeping (lid closed, on battery) mid-request; keep-awake can't prevent that. Five were rerun alone (one at a time also avoids memory pressure from several processes each holding the 143k-list history); three are still missing (Sonnet Creative Technique, Opus Persist and Fanatic Eldrazi) and need the machine awake.
+
+Cost: v4 runs $14.30, reruns $0.87, smoke test $0.59.
 
 ---
 

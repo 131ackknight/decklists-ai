@@ -1,0 +1,260 @@
+{
+ "ranAt": "2026-10-16T00:32:40.557Z",
+ "harness": "v4",
+ "model": "claude-sonnet-5-5",
+ "tracks": [
+  "holdout"
+ ],
+ "results": [
+  {
+   "id": "holdout-legacy-creative-technique",
+   "track": "holdout",
+   "format": "Legacy",
+   "before": "2025-09-11",
+   "prompt": "Brew me a Legacy deck built around Apex Devastator, Call Forth the Tempest and Creative Technique.",
+   "text": "",
+   "deck": null,
+   "toolCalls": [
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "meta",
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 4,
+    "output": 295,
+    "cacheRead": 0,
+    "cacheWrite": 5294
+   },
+   "costUsd": 0.0162,
+   "steps": 1,
+   "ms": 821992,
+   "errors": [
+    "terminated"
+   ]
+  },
+  {
+   "id": "holdout-pauper-metalcraft",
+   "track": "holdout",
+   "format": "Pauper",
+   "before": "2026-04-19",
+   "prompt": "Brew me a Pauper deck built around Ardent Recruit, Search Party Captain and Springleaf Drum.",
+   "text": "**The deck is a brew.** It is mono-white artifact aggro with 17 Plains. It borrows the mana base and the white shell from Mono-White Aggro, but the artifact core is new. I found no tournament results for Ardent Recruit or Search Party Captain. Springleaf Drum appeared in only 7 recent lists, none of them like this.\n\n**Plan:** Play cheap artifacts early: Clues from the Inspectors, Springleaf Drum, Ornithopter, Hovermyr, Myr Sire and Gingerbrute. Three artifacts turn Ardent Recruit into a 3/3 for one mana and turn Dispatch into a one-mana exile. Then attack wide so Search Party Captain costs little and draws a card.\n\n**Why these cards**\n- **Ardent Recruit ×4:** A 1/1 for {W} that becomes a 3/3 with three or more artifacts.\n- **Thraben Inspector ×4 and Novice Inspector ×4:** Each makes a Clue, which is an artifact, and Kor Skyfisher can bounce them to replay.\n- **Springleaf Drum ×4:** It is an artifact itself. It also taps a creature for mana of any color, so it helps cast the four-drops.\n- **Ornithopter ×4, Hovermyr ×3, Myr Sire ×2 and Gingerbrute ×2:** These are cheap artifact bodies. Hovermyr and Ornithopter fly.\n- **Search Party Captain ×4:** It costs {1} less for each creature you attacked with this turn. After a wide attack it is cheap to cast after combat.\n- **Battle Screech ×4:** It makes flyers and has a flashback that taps three white creatures. It is the other way to refill the board after an attack.\n- **Dispatch ×4 and Journey to Nowhere ×2:** These are the removal. Dispatch exiles once metalcraft is on, and only taps a creature otherwise.\n\n**The coach's odds:** The coach checked how often the deck draws 3 artifact enablers, a payoff and a refuel card by turn 5 on the play, mulligans included. My first draft did it in 23% of games by turn 3. By turn 5 it reached 54%, and a version with more artifacts (four Dispatch, no Thraben Charm in the main) passed. I then cut one Myr Sire for a 17th land and did not re-run the coach, so that exact list is unmeasured. Metalcraft is a bonus, not a requirement. The deck still works as a low-curve white aggro deck without it.\n\n**Mana:** 17 Plains. Real Mono-White Aggro lists average about 19 lands, but this curve is much lower: 22 one-drops and 12 two-drops, with only eight four-drops. Drum, Clues and the zero-cost Ornithopters help smooth draws. I judged 17 lands enough, but the deck may flood or stall slightly if you want to adjust.\n\n**Sideboard (15), aimed at the current field**\n- **Madness (16.6%) and Mono-Red Rally / Ponza:** Bring in 3 Prismatic Strands and 2 Sunlance, and take out the clunkier artifacts.\n- **Terror (13.9%):** Bring in 2 Sunlance and 2 Journey to Nowhere. Prismatic Strands also helps.\n- **Elves and Faeries:** Bring in 2 Holy Light and 2 Thraben Charm. Holy Light shrinks nonwhite creatures, and Charm punishes their small bodies.\n- **Affinity (6.6%):** Bring in 2 Dust to Dust and 2 Cathar Commando. Don't bring in Dust to Dust against a deck without artifacts, because it can hit your own.\n- **Golgari Gardens:** Bring in the 2 Journey to Nowhere from the sideboard.\n\n**Not verified:** I have no results on how this exact deck performs. The matchup plans above come from the field shares and card texts, not from tested games.",
+   "deck": {
+    "main": [
+     {
+      "qty": 4,
+      "name": "Ardent Recruit"
+     },
+     {
+      "qty": 4,
+      "name": "Thraben Inspector"
+     },
+     {
+      "qty": 4,
+      "name": "Novice Inspector"
+     },
+     {
+      "qty": 4,
+      "name": "Kor Skyfisher"
+     },
+     {
+      "qty": 4,
+      "name": "Search Party Captain"
+     },
+     {
+      "qty": 4,
+      "name": "Springleaf Drum"
+     },
+     {
+      "qty": 4,
+      "name": "Ornithopter"
+     },
+     {
+      "qty": 4,
+      "name": "Battle Screech"
+     },
+     {
+      "qty": 4,
+      "name": "Dispatch"
+     },
+     {
+      "qty": 2,
+      "name": "Journey to Nowhere"
+     },
+     {
+      "qty": 2,
+      "name": "Gingerbrute"
+     },
+     {
+      "qty": 3,
+      "name": "Hovermyr"
+     },
+     {
+      "qty": 2,
+      "name": "Myr Sire"
+     },
+     {
+      "qty": 17,
+      "name": "Plains"
+     }
+    ],
+    "side": [
+     {
+      "qty": 3,
+      "name": "Prismatic Strands"
+     },
+     {
+      "qty": 2,
+      "name": "Thraben Charm"
+     },
+     {
+      "qty": 2,
+      "name": "Journey to Nowhere"
+     },
+     {
+      "qty": 2,
+      "name": "Holy Light"
+     },
+     {
+      "qty": 2,
+      "name": "Dust to Dust"
+     },
+     {
+      "qty": 2,
+      "name": "Cathar Commando"
+     },
+     {
+      "qty": 2,
+      "name": "Sunlance"
+     }
+    ],
+    "commander": [],
+    "label": "brew",
+    "warnings": [],
+    "plan": {
+     "format": "pauper",
+     "kind": "synergy",
+     "thesis": "Mono-white aggro that floods the board with cheap artifacts (Clues, Springleaf Drum, Ornithopters) to turn on metalcraft for Ardent Recruit and Dispatch, then attacks wide so Search Party Captain is cheap and refuels the hand. It is a low-curve aggro deck that is still functional without metalcraft, so the full setup is a turn-4/5 payoff.",
+     "pieces": [
+      {
+       "role": "artifact enablers",
+       "cards": [
+        "Thraben Inspector",
+        "Novice Inspector",
+        "Springleaf Drum",
+        "Ornithopter",
+        "Hovermyr",
+        "Myr Sire",
+        "Gingerbrute"
+       ],
+       "need": 3
+      },
+      {
+       "role": "metalcraft payoff",
+       "cards": [
+        "Ardent Recruit",
+        "Dispatch"
+       ],
+       "need": 1
+      },
+      {
+       "role": "attack-wide refuel",
+       "cards": [
+        "Search Party Captain",
+        "Battle Screech",
+        "Kor Skyfisher"
+       ],
+       "need": 1
+      }
+     ],
+     "byTurn": 5
+    },
+    "coach": {
+     "notes": [],
+     "responses": [],
+     "rounds": 0
+    }
+   },
+   "toolCalls": [
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "meta",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "declare_plan",
+     "ok": true,
+     "isError": false
+    },
+    {
+     "name": "coach_check",
+     "isError": false
+    },
+    {
+     "name": "declare_plan",
+     "ok": true,
+     "isError": false
+    },
+    {
+     "name": "coach_check",
+     "isError": false
+    },
+    {
+     "name": "coach_check",
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "submit_brew",
+     "ok": true,
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 24,
+    "output": 9470,
+    "cacheRead": 270420,
+    "cacheWrite": 59158
+   },
+   "costUsd": 0.2967,
+   "steps": 10,
+   "ms": 908067,
+   "errors": []
+  }
+ ]
+}

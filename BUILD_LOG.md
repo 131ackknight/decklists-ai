@@ -27,10 +27,10 @@ Three things, and the third is turning out to be the most interesting.
 
 | Item | Total |
 | --- | --- |
-| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72. Total about $177.60. Plus one 17-token test call. |
+| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36. Total about $185.96. Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats); full history 143,721 (since 2025-07-01) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
-| Automated tests | 45 passing |
+| Automated tests | 48 passing |
 | Decklist Data PRs merged | 4 (#181 export, #182 baseline eval, #183 baseline on `main`, #184 model comparison) |
 | Plan steps done | 1, 4, 5, 6; step 8 pipeline built and run (48 decks, all legal); round 3 pairwise open |
 
@@ -62,6 +62,30 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - Lesson to apply: any prompt or claim that names a card gets checked against the card index before it is used.
 - ~~Switch to pairwise~~: done; 36 pairs judged (v1 8 wins, v2 6, 22 ties; v2 100% faithful vs. 92%).
 - ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
+
+---
+
+## 2026-10-19 · v6: borrow a package, not a deck. Originality restored, most of v5's gain gone
+
+Owner: "go for it" (teach v5 to borrow selectively). Per-deck data first: v5's Fanatic Eldrazi win came with 72% of the deck from one earlier list, Persist went to 92% (a Reanimator list with Persist cards), Creative Technique 78%.
+
+**v6** = v5, plus: the prompt says take the 5-12 cards that make a menu deck's engine or mana work and choose the rest yourself; `check_deck` reports how much of the deck is one existing list; a brew above 65% (about where the holdout's human brewers topped out) is sent back. Stock submissions are exempt. 48 tests pass (3 new).
+
+| Opus, 21 decks | Match to settled deck | Match to brewers' cards | From one earlier list |
+| --- | --- | --- | --- |
+| v2 (two runs) | 40.6%, 41.9% | 41.7%, 42.9% | 50%, 53% |
+| v5 | 43.7% | 45.1% | 60% |
+| **v6** | **42.2%** | **42.8%** | **49%** |
+| Original human brewers | 70% | | about 49% |
+
+- **The copy limit never fired** (0 decks sent back). Telling the model "a package, not a deck" and showing it the copy rate was enough to bring borrowing back to the human brewers' level.
+- **Most of v5's gain went with it.** v6 is 0.9 points above the average of the v2 runs, inside the noise. Fanatic Eldrazi fell back to 34% (it didn't borrow the Eldrazi package this time, which is about 20 cards, above the "5-12" the prompt suggested). Persist improved further (50%; 62% of the brewers' cards) with less copying.
+- **The clean comparison for the post: at the same originality (about 49% from one earlier list), the original human brewers matched the settled deck 70%; the AI 42%.** That is the real gap in brewing skill.
+- **v5's extra points mostly came from borrowing more.** Matching the crowd's deck and being original pull against each other, and the match score rewards borrowing.
+
+**A warning to ourselves:** v4, v5 and v6 have all been tuned and judged on the same 21 holdout decks, the same trap as v3 and the rubric prompts. Gains this small on a reused set can't be trusted. A fresh test set is needed before claiming anything: decks that appear on MTGO from now on can't be in any model's training data or in our tuning.
+
+Cost: $8.36.
 
 ---
 

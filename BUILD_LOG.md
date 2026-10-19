@@ -27,7 +27,7 @@ Three things, and the third is turning out to be the most interesting.
 
 | Item | Total |
 | --- | --- |
-| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53. Total about $150.88. Plus one 17-token test call. |
+| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72. Total about $177.60. Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats); full history 143,721 (since 2025-07-01) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
 | Automated tests | 45 passing |
@@ -62,6 +62,36 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - Lesson to apply: any prompt or claim that names a card gets checked against the card index before it is used.
 - ~~Switch to pairwise~~: done; 36 pairs judged (v1 8 wins, v2 6, 22 ties; v2 100% faithful vs. 92%).
 - ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
+
+---
+
+## 2026-10-19 · v5: the first harness change that moves the number (with a catch)
+
+Owner: run it on the best models, "Opus and Fable," then "Is there a way to slightly reduce cost?" Agreed plan (about $28 instead of about $47): repeat v2 on Opus to measure noise (must be identical, so no savings), v5 on Opus with a short final answer (the deck is locked before the write-up, so scoring is unaffected), and Fable only on the cheap one-call menu test, with a full Fable run only if it beat Opus there.
+
+**v5** = v2's loop and tools, plus (1) a menu of what's working in the format in the request (top 15 archetypes and the nonland cards 70%+ of their lists run, framed as packages to borrow, not decks to copy), (2) sketch three directions, at least one borrowing a package if one truly fits, then pick, (3) short final answer. No coach (v4 didn't help).
+
+**Noise, measured for the first time:** v2 run twice on Opus: 40.6% and 41.9% match to the settled decks. Per deck, runs differ by 2.4 points on average (up to 9).
+
+**Results, 21 holdout decks, Opus:**
+
+| | Match to settled deck | Match to original brewers' cards | Share of deck from one earlier list |
+| --- | --- | --- | --- |
+| v2, run 1 | 40.6% | 41.7% | 50% |
+| v2, run 2 | 41.9% | 42.9% | 53% |
+| **v5** | **43.7%** | **45.1%** | **60%** |
+| Hindsight oracle (best existing list) | 42.6% | | |
+| Original brewers' first lists | 70% | | about 49% |
+
+- **+2.5 points over the average of the two v2 runs, about twice the run-to-run difference.** First time a harness change has beaten the hindsight oracle (43.7% vs. 42.6%). v5 is better on 13 decks, worse on 6.
+- **It fixed exactly what the diagnosis found:** Fanatic Eldrazi 33% → **60%** (it borrowed the Eldrazi package, as the human brewers did); Modern Persist 34% → 48%; Pauper Inside Out 43% → 52%. Losses: Mardu Discard 44% → 34%, Pauper Metalcraft 58% → 52%.
+- **By kind:** combo +4.5 points, synergy +2.7, fair flat. Fair decks remain the gap.
+- **The catch:** v5's decks lean more on existing lists (60% from one earlier list vs. 50-53% for v2 and about 49% for the human brewers). Part of the gain is borrowing more in general, not only borrowing smarter. The owner's goal is brewing, not copying, so this trade-off is the next thing to work on.
+- **Without Fanatic Eldrazi, the gain is about 1.3 points:** one big win carries much of the average. Promising, not proven.
+
+**Fable:** on the one-call menu test it was slightly *below* Opus (first idea 39% vs. 42%, best of 5 44% vs. 45%) at about 3x the cost ($10.12 vs. $3.26). No full Fable run, as agreed. Same story as round 1: the most expensive model is not the best brewer.
+
+Cost: v2 repeat $8.54, v5 $7.63 (cheaper than v2's $8.66 thanks to the short write-up), Fable menu test $10.12, v5 smoke test $0.43.
 
 ---
 

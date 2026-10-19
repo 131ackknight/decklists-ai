@@ -27,7 +27,7 @@ Three things, and the third is turning out to be the most interesting.
 
 | Item | Total |
 | --- | --- |
-| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76. Total about $141.35. Plus one 17-token test call. |
+| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53. Total about $150.88. Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats); full history 143,721 (since 2025-07-01) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
 | Automated tests | 45 passing |
@@ -62,6 +62,38 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - Lesson to apply: any prompt or claim that names a card gets checked against the card index before it is used.
 - ~~Switch to pairwise~~: done; 36 pairs judged (v1 8 wins, v2 6, 22 ties; v2 100% faithful vs. 92%).
 - ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
+
+---
+
+## 2026-10-19 · Owner: "I am not ready to give up." Diagnosis: the AI builds a different deck, not an unfinished one
+
+After v4's null result, the owner pushed on. Three free or cheap diagnostics changed the picture.
+
+**1. Real decks were nearly finished on day one.** The players who first brewed the 21 holdout decks posted lists that already matched the settled deck **70%**. The crowd refined them little afterwards. So the AI's gap (41%) is not "missing weeks of games." From the same signature cards, it builds a *different deck* than the original brewer (43% match to their first lists). (Test fairness checked: only 0.7% of the brewers' cards were hidden from the AI's card pool.)
+
+**2. What the difference is.** On the worst misses, the AI dropped the cards into a familiar template; the brewers found the specific trick, usually by borrowing a proven package from the format's top decks:
+- Cosmogoyf: brewers went all-in with Serum Powder, Cosmogoyf and Summoner's Pact; the AI built Goryo's Vengeance reanimator and added Thud.
+- Fanatic Eldrazi: brewers paired the cards with the Eldrazi package from Modern's top decks (Devourer of Destiny, Emrakul, Sowing Mycospawn); the AI built generic green stompy with Noble Hierarch.
+- Dimir Excruciator: brewers went blue-black with Deceit and Superior Spider-Man; the AI made mono-black midrange with Excruciator as a finisher.
+- Jund Sacrifice: brewers went Jund; the AI defaulted to Orzhov Aristocrats.
+
+**3. Is the right deck in the AI's head, just not its first idea? Mostly no.** `scripts/brainstorm-shells.ts` asks Opus (no tools, one call) for 5 genuinely different decks per holdout deck and scores each against the brewers' first lists (share of their nonland cards):
+
+| | Without menu | With "what's working" menu |
+| --- | --- | --- |
+| First idea | 36% | **42%** |
+| Best of 5 ideas | 40% | **45%** |
+| (v2 Opus, full tool-using brew) | 42% | |
+
+Brainstorming more ideas alone doesn't find the brewers' deck. But giving the model a **menu of what's working in the format that day** (top archetypes and the cards most of their lists run, framed as packages to borrow, not decks to copy) moved its first idea up 6 points, to the level of a full tool-using brew, in one call. Fanatic Eldrazi: one menu idea borrowed the Eldrazi package and matched 55% of the brewers' cards (vs. 27-39% without). This is knowledge, not structure: the knowledge a player gets from playing the format.
+
+**Caveat, and a gap in our method:** single runs vary a lot per deck (Elementals' first idea 40% in one run, 23% in the next). We have never measured run-to-run noise on the holdout, so differences of a few points (including v2 vs. v4) can't be trusted yet. Next run should include a repeat of v2 to measure it.
+
+**Possible training leakage, noted:** the model's knowledge runs to June 2026, so for decks that appeared before then it may have seen them in training. It still didn't reproduce them, which says recall isn't the issue, but the effect can't be ruled out.
+
+**Direction this points to (v5):** give the brewer the format menu up front, have it consider a few directions that borrow packages where they fit the cards, then pick. Measured against a repeated v2 run so the noise is known.
+
+Cost: brainstorm runs $3.43 (no menu), $2.84 (menu run that crashed on one truncated answer), $3.26 (menu, complete).
 
 ---
 

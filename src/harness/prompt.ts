@@ -47,3 +47,14 @@ The coach is code, not a person: it measures how often the pieces come together,
 export const V5_SYSTEM_PROMPT = `${SYSTEM_PROMPT.slice(0, SYSTEM_PROMPT.indexOf("Final answer, after submit_deck"))}Harness v5: the request comes with a menu of what is working in the format right now: the top decks and the cards most of their lists run. Treat them as building blocks a strong player knows from playing the format. Before you build a brew, sketch three different directions for the request (different colors, partner cards or plans). At least one should borrow a package from the menu if any truly fits the requested cards. Pick the strongest direction and say in one sentence why. Borrowing a package is not copying a deck: the requested cards stay at the center.
 
 Final answer, after submit_deck accepts the deck: the plan in two or three sentences and which direction you chose. No sideboard guide.`;
+
+/**
+ * Harness v6: v5, but borrow a package, not a deck. v5 borrowed whole decks
+ * (60% of each brew from one earlier list, vs. about 49% for the human
+ * brewers it is compared with), so check_deck now reports the copy rate and
+ * a brew above the limit is sent back.
+ */
+export const V6_SYSTEM_PROMPT = V5_SYSTEM_PROMPT.replace(
+  "Borrowing a package is not copying a deck: the requested cards stay at the center.",
+  "Borrow a package, not a deck: take the 5-12 cards that make a menu deck's engine or mana work, and choose the rest yourself around the requested cards. check_deck reports how much of your deck is one existing list; a brew above the limit is sent back.",
+);

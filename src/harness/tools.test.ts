@@ -163,4 +163,18 @@ describe("lock fixes from the v3 run", () => {
     const r = JSON.parse(runTool("submit_deck", { format: "Commander", label: "brew", commander: [{ qty: 1, name: "Atraxa" }], main: [{ qty: 99, name: "Island" }] }, c).content);
     expect(r.accepted).toBe(true);
   });
+
+  it("a copy limit sends back a brew that is mostly one existing list, but not a stock list", () => {
+    const copying: DataSource = {
+      ...noData,
+      copyRate: () => ({ rate: 0.9, closest: { strategy: "Mono-Red", event: "Modern Challenge", date: "2026-10-01" } }),
+    };
+    const c: ToolContext = { index, data: copying, seen: new Set(["lightning bolt"]), submitted: null, lock: { cards: [], maxCopyRate: 0.65 } };
+    const brew = JSON.parse(runTool("submit_deck", { ...deck, label: "brew" }, c).content);
+    expect(brew.accepted).toBe(false);
+    expect(brew.errors.join(" ")).toMatch(/Mono-Red/);
+    expect(JSON.parse(runTool("submit_deck", { ...deck, label: "stock" }, c).content).accepted).toBe(true);
+    expect(JSON.parse(runTool("check_deck", deck, c).content).copy.percentOfOneExistingList).toBe(90);
+  });
 });
+

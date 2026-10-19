@@ -124,7 +124,7 @@ function fitsColors(card: Card, allowed: string[], format: string): boolean {
 
 const isBasic = (card: Card | undefined) => !!card && /\bBasic\b/.test(card.typeLine);
 
-function lockProblems(ctx: ToolContext, format: string, main: QtyName[], side: QtyName[], commander: QtyName[] = []): string[] {
+function lockProblems(ctx: ToolContext, format: string, main: QtyName[], side: QtyName[], commander: QtyName[] = [], label?: string): string[] {
   const lock = ctx.lock;
   if (!lock) return [];
   const problems: string[] = [];
@@ -158,7 +158,8 @@ function lockProblems(ctx: ToolContext, format: string, main: QtyName[], side: Q
       problems.push(`Engine cards are ${engine} of ${spells} nonland cards (${pct(engine / spells)}%); a brew needs at least ${pct(lock.minEngineShare)}% so the requested idea is the deck, not an add-on.`);
     }
   }
-  if (lock.maxCopyRate != null) {
+  // Copying a proven list is the right answer to a stock request; the limit is for brews.
+  if (lock.maxCopyRate != null && label !== "stock") {
     const copy = ctx.data.copyRate(format, main);
     if (copy && copy.rate > lock.maxCopyRate) {
       problems.push(`${pct(copy.rate)}% of this main deck is card for card the ${copy.closest.strategy} list from ${copy.closest.event} (${copy.closest.date}). A brew may borrow a shell but must be at most ${pct(lock.maxCopyRate)}% one existing list.`);
@@ -310,7 +311,18 @@ export const TOOLS = [
     run: (input, ctx) => {
       const key = formatKey(input.format);
       const result = checkDeck(ctx.index, { ...input, format: key });
-      const summary = checkSummary(result);
+      const summary: Record<string, unknown> = checkSummary(result);
+      // With a copy limit in force, say how much of the deck is one existing list, so a brew can stay its own.
+      if (ctx.lock?.maxCopyRate != null) {
+        const copy = ctx.data.copyRate(key, input.main);
+        if (copy) {
+          summary.copy = {
+            percentOfOneExistingList: pct(copy.rate),
+            closest: copy.closest,
+            brewLimitPercent: pct(ctx.lock.maxCopyRate),
+          };
+        }
+      }
       if (input.compareTo && result.mana) {
         const a = ctx.data.archetype(key, input.compareTo);
         if (a?.mana) {
@@ -473,7 +485,7 @@ export const TOOLS = [
         return { accepted: false, reason: "These cards were not returned by any tool yet; look them up with card_info.", cards: [...new Set(unseen)] };
       }
       const result = checkDeck(ctx.index, { ...input, format: key });
-      const problems = lockProblems(ctx, key, input.main, input.side, input.commander);
+      const problems = lockProblems(ctx, key, input.main, input.side, input.commander, input.label);
       if (!result.ok || problems.length) {
         return { accepted: false, errors: [...result.errors.map((e) => e.message), ...problems] };
       }

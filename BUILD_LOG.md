@@ -65,6 +65,27 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-10-19 · "What are we doing wrong?" (owner, after switching the session to Fable 5.1)
+
+The owner's question after six harness versions and one small, unreliable gain. Claude's answer, kept in full because it changes what we do next:
+
+1. **We picked a yardstick that measures the wrong thing, then chased it.** The brew holdout asks: given the 3 cards that defined a deck, reproduce the other 57 the crowd ended up with. That is prediction of one historical outcome, not brewing skill. An equally good different deck scores badly, and the score rewards copying: v5 "won" by borrowing more, v6 "lost" by borrowing less.
+2. **The 70% "human brewers" baseline (2026-10-19 diagnosis entry) is partly circular.** The settled deck descends from those first lists; they match it because the archetype *is* their deck, refined. A human who brewed the same cards into something else would be labeled a different archetype and never appear in the 70%. So "humans 70%, AI 42%" does not mean humans brew better; it means the AI doesn't reproduce the specific deck that caught on. Claude stated the stronger claim and shouldn't have.
+3. **Built before diagnosing, five times out of six.** The one version that moved the number (v5) was the only one preceded by reading the decks and asking what the AI did differently.
+4. **Effects this small can't be seen with runs this small.** 21 decks, one run each, about 2.4 points of per-deck noise, one deck swinging the average by 1.3 points. Noise was measured once, this week. Everything from v4 on is inside it.
+5. **Tuned on the test again:** v3 on the 24 prompts, then v4-v6 on the same 21 decks.
+6. **Stopped using the one judge who knows.** The owner has not seen a v5 or v6 deck and has judged 10 brews since round 3, because numbers were cheaper than their time.
+
+**Changes:**
+- No new harness versions until measurement is fixed.
+- Owner judges 5 holdout decks blind, v2 vs v5 vs v6 (about 15 pairs). If their picks don't track the match score, the match score is retired as a target.
+- Forward test only from here: new archetypes as they appear on MTGO, brewed the same week. No model has seen them; nothing can be tuned to them.
+- Several runs per version before any difference is believed.
+
+**Owner's idea: two known good brewers.** Their decklists could help three ways, ranked: as independent judges of blind pairs (the project's weakest link is that only the owner can say what "good" is); as worked examples of a brewer's reasoning in the prompt, if they've written about their decks (never tried: every harness gave the model tools and checks, never taste); and as a cleaner test set ("did it find what a known-good brewer found"), a secondary use with the same one-outcome caveat. Names and privately shared lists stay out of the repo without their say.
+
+---
+
 ## 2026-10-19 · v6: borrow a package, not a deck. Originality restored, most of v5's gain gone
 
 Owner: "go for it" (teach v5 to borrow selectively). Per-deck data first: v5's Fanatic Eldrazi win came with 72% of the deck from one earlier list, Persist went to 92% (a Reanimator list with Persist cards), Creative Technique 78%.

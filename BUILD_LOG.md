@@ -65,6 +65,20 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-10-19 · Two known good brewers, measured: AspiringSpike and Grantfly
+
+Owner: "we won't get their actual time, but we could review their lists from decklistdata.com." Both are public MTGO players with public results, so their handles can be used. `scripts/brewer-profile.ts` on their player pages' decks (44 and 48 lists; `scripts/fetch-dld-deck.ts` now skips decks that moved to a new URL).
+
+**AspiringSpike (Modern):** a brewer by the data. 15 of 44 lists are brews (under 65% of any one earlier list). His brews borrow about **50%** from other archetypes' lists; his first-ever lists 55%; all his lists 59%. He plays only **1.4 cards per deck that nobody in Modern played in the prior 90 days** (2.2 on brews). He originated **Fanatic Eldrazi** (2026-05-15), one of the 21 holdout decks: the "human brewers' first lists" for that deck are his. So brewing, as a top brewer practices it, is a proven package plus two or three new ideas, not a deck from nowhere.
+
+**Grantfly (Premodern, Pauper):** by this data a strong *player* more than a brewer: 90% of each list is an earlier list, 2 brews in 48. He originated Pattern Combo (Premodern, 2026-04-16), which drew only 2 lists in 90 days, so it isn't in the holdout. Premodern is a small card pool, so copy rates run high there anyway. His lists are a reference for what a settled Premodern deck looks like: the stock and tune side, and sideboards, not brewing.
+
+**Recalibration, and a correction to the v5 entry:** v5's "catch" (60% of each deck from one earlier list) is a known good brewer's normal level (AspiringSpike: 59% overall, 50-55% on brews). v6's 49% is slightly *more* original than his brews. The worry that v5 copied too much was wrong by a real brewer's standard. Target originality for brews: about 50-60% from one earlier list, with a few genuinely new cards, not lower.
+
+**Uses, in order:** (1) the originality target above; (2) AspiringSpike's 15 brews as worked examples of the style in the prompt (package plus new cards), and as a secondary test set, with the caveat that lists before June 2026 may be in the models' training data; (3) Grantfly's lists for the stock, tune and sideboard evals in Premodern.
+
+---
+
 ## 2026-10-19 · "What are we doing wrong?" (owner, after switching the session to Fable 5.1)
 
 The owner's question after six harness versions and one small, unreliable gain. Claude's answer, kept in full because it changes what we do next:

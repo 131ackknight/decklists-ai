@@ -1,7 +1,7 @@
 /**
  * Run round 4 (owner-written evals) on one harness and model.
  *
- *   pnpm exec tsx scripts/run-round4.ts --harness v2|v3|v4 --model claude-sonnet-5-5 [--track fill,brew,fresh|holdout] [--items id,id] [--concurrency 3] [--list]
+ *   pnpm exec tsx scripts/run-round4.ts --harness v2|v3|v4|v5 [--tag r2] --model claude-sonnet-5-5 [--track fill,brew,fresh|holdout] [--items id,id] [--concurrency 3] [--list]
  *
  * Fill in the blanks, brew to archetype and the brew holdout rebuild a past moment: lists from
  * the item's date on are cut from the data, and cards first printed after it
@@ -15,7 +15,7 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { loadCardIndex } from "../src/cards/load";
 import { FileDataSource } from "../src/data/source";
 import { MODELS } from "../src/harness/models";
-import { brew, brewV4, type BrewResult } from "../src/harness/run";
+import { brew, brewV4, brewV5, type BrewResult } from "../src/harness/run";
 import { runPipeline, type PipelineResult } from "../src/pipeline/run";
 import { isNearCopy, round4Items } from "../evals/round4/items";
 
@@ -34,6 +34,8 @@ const modelId = arg("model", "claude-sonnet-5-5")!;
 const tracks = arg("track", "fill,brew,fresh")!.split(",");
 const only = arg("items")?.split(",");
 const concurrency = Number(arg("concurrency", "3"));
+// A tag keeps a repeat run from overwriting the first, e.g. --tag r2.
+const tag = arg("tag");
 const model = MODELS[modelId];
 if (!model) throw new Error(`Unknown model ${modelId}. Known: ${Object.keys(MODELS).join(", ")}`);
 
@@ -61,7 +63,13 @@ async function main() {
       const req = { prompt: it.prompt, format: it.format };
       const deps = { index: pool, data };
       const r: BrewResult =
-        harness === "v3" ? await runPipeline(client, model, req, deps) : harness === "v4" ? await brewV4(client, model, req, deps) : await brew(client, model, req, deps);
+        harness === "v3"
+          ? await runPipeline(client, model, req, deps)
+          : harness === "v4"
+            ? await brewV4(client, model, req, deps)
+            : harness === "v5"
+              ? await brewV5(client, model, req, deps)
+              : await brew(client, model, req, deps);
       const pipe = "path" in r ? (r as PipelineResult) : null;
       spent += r.costUsd;
       const sum = (xs: { qty: number }[]) => xs.reduce((n, c) => n + c.qty, 0);
@@ -96,7 +104,7 @@ async function main() {
 
   await Promise.all(Array.from({ length: Math.max(1, concurrency) }, worker));
   mkdirSync("evals/results/round4", { recursive: true });
-  const out = `evals/results/round4/${tracks.join("+")}-${harness}-${modelId}${only ? "-partial" : ""}.json`.replace("fill+brew+fresh-", "");
+  const out = `evals/results/round4/${tracks.join("+")}-${harness}-${modelId}${tag ? `-${tag}` : ""}${only ? "-partial" : ""}.json`.replace("fill+brew+fresh-", "");
   writeFileSync(out, JSON.stringify({ ranAt: new Date().toISOString(), harness, model: modelId, tracks, results }, null, 1));
   console.log(`wrote ${out}, total $${spent.toFixed(2)}`);
 }

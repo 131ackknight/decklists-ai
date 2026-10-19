@@ -1,8 +1,10 @@
 import Anthropic from "@anthropic-ai/sdk";
 import type { CardIndex } from "@/cards/card-index";
+import { getFormat } from "@/cards/formats";
 import type { DataSource } from "@/data/source";
 import { costUsd, type ModelConfig, type Usage } from "./models";
-import { SYSTEM_PROMPT, V4_SYSTEM_PROMPT } from "./prompt";
+import { formatMenu } from "./menu";
+import { SYSTEM_PROMPT, V4_SYSTEM_PROMPT, V5_SYSTEM_PROMPT } from "./prompt";
 import { runTool, toolParams, type SubmittedDeck, type ToolContext } from "./tools";
 
 export interface BrewRequest {
@@ -188,6 +190,36 @@ export async function brewV4(
   const userText = req.format ? `Format: ${req.format}\n\n${req.prompt}` : req.prompt;
   const V4_TOOLS = ["search_cards", "find_tags", "card_info", "meta", "archetype", "reference_list", "draw_odds", "check_deck", "declare_plan", "coach_check", "submit_brew"];
   const r = await runStage({ client, model, system: V4_SYSTEM_PROMPT, userText, tools: V4_TOOLS, ctx, onStep, maxSteps: 40 });
+  return {
+    text: r.text,
+    deck: ctx.submitted,
+    toolCalls: r.toolCalls,
+    usage: r.usage,
+    costUsd: Math.round(costUsd(model, r.usage) * 10000) / 10000,
+    steps: r.steps,
+    stopReason: r.stopReason,
+    error: r.error,
+    ms: Date.now() - started,
+  };
+}
+
+/** Harness v5: v2's loop and tools, plus the format menu in the request and three directions before building. */
+export async function brewV5(
+  client: Anthropic,
+  model: ModelConfig,
+  req: BrewRequest,
+  deps: { index: CardIndex; data: DataSource },
+  onStep?: (step: number, note: string) => void,
+): Promise<BrewResult> {
+  const started = Date.now();
+  const ctx: ToolContext = { ...deps, seen: new Set(), submitted: null };
+  const key = req.format ? getFormat(req.format)?.key : undefined;
+  const menu = key ? formatMenu(deps.index, deps.data, key) : null;
+  const userText =
+    (req.format ? `Format: ${req.format}\n\n${req.prompt}` : req.prompt) +
+    (menu ? `\n\nWhat is working in ${req.format} right now (last 30 days of results):\n${menu}` : "");
+  const V5_TOOLS = ["search_cards", "find_tags", "card_info", "meta", "archetype", "reference_list", "draw_odds", "check_deck", "submit_deck"];
+  const r = await runStage({ client, model, system: V5_SYSTEM_PROMPT, userText, tools: V5_TOOLS, ctx, onStep });
   return {
     text: r.text,
     deck: ctx.submitted,

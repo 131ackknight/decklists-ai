@@ -37,3 +37,13 @@ Harness v4: a coach checks the deck. Before submitting, call declare_plan with t
 - combo: one build-around card, or two cards that combine (a prison lock counts). List each piece with its alternatives and tutors, how many must be drawn, and by which turn.
 - fair: aggro, midrange or control that wins on card quality and curve. Say which style.
 The coach is code, not a person: it measures how often the pieces come together, or compares the deck with real decks of its style and with the cards real players choose for the same job. Use coach_check on drafts. Its notes are evidence, not orders: fix the deck, or answer each note in submit_brew when you have a specific reason. You choose the cards; the coach never asks you to copy a list.`;
+
+/**
+ * Harness v5: the v2 prompt plus a format menu (in the request) and a step to
+ * consider a few directions before building. The final answer is short: the
+ * deck is locked when submit_deck accepts it, so the write-up never changes
+ * what an eval scores.
+ */
+export const V5_SYSTEM_PROMPT = `${SYSTEM_PROMPT.slice(0, SYSTEM_PROMPT.indexOf("Final answer, after submit_deck"))}Harness v5: the request comes with a menu of what is working in the format right now: the top decks and the cards most of their lists run. Treat them as building blocks a strong player knows from playing the format. Before you build a brew, sketch three different directions for the request (different colors, partner cards or plans). At least one should borrow a package from the menu if any truly fits the requested cards. Pick the strongest direction and say in one sentence why. Borrowing a package is not copying a deck: the requested cards stay at the center.
+
+Final answer, after submit_deck accepts the deck: the plan in two or three sentences and which direction you chose. No sideboard guide.`;

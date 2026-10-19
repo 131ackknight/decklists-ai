@@ -15,7 +15,7 @@
  * the model is missing knowledge the harness has to supply.
  */
 import Anthropic from "@anthropic-ai/sdk";
-import { readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { z } from "zod";
 import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
 import { loadCardIndex } from "../src/cards/load";
@@ -52,7 +52,9 @@ async function main() {
   const index = loadCardIndex();
   const history = await FileDataSource.load("data/reference-lists-all.jsonl", index);
   const raw = readFileSync("data/reference-lists-all.jsonl", "utf8").split("\n").filter(Boolean).map((l) => JSON.parse(l));
-  const single = new Map((JSON.parse(readFileSync(`evals/results/round4/holdout-v2-${modelId}.json`, "utf8")).results as any[]).map((r) => [r.id, r]));
+  // The model's own v2 brew, for comparison, when one exists.
+  const singleFile = `evals/results/round4/holdout-v2-${modelId}.json`;
+  const single = new Map<string, any>(existsSync(singleFile) ? (JSON.parse(readFileSync(singleFile, "utf8")).results as any[]).map((r) => [r.id, r]) : []);
   const client = new Anthropic();
   const rows: Record<string, unknown>[] = [];
   let spent = 0;

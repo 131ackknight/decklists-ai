@@ -38,7 +38,11 @@ for (const url of urls) {
   // RSC payload is a JSON string inside a script, so quotes arrive as \" and newlines as \\n.
   const page = (await (await fetch(url)).text()).replace(/\\"/g, '"');
   const snapAt = page.indexOf(`"url":"${pathname}"`);
-  if (snapAt < 0) throw new Error(`no snapshot for ${url}`);
+  if (snapAt < 0) {
+    // A deck reclassified since the link was made redirects to a new canonical URL; skip rather than stop the batch.
+    console.warn(`skipped ${url}: no snapshot (moved or reclassified)`);
+    continue;
+  }
   const snapStart = page.lastIndexOf('{"deckId"', snapAt);
   const snapshot = JSON.parse(page.slice(snapStart, page.indexOf("}", snapAt) + 1));
   const text = page.slice(snapAt).match(/"decklistText":"((?:[^"\\]|\\.)*)"/);

@@ -59,6 +59,14 @@ button:focus-visible, summary:focus-visible, input:focus-visible { outline: 2px 
 .full ul { list-style: none; margin: 0; padding: 0; font: 0.8rem/1.5 var(--font-mono); columns: 2 170px; column-gap: 14px; }
 .full li { break-inside: avoid; overflow-wrap: anywhere; }
 .full li.uniq { color: var(--accent); font-weight: 600; }
+.only ul { list-style: none; margin: 0; padding: 10px 12px; background: var(--bg); border-radius: 8px; font: 0.84rem/1.5 var(--font-mono); }
+.only li { overflow-wrap: anywhere; }
+.card { cursor: help; border-bottom: 1px dotted var(--muted); }
+.card:hover, .card:focus-visible { color: var(--accent); }
+#peek { position: fixed; z-index: 10; width: 244px; height: 340px; border-radius: 12px; box-shadow: 0 8px 28px rgba(0,0,0,0.35); background: var(--surface); display: none; pointer-events: none; object-fit: cover; }
+#peek.on { display: block; }
+#peek.wide { width: 340px; height: 244px; }
+.peek-note { font-size: 0.78rem; color: var(--muted); margin: 0; }
 details summary { cursor: pointer; color: var(--accent); font-size: 0.9rem; }
 .shared pre { margin: 6px 0 0; font: 0.8rem/1.45 var(--font-mono); padding: 10px 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; columns: 2 220px; }
 .reply { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 20rem; overflow: auto; padding: 10px; border: 1px solid var(--line); border-radius: 8px; font-size: 0.9rem; margin-top: 6px; }
@@ -92,6 +100,7 @@ button:disabled { cursor: not-allowed; opacity: 0.6; }
   <p class="notice" id="notice">Loading saved picks…</p>
   <section class="request" id="request"></section>
   <div class="duel" id="duel"></div>
+  <img id="peek" alt="" aria-hidden="true">
   <details class="shared" id="shared"></details>
   <section class="ask">
     <h2>Which would you rather play for this request?</h2>
@@ -201,6 +210,42 @@ button:disabled { cursor: not-allowed; opacity: 0.6; }
   }
 
   /** The whole list, by zone; lines with more copies than the other deck are highlighted. */
+  /** A card name that shows the card (Scryfall image) on hover, focus or tap. */
+  function cardName(name) {
+    return el("span", { class: "card", "data-card": name, tabindex: "0", text: name });
+  }
+  const peek = document.getElementById("peek");
+  let peekFor = null;
+  function showPeek(target, x, y) {
+    const name = target.dataset.card;
+    if (name !== peekFor) {
+      peekFor = name;
+      // Scryfall's fuzzy lookup handles split cards and small name differences; images are free to use.
+      peek.src = "https://api.scryfall.com/cards/named?format=image&version=normal&fuzzy=" + encodeURIComponent(name);
+    }
+    const w = peek.classList.contains("wide") ? 340 : 244;
+    const h = peek.classList.contains("wide") ? 244 : 340;
+    peek.style.left = Math.max(8, Math.min(window.innerWidth - w - 8, x + 16)) + "px";
+    peek.style.top = Math.max(8, Math.min(window.innerHeight - h - 8, y - h / 2)) + "px";
+    peek.classList.add("on");
+  }
+  function hidePeek() { peek.classList.remove("on"); }
+  document.addEventListener("mouseover", (e) => { const t = e.target.closest && e.target.closest(".card"); if (t) showPeek(t, e.clientX, e.clientY); });
+  document.addEventListener("mousemove", (e) => { if (peek.classList.contains("on") && e.target.closest && e.target.closest(".card")) showPeek(e.target.closest(".card"), e.clientX, e.clientY); });
+  document.addEventListener("mouseout", (e) => { if (e.target.closest && e.target.closest(".card")) hidePeek(); });
+  document.addEventListener("focusin", (e) => { const t = e.target.closest && e.target.closest(".card"); if (t) { const r = t.getBoundingClientRect(); showPeek(t, r.right, r.top + r.height / 2); } });
+  document.addEventListener("focusout", (e) => { if (e.target.closest && e.target.closest(".card")) hidePeek(); });
+  // Touch: tap a name to show, tap anywhere else to hide.
+  document.addEventListener("click", (e) => { const t = e.target.closest && e.target.closest(".card"); if (t) { if (peek.classList.contains("on") && peekFor === t.dataset.card) hidePeek(); else showPeek(t, e.clientX, e.clientY); } else hidePeek(); });
+  peek.addEventListener("error", hidePeek);
+
+  /** "4 Card Name" or "1 SB: Card Name" as a list item with a hoverable name. */
+  function cardLine(line) {
+    const m = line.match(/^(\d+) (SB: )?(.+)$/);
+    if (!m) return el("li", { text: line });
+    return el("li", {}, `${m[1]} ${m[2] || ""}`, cardName(m[3]));
+  }
+
   function fullList(deck, other) {
     const d = el("details", { class: "full", open: "" }, el("summary", { text: "Full decklist" }));
     const theirs = counts(other);
@@ -211,7 +256,7 @@ button:disabled { cursor: not-allowed; opacity: 0.6; }
       const ul = el("ul");
       for (const c of lines) {
         const k = (zone === "side" ? "SB: " : "") + c.name;
-        ul.append(el("li", { class: c.qty > (theirs.get(k) || 0) ? "uniq" : null, text: `${c.qty} ${c.name}` }));
+        ul.append(el("li", { class: c.qty > (theirs.get(k) || 0) ? "uniq" : null }, `${c.qty} `, cardName(c.name)));
       }
       d.append(el("h4", { text: `${label} (${total})` }), ul);
     }
@@ -223,7 +268,7 @@ button:disabled { cursor: not-allowed; opacity: 0.6; }
     box.append(el("div", { class: "side-head" }, el("span", { class: "letter", text: letter }), ans.deck ? null : el("span", { class: "fmt", text: "No deck" })));
     if (ans.text) box.append(el("p", { class: "lead", text: opening(ans.text) }));
     const o = el("div", { class: "only" }, el("h3", { text: `Only in ${letter}` }));
-    o.append(only.length ? el("pre", { text: only.join("\n") }) : el("p", { class: "none", text: "Nothing: every card is also in the other deck." }));
+    o.append(only.length ? el("ul", {}, ...only.map(cardLine)) : el("p", { class: "none", text: "Nothing: every card is also in the other deck." }));
     box.append(o);
     if (ans.deck) box.append(fullList(ans.deck, other));
     if (ans.text) {
@@ -327,7 +372,7 @@ button:disabled { cursor: not-allowed; opacity: 0.6; }
         if (first) {
           first = false;
           notice.textContent = canWrite
-            ? "The cards that differ are at the top; full lists are below, with those cards highlighted. Press 1, 2 or 3 (or click) and it moves on. The opening two sentences of each reply say what the deck is going for."
+            ? "Hover (or tap) any card name to see the card. The cards that differ are at the top; full lists are below, with those cards highlighted. Press 1, 2 or 3 (or click) and it moves on. The opening two sentences of each reply say what the deck is going for."
             : "Read-only: only the page owner can judge.";
           jumpToFirst();
           return;

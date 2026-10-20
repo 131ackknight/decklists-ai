@@ -90,6 +90,7 @@ button:disabled { cursor: not-allowed; opacity: 0.6; }
 <style>
 .deckbox { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px; display: grid; gap: 10px; }
 .ans { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+@media (max-width: 560px) { .ans { grid-template-columns: 1fr !important; } }
 .ans button { font: 700 1.05rem var(--font-display); padding: 16px 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); color: var(--ink); cursor: pointer; }
 .ans button kbd { display: block; font: 0.75rem var(--font-mono); color: var(--muted); margin-top: 2px; }
 .ans button[aria-pressed="true"] { background: var(--pick); color: var(--surface); border-color: var(--pick); }
@@ -116,7 +117,9 @@ button:disabled { cursor: not-allowed; opacity: 0.6; }
     <h2>Would you play this deck for this request?</h2>
     <div class="ans" id="ans">
       <button type="button" data-p="yes">Yes<kbd>1</kbd></button>
-      <button type="button" data-p="no">No<kbd>2</kbd></button>
+      <button type="button" data-p="no" data-plain>No<kbd>2</kbd></button>
+      <button type="button" data-p="closer" data-compare hidden>No, but closer than before<kbd>2</kbd></button>
+      <button type="button" data-p="further" data-compare hidden>No, further away<kbd>3</kbd></button>
     </div>
     <div class="note">
       <label for="why">If no (or if something is off): what's wrong, in a line?</label>
@@ -138,6 +141,12 @@ button:disabled { cursor: not-allowed; opacity: 0.6; }
   let chain = Promise.resolve();
   let advanceTimer = null;
   const unjudgedOnly = document.getElementById("unjudgedOnly");
+  // A rebuild round compares with the deck the judge saw last time: "no" splits into closer / further away.
+  if (DATA.compare) {
+    for (const b of document.querySelectorAll("#ans button[data-plain]")) b.hidden = true;
+    for (const b of document.querySelectorAll("#ans button[data-compare]")) b.hidden = false;
+    document.getElementById("ans").style.gridTemplateColumns = "repeat(3, minmax(0, 1fr))";
+  }
 
   const el = (tag, attrs, ...kids) => {
     const n = document.createElement(tag);
@@ -301,7 +310,7 @@ button:disabled { cursor: not-allowed; opacity: 0.6; }
   document.getElementById("saveWhy").addEventListener("click", () => save({ why: document.getElementById("why").value.trim() }, false));
   document.addEventListener("keydown", (e) => {
     if (e.target && e.target.tagName === "TEXTAREA") return;
-    const map = { "1": "yes", "2": "no" };
+    const map = DATA.compare ? { "1": "yes", "2": "closer", "3": "further" } : { "1": "yes", "2": "no" };
     if (map[e.key] && canWrite) save({ play: map[e.key] }, true);
     if (e.key === "ArrowRight") go(1);
     if (e.key === "ArrowLeft") go(-1);

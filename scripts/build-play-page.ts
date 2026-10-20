@@ -4,7 +4,7 @@
  * there is nothing left to compare against.
  *
  *   pnpm exec tsx scripts/build-play-page.ts --run evals/results/round4/expert2-v11-claude-opus-5-5.json \
- *     --out evals/rating/play-expert2-v11.html --key evals/results/round4/play-expert2-v11-key.json [--items id,id] [--title "..."]
+ *     --out evals/rating/play-expert2-v11.html --key evals/results/round4/play-expert2-v11-key.json [--items id,id] [--title "..."] [--compare]
  */
 import { createHash } from "node:crypto";
 import { readFileSync, writeFileSync } from "node:fs";
@@ -32,6 +32,8 @@ const keyPath = opt("key") ?? "evals/results/round4/play-key.json";
 const template = opt("template") ?? "evals/rating/play-template.html";
 const only = opt("items")?.split(",");
 const title = opt("title");
+// --compare: a rebuild round, where "no" splits into closer / further away than the deck judged before.
+const compare = argv.includes("--compare");
 
 const run = JSON.parse(readFileSync(runFile, "utf8")) as { harness: string; model: string; results: Result[] };
 const index = loadCardIndex();
@@ -48,7 +50,7 @@ const decks = run.results
     }
     return { id, format: r.format ?? "", prompt: r.prompt ?? r.id, text: r.text ?? "", deck: r.deck ? { main: r.deck.main, side: r.deck.side ?? [], commander: r.deck.commander ?? [] } : null };
   });
-const json = JSON.stringify({ decks, cards }).replace(/</g, "\\u003c");
+const json = JSON.stringify({ decks, cards, compare }).replace(/</g, "\\u003c");
 let page = readFileSync(template, "utf8").replace("/*DATA*/", () => json);
 if (title) page = page.replace(/<title>[^<]*<\/title>/, `<title>${title}</title>`).replace(/<h1>[^<]*<\/h1>/, `<h1>${title}</h1>`);
 writeFileSync(out, page);

@@ -7,7 +7,7 @@
  *     --pair v1-opus=evals/results/model-comparison/claude-opus-5-5-p1.json,v2-opus=evals/results/harness-v2/claude-opus-5-5-p1.json \
  *     --pair ...
  *
- * --track fresh keeps only round 4 items of that track; --title renames the page.
+ * --track fresh keeps only round 4 items of that track; --items id,id keeps only those; --title renames the page.
  *
  * The rater picks A, B or tie and answers two yes/no questions per answer.
  * The key (pair id -> which label is left and right) is written beside the
@@ -44,6 +44,7 @@ const keyPath = opt("key") ?? "evals/results/pairwise-key.json";
 const template = opt("template") ?? "evals/rating/pairwise-template.html";
 const title = opt("title");
 const onlyTrack = opt("track");
+const onlyItems = opt("items")?.split(",");
 const pairSpecs = argv.flatMap((a, i) => (a === "--pair" ? [argv[i + 1]] : []));
 
 const sent = new Map(
@@ -92,6 +93,7 @@ for (const spec of pairSpecs) {
     const rb = b.get(pid);
     if (!ra || !rb || ra.unsupported || rb.unsupported || !(ra.sentFormat ?? ra.format) || !(rb.sentFormat ?? rb.format)) continue;
     if (onlyTrack && ra.track !== onlyTrack) continue;
+    if (onlyItems && !onlyItems.includes(pid)) continue;
     if (!meta.has(pid)) extra.set(pid, { format: ra.format!, prompt: ra.prompt!, lookFor: "" });
     const p = { id: pid };
     const id = createHash("sha256").update(`${labelA}|${labelB}|${p.id}`).digest("hex").slice(0, 12);

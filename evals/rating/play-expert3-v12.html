@@ -1,0 +1,340 @@
+<title>Would You Play It, Round 3</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: one question per screen. The request, each answer's opening, only the cards that differ, then A / Same / B. */
+:root {
+  --bg: #f4f6fa;
+  --surface: #ffffff;
+  --ink: #1b2236;
+  --muted: #5d667d;
+  --line: #dde2ec;
+  --accent: #2459a6;
+  --pick: #b5650d;
+  --chip: #e8edf6;
+  --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #10141d; --surface: #181e2b; --ink: #e5e9f2; --muted: #9aa4ba; --line: #2a3346;
+    --accent: #6f9fe0; --pick: #e2a04f; --chip: #222b3d;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #10141d; --surface: #181e2b; --ink: #e5e9f2; --muted: #9aa4ba; --line: #2a3346;
+  --accent: #6f9fe0; --pick: #e2a04f; --chip: #222b3d;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 16px/1.5 var(--font-body); }
+.wrap { max-width: 1100px; margin: 0 auto; padding-inline: 16px; padding-block: 16px 64px; display: grid; gap: 16px; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; }
+.top { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 16px; }
+.top h1 { font-size: 1.3rem; }
+.progress { color: var(--muted); font-size: 0.9rem; font-variant-numeric: tabular-nums; }
+.progress b { color: var(--pick); }
+.controls { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; font-size: 0.9rem; color: var(--muted); }
+.controls label { display: inline-flex; gap: 6px; align-items: center; }
+.btn { font: 600 0.88rem var(--font-body); border: 1px solid var(--line); background: var(--surface); color: var(--ink); padding: 6px 12px; border-radius: 8px; cursor: pointer; }
+.btn:disabled { opacity: 0.5; cursor: default; }
+button:focus-visible, summary:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.notice { margin: 0; color: var(--muted); font-size: 0.9rem; }
+.request { display: grid; gap: 6px; }
+.fmt { font: 600 0.75rem var(--font-body); letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); }
+.prompt { font-family: var(--font-display); font-size: 1.25rem; font-weight: 600; margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.duel { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); gap: 14px; }
+.side { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px; display: grid; gap: 10px; align-content: start; min-width: 0; }
+.side-head { display: flex; gap: 10px; align-items: center; }
+.letter { font: 700 1.2rem var(--font-display); width: 2.1rem; height: 2.1rem; display: grid; place-items: center; border-radius: 8px; background: var(--ink); color: var(--surface); }
+.lead { margin: 0; font-size: 0.94rem; overflow-wrap: anywhere; }
+.only h3 { font: 600 0.78rem var(--font-body); text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin-bottom: 4px; }
+.only pre { margin: 0; font: 0.84rem/1.5 var(--font-mono); padding: 10px 12px; background: var(--bg); border-radius: 8px; overflow-x: auto; white-space: pre-wrap; }
+.none { color: var(--muted); font-style: italic; }
+.full summary { font-size: 0.85rem; }
+.full h4 { font: 600 0.72rem var(--font-body); text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin: 8px 0 2px; }
+.full ul { list-style: none; margin: 0; padding: 0; font: 0.8rem/1.5 var(--font-mono); columns: 2 170px; column-gap: 14px; }
+.full li { break-inside: avoid; overflow-wrap: anywhere; }
+.full li.uniq { color: var(--accent); font-weight: 600; }
+.only ul { list-style: none; margin: 0; padding: 10px 12px; background: var(--bg); border-radius: 8px; font: 0.84rem/1.5 var(--font-mono); }
+.only li { overflow-wrap: anywhere; }
+.card { cursor: help; border-bottom: 1px dotted var(--muted); }
+.card:hover, .card:focus-visible { color: var(--accent); }
+#peek { position: fixed; z-index: 10; width: min(300px, calc(100vw - 16px)); max-height: 60vh; overflow: auto; border-radius: 10px; border: 1px solid var(--line); box-shadow: 0 8px 28px rgba(0,0,0,0.3); background: var(--surface); color: var(--ink); padding: 10px 12px; display: none; pointer-events: none; font: 0.84rem/1.45 var(--font-body); }
+#peek.on { display: block; }
+#peek .pk-head { display: flex; justify-content: space-between; gap: 10px; font-weight: 700; }
+#peek .pk-cost { font-family: var(--font-mono); font-weight: 400; color: var(--muted); white-space: nowrap; }
+#peek .pk-type { color: var(--muted); font-size: 0.78rem; margin: 2px 0 6px; }
+#peek .pk-text { white-space: pre-wrap; }
+#peek .pk-pt { text-align: right; font-weight: 700; margin-top: 6px; }
+.peek-note { font-size: 0.78rem; color: var(--muted); margin: 0; }
+details summary { cursor: pointer; color: var(--accent); font-size: 0.9rem; }
+.shared pre { margin: 6px 0 0; font: 0.8rem/1.45 var(--font-mono); padding: 10px 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; columns: 2 220px; }
+.reply { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 20rem; overflow: auto; padding: 10px; border: 1px solid var(--line); border-radius: 8px; font-size: 0.9rem; margin-top: 6px; }
+.ask { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px; display: grid; gap: 12px; }
+.ask h2 { font-size: 1.1rem; }
+.picks { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.picks button { font: 700 1.05rem var(--font-display); padding: 16px 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); color: var(--ink); cursor: pointer; }
+.picks button kbd { display: block; font: 0.75rem var(--font-mono); color: var(--muted); margin-top: 2px; }
+.picks button[aria-pressed="true"] { background: var(--pick); color: var(--surface); border-color: var(--pick); }
+.picks button[aria-pressed="true"] kbd { color: var(--surface); }
+.why { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 0.85rem; color: var(--muted); }
+.why button { font: 0.85rem var(--font-body); border: 1px solid var(--line); background: var(--surface); color: var(--ink); padding: 4px 10px; border-radius: 999px; cursor: pointer; }
+.why button[aria-pressed="true"] { background: var(--chip); border-color: var(--accent); color: var(--accent); }
+button:disabled { cursor: not-allowed; opacity: 0.6; }
+.saved { font-size: 0.8rem; color: var(--muted); min-height: 1.2em; }
+@media (max-width: 560px) { .picks { grid-template-columns: 1fr 1fr; } }
+@media (prefers-reduced-motion: no-preference) { .picks button, .why button { transition: background 120ms ease, color 120ms ease; } }
+</style>
+<style>
+.deckbox { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px; display: grid; gap: 10px; }
+.ans { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+@media (max-width: 560px) { .ans { grid-template-columns: 1fr !important; } }
+.ans button { font: 700 1.05rem var(--font-display); padding: 16px 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); color: var(--ink); cursor: pointer; }
+.ans button kbd { display: block; font: 0.75rem var(--font-mono); color: var(--muted); margin-top: 2px; }
+.ans button[aria-pressed="true"] { background: var(--pick); color: var(--surface); border-color: var(--pick); }
+.ans button[aria-pressed="true"] kbd { color: var(--surface); }
+.note { display: grid; gap: 6px; }
+.note textarea { font: 0.92rem var(--font-body); padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--ink); min-height: 3.2em; resize: vertical; }
+</style>
+
+<div class="wrap">
+  <div class="top">
+    <h1>Would You Play It, Round 3</h1>
+    <span class="progress" id="progress"></span>
+  </div>
+  <div class="controls">
+    <button class="btn" id="prev" type="button">Previous</button>
+    <button class="btn" id="next" type="button">Next</button>
+    <label><input type="checkbox" id="unjudgedOnly" checked> Not yet judged</label>
+  </div>
+  <p class="notice" id="notice">Loading saved answers…</p>
+  <section class="request" id="request"></section>
+  <div class="deckbox" id="deckbox"></div>
+  <div id="peek" role="tooltip"></div>
+  <section class="ask">
+    <h2>Would you play this deck for this request?</h2>
+    <div class="ans" id="ans">
+      <button type="button" data-p="yes">Yes<kbd>1</kbd></button>
+      <button type="button" data-p="no" data-plain>No<kbd>2</kbd></button>
+      <button type="button" data-p="closer" data-compare hidden>No, but closer than before<kbd>2</kbd></button>
+      <button type="button" data-p="further" data-compare hidden>No, further away<kbd>3</kbd></button>
+    </div>
+    <div class="note">
+      <label for="why">If no (or if something is off): what's wrong, in a line?</label>
+      <textarea id="why" placeholder="e.g. no way to win; wrong shell; missing the key card"></textarea>
+      <button class="btn" id="saveWhy" type="button">Save note</button>
+    </div>
+    <div class="saved" id="saved" aria-live="polite"></div>
+  </section>
+</div>
+
+<script type="application/json" id="data">{"decks":[{"id":"feca701afab3","format":"Premodern","prompt":"Brew me a Premodern deck built around Wildfire.","text":"I built a **Red-Green Terravore Wildfire** deck. It's a brew: no published Premodern list in the last 400 days has run Wildfire.\n\n**The plan:** You ramp with Birds of Paradise, Wall of Roots, Mox Diamond and Fellwar Stone and land a Terravore early. Wildfire resolves in two steps: first each player sacrifices four lands, then it deals 4 damage to each creature. Terravore's size equals the number of land cards in all graveyards, so up to 8 extra lands get there before the damage. It's usually 8/8 or bigger by then and survives the 4, while the opponent's creatures die. A kicked Kavu Titan (5/5) and an unused Wall of Roots (0/5) also survive.\n\nAfter that, your Mox Diamond and Fellwar Stone still make mana, the opponent has almost no lands left, and an 8/8 trampler ends the game in a few attacks. Stone Rain, Thermokarst and Wasteland keep the opponent off their lands and grow Terravore while you build up to the 6 mana Wildfire needs. Sylvan Library helps you find the pieces.\n\n**Honest odds:** Without counting Sylvan Library or mulligans, you'll see Wildfire by turn 5 about 57% of the time. You'll have Wildfire, a creature that survives it, and some ramp all together about 37% of the time. The checker's strict version, every specific card in the turn-7 winning sequence, was only 11%. That one undersells the deck, because any ramp card can fill the Mox Diamond or Wall of Roots step.\n\n**The three directions I considered:**\n1. **Red-green Ponza (chosen):** borrows the Terravore, Mox Diamond and Sylvan Library package from the menu's Terrageddon and Oath Ponza decks.\n2. **Mono-red artifact ramp:** Worn Powerstone, Thran Dynamo and Mind Stone into Covetous Dragon or Rorix Bladewing.\n3. **Mono-red land destruction topped with Wildfire:** Stone Rain, Pillage and Avalanche Riders, with Wildfire as the finisher.\n\nI picked the first because Terravore is the only payoff that gets *bigger* from Wildfire's symmetrical land sacrifice. That turns the card from fair into one-sided, where the other two directions just try to survive it.\n\n**Two things to know:**\n- **Land count:** The deck runs 24 lands against Oath Ponza's 28, because the 14 non-land mana sources do the ramping instead.\n- **Sideboard:** It targets the current top decks: Pyroblast for Stiflenought and Psychatog, Tranquil Domain and Naturalize for Enchantress and Replenish, Pyroclasm and Earthquake for Sligh and Goblins, Tormod's Crypt for Hermit Druid, and Call of the Herd for control.","deck":{"main":[{"qty":4,"name":"Wildfire"},{"qty":4,"name":"Terravore"},{"qty":2,"name":"Kavu Titan"},{"qty":4,"name":"Birds of Paradise"},{"qty":4,"name":"Wall of Roots"},{"qty":4,"name":"Mox Diamond"},{"qty":2,"name":"Fellwar Stone"},{"qty":4,"name":"Sylvan Library"},{"qty":3,"name":"Thermokarst"},{"qty":2,"name":"Stone Rain"},{"qty":3,"name":"Lightning Bolt"},{"qty":4,"name":"Wasteland"},{"qty":4,"name":"Karplusan Forest"},{"qty":4,"name":"Wooded Foothills"},{"qty":7,"name":"Forest"},{"qty":5,"name":"Mountain"}],"side":[{"qty":3,"name":"Pyroblast"},{"qty":2,"name":"Naturalize"},{"qty":2,"name":"Tranquil Domain"},{"qty":2,"name":"Pyroclasm"},{"qty":2,"name":"Tormod's Crypt"},{"qty":3,"name":"Call of the Herd"},{"qty":1,"name":"Earthquake"}],"commander":[]}},{"id":"80c2073a469e","format":"Premodern","prompt":"Brew me a Premodern deck built around Zur's Weirding.","text":"I built Weirding Enchantress (a brew), and the submitted deck passed every check.\n\n**The plan:** The base is the GW Enchantress shell from the menu: the Argothian Enchantress / Enchantress's Presence draw engine, Serra's Sanctum, Opalescence and Parallax Wave. I added a light blue splash so Zur's Weirding can act as a lock piece. Once it's out, both players' hands are revealed, and whenever your opponent would draw a card you can pay 2 life to send it to the graveyard instead. That shuts off their topdecks, which is how Enchantress usually loses. Solitary Confinement makes you skip your draw step, so the opponent can't deny those cards. It also prevents all damage to you, which makes paying 2 life each turn safe. Words of Worship turns an Enchantress draw into 5 life, which pays for that. To win, cast Opalescence: it turns Weirding into a 4/4 and your other enchantments into attackers. Words of Wilding is a backup that turns draws into 2/2 Bears, and the opponent can't deny those either.\n\n**Directions I considered:**\n1. **Bant control:** This is where Weirding actually shows up in results. One 5-0 \"Parfait\" league list runs a single Weirding next to Oath of Druids, Counterspell and Gush. Weirding is a minor piece there, not the center.\n2. **Bant Armageddon prison:** Use Mox Diamond and Armageddon from Terrageddon, then Weirding stops opponents from drawing lands to rebuild. It needs too many separate parts to come together.\n3. **Enchantress plus Weirding (chosen):** Enchantress is 13% of the field and already runs Solitary Confinement and Words of Wilding, the exact cards that protect you from Weirding. Of the three, it's the only one where the requested card gets a full support package rather than a single slot.\n\n**Things to know:**\n- **Finding Weirding:** You run 3 copies, plus 3 Sterling Grove and 1 Enlightened Tutor to fetch it. That gives about a 78% chance to see one of those seven cards by turn 5 (assuming no mulligan).\n- **Blue mana:** It comes from 3 Yavimaya Coast, 1 Island and 2 Flooded Strand (6 sources). The checker found the mana in line with real Enchantress lists.\n- **The win line:** The checker estimates you'll draw every card in the sample line by turn 7 in only 0.4% of games. That number doesn't count tutors or card draw, and you rarely need every piece. In practice, Weirding plus any finisher (Opalescence, Bears or Replenish) is enough.\n- **Weirding is optional each time:** You choose whether to pay. Against burn decks like Sligh, don't pay life unless Confinement is out.","deck":{"main":[{"qty":4,"name":"Argothian Enchantress"},{"qty":4,"name":"Enchantress's Presence"},{"qty":2,"name":"Mirri's Guile"},{"qty":4,"name":"Wild Growth"},{"qty":3,"name":"Zur's Weirding"},{"qty":2,"name":"Solitary Confinement"},{"qty":1,"name":"Words of Worship"},{"qty":2,"name":"Words of Wilding"},{"qty":3,"name":"Sterling Grove"},{"qty":3,"name":"Opalescence"},{"qty":3,"name":"Parallax Wave"},{"qty":2,"name":"Seal of Cleansing"},{"qty":3,"name":"Swords to Plowshares"},{"qty":1,"name":"Replenish"},{"qty":1,"name":"Enlightened Tutor"},{"qty":4,"name":"Serra's Sanctum"},{"qty":4,"name":"Brushland"},{"qty":3,"name":"Yavimaya Coast"},{"qty":3,"name":"Windswept Heath"},{"qty":2,"name":"Flooded Strand"},{"qty":4,"name":"Forest"},{"qty":1,"name":"Plains"},{"qty":1,"name":"Island"}],"side":[{"qty":3,"name":"Xantid Swarm"},{"qty":3,"name":"Tormod's Crypt"},{"qty":2,"name":"Aura of Silence"},{"qty":2,"name":"Warmth"},{"qty":1,"name":"Gaea's Blessing"},{"qty":1,"name":"Sacred Ground"},{"qty":1,"name":"Swords to Plowshares"},{"qty":1,"name":"Karmic Justice"},{"qty":1,"name":"Choke"}],"commander":[]}},{"id":"af18a111f3dd","format":"Premodern","prompt":"Brew me a Premodern deck built around Squandered Resources and Natural Balance.","text":"I built a BG \"Squandervore\" brew. The idea: Squandered Resources turns every land into mana you can cash in at instant speed and a card in the graveyard. Terravore (power and toughness equal to the land cards in all graveyards), Nimble Mongoose and Werebear are the payoffs. Natural Balance is the refill: you float mana from your lands, sacrifice all of them to Squandered to pay {2}{G}{G}, end up with zero lands, and search up 5 basics that enter untapped. That puts 4+ more lands in your graveyard, and in combat you can sacrifice the new basics after blocks for +1/+1 each on Terravore.\n\n**Directions I considered:**\n1. A Rock shell (Pernicious Deed, Duress/Cabal Therapy, Ravenous Baloth), using Squandered as a mana burst.\n2. A BG X-spell ramp deck that sacrifices lands for a huge Pernicious Deed.\n3. Terrageddon's green threshold package from the menu (Terravore, Mox Diamond, Sylvan Library, Call of the Herd, Mongoose, Werebear), with white and Armageddon swapped for black.\n\nI chose the third because every land Squandered eats makes those creatures bigger. That gives both requested cards a real job instead of just ramping. I dropped Armageddon because Natural Balance gives basics to *any* player at four or fewer lands, so wiping all lands first would rebuild your opponent too.\n\n**What to know before playing it:**\n- **No track record:** no published list in the last 400 days runs these two cards together.\n- **Odds:** the deck has both Squandered and Terravore by turn 4 only 26.5% of the time. Every card in the full line shows up by turn 5 in about 10.5% of games.\n- **Without Squandered:** fetchlands, Wasteland, Mox Diamond discards and Tranquil Thicket still put lands in the graveyard, so the threshold creatures work without it.\n- **Fetchlands:** sacrificing one to Squandered gives no mana, because it can't produce any. Crack them normally instead.\n- **When to cast Natural Balance:** it's best when your opponent has 5+ lands. Below that, it gives them basics too.\n- **Sideboard:** aimed at Goblins/Sligh (Engineered Plague, Zuran Orb), Enchantress/Replenish (Naturalize, Pernicious Deed, Tormod's Crypt) and Stiflenought (Chainer's Edict).\n- **Land count:** the deck runs 24 lands plus 4 Mox Diamond. Terrageddon lists run about 26.","deck":{"main":[{"qty":4,"name":"Terravore"},{"qty":4,"name":"Nimble Mongoose"},{"qty":3,"name":"Werebear"},{"qty":3,"name":"Call of the Herd"},{"qty":4,"name":"Squandered Resources"},{"qty":3,"name":"Natural Balance"},{"qty":3,"name":"Sylvan Library"},{"qty":4,"name":"Mox Diamond"},{"qty":4,"name":"Duress"},{"qty":3,"name":"Smother"},{"qty":1,"name":"Diabolic Edict"},{"qty":2,"name":"Wasteland"},{"qty":4,"name":"Wooded Foothills"},{"qty":2,"name":"Bloodstained Mire"},{"qty":2,"name":"Llanowar Wastes"},{"qty":1,"name":"Tranquil Thicket"},{"qty":7,"name":"Forest"},{"qty":6,"name":"Swamp"}],"side":[{"qty":3,"name":"Engineered Plague"},{"qty":2,"name":"Tormod's Crypt"},{"qty":3,"name":"Naturalize"},{"qty":2,"name":"Pernicious Deed"},{"qty":2,"name":"Chainer's Edict"},{"qty":2,"name":"Zuran Orb"},{"qty":1,"name":"Ravenous Baloth"}],"commander":[]}},{"id":"073a6cea7d10","format":"Premodern","prompt":"Brew me a mill deck in premodern","text":"I built UW Millstone draw-go, a brew on the Standstill deck's shell. The tools show no recent Premodern list with Millstone or Traumatize, so nobody has tested this deck in tournaments.\n\n**The plan:** Play Millstone on turn 2 and Standstill on turn 3, then mill 2 cards at the end of every opponent turn. Millstone's activation is an ability, not a spell, so it never triggers Standstill. Ambassador Laquatus works the same way: {3} mills 3 at instant speed. Counterspell, Mana Leak, Swords to Plowshares and Wrath of God keep you alive. Around turns 6–7, Traumatize mills half of what's left. Vision Charm (1 mana, mill 4, at instant speed) and Brain Freeze finish the library. Cast Brain Freeze after another spell in the same turn and it mills 6 or more.\n\n**Directions I considered:**\n1. **UW Standstill shell with Millstone** (chosen). It borrows the menu's Standstill mana base and interaction (24-card mana base, 13 white / 17 blue sources, passed the checker), plus Vision Charm from the Stiflenought package.\n2. **Mono-blue Brain Freeze storm**, using Stiflenought's cheap cantrips.\n3. **UB Dreamborn Muse control**, with Duress.\n\nI picked the first because draw-go always has spare mana at the end of the opponent's turn, and Millstone needs exactly that.\n\n**Odds:**\n- You have Millstone by turn 5 about 57% of the time, and at least one of the 11 mill cards about 92% of the time.\n- My best guess for the kill is around turn 10 (60 − 7 opening hand = 53 cards to mill).\n- The checker says every card in the full win line is drawn by turn 10 in only 0.2% of games. That's not the real kill rate, since the deck only needs enough mill, not every piece. But it does mean the deck wins slowly and grinds.\n\n**Caveats:**\n- Mill helps some of the field. Hermit Druid, Psychatog and Replenish decks want a full graveyard. Against them, use counters as your main plan and mill later. The sideboard has Tormod's Crypt for those matchups.\n- Against Sligh and Goblins you're a slow control deck, so the sideboard also has Circle of Protection: Red, Hydroblast and Blue Elemental Blast.\n- Mishra's Factory and Faerie Conclave give you a backup way to win by damage.","deck":{"main":[{"qty":4,"name":"Millstone"},{"qty":2,"name":"Traumatize"},{"qty":3,"name":"Vision Charm"},{"qty":1,"name":"Brain Freeze"},{"qty":1,"name":"Ambassador Laquatus"},{"qty":4,"name":"Counterspell"},{"qty":3,"name":"Mana Leak"},{"qty":4,"name":"Swords to Plowshares"},{"qty":2,"name":"Wrath of God"},{"qty":1,"name":"Disenchant"},{"qty":4,"name":"Impulse"},{"qty":3,"name":"Fact or Fiction"},{"qty":3,"name":"Standstill"},{"qty":4,"name":"Flooded Strand"},{"qty":4,"name":"Adarkar Wastes"},{"qty":6,"name":"Island"},{"qty":3,"name":"Plains"},{"qty":2,"name":"Coastal Tower"},{"qty":4,"name":"Mishra's Factory"},{"qty":1,"name":"Dust Bowl"},{"qty":1,"name":"Faerie Conclave"}],"side":[{"qty":2,"name":"Circle of Protection: Red"},{"qty":2,"name":"Hydroblast"},{"qty":1,"name":"Blue Elemental Blast"},{"qty":2,"name":"Annul"},{"qty":2,"name":"Tormod's Crypt"},{"qty":3,"name":"Meddling Mage"},{"qty":1,"name":"Powder Keg"},{"qty":1,"name":"Disenchant"},{"qty":1,"name":"Wrath of God"}],"commander":[]}},{"id":"26503a6570ee","format":"Premodern","prompt":"Brew me a Premodern control deck built around Nether Spirit.","text":"I built a black-green prison deck, using Nether Spirit as a free creature to sacrifice every turn. It's labeled a brew, but be clear about where it comes from: the card search shows that every recent deck running Nether Spirit (4 lists) is Contamination-based. So I started from the latest 5-0 Contamination list and added my own twist: 3 Smokestack, a 4th Contamination, and fewer of the deck's flexible cards.\n\n**How it works:** Nether Spirit comes back at the start of your turn if it's the only creature card in your graveyard. The deck runs no other creature cards; Mishra's Factory and Zombie tokens don't count. Each turn you let the Spirit return first, then sacrifice it to keep Contamination. That makes all lands, including the opponent's, tap only for black mana, which shuts off Sligh (10% of the field) and Terrageddon (11%). Smokestack is a second lock: you add a counter each turn, and the Spirit and Zombie tokens pay your share of sacrifices while the opponent loses real cards. Duress and Cabal Therapy clear the way. Innocent Blood and Pernicious Deed act like one-sided removal, because your Spirit just comes back. Mishra's Factory and the Spirit do the attacking.\n\n**Directions I considered:**\n1. Black-green Contamination plus Smokestack (Smokestack from the Oath Ponza deck, Pernicious Deed from Rock).\n2. Blue-black draw-and-counter like the Psychatog deck, with Nether Spirit as the only finisher.\n3. White-black control (Wrath of God, Vindicate), with Spirit as a threat that survives Wrath.\n\nI picked the first because it's the only one where sacrificing the Spirit for free every turn builds a lock. The other two just use it as a 2/2 that keeps coming back.\n\n**Things to know:**\n- **Two Spirits in the graveyard cancel each other out.** Neither comes back. Skeletal Scrying fixes this by removing the extra copy from your graveyard, which is why it stays in.\n- **Pay for green spells and Smokestack before Contamination lands, or use Chromatic Sphere.** Once it's out your lands only make black mana. Sphere changes that mana into green for Deed or pays toward Smokestack, and draws a card. The deck checker questioned Sphere, Innocent Blood, Skeletal Scrying and Deed as rarely played. I kept all four for these reasons.\n- **Expect a slow game.** You have about a 49% chance of drawing a Spirit by turn 3 on the play, and 70% for Contamination or Smokestack. Zombie Infestation tokens can stand in for the Spirit. The win turn I gave is about 8. The checker says you'll have drawn every card in my example line by turn 8 in only 6.5% of games, but you don't need them all. Any lock piece plus Spirit, Zombie tokens or Factory does the job.\n\nThe 24 lands match real Contamination lists, and the deck passed the legality and mana check with no warnings. The 15-card sideboard is aimed at Enchantress, Terrageddon, Phyrexian Dreadnought, Goblins and graveyard decks.","deck":{"main":[{"qty":4,"name":"Nether Spirit"},{"qty":4,"name":"Contamination"},{"qty":3,"name":"Zombie Infestation"},{"qty":3,"name":"Pernicious Deed"},{"qty":3,"name":"Smokestack"},{"qty":4,"name":"Chromatic Sphere"},{"qty":4,"name":"Duress"},{"qty":4,"name":"Cabal Therapy"},{"qty":3,"name":"Innocent Blood"},{"qty":3,"name":"Skeletal Scrying"},{"qty":1,"name":"Smother"},{"qty":10,"name":"Swamp"},{"qty":4,"name":"Llanowar Wastes"},{"qty":1,"name":"Tainted Wood"},{"qty":3,"name":"Mishra's Factory"},{"qty":3,"name":"Rishadan Port"},{"qty":3,"name":"Wasteland"}],"side":[{"qty":3,"name":"Engineered Plague"},{"qty":3,"name":"Dystopia"},{"qty":2,"name":"Phyrexian Furnace"},{"qty":2,"name":"Tormod's Crypt"},{"qty":1,"name":"Snuff Out"},{"qty":1,"name":"Powder Keg"},{"qty":1,"name":"Haunting Echoes"},{"qty":2,"name":"Diabolic Edict"}],"commander":[]}}],"cards":{"Wildfire":{"cost":"{4}{R}{R}","type":"Sorcery","text":"Each player sacrifices four lands of their choice. Wildfire deals 4 damage to each creature."},"Terravore":{"cost":"{1}{G}{G}","type":"Creature — Lhurgoyf","text":"Trample\nTerravore's power and toughness are each equal to the number of land cards in all graveyards.","pt":"*/*"},"Kavu Titan":{"cost":"{1}{G}","type":"Creature — Kavu","text":"Kicker {2}{G} (You may pay an additional {2}{G} as you cast this spell.)\nIf this creature was kicked, it enters with three +1/+1 counters on it and with trample.","pt":"2/2"},"Birds of Paradise":{"cost":"{G}","type":"Creature — Bird","text":"Flying\n{T}: Add one mana of any color.","pt":"0/1"},"Wall of Roots":{"cost":"{1}{G}","type":"Creature — Plant Wall","text":"Defender\nPut a -0/-1 counter on this creature: Add {G}. Activate only once each turn.","pt":"0/5"},"Mox Diamond":{"cost":"{0}","type":"Artifact","text":"If this artifact would enter, you may discard a land card instead. If you do, put this artifact onto the battlefield. If you don't, put it into its owner's graveyard.\n{T}: Add one mana of any color."},"Fellwar Stone":{"cost":"{2}","type":"Artifact","text":"{T}: Add one mana of any color that a land an opponent controls could produce."},"Sylvan Library":{"cost":"{1}{G}","type":"Enchantment","text":"At the beginning of your draw step, you may draw two additional cards. If you do, choose two cards in your hand drawn this turn. For each of those cards, pay 4 life or put the card on top of your library."},"Thermokarst":{"cost":"{1}{G}{G}","type":"Sorcery","text":"Destroy target land. If that land was a snow land, you gain 1 life."},"Stone Rain":{"cost":"{2}{R}","type":"Sorcery","text":"Destroy target land."},"Lightning Bolt":{"cost":"{R}","type":"Instant","text":"Lightning Bolt deals 3 damage to any target."},"Wasteland":{"cost":"","type":"Land","text":"{T}: Add {C}.\n{T}, Sacrifice this land: Destroy target nonbasic land."},"Karplusan Forest":{"cost":"","type":"Land","text":"{T}: Add {C}.\n{T}: Add {R} or {G}. This land deals 1 damage to you."},"Wooded Foothills":{"cost":"","type":"Land","text":"{T}, Pay 1 life, Sacrifice this land: Search your library for a Mountain or Forest card, put it onto the battlefield, then shuffle."},"Forest":{"cost":"","type":"Basic Land — Forest","text":"({T}: Add {G}.)"},"Mountain":{"cost":"","type":"Basic Land — Mountain","text":"({T}: Add {R}.)"},"Pyroblast":{"cost":"{R}","type":"Instant","text":"Choose one —\n• Counter target spell if it's blue.\n• Destroy target permanent if it's blue."},"Naturalize":{"cost":"{1}{G}","type":"Instant","text":"Destroy target artifact or enchantment."},"Tranquil Domain":{"cost":"{1}{G}","type":"Instant","text":"Destroy all non-Aura enchantments."},"Pyroclasm":{"cost":"{1}{R}","type":"Sorcery","text":"Pyroclasm deals 2 damage to each creature."},"Tormod's Crypt":{"cost":"{0}","type":"Artifact","text":"{T}, Sacrifice this artifact: Exile target player's graveyard."},"Call of the Herd":{"cost":"{2}{G}","type":"Sorcery","text":"Create a 3/3 green Elephant creature token.\nFlashback {3}{G} (You may cast this card from your graveyard for its flashback cost. Then exile it.)"},"Earthquake":{"cost":"{X}{R}","type":"Sorcery","text":"Earthquake deals X damage to each creature without flying and each player."},"Argothian Enchantress":{"cost":"{1}{G}","type":"Creature — Human Druid","text":"Shroud (This creature can't be the target of spells or abilities.)\nWhenever you cast an enchantment spell, draw a card.","pt":"0/1"},"Enchantress's Presence":{"cost":"{2}{G}","type":"Enchantment","text":"Whenever you cast an enchantment spell, draw a card."},"Mirri's Guile":{"cost":"{G}","type":"Enchantment","text":"At the beginning of your upkeep, you may look at the top three cards of your library, then put them back in any order."},"Wild Growth":{"cost":"{G}","type":"Enchantment — Aura","text":"Enchant land\nWhenever enchanted land is tapped for mana, its controller adds an additional {G}."},"Zur's Weirding":{"cost":"{3}{U}","type":"Enchantment","text":"Players play with their hands revealed.\nIf a player would draw a card, they reveal it instead. Then any other player may pay 2 life. If a player does, put that card into its owner's graveyard. Otherwise, that player draws a card."},"Solitary Confinement":{"cost":"{2}{W}","type":"Enchantment","text":"At the beginning of your upkeep, sacrifice this enchantment unless you discard a card.\nSkip your draw step.\nYou have shroud. (You can't be the target of spells or abilities.)\nPrevent all damage that would be dealt to you."},"Words of Worship":{"cost":"{2}{W}","type":"Enchantment","text":"{1}: The next time you would draw a card this turn, you gain 5 life instead."},"Words of Wilding":{"cost":"{2}{G}","type":"Enchantment","text":"{1}: The next time you would draw a card this turn, create a 2/2 green Bear creature token instead."},"Sterling Grove":{"cost":"{G}{W}","type":"Enchantment","text":"Other enchantments you control have shroud. (They can't be the targets of spells or abilities.)\n{1}, Sacrifice this enchantment: Search your library for an enchantment card, reveal it, then shuffle and put that card on top."},"Opalescence":{"cost":"{2}{W}{W}","type":"Enchantment","text":"Each other non-Aura enchantment is a creature in addition to its other types and has base power and base toughness each equal to its mana value."},"Parallax Wave":{"cost":"{2}{W}{W}","type":"Enchantment","text":"Fading 5 (This enchantment enters with five fade counters on it. At the beginning of your upkeep, remove a fade counter from it. If you can't, sacrifice it.)\nRemove a fade counter from this enchantment: Exile target creature.\nWhen this enchantment leaves the battlefield, each player returns to the battlefield all cards they own exiled with it."},"Seal of Cleansing":{"cost":"{1}{W}","type":"Enchantment","text":"Sacrifice this enchantment: Destroy target artifact or enchantment."},"Swords to Plowshares":{"cost":"{W}","type":"Instant","text":"Exile target creature. Its controller gains life equal to its power."},"Replenish":{"cost":"{3}{W}","type":"Sorcery","text":"Return all enchantment cards from your graveyard to the battlefield. (Auras with nothing to enchant remain in your graveyard.)"},"Enlightened Tutor":{"cost":"{W}","type":"Instant","text":"Search your library for an artifact or enchantment card, reveal it, then shuffle and put that card on top."},"Serra's Sanctum":{"cost":"","type":"Legendary Land","text":"{T}: Add {W} for each enchantment you control."},"Brushland":{"cost":"","type":"Land","text":"{T}: Add {C}.\n{T}: Add {G} or {W}. This land deals 1 damage to you."},"Yavimaya Coast":{"cost":"","type":"Land","text":"{T}: Add {C}.\n{T}: Add {G} or {U}. This land deals 1 damage to you."},"Windswept Heath":{"cost":"","type":"Land","text":"{T}, Pay 1 life, Sacrifice this land: Search your library for a Forest or Plains card, put it onto the battlefield, then shuffle."},"Flooded Strand":{"cost":"","type":"Land","text":"{T}, Pay 1 life, Sacrifice this land: Search your library for a Plains or Island card, put it onto the battlefield, then shuffle."},"Plains":{"cost":"","type":"Basic Land — Plains","text":"({T}: Add {W}.)"},"Island":{"cost":"","type":"Basic Land — Island","text":"({T}: Add {U}.)"},"Xantid Swarm":{"cost":"{G}","type":"Creature — Insect","text":"Flying\nWhenever this creature attacks, defending player can't cast spells this turn.","pt":"0/1"},"Aura of Silence":{"cost":"{1}{W}{W}","type":"Enchantment","text":"Artifact and enchantment spells your opponents cast cost {2} more to cast.\nSacrifice this enchantment: Destroy target artifact or enchantment."},"Warmth":{"cost":"{1}{W}","type":"Enchantment","text":"Whenever an opponent casts a red spell, you gain 2 life."},"Gaea's Blessing":{"cost":"{1}{G}","type":"Sorcery","text":"Target player shuffles up to three target cards from their graveyard into their library.\nDraw a card.\nWhen this card is put into your graveyard from your library, shuffle your graveyard into your library."},"Sacred Ground":{"cost":"{1}{W}","type":"Enchantment","text":"Whenever a spell or ability an opponent controls causes a land to be put into your graveyard from the battlefield, return that card to the battlefield."},"Karmic Justice":{"cost":"{2}{W}","type":"Enchantment","text":"Whenever a spell or ability an opponent controls destroys a noncreature permanent you control, you may destroy target permanent that opponent controls."},"Choke":{"cost":"{2}{G}","type":"Enchantment","text":"Islands don't untap during their controllers' untap steps."},"Nimble Mongoose":{"cost":"{G}","type":"Creature — Mongoose","text":"Shroud (This creature can't be the target of spells or abilities.)\nThreshold — This creature gets +2/+2 as long as there are seven or more cards in your graveyard.","pt":"1/1"},"Werebear":{"cost":"{1}{G}","type":"Creature — Human Bear Druid","text":"{T}: Add {G}.\nThreshold — This creature gets +3/+3 as long as there are seven or more cards in your graveyard.","pt":"1/1"},"Squandered Resources":{"cost":"{B}{G}","type":"Enchantment","text":"Sacrifice a land: Add one mana of any type the sacrificed land could produce."},"Natural Balance":{"cost":"{2}{G}{G}","type":"Sorcery","text":"Each player who controls six or more lands chooses five lands they control and sacrifices the rest. Each player who controls four or fewer lands may search their library for up to X basic land cards and put them onto the battlefield, where X is five minus the number of lands they control. Then each player who searched their library this way shuffles."},"Duress":{"cost":"{B}","type":"Sorcery","text":"Target opponent reveals their hand. You choose a noncreature, nonland card from it. That player discards that card."},"Smother":{"cost":"{1}{B}","type":"Instant","text":"Destroy target creature with mana value 3 or less. It can't be regenerated."},"Diabolic Edict":{"cost":"{1}{B}","type":"Instant","text":"Target player sacrifices a creature of their choice."},"Bloodstained Mire":{"cost":"","type":"Land","text":"{T}, Pay 1 life, Sacrifice this land: Search your library for a Swamp or Mountain card, put it onto the battlefield, then shuffle."},"Llanowar Wastes":{"cost":"","type":"Land","text":"{T}: Add {C}.\n{T}: Add {B} or {G}. This land deals 1 damage to you."},"Tranquil Thicket":{"cost":"","type":"Land","text":"This land enters tapped.\n{T}: Add {G}.\nCycling {G} ({G}, Discard this card: Draw a card.)"},"Swamp":{"cost":"","type":"Basic Land — Swamp","text":"({T}: Add {B}.)"},"Engineered Plague":{"cost":"{2}{B}","type":"Enchantment","text":"As this enchantment enters, choose a creature type.\nAll creatures of the chosen type get -1/-1."},"Pernicious Deed":{"cost":"{1}{B}{G}","type":"Enchantment","text":"{X}, Sacrifice this enchantment: Destroy each artifact, creature, and enchantment with mana value X or less."},"Chainer's Edict":{"cost":"{1}{B}","type":"Sorcery","text":"Target player sacrifices a creature of their choice.\nFlashback {5}{B}{B} (You may cast this card from your graveyard for its flashback cost. Then exile it.)"},"Zuran Orb":{"cost":"{0}","type":"Artifact","text":"Sacrifice a land: You gain 2 life."},"Ravenous Baloth":{"cost":"{2}{G}{G}","type":"Creature — Beast","text":"Sacrifice a Beast: You gain 4 life.","pt":"4/4"},"Millstone":{"cost":"{2}","type":"Artifact","text":"{2}, {T}: Target player mills two cards."},"Traumatize":{"cost":"{3}{U}{U}","type":"Sorcery","text":"Target player mills half their library, rounded down."},"Vision Charm":{"cost":"{U}","type":"Instant","text":"Choose one —\n• Target player mills four cards.\n• Choose a land type and a basic land type. Each land of the first chosen type becomes the second chosen type until end of turn.\n• Target artifact phases out. (While it's phased out, it's treated as though it doesn't exist. It phases in before its controller untaps during their next untap step.)"},"Brain Freeze":{"cost":"{1}{U}","type":"Instant","text":"Target player mills three cards.\nStorm (When you cast this spell, copy it for each spell cast before it this turn. You may choose new targets for the copies.)"},"Ambassador Laquatus":{"cost":"{1}{U}{U}","type":"Legendary Creature — Merfolk Wizard","text":"{3}: Target player mills three cards.","pt":"1/3"},"Counterspell":{"cost":"{U}{U}","type":"Instant","text":"Counter target spell."},"Mana Leak":{"cost":"{1}{U}","type":"Instant","text":"Counter target spell unless its controller pays {3}."},"Wrath of God":{"cost":"{2}{W}{W}","type":"Sorcery","text":"Destroy all creatures. They can't be regenerated."},"Disenchant":{"cost":"{1}{W}","type":"Instant","text":"Destroy target artifact or enchantment."},"Impulse":{"cost":"{1}{U}","type":"Instant","text":"Look at the top four cards of your library. Put one of them into your hand and the rest on the bottom of your library in any order."},"Fact or Fiction":{"cost":"{3}{U}","type":"Instant","text":"Reveal the top five cards of your library. An opponent separates those cards into two piles. Put one pile into your hand and the other into your graveyard."},"Standstill":{"cost":"{1}{U}","type":"Enchantment","text":"When a player casts a spell, sacrifice this enchantment. If you do, each of that player's opponents draws three cards."},"Adarkar Wastes":{"cost":"","type":"Land","text":"{T}: Add {C}.\n{T}: Add {W} or {U}. This land deals 1 damage to you."},"Coastal Tower":{"cost":"","type":"Land","text":"This land enters tapped.\n{T}: Add {W} or {U}."},"Mishra's Factory":{"cost":"","type":"Land","text":"{T}: Add {C}.\n{1}: This land becomes a 2/2 Assembly-Worker artifact creature until end of turn. It's still a land.\n{T}: Target Assembly-Worker creature gets +1/+1 until end of turn."},"Dust Bowl":{"cost":"","type":"Land","text":"{T}: Add {C}.\n{3}, {T}, Sacrifice a land: Destroy target nonbasic land."},"Faerie Conclave":{"cost":"","type":"Land","text":"This land enters tapped.\n{T}: Add {U}.\n{1}{U}: This land becomes a 2/1 blue Faerie creature with flying until end of turn. It's still a land."},"Circle of Protection: Red":{"cost":"{1}{W}","type":"Enchantment","text":"{1}: The next time a red source of your choice would deal damage to you this turn, prevent that damage."},"Hydroblast":{"cost":"{U}","type":"Instant","text":"Choose one —\n• Counter target spell if it's red.\n• Destroy target permanent if it's red."},"Blue Elemental Blast":{"cost":"{U}","type":"Instant","text":"Choose one —\n• Counter target red spell.\n• Destroy target red permanent."},"Annul":{"cost":"{U}","type":"Instant","text":"Counter target artifact or enchantment spell."},"Meddling Mage":{"cost":"{W}{U}","type":"Creature — Human Wizard","text":"As this creature enters, choose a nonland card name.\nSpells with the chosen name can't be cast.","pt":"2/2"},"Powder Keg":{"cost":"{2}","type":"Artifact","text":"At the beginning of your upkeep, you may put a fuse counter on this artifact.\n{T}, Sacrifice this artifact: Destroy each artifact and creature with mana value equal to the number of fuse counters on this artifact."},"Nether Spirit":{"cost":"{1}{B}{B}","type":"Creature — Spirit","text":"At the beginning of your upkeep, if this card is the only creature card in your graveyard, you may return this card to the battlefield.","pt":"2/2"},"Contamination":{"cost":"{2}{B}","type":"Enchantment","text":"At the beginning of your upkeep, sacrifice this enchantment unless you sacrifice a creature.\nIf a land is tapped for mana, it produces {B} instead of any other type and amount."},"Zombie Infestation":{"cost":"{1}{B}","type":"Enchantment","text":"Discard two cards: Create a 2/2 black Zombie creature token."},"Smokestack":{"cost":"{4}","type":"Artifact","text":"At the beginning of your upkeep, you may put a soot counter on this artifact.\nAt the beginning of each player's upkeep, that player sacrifices a permanent of their choice for each soot counter on this artifact."},"Chromatic Sphere":{"cost":"{1}","type":"Artifact","text":"{1}, {T}, Sacrifice this artifact: Add one mana of any color. Draw a card. (Activate only as an instant.)"},"Cabal Therapy":{"cost":"{B}","type":"Sorcery","text":"Choose a nonland card name. Target player reveals their hand and discards all cards with that name.\nFlashback—Sacrifice a creature. (You may cast this card from your graveyard for its flashback cost. Then exile it.)"},"Innocent Blood":{"cost":"{B}","type":"Sorcery","text":"Each player sacrifices a creature of their choice."},"Skeletal Scrying":{"cost":"{X}{B}","type":"Instant","text":"As an additional cost to cast this spell, exile X cards from your graveyard.\nYou draw X cards and you lose X life."},"Tainted Wood":{"cost":"","type":"Land","text":"{T}: Add {C}.\n{T}: Add {B} or {G}. Activate only if you control a Swamp."},"Rishadan Port":{"cost":"","type":"Land","text":"{T}: Add {C}.\n{1}, {T}: Tap target land."},"Dystopia":{"cost":"{1}{B}{B}","type":"Enchantment","text":"Cumulative upkeep—Pay 1 life. (At the beginning of your upkeep, put an age counter on this permanent, then sacrifice it unless you pay its upkeep cost for each age counter on it.)\nAt the beginning of each player's upkeep, that player sacrifices a green or white permanent of their choice."},"Phyrexian Furnace":{"cost":"{1}","type":"Artifact","text":"{T}: Exile the bottom card of target player's graveyard.\n{1}, Sacrifice this artifact: Exile target card from a graveyard. Draw a card."},"Snuff Out":{"cost":"{3}{B}","type":"Instant","text":"If you control a Swamp, you may pay 4 life rather than pay this spell's mana cost.\nDestroy target nonblack creature. It can't be regenerated."},"Haunting Echoes":{"cost":"{3}{B}{B}","type":"Sorcery","text":"Exile all cards from target player's graveyard other than basic land cards. For each card exiled this way, search that player's library for all cards with the same name as that card and exile them. Then that player shuffles."}},"compare":false}</script>
+<script>
+(function () {
+  const DATA = JSON.parse(document.getElementById("data").textContent);
+  const answers = new Map();
+  let db = null;
+  let canWrite = false;
+  let current = 0;
+  let chain = Promise.resolve();
+  let advanceTimer = null;
+  const unjudgedOnly = document.getElementById("unjudgedOnly");
+  // A rebuild round compares with the deck the judge saw last time: "no" splits into closer / further away.
+  if (DATA.compare) {
+    for (const b of document.querySelectorAll("#ans button[data-plain]")) b.hidden = true;
+    for (const b of document.querySelectorAll("#ans button[data-compare]")) b.hidden = false;
+    document.getElementById("ans").style.gridTemplateColumns = "repeat(3, minmax(0, 1fr))";
+  }
+
+  const el = (tag, attrs, ...kids) => {
+    const n = document.createElement(tag);
+    for (const [k, v] of Object.entries(attrs || {})) {
+      if (k === "class") n.className = v;
+      else if (k === "text") n.textContent = v;
+      else if (v !== null && v !== undefined && v !== false) n.setAttribute(k, v);
+    }
+    for (const kid of kids) if (kid) n.append(kid);
+    return n;
+  };
+  /** Card -> copies across main, side and commander. */
+  function counts(deck) {
+    const m = new Map();
+    if (!deck) return m;
+    for (const zone of ["commander", "main", "side"]) {
+      for (const c of deck[zone] || []) {
+        const k = (zone === "side" ? "SB: " : "") + c.name;
+        m.set(k, (m.get(k) || 0) + c.qty);
+      }
+    }
+    return m;
+  }
+  function diff(a, b) {
+    const onlyA = [];
+    const onlyB = [];
+    const both = [];
+    for (const k of new Set([...a.keys(), ...b.keys()])) {
+      const x = a.get(k) || 0;
+      const y = b.get(k) || 0;
+      const shared = Math.min(x, y);
+      if (shared) both.push(`${shared} ${k}`);
+      if (x > shared) onlyA.push(`${x - shared} ${k}`);
+      if (y > shared) onlyB.push(`${y - shared} ${k}`);
+    }
+    const byMain = (s) => (s.includes("SB: ") ? 1 : 0);
+    const sort = (xs) => xs.sort((p, q) => byMain(p) - byMain(q) || p.replace(/^\d+ /, "").localeCompare(q.replace(/^\d+ /, "")));
+    return { onlyA: sort(onlyA), onlyB: sort(onlyB), both: sort(both) };
+  }
+  /** The reply's opening: its first two sentences, where answers put the plan. */
+  function opening(text) {
+    if (!text) return "";
+    const clean = text.replace(/\*\*/g, "").replace(/\s+/g, " ").trim();
+    const parts = clean.match(/[^.!?]+[.!?]+/g) || [clean];
+    const out = parts.slice(0, 2).join(" ").trim();
+    return out.length > 360 ? out.slice(0, 357) + "…" : out;
+  }
+
+  /** A card name that shows the card's text on hover, focus or tap (artifact pages can't load outside images). */
+  function cardName(name) {
+    return el("span", { class: "card", "data-card": name, tabindex: "0", text: name });
+  }
+  const peek = document.getElementById("peek");
+  let peekFor = null;
+  function showPeek(target, x, y) {
+    const name = target.dataset.card;
+    const c = DATA.cards && DATA.cards[name];
+    if (name !== peekFor) {
+      peekFor = name;
+      // el() skips null children; replaceChildren would render them as the text "null".
+      peek.replaceChildren(
+        ...[
+          el("div", { class: "pk-head" }, el("span", { text: name }), c ? el("span", { class: "pk-cost", text: c.cost }) : null),
+          c ? el("div", { class: "pk-type", text: c.type }) : el("div", { class: "pk-type", text: "No card text on file." }),
+          c ? el("div", { class: "pk-text", text: c.text }) : null,
+          c && c.pt ? el("div", { class: "pk-pt", text: c.pt }) : null,
+        ].filter(Boolean),
+      );
+    }
+    peek.classList.add("on");
+    const w = peek.offsetWidth;
+    const h = peek.offsetHeight;
+    peek.style.left = Math.max(8, Math.min(window.innerWidth - w - 8, x + 16)) + "px";
+    peek.style.top = Math.max(8, Math.min(window.innerHeight - h - 8, y - h / 2)) + "px";
+  }
+  function hidePeek() { peek.classList.remove("on"); }
+  document.addEventListener("mouseover", (e) => { const t = e.target.closest && e.target.closest(".card"); if (t) showPeek(t, e.clientX, e.clientY); });
+  document.addEventListener("mousemove", (e) => { if (peek.classList.contains("on") && e.target.closest && e.target.closest(".card")) showPeek(e.target.closest(".card"), e.clientX, e.clientY); });
+  document.addEventListener("mouseout", (e) => { if (e.target.closest && e.target.closest(".card")) hidePeek(); });
+  document.addEventListener("focusin", (e) => { const t = e.target.closest && e.target.closest(".card"); if (t) { const r = t.getBoundingClientRect(); showPeek(t, r.right, r.top + r.height / 2); } });
+  document.addEventListener("focusout", (e) => { if (e.target.closest && e.target.closest(".card")) hidePeek(); });
+  // Touch: tap a name to show, tap anywhere else to hide.
+  document.addEventListener("click", (e) => { const t = e.target.closest && e.target.closest(".card"); if (t) { if (peek.classList.contains("on") && peekFor === t.dataset.card) hidePeek(); else showPeek(t, e.clientX, e.clientY); } else hidePeek(); });
+
+  /** "4 Card Name" or "1 SB: Card Name" as a list item with a hoverable name. */
+  function cardLine(line) {
+    const m = line.match(/^(\d+) (SB: )?(.+)$/);
+    if (!m) return el("li", { text: line });
+    return el("li", {}, `${m[1]} ${m[2] || ""}`, cardName(m[3]));
+  }
+
+  function fullList(deck, other) {
+    const d = el("details", { class: "full", open: "" }, el("summary", { text: "Full decklist" }));
+    const theirs = counts(other);
+    for (const [zone, label] of [["commander", "Commander"], ["main", "Main"], ["side", "Sideboard"]]) {
+      const lines = deck[zone] || [];
+      if (!lines.length) continue;
+      const total = lines.reduce((n, c) => n + c.qty, 0);
+      const ul = el("ul");
+      for (const c of lines) {
+        const k = (zone === "side" ? "SB: " : "") + c.name;
+        ul.append(el("li", { class: c.qty > (theirs.get(k) || 0) ? "uniq" : null }, `${c.qty} `, cardName(c.name)));
+      }
+      d.append(el("h4", { text: `${label} (${total})` }), ul);
+    }
+    return d;
+  }
+
+
+  const judged = (id) => Boolean(answers.get(id) && answers.get(id).play);
+  const inView = (i) => !unjudgedOnly.checked || !judged(DATA.decks[i].id) || i === current;
+
+  function renderProgress() {
+    const done = DATA.decks.filter((d) => judged(d.id)).length;
+    document.getElementById("progress").replaceChildren(el("b", { text: `${done} of ${DATA.decks.length}` }), " decks judged");
+  }
+  function save(patch, advance) {
+    if (!db || !canWrite) return;
+    const d = DATA.decks[current];
+    const body = { ...(answers.get(d.id) || {}), ...patch, deck: d.id, prompt: d.prompt, updatedAt: new Date().toISOString() };
+    answers.set(d.id, body);
+    sync();
+    renderProgress();
+    const status = document.getElementById("saved");
+    status.textContent = "Saving…";
+    chain = chain
+      .then(() => db.collection("decks").doc(d.id).set(body))
+      .then(() => { status.textContent = advance ? "Saved. Next deck in a moment (Previous to go back)." : "Saved"; })
+      .catch(() => { status.textContent = "Could not save. Try again in a moment."; });
+    if (advance) { clearTimeout(advanceTimer); advanceTimer = setTimeout(() => go(1), 900); }
+  }
+  function sync() {
+    const a = answers.get(DATA.decks[current].id) || {};
+    for (const b of document.querySelectorAll("#ans button")) { b.setAttribute("aria-pressed", String(a.play === b.dataset.p)); b.disabled = !canWrite; }
+    document.getElementById("why").value = a.why || "";
+  }
+  function render() {
+    const d = DATA.decks[current];
+    document.getElementById("request").replaceChildren(el("span", { class: "fmt", text: d.format }), el("p", { class: "prompt", text: d.prompt.split("\n")[0] }));
+    const box = document.getElementById("deckbox");
+    box.replaceChildren();
+    if (d.text) box.append(el("p", { class: "lead", text: opening(d.text) }));
+    if (d.deck) box.append(fullList(d.deck, d.deck)); // compared with itself: nothing highlighted
+    else box.append(el("p", { class: "none", text: "No deck was submitted." }));
+    if (d.text) { const det = el("details", {}, el("summary", { text: "Full reply" })); det.append(el("div", { class: "reply", text: d.text })); box.append(det); }
+    document.getElementById("saved").textContent = "";
+    document.getElementById("prev").disabled = !DATA.decks.some((_, i) => i < current && inView(i));
+    document.getElementById("next").disabled = !DATA.decks.some((_, i) => i > current && inView(i));
+    sync();
+    try { localStorage.setItem("play-deck", String(current)); } catch (e) {}
+    window.scrollTo({ top: 0 });
+  }
+  function go(dir) {
+    for (let i = current + dir; i >= 0 && i < DATA.decks.length; i += dir) { if (inView(i)) { current = i; render(); return; } }
+  }
+  function jumpToFirst() { const i = DATA.decks.findIndex((d) => !judged(d.id)); if (i >= 0) current = i; render(); }
+  document.getElementById("prev").addEventListener("click", () => go(-1));
+  document.getElementById("next").addEventListener("click", () => go(1));
+  unjudgedOnly.addEventListener("change", render);
+  for (const b of document.querySelectorAll("#ans button")) b.addEventListener("click", () => save({ play: b.dataset.p }, true));
+  document.getElementById("saveWhy").addEventListener("click", () => save({ why: document.getElementById("why").value.trim() }, false));
+  document.addEventListener("keydown", (e) => {
+    if (e.target && e.target.tagName === "TEXTAREA") return;
+    const map = DATA.compare ? { "1": "yes", "2": "closer", "3": "further" } : { "1": "yes", "2": "no" };
+    if (map[e.key] && canWrite) save({ play: map[e.key] }, true);
+    if (e.key === "ArrowRight") go(1);
+    if (e.key === "ArrowLeft") go(-1);
+  });
+  try { current = Math.min(Number(localStorage.getItem("play-deck") || 0), DATA.decks.length - 1) || 0; } catch (e) {}
+  render();
+  (async () => {
+    const notice = document.getElementById("notice");
+    const claude = window.claude;
+    const dbNs = claude && claude.use ? await claude.use("db") : null;
+    const user = claude && claude.use ? await claude.use("user") : null;
+    if (!dbNs) { notice.textContent = "Answers save only when this page is open on claude.ai and you're signed in."; return; }
+    db = dbNs;
+    canWrite = user ? (user.isOwner() ?? false) : false;
+    let first = true;
+    db.collection("decks").onSnapshot(
+      (snap) => {
+        answers.clear();
+        for (const doc of snap.docs) answers.set(doc.id, doc.data());
+        if (first) { first = false; notice.textContent = canWrite ? "One deck at a time. Press 1 (yes) or 2 (no); hover any card for its text. A line on what's wrong is the most useful thing you can give." : "Read-only: only the page owner can judge."; jumpToFirst(); return; }
+        sync(); renderProgress();
+      },
+      () => { notice.textContent = "Saved answers could not be loaded. Reload the page to try again."; },
+    );
+  })();
+})();
+</script>

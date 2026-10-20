@@ -149,9 +149,6 @@ button:disabled { cursor: not-allowed; opacity: 0.6; }
     for (const kid of kids) if (kid) n.append(kid);
     return n;
   };
-  const judged = (id) => Boolean(picks.get(id) && picks.get(id).winner);
-  const inView = (i) => (!brewsOnly.checked || DATA.pairs[i].brew) && (!unjudgedOnly.checked || !judged(DATA.pairs[i].id) || i === current);
-
   /** Card -> copies across main, side and commander. */
   function counts(deck) {
     const m = new Map();
@@ -189,32 +186,6 @@ button:disabled { cursor: not-allowed; opacity: 0.6; }
     return out.length > 360 ? out.slice(0, 357) + "…" : out;
   }
 
-  function renderProgress() {
-    const pool = DATA.pairs.filter((p) => !brewsOnly.checked || p.brew);
-    const done = pool.filter((p) => judged(p.id)).length;
-    document.getElementById("progress").replaceChildren(el("b", { text: `${done} of ${pool.length}` }), brewsOnly.checked ? " brew pairs judged" : " pairs judged");
-  }
-
-  function save(patch, advance) {
-    if (!db || !canWrite) return;
-    const p = DATA.pairs[current];
-    const body = { ...(picks.get(p.id) || {}), ...patch, pair: p.id, prompt: p.prompt, quick: true, updatedAt: new Date().toISOString() };
-    picks.set(p.id, body);
-    sync();
-    renderProgress();
-    const status = document.getElementById("saved");
-    status.textContent = "Saving…";
-    chain = chain
-      .then(() => db.collection("pairs").doc(p.id).set(body))
-      .then(() => { status.textContent = advance ? "Saved. Next pair in a moment (change your mind with Previous)." : "Saved"; })
-      .catch((e) => { status.textContent = e && e.code === "invalid_argument" ? "Only the owner can save picks on this page." : "Could not save. Try again in a moment."; });
-    if (advance) {
-      clearTimeout(advanceTimer);
-      advanceTimer = setTimeout(() => go(1), 900);
-    }
-  }
-
-  /** The whole list, by zone; lines with more copies than the other deck are highlighted. */
   /** A card name that shows the card's text on hover, focus or tap (artifact pages can't load outside images). */
   function cardName(name) {
     return el("span", { class: "card", "data-card": name, tabindex: "0", text: name });
@@ -309,7 +280,7 @@ button:disabled { cursor: not-allowed; opacity: 0.6; }
     const box = document.getElementById("deckbox");
     box.replaceChildren();
     if (d.text) box.append(el("p", { class: "lead", text: opening(d.text) }));
-    if (d.deck) box.append(fullList(d.deck, null));
+    if (d.deck) box.append(fullList(d.deck, d.deck)); // compared with itself: nothing highlighted
     else box.append(el("p", { class: "none", text: "No deck was submitted." }));
     if (d.text) { const det = el("details", {}, el("summary", { text: "Full reply" })); det.append(el("div", { class: "reply", text: d.text })); box.append(det); }
     document.getElementById("saved").textContent = "";

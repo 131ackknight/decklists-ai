@@ -27,7 +27,7 @@ Three things, and the third is turning out to be the most interesting.
 
 | Item | Total |
 | --- | --- |
-| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80; v12 on six $2.61. Total about $257.25. Plus one 17-token test call. |
+| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80; v12 on six $2.61; round 3 $1.90. Total about $259.15. Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats); full history 143,721 (since 2025-07-01) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
 | Automated tests | 48 passing |
@@ -62,6 +62,20 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - Lesson to apply: any prompt or claim that names a card gets checked against the card index before it is used.
 - ~~Switch to pairwise~~: done; 36 pairs judged (v1 8 wins, v2 6, 22 ties; v2 100% faithful vs. 92%).
 - ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
+
+---
+
+## 2026-10-20 · Round 3, five prompts no rule had seen: 3 of 5
+
+The generality check. Five brand-new Premodern prompts (owner approved, one swapped for "Brew me a mill deck in premodern"), v12 straight through, no reruns ($1.90), judged one at a time.
+
+**Would play: 3 of 5** (Nether Spirit control, Zur's Weirding, Squandered Resources + Natural Balance). The two no's, in the owner's words:
+- **Mill:** "Some of the card numbers are a little weird, like 3 Vision Charms (which are kinda bad on their own, and usually used to cheat Dreadnought into play), and Traumatize doesn't really work in draw-go control."
+- **Wildfire:** "I think it's OK, but it needs to keep in mind that Wildfire kills a lot of their guys. Also it's sorta light on removal."
+
+**Reading:** first-pass rate on fresh prompts is 3 of 5, against 6 of 12 on the first pass this afternoon: same order, small samples, and these prompts could not have been patched for. The two no's are the same kind as the "closer" notes earlier: the engine is right, specific cards and numbers are off (a card chosen for a job it doesn't do, an own-board effect not thought through, too little removal). Nothing was a "no line to the win" or "wrong shell," which were this morning's failures. The fixes so far look like a method on this evidence, with the remaining gap in card-by-card judgment.
+
+**Running score for the day, first-pass "would play" on v11/v12: 9 of 17 (53%); with one rebuild round, 12 of 17 (71%).**
 
 ---
 

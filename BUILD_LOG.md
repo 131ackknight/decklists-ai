@@ -27,7 +27,7 @@ Three things, and the third is turning out to be the most interesting.
 
 | Item | Total |
 | --- | --- |
-| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74. Total about $186.70. Plus one 17-token test call. |
+| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79. Total about $209.49. Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats); full history 143,721 (since 2025-07-01) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
 | Automated tests | 48 passing |
@@ -62,6 +62,26 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - Lesson to apply: any prompt or claim that names a card gets checked against the card index before it is used.
 - ~~Switch to pairwise~~: done; 36 pairs judged (v1 8 wins, v2 6, 22 ties; v2 100% faithful vs. 92%).
 - ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
+
+---
+
+## 2026-10-20 · v7 (worked examples) with two runs each: v2, v5 and v7 are indistinguishable on the match score
+
+v7 = v5 plus annotated examples of AspiringSpike's brews in the request (`src/harness/examples.ts`: code marks each example's borrowed shell, new ideas and the rest; only examples dated before the run's cutoff are shown). First comparison with two runs per version.
+
+| Opus, 21 holdout decks, match to settled deck | Run 1 | Run 2 | Mean |
+| --- | --- | --- | --- |
+| v2 | 40.6% | 41.8% | 41.2% |
+| v5 | 43.7% | 41.6% | 42.7% |
+| v7 | 40.4% | 43.4% | 41.9% |
+
+- **Within a version, runs differ by 2-3 points. Between versions, the means differ by 0.7-1.5 points.** With this noise, 21 decks and two runs can't tell these three apart. v5's lead over v2 shrank from 2.5 points to 1.5 when its second run landed at 41.6%.
+- **The worked examples did nothing measurable.** v7's copy rate (60%) matches v5's; its brews are not more "shell plus new ideas" by the score.
+- **What still separates v5:** the owner's blind preference (6-2-2 over v2 and v6), made on v5's run-1 decks. That is one judge on five decks, and it is the only signal we have that v5 is better.
+
+**Reading:** the holdout as a fast test is saturated at this effect size. Four levers that could change that: more decks (lowering the 15-list bar adds archetypes but weaker "settled" targets), more runs per version (cost scales linearly), the owner judging more pairs, and the forward test (slow, but decisive). The cheapest real information per dollar is now the owner's blind picks, not more runs.
+
+Cost: v7 $7.46 + $7.44, v5 run 2 $7.89.
 
 ---
 

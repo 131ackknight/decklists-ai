@@ -27,7 +27,7 @@ Three things, and the third is turning out to be the most interesting.
 
 | Item | Total |
 | --- | --- |
-| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29. Total about $226.78. Plus one 17-token test call. |
+| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20. Total about $227.98. Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats); full history 143,721 (since 2025-07-01) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
 | Automated tests | 48 passing |
@@ -62,6 +62,20 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - Lesson to apply: any prompt or claim that names a card gets checked against the card index before it is used.
 - ~~Switch to pairwise~~: done; 36 pairs judged (v1 8 wins, v2 6, 22 ties; v2 100% faithful vs. 92%).
 - ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
+
+---
+
+## 2026-10-20 · v10 (a win line the checker verifies): no more "neither" on the three hardest prompts
+
+v10 = v5 plus the two things that each fixed a miss earlier today (played_with lookup, mechanism-first step) plus a new rule: `submit_deck` requires a **win line**, the exact sequence of named cards that wins, and sends the deck back if any card in the line is missing from the deck. Code checks presence; the simulator reports how often the whole line is drawn by the declared turn (reported, not enforced, since tutors aren't simulated). 52 tests.
+
+Run on the three Premodern combo prompts the owner had rejected twice ($1.20). What the rule did: for Rector, the brew wrote "Rector → Pattern of Rebirth → Akroma" with Carrion Feeder as the outlet, the Pattern-style line from the owner's first reference, where every earlier version had Rector and interaction and no win. Pande-Burst stayed an Enchantress-Replenish build. Draco kept a single Draco with Worldly Tutor.
+
+**Owner's blind picks, v10 vs v8:** Rector **v10**; Pande-Burst v8; Draco same. Owner: "they were getting better I think." **No "neither" this round**, after 50% "neither" on these prompts this morning: the owner picked a side or called it even on all three.
+
+**Reading:** the win-line rule is the first structural change that moved a combo deck in the owner's eyes, and it worked because it is a check the model can't talk its way around (the cards are in the deck or they aren't), aimed at the exact failure the owner named. Pande-Burst remains the open case: the right line (Replenish with Intuition and Lion's Eye Diamond) is in the data and the model keeps choosing Enchantress.
+
+**Decision:** v10 is the base harness from here. It goes into the forward test alongside v2, and gets a two-run holdout check later to make sure the win-line rule costs nothing on fair and synergy decks.
 
 ---
 

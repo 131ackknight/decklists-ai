@@ -27,7 +27,7 @@ Three things, and the third is turning out to be the most interesting.
 
 | Item | Total |
 | --- | --- |
-| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36. Total about $185.96. Plus one 17-token test call. |
+| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74. Total about $186.70. Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats); full history 143,721 (since 2025-07-01) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
 | Automated tests | 48 passing |
@@ -62,6 +62,20 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - Lesson to apply: any prompt or claim that names a card gets checked against the card index before it is used.
 - ~~Switch to pairwise~~: done; 36 pairs judged (v1 8 wins, v2 6, 22 ties; v2 100% faithful vs. 92%).
 - ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
+
+---
+
+## 2026-10-20 · The forward test is live: first brew made before the deck settles
+
+Owner: "Yes" to the forward test (new decks brewed the week they appear, scored when they settle, so nothing can be tuned to them and no model has seen them).
+
+**Built:** `scripts/forward-week.ts` merges a fresh Decklist Data export into the full history, finds archetypes first seen since a date (same rules as the holdout finder, minus the "15+ lists in 90 days" test, which is applied at scoring time; fixed now, before any result), brews each with the data cut the day before it appeared and the card pool as of that day, and appends to `evals/forward/ledger.jsonl`. `scripts/forward-score.ts` scores brews once their archetype is 90 days old. Brews are committed: the git history is the proof they came first.
+
+**Rate of new decks:** 3 in the last two months across all formats (Jund Sacrifice, Aug 22, already in the holdout; Pioneer Boros Dragons, Aug 24, 3 lists, likely to fizzle; Standard Boros Planeswalkers, Oct 5). About one every three weeks, so a meaningful forward sample takes months. The holdout stays the fast test for ideas; the forward test is the verdict.
+
+**First live item: Standard Boros Planeswalkers**, first seen 2026-10-05, 6 lists by 2026-10-20, signature Gideon's Memorial, Solitary Cell, Ajani Unrelenting. Brewed 2026-10-20 with v5 and v2 on Opus ($0.74). Settles 2027-01-03; it counts only if it reaches 15 lists by then. Verdict in January.
+
+**Weekly ritual from here:** export (30 days), merge, detect since last run, brew new candidates with the current base harness plus v2 for comparison, commit.
 
 ---
 

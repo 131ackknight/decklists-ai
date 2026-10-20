@@ -225,11 +225,14 @@ button:disabled { cursor: not-allowed; opacity: 0.6; }
     const c = DATA.cards && DATA.cards[name];
     if (name !== peekFor) {
       peekFor = name;
+      // el() skips null children; replaceChildren would render them as the text "null".
       peek.replaceChildren(
-        el("div", { class: "pk-head" }, el("span", { text: name }), c ? el("span", { class: "pk-cost", text: c.cost }) : null),
-        c ? el("div", { class: "pk-type", text: c.type }) : el("div", { class: "pk-type", text: "No card text on file." }),
-        c ? el("div", { class: "pk-text", text: c.text }) : null,
-        c && c.pt ? el("div", { class: "pk-pt", text: c.pt }) : null,
+        ...[
+          el("div", { class: "pk-head" }, el("span", { text: name }), c ? el("span", { class: "pk-cost", text: c.cost }) : null),
+          c ? el("div", { class: "pk-type", text: c.type }) : el("div", { class: "pk-type", text: "No card text on file." }),
+          c ? el("div", { class: "pk-text", text: c.text }) : null,
+          c && c.pt ? el("div", { class: "pk-pt", text: c.pt }) : null,
+        ].filter(Boolean),
       );
     }
     peek.classList.add("on");

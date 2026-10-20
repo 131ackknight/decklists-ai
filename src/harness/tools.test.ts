@@ -189,4 +189,12 @@ describe("lock fixes from the v3 run", () => {
     expect(ok.winLine.allCardsDrawnByTurnPct).toBeGreaterThan(50);
     expect(c.submitted?.winLine).toHaveLength(1);
   });
+
+  it("strict brews must be exactly 60 cards in 60-card formats unless the player asked for more", () => {
+    const c: ToolContext = { index, data: noData, seen: new Set(["lightning bolt"]), submitted: null, strictBrew: true, request: "Brew me a Modern deck" };
+    const big = { ...deck, main: [{ qty: 4, name: "Lightning Bolt" }, { qty: 58, name: "Mountain" }], label: "brew" };
+    expect(JSON.parse(runTool("submit_deck", big, c).content).errors[0]).toMatch(/62 cards/);
+    c.request = "Brew me a 62 card Modern deck";
+    expect(JSON.parse(runTool("submit_deck", big, c).content).accepted).toBe(true);
+  });
 });

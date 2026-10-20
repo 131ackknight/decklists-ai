@@ -5,7 +5,7 @@ import type { DataSource } from "@/data/source";
 import { costUsd, type ModelConfig, type Usage } from "./models";
 import { formatMenu } from "./menu";
 import { examplesText, loadBrewerLists, type BrewerList } from "./examples";
-import { SYSTEM_PROMPT, V4_SYSTEM_PROMPT, V5_SYSTEM_PROMPT, V6_SYSTEM_PROMPT, V7_SYSTEM_PROMPT, V8_SYSTEM_PROMPT, V9_SYSTEM_PROMPT, V10_SYSTEM_PROMPT } from "./prompt";
+import { SYSTEM_PROMPT, V4_SYSTEM_PROMPT, V5_SYSTEM_PROMPT, V6_SYSTEM_PROMPT, V7_SYSTEM_PROMPT, V8_SYSTEM_PROMPT, V9_SYSTEM_PROMPT, V10_SYSTEM_PROMPT, V11_SYSTEM_PROMPT } from "./prompt";
 import { runTool, toolParams, type SubmittedDeck, type ToolContext } from "./tools";
 
 export interface BrewRequest {
@@ -214,10 +214,12 @@ export async function brewV5(
   req: BrewRequest,
   deps: { index: CardIndex; data: DataSource },
   onStep?: (step: number, note: string) => void,
-  variant: { system: string; maxCopyRate?: number; examples?: { lists: BrewerList[]; before: string }; extraTools?: string[]; requireWinLine?: boolean } = { system: V5_SYSTEM_PROMPT },
+  variant: { system: string; maxCopyRate?: number; examples?: { lists: BrewerList[]; before: string }; extraTools?: string[]; requireWinLine?: boolean; strictBrew?: boolean } = {
+    system: V5_SYSTEM_PROMPT,
+  },
 ): Promise<BrewResult> {
   const started = Date.now();
-  const ctx: ToolContext = { ...deps, seen: new Set(), submitted: null, requireWinLine: variant.requireWinLine };
+  const ctx: ToolContext = { ...deps, seen: new Set(), submitted: null, requireWinLine: variant.requireWinLine, strictBrew: variant.strictBrew, request: req.prompt };
   if (variant.maxCopyRate != null) ctx.lock = { cards: [], maxCopyRate: variant.maxCopyRate };
   const key = req.format ? getFormat(req.format)?.key : undefined;
   const menu = key ? formatMenu(deps.index, deps.data, key) : null;
@@ -304,4 +306,15 @@ export function brewV10(
   onStep?: (step: number, note: string) => void,
 ): Promise<BrewResult> {
   return brewV5(client, model, req, deps, onStep, { system: V10_SYSTEM_PROMPT, extraTools: ["played_with"], requireWinLine: true });
+}
+
+/** Harness v11: v10 plus exactly-60 and build-on-the-dominant-shell rules. */
+export function brewV11(
+  client: Anthropic,
+  model: ModelConfig,
+  req: BrewRequest,
+  deps: { index: CardIndex; data: DataSource },
+  onStep?: (step: number, note: string) => void,
+): Promise<BrewResult> {
+  return brewV5(client, model, req, deps, onStep, { system: V11_SYSTEM_PROMPT, extraTools: ["played_with"], requireWinLine: true, strictBrew: true });
 }

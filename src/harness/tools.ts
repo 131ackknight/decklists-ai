@@ -29,6 +29,10 @@ export interface ToolContext {
   request?: string;
   /** Harness v10: submit_deck must carry a win line whose cards are all in the deck. */
   requireWinLine?: boolean;
+  /** Harness v11: exactly 60 cards in 60-card formats, and build on the shell real decks use for the requested cards (or say why not). */
+  strictBrew?: boolean;
+  /** The strategy most lists running the requested cards use, from played_with, when it is dominant. */
+  dominantShell?: { format: string; strategy: string; lists: number; share: number } | null;
 }
 
 export interface EnginePlan {
@@ -278,6 +282,11 @@ export const TOOLS = [
       const r = ctx.data.playedWith(cards);
       if (!r) return { lists: 0, note: "No published list in the last 400 days plays all of these together." };
       remember(ctx, r.cards.map((c) => c.name));
+      // v11: when most of those lists are one strategy, a brew should start from its shell.
+      const top = r.strategies[0];
+      if (ctx.strictBrew && top && r.lists >= 5 && top.lists / r.lists >= 0.6) {
+        ctx.dominantShell = { format: top.format, strategy: top.strategy, lists: top.lists, share: top.lists / r.lists };
+      }
       return { ...r, cards: r.cards.map((c) => ({ name: c.name, inPercentOfLists: pct(c.share), avgCopies: c.avgCopies })) };
     },
   }),
@@ -499,9 +508,39 @@ export const TOOLS = [
         .optional()
         .describe("The exact sequence of named cards from this deck that wins the game, in order, with what each one does in the line."),
       winTurn: z.number().int().min(1).max(10).optional().describe("The turn the line is meant to be complete."),
+      shellReason: z.string().optional().describe("If real decks mostly run the requested cards in one strategy and you built something else: why, in one or two sentences."),
     }),
     run: (input, ctx) => {
       const key = formatKey(input.format);
+      if (ctx.strictBrew && input.label !== "stock") {
+        // Exactly 60 in 60-card formats: real lists are 60 cards 91-99% of the time; 62 means the choosing isn't finished.
+        const rules = getFormat(key)!;
+        const size = input.main.reduce((n, l) => n + l.qty, 0);
+        const asked = /\b(6[1-9]|7\d|8\d|9\d|1\d\d) cards?\b/i.test(ctx.request ?? "");
+        if (!rules.commander && size > rules.mainSize && !asked) {
+          return { accepted: false, errors: [`${size} cards in the main deck. Real ${rules.name} lists are ${rules.mainSize} cards almost without exception: cut to ${rules.mainSize} unless the player asked for more.`] };
+        }
+        const shell = ctx.dominantShell;
+        if (shell && shell.format === key && !input.shellReason) {
+          const ref = ctx.data.referenceList(key, shell.strategy);
+          if (ref) {
+            const canon = (n: string) => normalizeName(ctx.index.getCard(n)?.name ?? n);
+            const theirs = new Map<string, number>();
+            for (const c of ref.main) theirs.set(canon(c.name), (theirs.get(canon(c.name)) ?? 0) + c.qty);
+            let shared = 0;
+            for (const l of input.main) shared += Math.min(l.qty, theirs.get(canon(l.name)) ?? 0);
+            if (shared / 60 < 0.35) {
+              return {
+                accepted: false,
+                errors: [
+                  `${Math.round(shell.share * 100)}% of the real lists that run the requested cards are ${shell.strategy} (${shell.lists} lists), and this deck shares only ${shared} of 60 cards with its latest list. Build on that shell, or resubmit with shellReason saying why this deck should be something else.`,
+                ],
+                shellList: { strategy: shell.strategy, event: ref.event, date: ref.date, main: ref.main },
+              };
+            }
+          }
+        }
+      }
       // Harness v10: a brew has to say how it wins, and the line has to be in the deck.
       let winLineDrawnPct: number | undefined;
       if (ctx.requireWinLine && input.label !== "stock") {

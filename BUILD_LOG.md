@@ -65,6 +65,20 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-10-20 · The owner explains the four "neither" decks: the AI doesn't understand how a combo works
+
+Asked for one line each on the four pairs they wouldn't play, the owner wrote (lightly condensed):
+- **Pande-Burst:** "4 Enlightened Tutor is bad, the deck lacks focus: it should either be a stompy deck with the combo, or dedicated combo, but that would require putting the enchantments in the graveyard and Replenishing them." The Enchantress shell "would never really work for this."
+- **Erratic Explosion + Draco:** "Tribal Flames in this deck is bad, the AI was playing too much into Draco's domain-matters mana cost, but the deck that wants to Draco-Explode doesn't want domain, it's just for the 16 mana cost."
+- **Living End cyclers (Legacy):** both brews built Reanimator with the cyclers as targets. "The prompt suggested a bunch of cycling creatures but didn't say anything about Living End; the AI should probably know to do that."
+- **Rector Combo:** "Super misses, it didn't really understand what enchantments the Rector wants to get out, way too many sacrifice outlets."
+
+**One cause behind all four: the model pattern-matches on the surface of the cards, not the mechanism of the combo.** Draco's domain text instead of its 16 mana value; "cycling creatures" as reanimation targets instead of Living End; "sacrifice Rector" as a sac-outlet theme instead of "which enchantment does Rector fetch"; two combo pieces with no plan around them, hedged with tutors. This also explains v4's null result: the coach checked whether the stated combo assembles, never whether it was the right combo.
+
+**Lever:** knowledge again. A public combo database with mechanisms (Commander Spellbook) covers these: plan step 4 listed "combos" under card knowledge and it was never built. Proposed: known-combo lookups in the tools, rerun the four prompts, owner judges four blind pairs against v5 (about $3).
+
+---
+
 ## 2026-10-20 · Expert round: the owner judges 18 Premodern and Legacy brews blind
 
 Owner: "I think I need to judge decks that I know intimately." Formats: Premodern and Legacy. 11 fresh prompts (Claude proposed 14, owner cut 3) plus 7 archetypes that appeared this year in those formats (found with a 5-list bar), v2 vs v5 on Opus ($14). A fourth button was added at the owner's request: **Neither** (I wouldn't play either).

@@ -16,6 +16,7 @@
 import { createHash } from "node:crypto";
 import { readFileSync, writeFileSync } from "node:fs";
 import { RUBRIC_PROMPTS } from "../evals/rubric/prompts";
+import { loadCardIndex } from "../src/cards/load";
 
 interface Line {
   qty: number;
@@ -114,7 +115,18 @@ const prompts = Object.fromEntries(
     return [id, { format: m.format, prompt: sent.get(id) ?? m.prompt, lookFor: m.lookFor }];
   }),
 );
-const json = JSON.stringify({ prompts, pairs: order }).replace(/</g, "\\u003c");
+// Card facts for the hover popup: artifact pages can't load outside images, so the page shows the card as text.
+const index = loadCardIndex();
+const cards: Record<string, { cost: string; type: string; text: string; pt?: string }> = {};
+for (const p of order as { left: { deck: { main: Line[]; side: Line[]; commander: Line[] } | null }; right: { deck: { main: Line[]; side: Line[]; commander: Line[] } | null } }[]) {
+  for (const ans of [p.left, p.right]) {
+    for (const l of [...(ans.deck?.main ?? []), ...(ans.deck?.side ?? []), ...(ans.deck?.commander ?? [])]) {
+      const c = index.getCard(l.name);
+      if (c && !cards[l.name]) cards[l.name] = { cost: c.manaCost, type: c.typeLine, text: c.text, pt: c.power != null ? `${c.power}/${c.toughness}` : undefined };
+    }
+  }
+}
+const json = JSON.stringify({ prompts, pairs: order, cards }).replace(/</g, "\\u003c");
 let page = readFileSync(template, "utf8").replace("/*DATA*/", () => json);
 if (title) page = page.replace(/<title>[^<]*<\/title>/, `<title>${title}</title>`).replace(/<h1>[^<]*<\/h1>/, `<h1>${title}</h1>`);
 writeFileSync(out, page);

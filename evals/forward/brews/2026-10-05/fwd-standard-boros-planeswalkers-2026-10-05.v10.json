@@ -1,0 +1,164 @@
+{
+ "id": "fwd-standard-boros-planeswalkers-2026-10-05",
+ "format": "standard",
+ "strategy": "Boros Planeswalkers",
+ "firstSeen": "2026-10-05",
+ "listsSoFar": 6,
+ "closestEarlierOverlap": 31,
+ "signature": [
+  "Gideon's Memorial",
+  "Solitary Cell",
+  "Ajani Unrelenting"
+ ],
+ "harness": "v10",
+ "model": "claude-opus-5-5",
+ "brewedAt": "2026-10-20T19:38:17.615Z",
+ "dataThrough": "2026-10-20",
+ "prompt": "Brew me a Standard deck built around Gideon's Memorial, Solitary Cell and Ajani Unrelenting.",
+ "text": "I built a Boros \"superfriends\" token deck: lots of planeswalkers (cards like Ajani and Elspeth) that make creature tokens every turn. Gideon's Memorial's mana can only be spent on planeswalkers, so it casts them a turn early, and it gives every token +1/+0 and vigilance. Solitary Cell removes an early threat (anything costing 3 or less), and later it trades a spare legendary card for a fresh draw. Ajani Unrelenting is the top end: its −3 deals 4 damage to every creature except your tokens, so it wipes the opponent's board and leaves yours standing. Then its +1 gives your creatures +1/+0 and haste and makes another 2/2 token to swing with.\n\n**Why this direction:** I looked at three options:\n- **Boros Dragons' creatures:** Ajani's −3 would kill your own dragons, so it's a bad fit.\n- **Jeskai control with Ajani as a board wipe:** this wastes Memorial's token bonus.\n- **Boros token-making planeswalkers (chosen):** this is the only one where all three cards work together. Memorial ramps the walkers and pumps their tokens, Ajani's −3 spares those tokens, and the deck runs 18 legendary cards to feed Solitary Cell.\n\n**What's in it:**\n- **Token makers:** Ajani, Outland Chaperone, Elspeth, Storm Slayer (doubles every token you make), Toby (leaves a 4/4 token), Antiquities on the Loose and Caretaker's Talent (draws a card when tokens enter).\n- **Removal:** Burst Lightning, Get Lost, Lightning Helix and Chandra.\n- **From Boros Dragons:** the lands and removal, borrowed from the format's main Boros deck. The 24-land Boros mana base passed the deck checker. Its only warnings were about blue, black and green sources, which this two-color deck doesn't need.\n- **Sideboard:** aimed at Jund Sacrifice, Reanimator, Elementals and the control decks.\n\n**Honest odds:**\n- **Ajani Unrelenting:** with 3 copies, you'd see it by turn 6 only 49.5% of the time, so I went to 4.\n- **The full line:** drawing every card in my submitted turn-7 line by turn 7 happens in only about 5% of games. In practice any walker or token maker can fill each step, so read the line as a template rather than a script.\n- **Speed:** this is a slower midrange deck, not a fast combo.\n\nNo published list has run these three cards together in the last 400 days, so this is a true brew.",
+ "deck": {
+  "format": "standard",
+  "main": [
+   {
+    "qty": 4,
+    "name": "Gideon's Memorial"
+   },
+   {
+    "qty": 4,
+    "name": "Solitary Cell"
+   },
+   {
+    "qty": 4,
+    "name": "Ajani Unrelenting"
+   },
+   {
+    "qty": 4,
+    "name": "Ajani, Outland Chaperone"
+   },
+   {
+    "qty": 2,
+    "name": "Elspeth, Storm Slayer"
+   },
+   {
+    "qty": 2,
+    "name": "Chandra, Torch of Defiance"
+   },
+   {
+    "qty": 4,
+    "name": "Burst Lightning"
+   },
+   {
+    "qty": 3,
+    "name": "Get Lost"
+   },
+   {
+    "qty": 1,
+    "name": "Lightning Helix"
+   },
+   {
+    "qty": 3,
+    "name": "Caretaker's Talent"
+   },
+   {
+    "qty": 3,
+    "name": "Toby, Beastie Befriender"
+   },
+   {
+    "qty": 2,
+    "name": "Antiquities on the Loose"
+   },
+   {
+    "qty": 4,
+    "name": "Sacred Foundry"
+   },
+   {
+    "qty": 4,
+    "name": "Inspiring Vantage"
+   },
+   {
+    "qty": 4,
+    "name": "Sunbillow Verge"
+   },
+   {
+    "qty": 4,
+    "name": "Sundown Pass"
+   },
+   {
+    "qty": 2,
+    "name": "Multiversal Passage"
+   },
+   {
+    "qty": 3,
+    "name": "Plains"
+   },
+   {
+    "qty": 3,
+    "name": "Mountain"
+   }
+  ],
+  "side": [
+   {
+    "qty": 2,
+    "name": "Rest in Peace"
+   },
+   {
+    "qty": 3,
+    "name": "Seam Rip"
+   },
+   {
+    "qty": 3,
+    "name": "Voice of Victory"
+   },
+   {
+    "qty": 2,
+    "name": "Pyroclasm"
+   },
+   {
+    "qty": 2,
+    "name": "Dawn's Truce"
+   },
+   {
+    "qty": 1,
+    "name": "Get Lost"
+   },
+   {
+    "qty": 2,
+    "name": "Quintorius Kand"
+   }
+  ],
+  "commander": [],
+  "label": "brew",
+  "donor": "Boros Dragons",
+  "warnings": [],
+  "winLine": [
+   {
+    "card": "Gideon's Memorial",
+    "does": "Turn 2: its mana can only be spent on planeswalkers, so every walker comes down a turn early. It also gives all your creature tokens +1/+0 and vigilance."
+   },
+   {
+    "card": "Solitary Cell",
+    "does": "Turns 2-3: exiles the opponent's best permanent with mana value 3 or less. Later, pay {1}, tap it and discard a spare legendary card (an extra walker or Memorial) to draw a card."
+   },
+   {
+    "card": "Ajani, Outland Chaperone",
+    "does": "Turn 3: +1 makes a 1/1 Kithkin token each turn, which Memorial turns into a 2/1 with vigilance that attacks and still guards walkers."
+   },
+   {
+    "card": "Toby, Beastie Befriender",
+    "does": "Turn 4: leaves behind a 4/4 Beast token. Once you control 4 or more creature tokens, all your tokens fly."
+   },
+   {
+    "card": "Ajani Unrelenting",
+    "does": "Turn 5, using Memorial mana: −3 deals 4 damage to every creature except your tokens. Activating the ability also makes a 2/2 Cadet token, so the opponent's board is gone and yours is intact."
+   },
+   {
+    "card": "Ajani Unrelenting",
+    "does": "Turn 6+: +1 gives creatures +1/+0 and haste and makes another Cadet. With Memorial's bonus on top, the token army deals lethal in one or two swings."
+   }
+  ],
+  "winTurn": 7,
+  "winLineDrawnPct": 5
+ },
+ "costUsd": 0.3802,
+ "error": null
+}

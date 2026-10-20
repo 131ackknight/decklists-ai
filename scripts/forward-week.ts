@@ -28,7 +28,7 @@ import { loadCardIndex } from "../src/cards/load";
 import { normalizeName } from "../src/cards/names";
 import { FileDataSource } from "../src/data/source";
 import { MODELS } from "../src/harness/models";
-import { brew, brewV5, brewV6, brewV7, type BrewResult } from "../src/harness/run";
+import { brew, brewV5, brewV6, brewV7, brewV10, type BrewResult } from "../src/harness/run";
 
 try {
   process.loadEnvFile(".env.local");
@@ -194,7 +194,9 @@ async function main() {
       }
       const deps = { index: pool, data };
       const r: BrewResult =
-        h === "v7"
+        h === "v10"
+          ? await brewV10(client, model, req, deps)
+          : h === "v7"
           ? await brewV7(client, model, req, deps, undefined, c.firstSeen)
           : h === "v6"
             ? await brewV6(client, model, req, deps)

@@ -27,7 +27,7 @@ Three things, and the third is turning out to be the most interesting.
 
 | Item | Total |
 | --- | --- |
-| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79. Total about $209.49. Plus one 17-token test call. |
+| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14. Total about $223.49. Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats); full history 143,721 (since 2025-07-01) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
 | Automated tests | 48 passing |
@@ -62,6 +62,29 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - Lesson to apply: any prompt or claim that names a card gets checked against the card index before it is used.
 - ~~Switch to pairwise~~: done; 36 pairs judged (v1 8 wins, v2 6, 22 ties; v2 100% faithful vs. 92%).
 - ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
+
+---
+
+## 2026-10-20 · Expert round: the owner judges 18 Premodern and Legacy brews blind
+
+Owner: "I think I need to judge decks that I know intimately." Formats: Premodern and Legacy. 11 fresh prompts (Claude proposed 14, owner cut 3) plus 7 archetypes that appeared this year in those formats (found with a 5-list bar), v2 vs v5 on Opus ($14). A fourth button was added at the owner's request: **Neither** (I wouldn't play either).
+
+**Picks: v5 8, v2 4, same 2, neither 4.**
+
+| | v5 | v2 | same | neither |
+| --- | --- | --- | --- | --- |
+| Premodern (7) | 3 | 1 | 0 | **3** |
+| Legacy (11) | 5 | 3 | 2 | 1 |
+| Fresh prompts (11) | 4 | 3 | 2 | 2 |
+| History decks (7) | 4 | 1 | 0 | 2 |
+
+- **v5 over v2 again, 2 to 1**, now in formats the owner knows cold. Third blind comparison in a row to favor it (holdout 3-0, this 8-4). The format menu is the one harness change with a consistent human preference behind it.
+- **"Neither" is the new number: 4 of 18 (22%).** In Premodern, where the owner is most expert and the data is thinnest (10 months of a small format), **3 of 7 pairs produced nothing they'd play**; in Legacy, 1 of 11. All four were combo decks: Pande-Burst, Erratic Explosion and Draco, Rector Combo, Living End. That is the owner's "specialist" category and the AI's known weak spot, now confirmed by the judge who knows those decks best.
+- **Objective score vs. owner on the 7 history decks:** agree 3, disagree 1 (Creative Technique: owner v5, score v2), 3 undecidable. Running tally across both checks: 8 agree, 1 disagree.
+
+**Reading:** on fair and synergy decks in formats with data, the AI produces something the owner would play almost every time, and v5 is the better harness. On Premodern combo it fails about half the time. The next diagnostic is cheap: the owner's one line on what was wrong with each "neither" deck.
+
+**Open offer:** the owner brews two of the fresh prompts themselves for a blind human-vs-AI comparison.
 
 ---
 

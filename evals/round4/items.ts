@@ -27,7 +27,7 @@ export interface SavedList {
 
 export interface Round4Item {
   id: string;
-  track: "fill" | "brew" | "fresh" | "holdout" | "expert" | "post" | "expert2";
+  track: "fill" | "brew" | "fresh" | "holdout" | "expert" | "post" | "expert2" | "expert3";
   format: string;
   prompt: string;
   /** Data and cards are cut to before this date (YYYY-MM-DD); null = today's data. */
@@ -243,6 +243,15 @@ const EXPERT2_FRESH: { id: string; format: string; prompt: string }[] = [
   { id: "expert2-legacy-kiki-pestermite", format: "Legacy", prompt: "Brew me a Legacy deck built around Kiki-Jiki, Mirror Breaker and Pestermite." },
 ];
 
+/** Expert round 3 (2026-10-20): five brand-new Premodern prompts, never seen by any harness rule. Owner swapped one. */
+const EXPERT3_FRESH: { id: string; format: string; prompt: string }[] = [
+  { id: "expert3-premodern-wildfire", format: "Premodern", prompt: "Brew me a Premodern deck built around Wildfire." },
+  { id: "expert3-premodern-zurs-weirding", format: "Premodern", prompt: "Brew me a Premodern deck built around Zur's Weirding." },
+  { id: "expert3-premodern-squandered-balance", format: "Premodern", prompt: "Brew me a Premodern deck built around Squandered Resources and Natural Balance." },
+  { id: "expert3-premodern-mill", format: "Premodern", prompt: "Brew me a mill deck in premodern" },
+  { id: "expert3-premodern-nether-spirit", format: "Premodern", prompt: "Brew me a Premodern control deck built around Nether Spirit." },
+];
+
 export function round4Items(index: CardIndex): Round4Item[] {
   return [
     ...fillItems(index),
@@ -254,5 +263,6 @@ export function round4Items(index: CardIndex): Round4Item[] {
     // Post-cutoff: archetypes first seen after the models' training cutoff (June 2026). The future, for the model, today.
     ...holdoutItems("evals/brew-holdout/candidates-post.json", "post", 0),
     ...EXPERT2_FRESH.map((f) => ({ ...f, track: "expert2" as const, before: null })),
+    ...EXPERT3_FRESH.map((f) => ({ ...f, track: "expert3" as const, before: null })),
   ];
 }

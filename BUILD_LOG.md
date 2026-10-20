@@ -27,7 +27,7 @@ Three things, and the third is turning out to be the most interesting.
 
 | Item | Total |
 | --- | --- |
-| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86. Total about $249.84. Plus one 17-token test call. |
+| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80. Total about $254.64. Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats); full history 143,721 (since 2025-07-01) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
 | Automated tests | 48 passing |
@@ -62,6 +62,29 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - Lesson to apply: any prompt or claim that names a card gets checked against the card index before it is used.
 - ~~Switch to pairwise~~: done; 36 pairs judged (v1 8 wins, v2 6, 22 ties; v2 100% faithful vs. 92%).
 - ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
+
+---
+
+## 2026-10-20 · "Would you play it?" on v11: 6 of 12
+
+The question changed from pairs to single decks: twelve v11 brews (expert round 2 prompts, $4.80), one at a time, yes or no, a line on each no (`scripts/build-play-page.ts`, `evals/rating/play-template.html`). All twelve were 60 cards with a deck submitted.
+
+**Would play: 6 of 12.** Premodern 4 of 6 (Rising Waters, Phyrexian Processor, Rofellos, Shapeshifter + Phage); Legacy 2 of 6 (Glimpse Elves, Oracle + Pact). The formats swapped: this morning Premodern was where the brews failed; after the day's fixes it's where they pass, and Legacy, where card quality matters more, is where they fall short.
+
+**The six no's, in the owner's words:**
+- Mind Over Matter: "It's not understanding what Mind Over Matter does. It needs to generate a ton of mana, but how does it do this in the list? It has only one Thran Dynamo. You need to put Arcanis and Mind Over Matter in the field at the same time, or something like Lotus Vale. It's close but not quite there."
+- Seismic Assault: "Doesn't really have any enablers, you need to play extra lands or ways to get extra lands."
+- Scapeshift: "Close, but cards like Sakura-Tribe Elder at this point are outclassed."
+- Hypergenesis: "Close, but the creatures it's putting into play seem kind of weird. Why 4 Craterhoof?"
+- Kiki-Pestermite: "Close, but I don't think it needs Sneak Attack here since it's just 1 more mana to do Kiki-Jiki."
+- Bomberman: no note.
+- Rofellos (a yes, with a note): "I don't get the Krosan Tuskers. The numbers between Winter's Grasp and Creeping Mold are a little weird."
+
+**Two patterns in the no's:**
+1. **The build-around's enablers aren't there in quantity** (Mind Over Matter, Seismic Assault). The model names what the card needs (the mechanism step) and then plays one copy of it. Same failure the owner named in round 2; no check counts it yet. Candidate check: for each requested card, the brew must name its enabler role and the cards filling it, and code counts copies against a floor, with a stated reason allowed for fewer.
+2. **Card quality and odd numbers** (Scapeshift, Hypergenesis, Kiki with Sneak Attack, the Tuskers). Outclassed cards and packages the deck doesn't need. v4's fair-deck card check (cards far below the play share of alternatives for the same job) was aimed at this and was dropped with the coach; it could come back as a note at submit time.
+
+Four of the six no's were "close": the shape is right and specific choices are off, which is a different place from this morning's "no line to the win."
 
 ---
 

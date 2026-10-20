@@ -22,6 +22,21 @@ export interface DataSource {
   copyRate(format: string, main: QtyName[], opts?: Window): CopyRate | null;
   /** Every list in the window (default 90 days), for measuring what decks of a kind look like. */
   recentLists(format: string, opts?: Window): RefList[];
+  /**
+   * What real lists in any format play alongside all of `cards`: the lists'
+   * formats and strategies, and the nonland cards most often beside them.
+   * The mechanism of a combo, read off the decks that actually run it.
+   */
+  playedWith(cards: string[], opts?: Window): PlayedWith | null;
+}
+
+export interface PlayedWith {
+  lists: number;
+  byFormat: { format: string; lists: number }[];
+  strategies: { format: string; strategy: string; lists: number }[];
+  cards: { name: string; share: number; avgCopies: number }[];
+  /** Newest list date seen, so a stale pairing reads as stale. */
+  newest: string;
 }
 
 export interface CopyRate {
@@ -191,6 +206,46 @@ export class FileDataSource implements DataSource {
 
   recentLists(format: string, opts?: Window): RefList[] {
     return this.window(format, { days: 90, ...opts });
+  }
+
+  playedWith(cards: string[], opts: Window = {}): PlayedWith | null {
+    const asOf = opts.asOf ?? this.newest;
+    const since = new Date(Date.parse(asOf) - (opts.days ?? 400) * DAY).toISOString().slice(0, 10);
+    const canon = (n: string) => normalizeName(this.index.getCard(n)?.name ?? n);
+    const want = cards.map(canon);
+    const isLand = (n: string) => /\bLand\b/.test(this.index.getCard(n)?.typeLine.split(" // ")[0] ?? "");
+    const hits = this.lists.filter((l) => l.date <= asOf && l.date > since && want.every((w) => l.main.some((c) => canon(c.name) === w)));
+    if (!hits.length) return null;
+    const byFormat = new Map<string, number>();
+    const byStrategy = new Map<string, number>();
+    const seen = new Map<string, { lists: number; copies: number; name: string }>();
+    let newest = "";
+    for (const l of hits) {
+      byFormat.set(l.format, (byFormat.get(l.format) ?? 0) + 1);
+      byStrategy.set(`${l.format}|${l.strategy}`, (byStrategy.get(`${l.format}|${l.strategy}`) ?? 0) + 1);
+      if (l.date > newest) newest = l.date;
+      for (const c of l.main) {
+        const k = canon(c.name);
+        if (want.includes(k) || isLand(c.name)) continue;
+        const row = seen.get(k) ?? { lists: 0, copies: 0, name: this.index.getCard(c.name)?.name ?? c.name };
+        row.lists++;
+        row.copies += c.qty;
+        seen.set(k, row);
+      }
+    }
+    return {
+      lists: hits.length,
+      byFormat: [...byFormat].map(([format, n]) => ({ format, lists: n })).sort((a, b) => b.lists - a.lists),
+      strategies: [...byStrategy]
+        .map(([k, n]) => ({ format: k.split("|")[0], strategy: k.split("|")[1], lists: n }))
+        .sort((a, b) => b.lists - a.lists)
+        .slice(0, 6),
+      cards: [...seen.values()]
+        .map((r) => ({ name: r.name, share: r.lists / hits.length, avgCopies: Math.round((r.copies / r.lists) * 10) / 10 }))
+        .sort((a, b) => b.share - a.share)
+        .slice(0, 25),
+      newest,
+    };
   }
 
   referenceList(format: string, strategy: string, opts?: Window): RefList | null {

@@ -35,6 +35,7 @@ const noData: DataSource = {
   cardPlayRate: () => null,
   copyRate: () => null,
   recentLists: () => [],
+  playedWith: () => null,
 };
 
 const ctx = (): ToolContext => ({ index, data: noData, seen: new Set(), submitted: null });

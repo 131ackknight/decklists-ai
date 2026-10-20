@@ -68,3 +68,14 @@ export const V7_SYSTEM_PROMPT = V5_SYSTEM_PROMPT.replace(
   "Borrowing a package is not copying a deck: the requested cards stay at the center.",
   "Borrowing a package is not copying a deck: the requested cards stay at the center. The request may include annotated examples of real brews by a strong brewer: use them for the shape of a good brew (a proven shell, a few new cards that make the idea work, the rest chosen to fit), never for their cards.",
 );
+
+/**
+ * Harness v8: v5 plus the played_with tool. The owner's diagnosis of the
+ * expert round's misses (2026-10-20): the model read the surface of the cards
+ * (Draco's domain text, "cycling creatures") instead of the mechanism of the
+ * combo. Real lists that run the cards together show the mechanism.
+ */
+export const V8_SYSTEM_PROMPT = V5_SYSTEM_PROMPT.replace(
+  "- Brew (anything without a proven list): start from the requested cards and plan.",
+  "- Brew (anything without a proven list): first call played_with on the requested cards. If real decks in any format run them together, learn the mechanism from those decks (what each card is actually for, what else makes it work) before you plan; then check what carries over to the requested format. Start from the requested cards and plan.",
+);

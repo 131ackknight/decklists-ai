@@ -5,7 +5,7 @@ import type { DataSource } from "@/data/source";
 import { costUsd, type ModelConfig, type Usage } from "./models";
 import { formatMenu } from "./menu";
 import { examplesText, loadBrewerLists, type BrewerList } from "./examples";
-import { SYSTEM_PROMPT, V4_SYSTEM_PROMPT, V5_SYSTEM_PROMPT, V6_SYSTEM_PROMPT, V7_SYSTEM_PROMPT } from "./prompt";
+import { SYSTEM_PROMPT, V4_SYSTEM_PROMPT, V5_SYSTEM_PROMPT, V6_SYSTEM_PROMPT, V7_SYSTEM_PROMPT, V8_SYSTEM_PROMPT } from "./prompt";
 import { runTool, toolParams, type SubmittedDeck, type ToolContext } from "./tools";
 
 export interface BrewRequest {
@@ -214,7 +214,7 @@ export async function brewV5(
   req: BrewRequest,
   deps: { index: CardIndex; data: DataSource },
   onStep?: (step: number, note: string) => void,
-  variant: { system: string; maxCopyRate?: number; examples?: { lists: BrewerList[]; before: string } } = { system: V5_SYSTEM_PROMPT },
+  variant: { system: string; maxCopyRate?: number; examples?: { lists: BrewerList[]; before: string }; extraTools?: string[] } = { system: V5_SYSTEM_PROMPT },
 ): Promise<BrewResult> {
   const started = Date.now();
   const ctx: ToolContext = { ...deps, seen: new Set(), submitted: null };
@@ -226,7 +226,7 @@ export async function brewV5(
     (req.format ? `Format: ${req.format}\n\n${req.prompt}` : req.prompt) +
     (menu ? `\n\nWhat is working in ${req.format} right now (last 30 days of results):\n${menu}` : "") +
     (examples ? `\n\n${examples}` : "");
-  const V5_TOOLS = ["search_cards", "find_tags", "card_info", "meta", "archetype", "reference_list", "draw_odds", "check_deck", "submit_deck"];
+  const V5_TOOLS = ["search_cards", "find_tags", "card_info", "meta", "archetype", "reference_list", "draw_odds", "check_deck", "submit_deck", ...(variant.extraTools ?? [])];
   const r = await runStage({ client, model, system: variant.system, userText, tools: V5_TOOLS, ctx, onStep });
   return {
     text: r.text,
@@ -271,4 +271,15 @@ export function brewV7(
 ): Promise<BrewResult> {
   exampleLists ??= loadBrewerLists(EXAMPLE_BREWER_DIR);
   return brewV5(client, model, req, deps, onStep, { system: V7_SYSTEM_PROMPT, examples: { lists: exampleLists, before } });
+}
+
+/** Harness v8: v5 plus played_with, so a brew learns a combo's mechanism from the decks that run it. */
+export function brewV8(
+  client: Anthropic,
+  model: ModelConfig,
+  req: BrewRequest,
+  deps: { index: CardIndex; data: DataSource },
+  onStep?: (step: number, note: string) => void,
+): Promise<BrewResult> {
+  return brewV5(client, model, req, deps, onStep, { system: V8_SYSTEM_PROMPT, extraTools: ["played_with"] });
 }

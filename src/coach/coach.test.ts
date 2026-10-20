@@ -67,6 +67,7 @@ const data: DataSource = {
   cardPlayRate: () => null,
   copyRate: () => null,
   recentLists: () => lists,
+  playedWith: () => null,
 };
 
 const combo: Plan = {

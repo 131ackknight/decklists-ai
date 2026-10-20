@@ -264,6 +264,18 @@ export const TOOLS = [
     },
   }),
   tool({
+    name: "played_with",
+    description:
+      "What real decks in ANY format play alongside these cards (up to 3): how many lists, which formats and strategies, and the nonland cards most often beside them. The fastest way to learn how a combo or engine is actually built, from the players who run it. Pairings from other formats are evidence of the mechanism, not cards you can use: check legality in the requested format with card_info.",
+    schema: z.object({ cards: z.array(z.string()).min(1).max(3) }),
+    run: ({ cards }, ctx) => {
+      const r = ctx.data.playedWith(cards);
+      if (!r) return { lists: 0, note: "No published list in the last 400 days plays all of these together." };
+      remember(ctx, r.cards.map((c) => c.name));
+      return { ...r, cards: r.cards.map((c) => ({ name: c.name, inPercentOfLists: pct(c.share), avgCopies: c.avgCopies })) };
+    },
+  }),
+  tool({
     name: "draw_odds",
     description:
       "Exact draw odds with no mulligans: chance to have at least one card from each group by a turn. Use it to size engines and to give honest odds.",

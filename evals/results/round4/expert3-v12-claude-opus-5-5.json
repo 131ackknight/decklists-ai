@@ -1,0 +1,1047 @@
+{
+ "ranAt": "2026-10-20T22:57:12.791Z",
+ "harness": "v12",
+ "model": "claude-opus-5-5",
+ "tracks": [
+  "expert3"
+ ],
+ "results": [
+  {
+   "id": "expert3-premodern-wildfire",
+   "track": "expert3",
+   "format": "Premodern",
+   "before": null,
+   "prompt": "Brew me a Premodern deck built around Wildfire.",
+   "text": "I built a **Red-Green Terravore Wildfire** deck. It's a brew: no published Premodern list in the last 400 days has run Wildfire.\n\n**The plan:** You ramp with Birds of Paradise, Wall of Roots, Mox Diamond and Fellwar Stone and land a Terravore early. Wildfire resolves in two steps: first each player sacrifices four lands, then it deals 4 damage to each creature. Terravore's size equals the number of land cards in all graveyards, so up to 8 extra lands get there before the damage. It's usually 8/8 or bigger by then and survives the 4, while the opponent's creatures die. A kicked Kavu Titan (5/5) and an unused Wall of Roots (0/5) also survive.\n\nAfter that, your Mox Diamond and Fellwar Stone still make mana, the opponent has almost no lands left, and an 8/8 trampler ends the game in a few attacks. Stone Rain, Thermokarst and Wasteland keep the opponent off their lands and grow Terravore while you build up to the 6 mana Wildfire needs. Sylvan Library helps you find the pieces.\n\n**Honest odds:** Without counting Sylvan Library or mulligans, you'll see Wildfire by turn 5 about 57% of the time. You'll have Wildfire, a creature that survives it, and some ramp all together about 37% of the time. The checker's strict version, every specific card in the turn-7 winning sequence, was only 11%. That one undersells the deck, because any ramp card can fill the Mox Diamond or Wall of Roots step.\n\n**The three directions I considered:**\n1. **Red-green Ponza (chosen):** borrows the Terravore, Mox Diamond and Sylvan Library package from the menu's Terrageddon and Oath Ponza decks.\n2. **Mono-red artifact ramp:** Worn Powerstone, Thran Dynamo and Mind Stone into Covetous Dragon or Rorix Bladewing.\n3. **Mono-red land destruction topped with Wildfire:** Stone Rain, Pillage and Avalanche Riders, with Wildfire as the finisher.\n\nI picked the first because Terravore is the only payoff that gets *bigger* from Wildfire's symmetrical land sacrifice. That turns the card from fair into one-sided, where the other two directions just try to survive it.\n\n**Two things to know:**\n- **Land count:** The deck runs 24 lands against Oath Ponza's 28, because the 14 non-land mana sources do the ramping instead.\n- **Sideboard:** It targets the current top decks: Pyroblast for Stiflenought and Psychatog, Tranquil Domain and Naturalize for Enchantress and Replenish, Pyroclasm and Earthquake for Sligh and Goblins, Tormod's Crypt for Hermit Druid, and Call of the Herd for control.",
+   "deck": {
+    "main": [
+     {
+      "qty": 4,
+      "name": "Wildfire"
+     },
+     {
+      "qty": 4,
+      "name": "Terravore"
+     },
+     {
+      "qty": 2,
+      "name": "Kavu Titan"
+     },
+     {
+      "qty": 4,
+      "name": "Birds of Paradise"
+     },
+     {
+      "qty": 4,
+      "name": "Wall of Roots"
+     },
+     {
+      "qty": 4,
+      "name": "Mox Diamond"
+     },
+     {
+      "qty": 2,
+      "name": "Fellwar Stone"
+     },
+     {
+      "qty": 4,
+      "name": "Sylvan Library"
+     },
+     {
+      "qty": 3,
+      "name": "Thermokarst"
+     },
+     {
+      "qty": 2,
+      "name": "Stone Rain"
+     },
+     {
+      "qty": 3,
+      "name": "Lightning Bolt"
+     },
+     {
+      "qty": 4,
+      "name": "Wasteland"
+     },
+     {
+      "qty": 4,
+      "name": "Karplusan Forest"
+     },
+     {
+      "qty": 4,
+      "name": "Wooded Foothills"
+     },
+     {
+      "qty": 7,
+      "name": "Forest"
+     },
+     {
+      "qty": 5,
+      "name": "Mountain"
+     }
+    ],
+    "side": [
+     {
+      "qty": 3,
+      "name": "Pyroblast"
+     },
+     {
+      "qty": 2,
+      "name": "Naturalize"
+     },
+     {
+      "qty": 2,
+      "name": "Tranquil Domain"
+     },
+     {
+      "qty": 2,
+      "name": "Pyroclasm"
+     },
+     {
+      "qty": 2,
+      "name": "Tormod's Crypt"
+     },
+     {
+      "qty": 3,
+      "name": "Call of the Herd"
+     },
+     {
+      "qty": 1,
+      "name": "Earthquake"
+     }
+    ],
+    "commander": [],
+    "label": "brew",
+    "warnings": [],
+    "winLine": [
+     {
+      "card": "Mox Diamond",
+      "does": "Turn 1: discard a land for fast mana, which also puts a land in the graveyard for Terravore"
+     },
+     {
+      "card": "Wall of Roots",
+      "does": "Turn 2 ramp; the 0/5 body can make it through Wildfire if you've used it at most once"
+     },
+     {
+      "card": "Terravore",
+      "does": "Turn 3: lands up, grows with every Wasteland, Thermokarst and Stone Rain"
+     },
+     {
+      "card": "Wildfire",
+      "does": "Turn 5: each player sacrifices 4 lands, so up to 8+ more land cards hit the graveyards and Terravore is 8/8 or bigger before the 4 damage. It survives while the opponent's creatures and your Birds die"
+     },
+     {
+      "card": "Terravore",
+      "does": "Swings as an 8/8+ trampler. You keep Mox and Fellwar mana, the opponent is left with 0-1 lands, and you win in about 2-3 attacks"
+     }
+    ],
+    "winTurn": 7,
+    "winLineDrawnPct": 11.3
+   },
+   "toolCalls": [
+    {
+     "name": "played_with",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "reference_list",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "submit_deck",
+     "ok": false,
+     "isError": false,
+     "rejected": [
+      "card fair-card-stone rain: Stone Rain (removal): in 0% of recent premodern decks. At a similar cost in your colors, players choose Powder Keg (19%) or Naturalize (16%). Keep it only if it does something specific for this deck, and say what."
+     ]
+    },
+    {
+     "name": "submit_deck",
+     "ok": true,
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 22,
+    "output": 9744,
+    "cacheRead": 169152,
+    "cacheWrite": 29482
+   },
+   "costUsd": 0.3762,
+   "steps": 9,
+   "ms": 102141,
+   "errors": []
+  },
+  {
+   "id": "expert3-premodern-zurs-weirding",
+   "track": "expert3",
+   "format": "Premodern",
+   "before": null,
+   "prompt": "Brew me a Premodern deck built around Zur's Weirding.",
+   "text": "I built Weirding Enchantress (a brew), and the submitted deck passed every check.\n\n**The plan:** The base is the GW Enchantress shell from the menu: the Argothian Enchantress / Enchantress's Presence draw engine, Serra's Sanctum, Opalescence and Parallax Wave. I added a light blue splash so Zur's Weirding can act as a lock piece. Once it's out, both players' hands are revealed, and whenever your opponent would draw a card you can pay 2 life to send it to the graveyard instead. That shuts off their topdecks, which is how Enchantress usually loses. Solitary Confinement makes you skip your draw step, so the opponent can't deny those cards. It also prevents all damage to you, which makes paying 2 life each turn safe. Words of Worship turns an Enchantress draw into 5 life, which pays for that. To win, cast Opalescence: it turns Weirding into a 4/4 and your other enchantments into attackers. Words of Wilding is a backup that turns draws into 2/2 Bears, and the opponent can't deny those either.\n\n**Directions I considered:**\n1. **Bant control:** This is where Weirding actually shows up in results. One 5-0 \"Parfait\" league list runs a single Weirding next to Oath of Druids, Counterspell and Gush. Weirding is a minor piece there, not the center.\n2. **Bant Armageddon prison:** Use Mox Diamond and Armageddon from Terrageddon, then Weirding stops opponents from drawing lands to rebuild. It needs too many separate parts to come together.\n3. **Enchantress plus Weirding (chosen):** Enchantress is 13% of the field and already runs Solitary Confinement and Words of Wilding, the exact cards that protect you from Weirding. Of the three, it's the only one where the requested card gets a full support package rather than a single slot.\n\n**Things to know:**\n- **Finding Weirding:** You run 3 copies, plus 3 Sterling Grove and 1 Enlightened Tutor to fetch it. That gives about a 78% chance to see one of those seven cards by turn 5 (assuming no mulligan).\n- **Blue mana:** It comes from 3 Yavimaya Coast, 1 Island and 2 Flooded Strand (6 sources). The checker found the mana in line with real Enchantress lists.\n- **The win line:** The checker estimates you'll draw every card in the sample line by turn 7 in only 0.4% of games. That number doesn't count tutors or card draw, and you rarely need every piece. In practice, Weirding plus any finisher (Opalescence, Bears or Replenish) is enough.\n- **Weirding is optional each time:** You choose whether to pay. Against burn decks like Sligh, don't pay life unless Confinement is out.",
+   "deck": {
+    "main": [
+     {
+      "qty": 4,
+      "name": "Argothian Enchantress"
+     },
+     {
+      "qty": 4,
+      "name": "Enchantress's Presence"
+     },
+     {
+      "qty": 2,
+      "name": "Mirri's Guile"
+     },
+     {
+      "qty": 4,
+      "name": "Wild Growth"
+     },
+     {
+      "qty": 3,
+      "name": "Zur's Weirding"
+     },
+     {
+      "qty": 2,
+      "name": "Solitary Confinement"
+     },
+     {
+      "qty": 1,
+      "name": "Words of Worship"
+     },
+     {
+      "qty": 2,
+      "name": "Words of Wilding"
+     },
+     {
+      "qty": 3,
+      "name": "Sterling Grove"
+     },
+     {
+      "qty": 3,
+      "name": "Opalescence"
+     },
+     {
+      "qty": 3,
+      "name": "Parallax Wave"
+     },
+     {
+      "qty": 2,
+      "name": "Seal of Cleansing"
+     },
+     {
+      "qty": 3,
+      "name": "Swords to Plowshares"
+     },
+     {
+      "qty": 1,
+      "name": "Replenish"
+     },
+     {
+      "qty": 1,
+      "name": "Enlightened Tutor"
+     },
+     {
+      "qty": 4,
+      "name": "Serra's Sanctum"
+     },
+     {
+      "qty": 4,
+      "name": "Brushland"
+     },
+     {
+      "qty": 3,
+      "name": "Yavimaya Coast"
+     },
+     {
+      "qty": 3,
+      "name": "Windswept Heath"
+     },
+     {
+      "qty": 2,
+      "name": "Flooded Strand"
+     },
+     {
+      "qty": 4,
+      "name": "Forest"
+     },
+     {
+      "qty": 1,
+      "name": "Plains"
+     },
+     {
+      "qty": 1,
+      "name": "Island"
+     }
+    ],
+    "side": [
+     {
+      "qty": 3,
+      "name": "Xantid Swarm"
+     },
+     {
+      "qty": 3,
+      "name": "Tormod's Crypt"
+     },
+     {
+      "qty": 2,
+      "name": "Aura of Silence"
+     },
+     {
+      "qty": 2,
+      "name": "Warmth"
+     },
+     {
+      "qty": 1,
+      "name": "Gaea's Blessing"
+     },
+     {
+      "qty": 1,
+      "name": "Sacred Ground"
+     },
+     {
+      "qty": 1,
+      "name": "Swords to Plowshares"
+     },
+     {
+      "qty": 1,
+      "name": "Karmic Justice"
+     },
+     {
+      "qty": 1,
+      "name": "Choke"
+     }
+    ],
+    "commander": [],
+    "label": "brew",
+    "warnings": [],
+    "winLine": [
+     {
+      "card": "Wild Growth",
+      "does": "Turn 1 ramp so the 4-drops land on turn 3"
+     },
+     {
+      "card": "Argothian Enchantress",
+      "does": "Turn 2 engine: every enchantment cast draws a card"
+     },
+     {
+      "card": "Zur's Weirding",
+      "does": "Turn 3-4: opponent's hand is revealed and each card they would draw can be binned for 2 life, so they never get a new card"
+     },
+     {
+      "card": "Solitary Confinement",
+      "does": "Skips my draw step (opponent can't deny it) and prevents all damage to me, so paying 2 life a turn for Weirding is safe"
+     },
+     {
+      "card": "Words of Worship",
+      "does": "{1}: replace an Enchantress draw with 5 life, refunding the Weirding payments"
+     },
+     {
+      "card": "Opalescence",
+      "does": "Turns Weirding (4/4), Confinement (3/3), Words and Presence into attackers that finish an opponent who can't draw answers"
+     }
+    ],
+    "winTurn": 7,
+    "winLineDrawnPct": 0.4
+   },
+   "toolCalls": [
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "played_with",
+     "isError": false
+    },
+    {
+     "name": "reference_list",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "reference_list",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "submit_deck",
+     "ok": true,
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 18,
+    "output": 12481,
+    "cacheRead": 132484,
+    "cacheWrite": 32812
+   },
+   "costUsd": 0.4402,
+   "steps": 7,
+   "ms": 125726,
+   "errors": []
+  },
+  {
+   "id": "expert3-premodern-squandered-balance",
+   "track": "expert3",
+   "format": "Premodern",
+   "before": null,
+   "prompt": "Brew me a Premodern deck built around Squandered Resources and Natural Balance.",
+   "text": "I built a BG \"Squandervore\" brew. The idea: Squandered Resources turns every land into mana you can cash in at instant speed and a card in the graveyard. Terravore (power and toughness equal to the land cards in all graveyards), Nimble Mongoose and Werebear are the payoffs. Natural Balance is the refill: you float mana from your lands, sacrifice all of them to Squandered to pay {2}{G}{G}, end up with zero lands, and search up 5 basics that enter untapped. That puts 4+ more lands in your graveyard, and in combat you can sacrifice the new basics after blocks for +1/+1 each on Terravore.\n\n**Directions I considered:**\n1. A Rock shell (Pernicious Deed, Duress/Cabal Therapy, Ravenous Baloth), using Squandered as a mana burst.\n2. A BG X-spell ramp deck that sacrifices lands for a huge Pernicious Deed.\n3. Terrageddon's green threshold package from the menu (Terravore, Mox Diamond, Sylvan Library, Call of the Herd, Mongoose, Werebear), with white and Armageddon swapped for black.\n\nI chose the third because every land Squandered eats makes those creatures bigger. That gives both requested cards a real job instead of just ramping. I dropped Armageddon because Natural Balance gives basics to *any* player at four or fewer lands, so wiping all lands first would rebuild your opponent too.\n\n**What to know before playing it:**\n- **No track record:** no published list in the last 400 days runs these two cards together.\n- **Odds:** the deck has both Squandered and Terravore by turn 4 only 26.5% of the time. Every card in the full line shows up by turn 5 in about 10.5% of games.\n- **Without Squandered:** fetchlands, Wasteland, Mox Diamond discards and Tranquil Thicket still put lands in the graveyard, so the threshold creatures work without it.\n- **Fetchlands:** sacrificing one to Squandered gives no mana, because it can't produce any. Crack them normally instead.\n- **When to cast Natural Balance:** it's best when your opponent has 5+ lands. Below that, it gives them basics too.\n- **Sideboard:** aimed at Goblins/Sligh (Engineered Plague, Zuran Orb), Enchantress/Replenish (Naturalize, Pernicious Deed, Tormod's Crypt) and Stiflenought (Chainer's Edict).\n- **Land count:** the deck runs 24 lands plus 4 Mox Diamond. Terrageddon lists run about 26.",
+   "deck": {
+    "main": [
+     {
+      "qty": 4,
+      "name": "Terravore"
+     },
+     {
+      "qty": 4,
+      "name": "Nimble Mongoose"
+     },
+     {
+      "qty": 3,
+      "name": "Werebear"
+     },
+     {
+      "qty": 3,
+      "name": "Call of the Herd"
+     },
+     {
+      "qty": 4,
+      "name": "Squandered Resources"
+     },
+     {
+      "qty": 3,
+      "name": "Natural Balance"
+     },
+     {
+      "qty": 3,
+      "name": "Sylvan Library"
+     },
+     {
+      "qty": 4,
+      "name": "Mox Diamond"
+     },
+     {
+      "qty": 4,
+      "name": "Duress"
+     },
+     {
+      "qty": 3,
+      "name": "Smother"
+     },
+     {
+      "qty": 1,
+      "name": "Diabolic Edict"
+     },
+     {
+      "qty": 2,
+      "name": "Wasteland"
+     },
+     {
+      "qty": 4,
+      "name": "Wooded Foothills"
+     },
+     {
+      "qty": 2,
+      "name": "Bloodstained Mire"
+     },
+     {
+      "qty": 2,
+      "name": "Llanowar Wastes"
+     },
+     {
+      "qty": 1,
+      "name": "Tranquil Thicket"
+     },
+     {
+      "qty": 7,
+      "name": "Forest"
+     },
+     {
+      "qty": 6,
+      "name": "Swamp"
+     }
+    ],
+    "side": [
+     {
+      "qty": 3,
+      "name": "Engineered Plague"
+     },
+     {
+      "qty": 2,
+      "name": "Tormod's Crypt"
+     },
+     {
+      "qty": 3,
+      "name": "Naturalize"
+     },
+     {
+      "qty": 2,
+      "name": "Pernicious Deed"
+     },
+     {
+      "qty": 2,
+      "name": "Chainer's Edict"
+     },
+     {
+      "qty": 2,
+      "name": "Zuran Orb"
+     },
+     {
+      "qty": 1,
+      "name": "Ravenous Baloth"
+     }
+    ],
+    "commander": [],
+    "label": "brew",
+    "warnings": [],
+    "winLine": [
+     {
+      "card": "Squandered Resources",
+      "does": "Turn 2: lands become instant-speed mana you can cash in, and every land you sacrifice goes to the graveyard"
+     },
+     {
+      "card": "Terravore",
+      "does": "Turn 3: a trampler whose power and toughness equal the land cards in all graveyards, already pumped by fetches, Wasteland and Mox Diamond discards"
+     },
+     {
+      "card": "Natural Balance",
+      "does": "Turn 4: tap your lands, then sacrifice all of them to Squandered to pay {2}{G}{G}. With zero lands left you search for 5 basics that enter untapped, so 4+ more lands go to the graveyard and Terravore grows by that much"
+     },
+     {
+      "card": "Squandered Resources",
+      "does": "In combat, sacrifice the fresh basics one at a time after blocks for +1/+1 each on Terravore, swinging for 10+ trample; this also turns on threshold for Nimble Mongoose and Werebear"
+     }
+    ],
+    "winTurn": 5,
+    "winLineDrawnPct": 10.5
+   },
+   "toolCalls": [
+    {
+     "name": "played_with",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "submit_deck",
+     "ok": true,
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 20,
+    "output": 11524,
+    "cacheRead": 179504,
+    "cacheWrite": 35490
+   },
+   "costUsd": 0.4439,
+   "steps": 8,
+   "ms": 126915,
+   "errors": []
+  },
+  {
+   "id": "expert3-premodern-mill",
+   "track": "expert3",
+   "format": "Premodern",
+   "before": null,
+   "prompt": "Brew me a mill deck in premodern",
+   "text": "I built UW Millstone draw-go, a brew on the Standstill deck's shell. The tools show no recent Premodern list with Millstone or Traumatize, so nobody has tested this deck in tournaments.\n\n**The plan:** Play Millstone on turn 2 and Standstill on turn 3, then mill 2 cards at the end of every opponent turn. Millstone's activation is an ability, not a spell, so it never triggers Standstill. Ambassador Laquatus works the same way: {3} mills 3 at instant speed. Counterspell, Mana Leak, Swords to Plowshares and Wrath of God keep you alive. Around turns 6–7, Traumatize mills half of what's left. Vision Charm (1 mana, mill 4, at instant speed) and Brain Freeze finish the library. Cast Brain Freeze after another spell in the same turn and it mills 6 or more.\n\n**Directions I considered:**\n1. **UW Standstill shell with Millstone** (chosen). It borrows the menu's Standstill mana base and interaction (24-card mana base, 13 white / 17 blue sources, passed the checker), plus Vision Charm from the Stiflenought package.\n2. **Mono-blue Brain Freeze storm**, using Stiflenought's cheap cantrips.\n3. **UB Dreamborn Muse control**, with Duress.\n\nI picked the first because draw-go always has spare mana at the end of the opponent's turn, and Millstone needs exactly that.\n\n**Odds:**\n- You have Millstone by turn 5 about 57% of the time, and at least one of the 11 mill cards about 92% of the time.\n- My best guess for the kill is around turn 10 (60 − 7 opening hand = 53 cards to mill).\n- The checker says every card in the full win line is drawn by turn 10 in only 0.2% of games. That's not the real kill rate, since the deck only needs enough mill, not every piece. But it does mean the deck wins slowly and grinds.\n\n**Caveats:**\n- Mill helps some of the field. Hermit Druid, Psychatog and Replenish decks want a full graveyard. Against them, use counters as your main plan and mill later. The sideboard has Tormod's Crypt for those matchups.\n- Against Sligh and Goblins you're a slow control deck, so the sideboard also has Circle of Protection: Red, Hydroblast and Blue Elemental Blast.\n- Mishra's Factory and Faerie Conclave give you a backup way to win by damage.",
+   "deck": {
+    "main": [
+     {
+      "qty": 4,
+      "name": "Millstone"
+     },
+     {
+      "qty": 2,
+      "name": "Traumatize"
+     },
+     {
+      "qty": 3,
+      "name": "Vision Charm"
+     },
+     {
+      "qty": 1,
+      "name": "Brain Freeze"
+     },
+     {
+      "qty": 1,
+      "name": "Ambassador Laquatus"
+     },
+     {
+      "qty": 4,
+      "name": "Counterspell"
+     },
+     {
+      "qty": 3,
+      "name": "Mana Leak"
+     },
+     {
+      "qty": 4,
+      "name": "Swords to Plowshares"
+     },
+     {
+      "qty": 2,
+      "name": "Wrath of God"
+     },
+     {
+      "qty": 1,
+      "name": "Disenchant"
+     },
+     {
+      "qty": 4,
+      "name": "Impulse"
+     },
+     {
+      "qty": 3,
+      "name": "Fact or Fiction"
+     },
+     {
+      "qty": 3,
+      "name": "Standstill"
+     },
+     {
+      "qty": 4,
+      "name": "Flooded Strand"
+     },
+     {
+      "qty": 4,
+      "name": "Adarkar Wastes"
+     },
+     {
+      "qty": 6,
+      "name": "Island"
+     },
+     {
+      "qty": 3,
+      "name": "Plains"
+     },
+     {
+      "qty": 2,
+      "name": "Coastal Tower"
+     },
+     {
+      "qty": 4,
+      "name": "Mishra's Factory"
+     },
+     {
+      "qty": 1,
+      "name": "Dust Bowl"
+     },
+     {
+      "qty": 1,
+      "name": "Faerie Conclave"
+     }
+    ],
+    "side": [
+     {
+      "qty": 2,
+      "name": "Circle of Protection: Red"
+     },
+     {
+      "qty": 2,
+      "name": "Hydroblast"
+     },
+     {
+      "qty": 1,
+      "name": "Blue Elemental Blast"
+     },
+     {
+      "qty": 2,
+      "name": "Annul"
+     },
+     {
+      "qty": 2,
+      "name": "Tormod's Crypt"
+     },
+     {
+      "qty": 3,
+      "name": "Meddling Mage"
+     },
+     {
+      "qty": 1,
+      "name": "Powder Keg"
+     },
+     {
+      "qty": 1,
+      "name": "Disenchant"
+     },
+     {
+      "qty": 1,
+      "name": "Wrath of God"
+     }
+    ],
+    "commander": [],
+    "label": "brew",
+    "warnings": [],
+    "winLine": [
+     {
+      "card": "Millstone",
+      "does": "Turn 2: lands as a cheap artifact; from then on, {2},{T} mills 2 at the end of every opponent turn"
+     },
+     {
+      "card": "Standstill",
+      "does": "Turn 3: locks the board. Millstone and Laquatus activations are abilities, not spells, so they never break it; the opponent has to cast first or get milled"
+     },
+     {
+      "card": "Ambassador Laquatus",
+      "does": "Second mana sink: {3} mills 3 at instant speed, also without breaking Standstill"
+     },
+     {
+      "card": "Counterspell",
+      "does": "Plus Mana Leak, Swords and Wrath: keeps us alive while the stones work"
+     },
+     {
+      "card": "Traumatize",
+      "does": "Turn 6-7: mills half of what's left (roughly 40 cards down to 20)"
+     },
+     {
+      "card": "Vision Charm",
+      "does": "1 mana, instant: mill 4, cast at their end step to dig the last cards out"
+     },
+     {
+      "card": "Brain Freeze",
+      "does": "Cast after a Vision Charm or a counter in the same turn: storm makes it mill 6+ and finishes the library"
+     }
+    ],
+    "winTurn": 10,
+    "winLineDrawnPct": 0.2
+   },
+   "toolCalls": [
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "meta",
+     "isError": false
+    },
+    {
+     "name": "played_with",
+     "isError": false
+    },
+    {
+     "name": "played_with",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "submit_deck",
+     "ok": true,
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 16,
+    "output": 6728,
+    "cacheRead": 114554,
+    "cacheWrite": 27271
+   },
+   "costUsd": 0.2939,
+   "steps": 6,
+   "ms": 69826,
+   "errors": []
+  },
+  {
+   "id": "expert3-premodern-nether-spirit",
+   "track": "expert3",
+   "format": "Premodern",
+   "before": null,
+   "prompt": "Brew me a Premodern control deck built around Nether Spirit.",
+   "text": "I built a black-green prison deck, using Nether Spirit as a free creature to sacrifice every turn. It's labeled a brew, but be clear about where it comes from: the card search shows that every recent deck running Nether Spirit (4 lists) is Contamination-based. So I started from the latest 5-0 Contamination list and added my own twist: 3 Smokestack, a 4th Contamination, and fewer of the deck's flexible cards.\n\n**How it works:** Nether Spirit comes back at the start of your turn if it's the only creature card in your graveyard. The deck runs no other creature cards; Mishra's Factory and Zombie tokens don't count. Each turn you let the Spirit return first, then sacrifice it to keep Contamination. That makes all lands, including the opponent's, tap only for black mana, which shuts off Sligh (10% of the field) and Terrageddon (11%). Smokestack is a second lock: you add a counter each turn, and the Spirit and Zombie tokens pay your share of sacrifices while the opponent loses real cards. Duress and Cabal Therapy clear the way. Innocent Blood and Pernicious Deed act like one-sided removal, because your Spirit just comes back. Mishra's Factory and the Spirit do the attacking.\n\n**Directions I considered:**\n1. Black-green Contamination plus Smokestack (Smokestack from the Oath Ponza deck, Pernicious Deed from Rock).\n2. Blue-black draw-and-counter like the Psychatog deck, with Nether Spirit as the only finisher.\n3. White-black control (Wrath of God, Vindicate), with Spirit as a threat that survives Wrath.\n\nI picked the first because it's the only one where sacrificing the Spirit for free every turn builds a lock. The other two just use it as a 2/2 that keeps coming back.\n\n**Things to know:**\n- **Two Spirits in the graveyard cancel each other out.** Neither comes back. Skeletal Scrying fixes this by removing the extra copy from your graveyard, which is why it stays in.\n- **Pay for green spells and Smokestack before Contamination lands, or use Chromatic Sphere.** Once it's out your lands only make black mana. Sphere changes that mana into green for Deed or pays toward Smokestack, and draws a card. The deck checker questioned Sphere, Innocent Blood, Skeletal Scrying and Deed as rarely played. I kept all four for these reasons.\n- **Expect a slow game.** You have about a 49% chance of drawing a Spirit by turn 3 on the play, and 70% for Contamination or Smokestack. Zombie Infestation tokens can stand in for the Spirit. The win turn I gave is about 8. The checker says you'll have drawn every card in my example line by turn 8 in only 6.5% of games, but you don't need them all. Any lock piece plus Spirit, Zombie tokens or Factory does the job.\n\nThe 24 lands match real Contamination lists, and the deck passed the legality and mana check with no warnings. The 15-card sideboard is aimed at Enchantress, Terrageddon, Phyrexian Dreadnought, Goblins and graveyard decks.",
+   "deck": {
+    "main": [
+     {
+      "qty": 4,
+      "name": "Nether Spirit"
+     },
+     {
+      "qty": 4,
+      "name": "Contamination"
+     },
+     {
+      "qty": 3,
+      "name": "Zombie Infestation"
+     },
+     {
+      "qty": 3,
+      "name": "Pernicious Deed"
+     },
+     {
+      "qty": 3,
+      "name": "Smokestack"
+     },
+     {
+      "qty": 4,
+      "name": "Chromatic Sphere"
+     },
+     {
+      "qty": 4,
+      "name": "Duress"
+     },
+     {
+      "qty": 4,
+      "name": "Cabal Therapy"
+     },
+     {
+      "qty": 3,
+      "name": "Innocent Blood"
+     },
+     {
+      "qty": 3,
+      "name": "Skeletal Scrying"
+     },
+     {
+      "qty": 1,
+      "name": "Smother"
+     },
+     {
+      "qty": 10,
+      "name": "Swamp"
+     },
+     {
+      "qty": 4,
+      "name": "Llanowar Wastes"
+     },
+     {
+      "qty": 1,
+      "name": "Tainted Wood"
+     },
+     {
+      "qty": 3,
+      "name": "Mishra's Factory"
+     },
+     {
+      "qty": 3,
+      "name": "Rishadan Port"
+     },
+     {
+      "qty": 3,
+      "name": "Wasteland"
+     }
+    ],
+    "side": [
+     {
+      "qty": 3,
+      "name": "Engineered Plague"
+     },
+     {
+      "qty": 3,
+      "name": "Dystopia"
+     },
+     {
+      "qty": 2,
+      "name": "Phyrexian Furnace"
+     },
+     {
+      "qty": 2,
+      "name": "Tormod's Crypt"
+     },
+     {
+      "qty": 1,
+      "name": "Snuff Out"
+     },
+     {
+      "qty": 1,
+      "name": "Powder Keg"
+     },
+     {
+      "qty": 1,
+      "name": "Haunting Echoes"
+     },
+     {
+      "qty": 2,
+      "name": "Diabolic Edict"
+     }
+    ],
+    "commander": [],
+    "label": "brew",
+    "warnings": [],
+    "winLine": [
+     {
+      "card": "Duress",
+      "does": "Turn 1: strips a counterspell, burn spell or enchantment so the lock lands safely"
+     },
+     {
+      "card": "Nether Spirit",
+      "does": "Turn 3: the deck's only creature card, so it comes back every upkeep after it's sacrificed"
+     },
+     {
+      "card": "Contamination",
+      "does": "Turn 3-4: every land now taps for only B; each upkeep you put the Spirit's return trigger on the stack first, then sacrifice the Spirit to keep Contamination, so it costs you nothing"
+     },
+     {
+      "card": "Smokestack",
+      "does": "Paid for with Chromatic Sphere or before Contamination is out; add soot counters while the Spirit and Zombie tokens cover your own sacrifices and the opponent loses permanents each turn"
+     },
+     {
+      "card": "Mishra's Factory",
+      "does": "Hits each turn alongside the Spirit while a mana-locked opponent can't cast spells, until they're dead"
+     }
+    ],
+    "winTurn": 8,
+    "winLineDrawnPct": 6.5
+   },
+   "toolCalls": [
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "played_with",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "reference_list",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "submit_deck",
+     "ok": false,
+     "isError": false,
+     "rejected": [
+      "card fair-card-chromatic sphere: Chromatic Sphere (card advantage): in 1% of recent premodern decks. At a similar cost in your colors, players choose Sylvan Library (19%). Keep it only if it does something specific for this deck, and say what.",
+      "card fair-card-innocent blood: Innocent Blood (removal): in 1% of recent premodern decks. At a similar cost in your colors, players choose Powder Keg (19%) or Naturalize (16%). Keep it only if it does something specific for this deck, and say what.",
+      "card fair-card-skeletal scrying: Skeletal Scrying (card advantage): in 2% of recent premodern decks. At a similar cost in your colors, players choose Sylvan Library (19%). Keep it only if it does something specific for this deck, and say what.",
+      "card fair-card-pernicious deed: Pernicious Deed (removal): in 3% of recent premodern decks. At a similar cost in your colors, players choose Powder Keg (19%) or Naturalize (16%). Keep it only if it does something specific for this deck, and say what."
+     ]
+    },
+    {
+     "name": "submit_deck",
+     "ok": true,
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 20,
+    "output": 9783,
+    "cacheRead": 131093,
+    "cacheWrite": 25583
+   },
+   "costUsd": 0.3499,
+   "steps": 8,
+   "ms": 98346,
+   "errors": []
+  }
+ ]
+}

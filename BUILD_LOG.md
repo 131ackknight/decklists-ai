@@ -71,6 +71,8 @@ Asked what v8's Rector and Pande-Burst decks got wrong with the right cards in f
 
 The saved reference (Premodern, Aug 2026, "Name Sexy Rector") shows what that means: Rector plus **Pattern of Rebirth** and **Recurring Nightmare** as the engine, **Nantuko Husk** as the sacrifice outlet that makes Rector and Pattern go, and **Form of the Dragon / Worship / Akroma** as what Rector fetches to actually win, on top of Cabal Therapy, Survival and the usual green creature suite. None of the three AI builds had Pattern of Rebirth, Recurring Nightmare or a Rector target that wins the game: they had Rector, the interaction, and no line.
 
+The owner's second reference (Rector Control, saved beside it) is the deck our own data was pointing at: Cabal Therapy, Pernicious Deed, Gaea's Blessing, Fact or Fiction, Innocent Blood, Krosan Tusker, the exact `played_with` list. Its win is **Decree of Silence** fetched by Rector, with **Phyrexian Tower** as the outlet and a Gaea's Blessing loop so it never decks. v8 had that list in front of it and still built neither the Decree nor the Tower: it borrowed the interaction and skipped the win.
+
 This names the gap more precisely than "combo": **the model builds the shell and the interaction but not the win.** It is the same thing the owner saw in Pande-Burst (two combo cards, no plan to resolve them). A plan has a line to the win; the model's brews often stop at "a deck containing the cards."
 
 ---

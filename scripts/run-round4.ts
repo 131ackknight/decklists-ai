@@ -1,7 +1,7 @@
 /**
  * Run round 4 (owner-written evals) on one harness and model.
  *
- *   pnpm exec tsx scripts/run-round4.ts --harness v2|v3|v4|v5|v6|v7|v8|v9 [--tag r2] --model claude-sonnet-5-5 [--track fill,brew,fresh|holdout] [--items id,id] [--concurrency 3] [--list]
+ *   pnpm exec tsx scripts/run-round4.ts --harness v2|...|v10 [--tag r2] --model claude-sonnet-5-5 [--track fill,brew,fresh|holdout] [--items id,id] [--concurrency 3] [--list]
  *
  * Fill in the blanks, brew to archetype and the brew holdout rebuild a past moment: lists from
  * the item's date on are cut from the data, and cards first printed after it
@@ -15,7 +15,7 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { loadCardIndex } from "../src/cards/load";
 import { FileDataSource } from "../src/data/source";
 import { MODELS } from "../src/harness/models";
-import { brew, brewV4, brewV5, brewV6, brewV7, brewV8, brewV9, type BrewResult } from "../src/harness/run";
+import { brew, brewV4, brewV5, brewV6, brewV7, brewV8, brewV9, brewV10, type BrewResult } from "../src/harness/run";
 import { runPipeline, type PipelineResult } from "../src/pipeline/run";
 import { isNearCopy, round4Items } from "../evals/round4/items";
 
@@ -77,7 +77,9 @@ async function main() {
                     ? await brewV8(client, model, req, deps)
                     : harness === "v9"
                       ? await brewV9(client, model, req, deps)
-                      : await brew(client, model, req, deps);
+                      : harness === "v10"
+                        ? await brewV10(client, model, req, deps)
+                        : await brew(client, model, req, deps);
       const pipe = "path" in r ? (r as PipelineResult) : null;
       spent += r.costUsd;
       const sum = (xs: { qty: number }[]) => xs.reduce((n, c) => n + c.qty, 0);
@@ -99,6 +101,7 @@ async function main() {
           label: r.deck.label,
           warnings: r.deck.warnings,
           ...(r.deck.plan ? { plan: r.deck.plan, coach: r.deck.coach } : {}),
+          ...(r.deck.winLine ? { winLine: r.deck.winLine, winTurn: r.deck.winTurn, winLineDrawnPct: r.deck.winLineDrawnPct } : {}),
         },
         toolCalls: r.toolCalls.map((c) => ({ name: c.name, ok: c.accepted, isError: c.isError, stage: c.stage, rejected: c.rejected })),
         usage: r.usage,

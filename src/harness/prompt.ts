@@ -90,3 +90,14 @@ export const V9_SYSTEM_PROMPT = V5_SYSTEM_PROMPT.replace(
   "- Brew (anything without a proven list): start from the requested cards and plan.",
   "- Brew (anything without a proven list): before any plan, write one line per requested card: what it is FOR in this deck, which part of its text or numbers actually matters for that, and what it needs around it to do its job. A card's theme words (a keyword, a creature type, a mana-cost gimmick) are not its job; its job is the line it enables. Only then start from the requested cards and plan.",
 );
+
+/**
+ * Harness v10: v5 plus everything that fixed a combo miss on 2026-10-20
+ * (played_with lookup, the mechanism-first step) plus a win line the checker
+ * verifies. The owner's diagnosis of the two unfixed decks: "missing a way to
+ * win"; the model built the shell and the interaction and never the line.
+ */
+export const V10_SYSTEM_PROMPT = V5_SYSTEM_PROMPT.replace(
+  "- Brew (anything without a proven list): start from the requested cards and plan.",
+  "- Brew (anything without a proven list): first call played_with on the requested cards; if real decks in any format run them together, learn the mechanism from those decks (what each card is actually for, what else makes it work) before you plan. Then write one line per requested card: what it is FOR in this deck, which part of its text or numbers matters, and what it needs around it. A card's theme words are not its job; its job is the line it enables. Then decide the line to the win: the exact sequence of named cards that wins the game, and build the deck around that line. submit_deck requires winLine and winTurn, and sends the deck back if any card in the line is missing from the deck. A deck that contains the requested cards but has no line to the win is not a brew.",
+);

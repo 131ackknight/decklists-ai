@@ -27,6 +27,8 @@ export interface ToolContext {
   coachRounds?: number;
   /** The player's message, so the coach never questions cards they named. */
   request?: string;
+  /** Harness v10: submit_deck must carry a win line whose cards are all in the deck. */
+  requireWinLine?: boolean;
 }
 
 export interface EnginePlan {
@@ -60,6 +62,10 @@ export interface SubmittedDeck {
   label: "stock" | "tuned" | "brew";
   donor: string | null;
   warnings: string[];
+  /** Harness v10: the declared line to the win, and how often its cards are all drawn by the declared turn. */
+  winLine?: { card: string; does: string }[];
+  winTurn?: number;
+  winLineDrawnPct?: number;
   /** Harness v4: the plan, the coach's notes on the accepted deck, and the brewer's answers. */
   plan?: Plan | null;
   coach?: { notes: CoachNote[]; responses: { id: string; response: string }[]; rounds: number };
@@ -486,9 +492,33 @@ export const TOOLS = [
     schema: DeckInput.extend({
       label: z.enum(["stock", "tuned", "brew"]),
       donor: z.string().optional().describe("The existing strategy this borrows its shell from, if any."),
+      winLine: z
+        .array(z.object({ card: z.string(), does: z.string().min(3) }))
+        .min(1)
+        .max(8)
+        .optional()
+        .describe("The exact sequence of named cards from this deck that wins the game, in order, with what each one does in the line."),
+      winTurn: z.number().int().min(1).max(10).optional().describe("The turn the line is meant to be complete."),
     }),
     run: (input, ctx) => {
       const key = formatKey(input.format);
+      // Harness v10: a brew has to say how it wins, and the line has to be in the deck.
+      let winLineDrawnPct: number | undefined;
+      if (ctx.requireWinLine && input.label !== "stock") {
+        if (!input.winLine?.length) {
+          return { accepted: false, errors: ["State the win line: the sequence of named cards from this deck that wins the game, with what each does (winLine), and the turn it is meant to be complete (winTurn)."] };
+        }
+        const inDeck = (name: string) => {
+          const want = normalizeName(ctx.index.getCard(name)?.name ?? name);
+          return [...input.main, ...input.commander].some((l) => normalizeName(ctx.index.getCard(l.name)?.name ?? l.name) === want);
+        };
+        const missing = input.winLine.filter((step) => !inDeck(step.card)).map((step) => step.card);
+        if (missing.length) {
+          return { accepted: false, errors: [`The win line names cards that are not in the main deck: ${[...new Set(missing)].join(", ")}. Add them or change the line.`] };
+        }
+        const groups = [...new Set(input.winLine.map((step) => ctx.index.getCard(step.card)?.name ?? step.card))].map((card) => ({ name: card, cards: [card], need: 1 }));
+        winLineDrawnPct = goldfish(ctx.index, { main: input.main, engine: groups, targetTurn: input.winTurn ?? 5, games: 3000 }).engineSeenByTarget ?? undefined;
+      }
       const unseen = [...input.main, ...input.side, ...input.commander]
         .filter((l) => !isBasic(ctx.index.getCard(l.name)))
         .map((l) => ctx.index.getCard(l.name)?.name ?? l.name)
@@ -509,8 +539,15 @@ export const TOOLS = [
         label: input.label,
         donor: input.donor ?? null,
         warnings: result.warnings.map((w) => w.message),
+        ...(input.winLine ? { winLine: input.winLine, winTurn: input.winTurn, winLineDrawnPct } : {}),
       };
-      return { accepted: true, warnings: ctx.submitted.warnings };
+      return {
+        accepted: true,
+        warnings: ctx.submitted.warnings,
+        ...(winLineDrawnPct != null
+          ? { winLine: { allCardsDrawnByTurnPct: winLineDrawnPct, turn: input.winTurn ?? 5, note: "Share of games (mulligans included) where every card in the line has been drawn by that turn. Tutors and card draw are not simulated; a low number with tutors in the deck may be fine. Reported, not enforced." } }
+          : {}),
+      };
     },
   }),
 ];

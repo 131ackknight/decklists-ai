@@ -177,5 +177,16 @@ describe("lock fixes from the v3 run", () => {
     expect(JSON.parse(runTool("submit_deck", { ...deck, label: "stock" }, c).content).accepted).toBe(true);
     expect(JSON.parse(runTool("check_deck", deck, c).content).copy.percentOfOneExistingList).toBe(90);
   });
-});
 
+  it("with a win line required, a brew is sent back without one or with a card not in the deck", () => {
+    const c: ToolContext = { index, data: noData, seen: new Set(["lightning bolt"]), submitted: null, requireWinLine: true };
+    expect(JSON.parse(runTool("submit_deck", { ...deck, label: "brew" }, c).content).accepted).toBe(false);
+    const bad = JSON.parse(runTool("submit_deck", { ...deck, label: "brew", winLine: [{ card: "Fireblast", does: "finishes" }], winTurn: 4 }, c).content);
+    expect(bad.accepted).toBe(false);
+    expect(bad.errors[0]).toMatch(/Fireblast/);
+    const ok = JSON.parse(runTool("submit_deck", { ...deck, label: "brew", winLine: [{ card: "Lightning Bolt", does: "deals the last 3" }], winTurn: 4 }, c).content);
+    expect(ok.accepted).toBe(true);
+    expect(ok.winLine.allCardsDrawnByTurnPct).toBeGreaterThan(50);
+    expect(c.submitted?.winLine).toHaveLength(1);
+  });
+});

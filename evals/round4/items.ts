@@ -4,7 +4,7 @@
  * Shared by scripts/run-round4.ts and scripts/score-round4.ts so both see
  * exactly the same hidden cards and targets. Everything is deterministic.
  */
-import { readdirSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { normalizeName } from "../../src/cards/names";
 import type { CardIndex } from "../../src/cards/card-index";
@@ -27,7 +27,7 @@ export interface SavedList {
 
 export interface Round4Item {
   id: string;
-  track: "fill" | "brew" | "fresh" | "holdout";
+  track: "fill" | "brew" | "fresh" | "holdout" | "expert";
   format: string;
   prompt: string;
   /** Data and cards are cut to before this date (YYYY-MM-DD); null = today's data. */
@@ -187,18 +187,18 @@ const titleCase = (f: string) => f[0].toUpperCase() + f.slice(1);
  * history (scripts/find-new-archetypes.ts), rebuilt from the day it first
  * appeared. No list of the archetype exists before that day, so it can't be copied.
  */
-function holdoutItems(): Round4Item[] {
-  const file = "evals/brew-holdout/candidates.json";
+function holdoutItems(file = "evals/brew-holdout/candidates.json", track: "holdout" | "expert" = "holdout", minSettled = 5): Round4Item[] {
+  if (!existsSync(file)) return [];
   const candidates = JSON.parse(readFileSync(file, "utf8")) as Candidate[];
   return candidates
-    .filter((c) => c.settledLists >= 5 && c.signature.length >= 1)
+    .filter((c) => c.settledLists >= minSettled && c.signature.length >= 1)
     .map((c) => {
       // Front face only, as a player would say it ("Ashling, Rekindled", not both faces).
       const keyCards = c.signature.map((s) => s.card.split(" // ")[0]);
       const format = titleCase(c.format);
       return {
-        id: `holdout-${c.format}-${c.strategy.toLowerCase().replace(/\W+/g, "-")}`,
-        track: "holdout" as const,
+        id: `${track}-${c.format}-${c.strategy.toLowerCase().replace(/\W+/g, "-")}`,
+        track,
         format,
         prompt: `Brew me a ${format} deck built around ${naturalList(keyCards)}.`,
         before: c.firstSeen,
@@ -208,11 +208,32 @@ function holdoutItems(): Round4Item[] {
     });
 }
 
+/**
+ * The expert round (2026-10-20): formats the owner knows intimately, so their
+ * blind pick is the score. Fresh prompts proposed by Claude and reviewed by the
+ * owner (3 cut), plus this year's new Premodern and Legacy archetypes.
+ */
+const EXPERT_FRESH: { id: string; format: string; prompt: string }[] = [
+  { id: "expert-premodern-pandeburst", format: "Premodern", prompt: "Brew me a Premodern deck built around Pandemonium and Saproling Burst." },
+  { id: "expert-premodern-miraris-wake", format: "Premodern", prompt: "Brew me a Premodern deck built around Mirari's Wake." },
+  { id: "expert-premodern-life", format: "Premodern", prompt: "Brew me a Premodern deck built around Daru Spiritualist and Worthy Cause." },
+  { id: "expert-premodern-draco-explosion", format: "Premodern", prompt: "Brew me a Premodern deck built around Erratic Explosion and Draco." },
+  { id: "expert-premodern-winter-orb", format: "Premodern", prompt: "Brew me a mono-blue Premodern tempo deck built around Winter Orb." },
+  { id: "expert-legacy-helm-rip", format: "Legacy", prompt: "Brew me a Legacy deck built around Helm of Obedience and Rest in Peace." },
+  { id: "expert-legacy-worldgorger", format: "Legacy", prompt: "Brew me a Legacy deck built around Worldgorger Dragon and Animate Dead." },
+  { id: "expert-legacy-belcher", format: "Legacy", prompt: "Brew me a Legacy deck built around Goblin Charbelcher." },
+  { id: "expert-legacy-kaalia", format: "Legacy", prompt: "Brew me a Legacy deck built around Kaalia of the Vast." },
+  { id: "expert-legacy-pyromancer-ascension", format: "Legacy", prompt: "Brew me a Legacy deck built around Pyromancer Ascension." },
+  { id: "expert-legacy-mystic-remora", format: "Legacy", prompt: "Brew me a Legacy control deck built around Mystic Remora." },
+];
+
 export function round4Items(index: CardIndex): Round4Item[] {
   return [
     ...fillItems(index),
     ...brewItems(),
     ...FRESH.map((f) => ({ ...f, track: "fresh" as const, before: null })),
     ...holdoutItems(),
+    ...EXPERT_FRESH.map((f) => ({ ...f, track: "expert" as const, before: null })),
+    ...holdoutItems("evals/brew-holdout/candidates-expert.json", "expert", 3),
   ];
 }

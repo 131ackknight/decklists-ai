@@ -2,7 +2,7 @@
  * Find decks that appeared from nothing in Decklist Data's history: the
  * candidates for the brew holdout test (brew to archetype at scale).
  *
- *   pnpm exec tsx scripts/find-new-archetypes.ts [data/reference-lists-all.jsonl]
+ *   pnpm exec tsx scripts/find-new-archetypes.ts [data/reference-lists-all.jsonl] [--format premodern,legacy] [--min-lists 5] [--out file]
  *
  * An archetype qualifies when:
  *   - its first list comes at least 45 days after the format's data begins
@@ -48,7 +48,16 @@ const COLOR_NAMES = new Set(
   ],
 );
 
-const file = process.argv[2] ?? "data/reference-lists-all.jsonl";
+const argv = process.argv.slice(2);
+const opt = (n: string) => {
+  const i = argv.indexOf(`--${n}`);
+  return i >= 0 ? argv[i + 1] : undefined;
+};
+const file = argv.find((a) => !a.startsWith("--") && !argv.includes(`--${a}`) && argv[argv.indexOf(a) - 1]?.startsWith("--") !== true) ?? "data/reference-lists-all.jsonl";
+// --format premodern,legacy limits the search; --min-lists lowers the "caught on" bar; --out picks the output file.
+const onlyFormats = opt("format")?.split(",");
+const minLists = Number(opt("min-lists") ?? MIN_LISTS_90D);
+const outFile = opt("out") ?? "evals/brew-holdout/candidates.json";
 const index = loadCardIndex();
 const canon = (n: string) => normalizeName(index.getCard(n)?.name ?? n);
 const isLand = (n: string) => /\bLand\b/.test(index.getCard(n)?.typeLine.split(" // ")[0] ?? "");
@@ -63,7 +72,7 @@ const all = readFileSync(file, "utf8")
   .split("\n")
   .filter(Boolean)
   .map((l) => JSON.parse(l) as RefList)
-  .filter((l) => l.format !== "duel")
+  .filter((l) => l.format !== "duel" && (!onlyFormats || onlyFormats.includes(l.format)))
   .map((l) => ({ ...l, main: l.main.filter((c) => !WIDGET_ROW.test(c.name)) }))
   .sort((a, b) => a.date.localeCompare(b.date));
 
@@ -90,8 +99,8 @@ for (const [format, lists] of byFormat) {
       continue;
     }
     const in90 = mine.filter((l) => Date.parse(l.date) < first + 90 * DAY);
-    if (in90.length < MIN_LISTS_90D) {
-      reject("fewer than 15 lists in its first 90 days");
+    if (in90.length < minLists) {
+      reject(`fewer than ${minLists} lists in its first 90 days`);
       continue;
     }
     // New, not relabeled: each of its first lists vs. everything posted before the archetype existed.
@@ -142,7 +151,7 @@ for (const [format, lists] of byFormat) {
   }
 }
 
-writeFileSync("evals/brew-holdout/candidates.json", JSON.stringify(out, null, 1) + "\n");
+writeFileSync(outFile, JSON.stringify(out, null, 1) + "\n");
 console.log(`${out.length} candidates; rejected:`, rejected);
 console.table(
   (out as { format: string; strategy: string; firstSeen: string; listsFirst90Days: number; closestEarlierOverlap: number; signature: { card: string }[]; newCards: string[]; settledLists: number }[]).map((c) => ({

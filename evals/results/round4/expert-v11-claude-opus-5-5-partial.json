@@ -1,0 +1,196 @@
+{
+ "ranAt": "2026-10-20T21:05:15.148Z",
+ "harness": "v11",
+ "model": "claude-opus-5-5",
+ "tracks": [
+  "expert"
+ ],
+ "results": [
+  {
+   "id": "expert-premodern-pandeburst",
+   "track": "expert",
+   "format": "Premodern",
+   "before": null,
+   "prompt": "Brew me a Premodern deck built around Pandemonium and Saproling Burst.",
+   "text": "I submitted a brew called **Pandemonium Replenish**. It's built on the Premodern Replenish shell, the only one where real results show these two cards together (just one list so far).\n\n**The plan:** Attunement ({2}{U}; return it to your hand to draw 3 and discard 4), Frantic Search and Intuition get Pandemonium and Saproling Burst into your graveyard. Then Replenish ({3}{W}) puts them both onto the battlefield at once, and Saproling Burst comes back with a full 7 fade counters. Removing counters is free, so you remove them one at a time and let each Pandemonium trigger resolve before removing the next. Each Saproling's power equals the counters left, so they hit for 6, 5, 4, 3, 2 and 1: that's 21 damage, enough to kill from 20. The fastest kill is turn 4 (turn 3 if Ancient Tomb gives you extra mana).\n\nYou never need green, and you only need red if you cast Pandemonium from your hand. That's a backup for when the opponent has graveyard hate, so the deck has just 3 red sources (2 City of Brass, 1 Shivan Reef). Parallax Wave, Swords to Plowshares, Seal of Cleansing and Abeyance are there to keep you alive and to protect the turn you cast Replenish. The land count and white/blue mana match what real Replenish lists run, and the deck passed the legality and mana check.\n\n**Honest odds:** If you only count natural draws, all the combo pieces are in hand by turn 4 in about 4.5% of games. That number ignores Attunement, Frantic Search and Intuition, which are how the deck actually finds its pieces. So expect to win around turns 4–6, not reliably on turn 4.\n\n**Three directions I considered:**\n1. **The Replenish package (chosen).** Replenish puts both enchantments onto the battlefield for 4 mana instead of 9, and every card in the shell either digs for the pieces or protects the combo.\n2. **Red-green ramp casting both from hand.** Elves, Birds of Paradise and Gaea's Cradle would get you there, but 9 mana across two cards is too slow against Sligh and Stiflenought.\n3. **The Enchantress package** (Argothian Enchantress, Wild Growth, Replenish). It draws lots of cards but has fewer ways to discard, so getting both pieces into the graveyard is clunkier.\n\n**Sideboard:** Meddling Mage, Hydroblast and Defense Grid against counterspell decks (Stiflenought, Psychatog) and Sligh. Exalted Angel is a second way to win when opponents bring in graveyard hate. Wrath of God is for Goblins. The 2 Opalescence are a bonus: with Opalescence also coming back on Replenish, every enchantment that returns becomes a creature and triggers Pandemonium for its mana value, on top of the 21 from the Saprolings.",
+   "deck": {
+    "main": [
+     {
+      "qty": 4,
+      "name": "Attunement"
+     },
+     {
+      "qty": 4,
+      "name": "Replenish"
+     },
+     {
+      "qty": 3,
+      "name": "Intuition"
+     },
+     {
+      "qty": 3,
+      "name": "Frantic Search"
+     },
+     {
+      "qty": 4,
+      "name": "Pandemonium"
+     },
+     {
+      "qty": 4,
+      "name": "Saproling Burst"
+     },
+     {
+      "qty": 4,
+      "name": "Parallax Wave"
+     },
+     {
+      "qty": 4,
+      "name": "Swords to Plowshares"
+     },
+     {
+      "qty": 3,
+      "name": "Seal of Cleansing"
+     },
+     {
+      "qty": 2,
+      "name": "Abeyance"
+     },
+     {
+      "qty": 4,
+      "name": "Ancient Tomb"
+     },
+     {
+      "qty": 4,
+      "name": "Adarkar Wastes"
+     },
+     {
+      "qty": 4,
+      "name": "Flooded Strand"
+     },
+     {
+      "qty": 3,
+      "name": "Skycloud Expanse"
+     },
+     {
+      "qty": 3,
+      "name": "Island"
+     },
+     {
+      "qty": 4,
+      "name": "Plains"
+     },
+     {
+      "qty": 2,
+      "name": "City of Brass"
+     },
+     {
+      "qty": 1,
+      "name": "Shivan Reef"
+     }
+    ],
+    "side": [
+     {
+      "qty": 3,
+      "name": "Meddling Mage"
+     },
+     {
+      "qty": 3,
+      "name": "Exalted Angel"
+     },
+     {
+      "qty": 3,
+      "name": "Hydroblast"
+     },
+     {
+      "qty": 3,
+      "name": "Defense Grid"
+     },
+     {
+      "qty": 2,
+      "name": "Opalescence"
+     },
+     {
+      "qty": 1,
+      "name": "Wrath of God"
+     }
+    ],
+    "commander": [],
+    "label": "brew",
+    "warnings": [],
+    "winLine": [
+     {
+      "card": "Attunement",
+      "does": "Cast turn 2-3; return it to hand to draw 3 and discard 4, pitching Pandemonium and Saproling Burst to the graveyard (Frantic Search or Intuition can fill the yard instead)."
+     },
+     {
+      "card": "Replenish",
+      "does": "For 3W, returns every enchantment from the graveyard to the battlefield: Pandemonium, plus Saproling Burst with a fresh 7 fade counters."
+     },
+     {
+      "card": "Pandemonium",
+      "does": "On the battlefield, each creature that enters deals damage equal to its power to any target."
+     },
+     {
+      "card": "Saproling Burst",
+      "does": "Remove counters one at a time for free, letting each trigger resolve first: Saprolings enter as 6,5,4,3,2,1 for 21 damage to the opponent's face."
+     }
+    ],
+    "winTurn": 4,
+    "winLineDrawnPct": 4.5
+   },
+   "toolCalls": [
+    {
+     "name": "played_with",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "reference_list",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "meta",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "submit_deck",
+     "ok": true,
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 18,
+    "output": 9167,
+    "cacheRead": 128382,
+    "cacheWrite": 27221
+   },
+   "costUsd": 0.3452,
+   "steps": 7,
+   "ms": 101382,
+   "errors": []
+  }
+ ]
+}

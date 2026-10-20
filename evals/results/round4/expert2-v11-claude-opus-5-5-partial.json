@@ -1,0 +1,481 @@
+{
+ "ranAt": "2026-10-20T21:08:28.557Z",
+ "harness": "v11",
+ "model": "claude-opus-5-5",
+ "tracks": [
+  "expert2"
+ ],
+ "results": [
+  {
+   "id": "expert2-premodern-mind-over-matter",
+   "track": "expert2",
+   "format": "Premodern",
+   "before": null,
+   "prompt": "Brew me a Premodern deck built around Mind Over Matter.",
+   "text": "I built a UB **\"Show and Grave\"** deck around Mind Over Matter. It's a brew, and the submission went through.\n\n**Plan:** Arcanis the Omnipotent ({T}: draw three) plus Mind Over Matter (discard a card: tap or untap an artifact, creature or land) gives you two extra cards every time you loop. Show and Tell puts Mind Over Matter onto the battlefield so you don't pay its {2}{U}{U}{U}{U}. Careful Study, Frantic Search and Intuition put Arcanis in your graveyard, and Shallow Grave brings it back with haste so it can draw right away.\n\n**How it wins:** Once you've drawn most of your deck, discard Kamahl, Pit Fighter as one of the Mind Over Matter costs. That makes Kamahl the top creature in your graveyard, so a second Shallow Grave or Corpse Dance brings it back with haste. You never need red mana. Then you tap Kamahl for 3 damage, discard a card to untap it, and repeat about seven times for 20+ damage. The deck also has a shortcut: Kamahl plus Mind Over Matter wins with about 6–7 cards in hand, even without Arcanis.\n\n**Directions I considered:**\n1. **UW/Esper Replenish:** discard Mind Over Matter and bring it back with Replenish, using the Replenish deck's Attunement, Frantic Search and Intuition package.\n2. **Mono-blue Dream Halls:** cast Mind Over Matter and Arcanis by discarding cards instead of paying mana.\n3. **UB Show and Tell plus haste reanimation (the one I chose):** it uses the Shallow Grave package from the Hermit Druid deck on the menu and mana borrowed from the Reanimator deck. It's the only one of the three that can win in a single turn, because Arcanis needs haste to draw the turn it arrives.\n\n**Notes:**\n- **Odds:** Without counting card draw or mulligans, you have about a 24% chance to hold Mind Over Matter (or Intuition), a reanimation spell and Show and Tell all by turn 4. Careful Study, Impulse and Intuition improve that in practice. Hard-casting Mind Over Matter on turn 5–6 with Ancient Tomb is the backup.\n- **Mana:** I used 17 lands and 4 Lotus Petal. That's more lands than real Reanimator lists (about 14) but fewer than the deck checker's estimate, because the deck sometimes has to hard-cast its 6-drops. Kamahl is never cast, so the \"red sources\" warning doesn't matter.\n- **Sideboard:** It's built for the decks winning right now:\n  - Unmask, Daze and Defense Grid against counterspells and Enchantress.\n  - Hydroblast and Blue Elemental Blast against Sligh.\n  - Smother against Goblins and Sligh creatures.\n  - Tormod's Crypt against Hermit Druid and Replenish.",
+   "deck": {
+    "main": [
+     {
+      "qty": 4,
+      "name": "Mind Over Matter"
+     },
+     {
+      "qty": 3,
+      "name": "Arcanis the Omnipotent"
+     },
+     {
+      "qty": 2,
+      "name": "Kamahl, Pit Fighter"
+     },
+     {
+      "qty": 4,
+      "name": "Show and Tell"
+     },
+     {
+      "qty": 4,
+      "name": "Shallow Grave"
+     },
+     {
+      "qty": 2,
+      "name": "Corpse Dance"
+     },
+     {
+      "qty": 4,
+      "name": "Careful Study"
+     },
+     {
+      "qty": 3,
+      "name": "Frantic Search"
+     },
+     {
+      "qty": 3,
+      "name": "Intuition"
+     },
+     {
+      "qty": 3,
+      "name": "Impulse"
+     },
+     {
+      "qty": 4,
+      "name": "Duress"
+     },
+     {
+      "qty": 1,
+      "name": "Cabal Therapy"
+     },
+     {
+      "qty": 2,
+      "name": "Counterspell"
+     },
+     {
+      "qty": 4,
+      "name": "Lotus Petal"
+     },
+     {
+      "qty": 4,
+      "name": "Polluted Delta"
+     },
+     {
+      "qty": 4,
+      "name": "Underground River"
+     },
+     {
+      "qty": 5,
+      "name": "Island"
+     },
+     {
+      "qty": 1,
+      "name": "Swamp"
+     },
+     {
+      "qty": 2,
+      "name": "Ancient Tomb"
+     },
+     {
+      "qty": 1,
+      "name": "City of Traitors"
+     }
+    ],
+    "side": [
+     {
+      "qty": 3,
+      "name": "Unmask"
+     },
+     {
+      "qty": 2,
+      "name": "Hydroblast"
+     },
+     {
+      "qty": 2,
+      "name": "Blue Elemental Blast"
+     },
+     {
+      "qty": 2,
+      "name": "Smother"
+     },
+     {
+      "qty": 2,
+      "name": "Tormod's Crypt"
+     },
+     {
+      "qty": 2,
+      "name": "Defense Grid"
+     },
+     {
+      "qty": 2,
+      "name": "Daze"
+     }
+    ],
+    "commander": [],
+    "label": "brew",
+    "warnings": [
+     "17 lands; Premodern decks with an average mana value of 2.72 and 8 cheap draw or ramp spells run about 22.5. Add about 6.",
+     "4 R sources; Kamahl, Pit Fighter wants about 14 to cast on curve."
+    ],
+    "winLine": [
+     {
+      "card": "Careful Study",
+      "does": "Turn 1: draw 2, discard 2 — dump Arcanis the Omnipotent into the graveyard (Intuition for Arcanis x3 or Frantic Search do the same)."
+     },
+     {
+      "card": "Show and Tell",
+      "does": "Turn 2-3 (Ancient Tomb/Lotus Petal speed it up): put Mind Over Matter onto the battlefield, skipping its {2}{U}{U}{U}{U} cost."
+     },
+     {
+      "card": "Shallow Grave",
+      "does": "Return Arcanis (top creature in graveyard) with haste so it can use its {T} ability right away."
+     },
+     {
+      "card": "Mind Over Matter",
+      "does": "Tap Arcanis to draw 3, discard 1 card to untap it, repeat: +2 cards per loop. Discarding more cards untaps lands for mana as needed."
+     },
+     {
+      "card": "Kamahl, Pit Fighter",
+      "does": "Discard Kamahl as a Mind Over Matter cost so it becomes the top creature card in the graveyard."
+     },
+     {
+      "card": "Corpse Dance",
+      "does": "(Or a second Shallow Grave drawn during the loop) return Kamahl with haste; no red mana needed."
+     },
+     {
+      "card": "Mind Over Matter",
+      "does": "Tap Kamahl for 3 damage, discard a card to untap it, repeat about 7 times for 20+ damage."
+     }
+    ],
+    "winTurn": 4,
+    "winLineDrawnPct": 0.3
+   },
+   "toolCalls": [
+    {
+     "name": "played_with",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "played_with",
+     "isError": false
+    },
+    {
+     "name": "played_with",
+     "isError": false
+    },
+    {
+     "name": "reference_list",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "submit_deck",
+     "ok": true,
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 24,
+    "output": 17139,
+    "cacheRead": 244555,
+    "cacheWrite": 41391
+   },
+   "costUsd": 0.5987,
+   "steps": 10,
+   "ms": 191173,
+   "errors": []
+  },
+  {
+   "id": "expert2-premodern-rofellos",
+   "track": "expert2",
+   "format": "Premodern",
+   "before": null,
+   "prompt": "Brew me a mono-green Premodern ramp deck built around Rofellos, Llanowar Emissary.",
+   "text": "I built a mono-green Rofellos ramp brew. Premodern results show no recent lists with Rofellos, so this is untested. The closest proven decks are Elves and Cradle Control, which run the same mana elves and Survival of the Fittest.\n\n**Plan:** Play an elf on turn 1 and Rofellos on turn 2. From turn 3, Rofellos makes one green mana for each Forest you control, which is why the deck runs 17 basic Forests. Two cards let him tap twice in one turn:\n- **Wirewood Symbiote:** return a Llanowar Elves to your hand (recast it for G) to untap Rofellos.\n- **Quirion Ranger:** return a Forest to your hand to untap Rofellos.\n\nOn turn 3 that much mana lets you cast Plow Under, which puts two of the opponent's lands on top of their library. They lose their next two draws and fall behind on mana. Then you play threats Rofellos can easily pay for: Deranged Hermit (four 2/2 Squirrels), Silvos (8/5 trample; Rofellos mana pays for regeneration), Masticore (2 mana per 1 damage to a creature, cheap with Rofellos) and Kamahl (gives your whole team +3/+3 and trample). Survival of the Fittest finds Rofellos or whichever answer you need: Nantuko Vigilante against Enchantress's enchantments, Uktabi Orangutan against Mox Diamond, Ravenous Baloth or Spike Feeder against Sligh.\n\n**Odds and honest caveats:**\n- You see Rofellos or Survival by turn 2 in about 71% of games. By turn 3 you have that plus a 1-mana elf in about 55%.\n- The best case wins on turn 5, but drawing those exact cards by then is rare (about 0.1%, not counting Survival). In practice you win with whatever big threat Survival or your draws give you.\n- Rofellos is a 2/1, so Sligh's burn will often kill him. That's why the deck has 13 one-mana creatures and Wall of Roots to back him up.\n- The deck has 18 lands, a bit under Elves' average of about 19. That's on purpose: the extra mana creatures make up for it, and you want Forests on the battlefield, not stuck in your hand.\n\n**Directions I considered:**\n1. **Plain big ramp:** elves into large creatures and Plow Under, with no tutors.\n2. **Elves/Cradle Control borrow:** the Survival of the Fittest toolbox, Wirewood Symbiote, Quirion Ranger and Gaea's Cradle from the format's top decks, with Rofellos as the main mana source.\n3. **Pump finish:** a creature-heavy deck that wins with Kamahl's team pump.\n\n**I chose direction 2,** with the Plow Under plan and big threats from direction 1 mixed in. Survival fixes the brew's biggest weakness, which is finding a single legendary 2-drop. The untap creatures make Rofellos's mana count twice. I kept only one Gaea's Cradle so nearly all lands are Forests. Check_deck found no errors or warnings.\n\n**Sideboard, aimed at the current top decks:**\n- 3 Choke for Stiflenought, Psychatog and Standstill\n- 3 Naturalize and 2 Tranquil Domain for Enchantress and Replenish\n- 2 Tormod's Crypt for Hermit Druid, Replenish and Psychatog\n- 2 Xantid Swarm against counterspells\n- 1 Caller of the Claw against board wipes\n- 1 extra Masticore and 1 extra Ravenous Baloth for Sligh and Goblins",
+   "deck": {
+    "main": [
+     {
+      "qty": 4,
+      "name": "Llanowar Elves"
+     },
+     {
+      "qty": 4,
+      "name": "Fyndhorn Elves"
+     },
+     {
+      "qty": 4,
+      "name": "Rofellos, Llanowar Emissary"
+     },
+     {
+      "qty": 3,
+      "name": "Wirewood Symbiote"
+     },
+     {
+      "qty": 2,
+      "name": "Quirion Ranger"
+     },
+     {
+      "qty": 1,
+      "name": "Priest of Titania"
+     },
+     {
+      "qty": 2,
+      "name": "Wall of Blossoms"
+     },
+     {
+      "qty": 1,
+      "name": "Wall of Roots"
+     },
+     {
+      "qty": 4,
+      "name": "Survival of the Fittest"
+     },
+     {
+      "qty": 2,
+      "name": "Sylvan Library"
+     },
+     {
+      "qty": 3,
+      "name": "Plow Under"
+     },
+     {
+      "qty": 2,
+      "name": "Deranged Hermit"
+     },
+     {
+      "qty": 1,
+      "name": "Masticore"
+     },
+     {
+      "qty": 1,
+      "name": "Silvos, Rogue Elemental"
+     },
+     {
+      "qty": 1,
+      "name": "Kamahl, Fist of Krosa"
+     },
+     {
+      "qty": 1,
+      "name": "Verdant Force"
+     },
+     {
+      "qty": 1,
+      "name": "Genesis"
+     },
+     {
+      "qty": 1,
+      "name": "Nantuko Vigilante"
+     },
+     {
+      "qty": 1,
+      "name": "Ravenous Baloth"
+     },
+     {
+      "qty": 1,
+      "name": "Uktabi Orangutan"
+     },
+     {
+      "qty": 1,
+      "name": "Spike Feeder"
+     },
+     {
+      "qty": 1,
+      "name": "Yavimaya Granger"
+     },
+     {
+      "qty": 17,
+      "name": "Forest"
+     },
+     {
+      "qty": 1,
+      "name": "Gaea's Cradle"
+     }
+    ],
+    "side": [
+     {
+      "qty": 3,
+      "name": "Naturalize"
+     },
+     {
+      "qty": 3,
+      "name": "Choke"
+     },
+     {
+      "qty": 2,
+      "name": "Tormod's Crypt"
+     },
+     {
+      "qty": 2,
+      "name": "Tranquil Domain"
+     },
+     {
+      "qty": 1,
+      "name": "Caller of the Claw"
+     },
+     {
+      "qty": 1,
+      "name": "Masticore"
+     },
+     {
+      "qty": 1,
+      "name": "Ravenous Baloth"
+     },
+     {
+      "qty": 2,
+      "name": "Xantid Swarm"
+     }
+    ],
+    "commander": [],
+    "label": "brew",
+    "warnings": [],
+    "winLine": [
+     {
+      "card": "Llanowar Elves",
+      "does": "Turn 1 dork so Rofellos comes down on turn 2"
+     },
+     {
+      "card": "Rofellos, Llanowar Emissary",
+      "does": "Turn 2; from turn 3 on it taps for G for each Forest you control (3+ mana by itself)"
+     },
+     {
+      "card": "Wirewood Symbiote",
+      "does": "Returns Llanowar Elves (recast it for G) to untap Rofellos, so it taps a second time each turn"
+     },
+     {
+      "card": "Plow Under",
+      "does": "Turn 3 off Forests + Rofellos: puts two of the opponent's lands on top of their library, wiping out their next two draws and their mana development"
+     },
+     {
+      "card": "Deranged Hermit",
+      "does": "Turn 4: four 2/2 Squirrels plus the Hermit; Rofellos mana pays the echo easily"
+     },
+     {
+      "card": "Kamahl, Fist of Krosa",
+      "does": "Turn 5: cast it and, with leftover Rofellos mana, activate +3/+3 and trample on the whole team for a lethal swing against a stalled opponent"
+     }
+    ],
+    "winTurn": 5,
+    "winLineDrawnPct": 0.1
+   },
+   "toolCalls": [
+    {
+     "name": "played_with",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "reference_list",
+     "isError": false
+    },
+    {
+     "name": "meta",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "submit_deck",
+     "ok": true,
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 18,
+    "output": 9537,
+    "cacheRead": 160178,
+    "cacheWrite": 40664
+   },
+   "costUsd": 0.4262,
+   "steps": 7,
+   "ms": 96485,
+   "errors": []
+  }
+ ]
+}

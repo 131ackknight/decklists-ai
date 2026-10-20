@@ -65,6 +65,31 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-10-20 · Owner judges v2 vs v5 vs v6 blind: v5 wins, and the match score agrees with the owner
+
+The check that had to come before any more building (2026-10-19, "what we got wrong"): does the holdout match score track what the owner would actually play? Five holdout decks (Fanatic Eldrazi, Persist, Mardu Discard, Living Death, Inside Out), every pair of v2 (repeat run), v5 and v6 on Opus, 15 blind pairs, one question. The page now shows each card's rules text on hover (artifact pages can't load outside images, so the text comes from the card index).
+
+**Head to head (owner's picks):**
+
+| | Wins | Ties |
+| --- | --- | --- |
+| v5 vs v2 | **v5 3-0** | 2 |
+| v5 vs v6 | **v5 3-0** | 2 |
+| v2 vs v6 | 2-2 | 1 |
+
+v5 won 6 pairs, v2 and v6 two each, five ties. The owner preferred v5 on Fanatic Eldrazi (the Eldrazi-package brew), Persist, Inside Out and Living Death.
+
+**Match score vs. owner:** in the 5 pairs where the owner picked a side and the match scores differed by 3+ points, the score picked the same deck **5 of 5 times**, never the opposite. The other 10 pairs were ties or near-equal scores, where the score has no opinion. Small sample, one judge, but no disagreement.
+
+**What this settles:**
+1. **The match score is usable as a target**, with the originality floor set where a real brewer sits (about 50-60% from one earlier list, per AspiringSpike), not lower. It tracks the owner's taste where it has an opinion.
+2. **v5 is the base to build on.** The owner preferred the version that borrowed more; v6's extra originality bought nothing the owner valued. The "v5 copies too much" worry (already walked back on 2026-10-19 by the brewer profiles) is closed.
+3. **Harness changes can matter**: the owner's first clear preference between harnesses since round 3 is for one whose only change was format knowledge in the request. Structure (v3, v4) never won a blind comparison; knowledge did.
+
+**Next:** the forward test (new archetypes brewed the week they appear) as the only honest test set from here, and the worked-examples idea (AspiringSpike's brews as examples of the style) built on v5, measured on the forward set with repeated runs.
+
+---
+
 ## 2026-10-19 · Two known good brewers, measured: AspiringSpike and Grantfly
 
 Owner: "we won't get their actual time, but we could review their lists from decklistdata.com." Both are public MTGO players with public results, so their handles can be used. `scripts/brewer-profile.ts` on their player pages' decks (44 and 48 lists; `scripts/fetch-dld-deck.ts` now skips decks that moved to a new URL).

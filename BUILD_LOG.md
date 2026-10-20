@@ -27,7 +27,7 @@ Three things, and the third is turning out to be the most interesting.
 
 | Item | Total |
 | --- | --- |
-| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33. Total about $235.69. Plus one 17-token test call. |
+| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92. Total about $245.61. Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats); full history 143,721 (since 2025-07-01) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
 | Automated tests | 48 passing |
@@ -62,6 +62,23 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - Lesson to apply: any prompt or claim that names a card gets checked against the card index before it is used.
 - ~~Switch to pairwise~~: done; 36 pairs judged (v1 8 wins, v2 6, 22 ties; v2 100% faithful vs. 92%).
 - ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
+
+---
+
+## 2026-10-20 · Expert round 2: twelve fresh prompts, v10 vs v5
+
+Twelve prompts the owner approved (6 Premodern, 6 Legacy), v10 vs v5 on Opus ($9.92), judged blind with Neither.
+
+**Picks: v10 4, v5 3, same 3, neither 2.** Premodern: v10 2, same 2, neither 2. Legacy: v5 3, v10 2, same 1. Reasons given: Kiki-Pestermite (v5, "clearer plan"), Scapeshift (v10, "stronger cards").
+
+- v10 and v5 are even here; the combo fixes didn't tilt fresh prompts either way, and the one combo-heavy format (Legacy, 5 combo prompts) slightly favored v5. The win-line rule helps when the model has the wrong line (Rector); it doesn't add much when both versions already have a line.
+- **"Neither" 2 of 12, both Premodern again** (3 of 7 last round, 2 of 6 this round). Owner's lines:
+  - **Mind Over Matter:** "Not enough mana rocks or engines to use with the card." Both builds went Show and Tell / Intuition with 2 Thran Dynamo; MoM needs its enablers in quantity.
+  - **Rofellos:** "One missed Gaea's Cradle, and it's putting weird cards like Multani and Krosan Tusker. The other deck there had 62 cards. Hurricane doesn't make sense. I think it's confusing what ramp means in different contexts." v5: 0 Cradle, Multani, Tusker. v10: 62 cards, 2 Cradle, Hurricane.
+
+**Two concrete things from this:**
+1. **62 cards is a tell.** The checker only enforces the 60 minimum. Real lists are 60 almost without exception (measured below); a brew that submits 62 has not finished choosing. Fix: 60 exactly in 60-card formats unless the player asks otherwise.
+2. **A build-around card's requirements aren't counted.** MoM wants rocks and untap engines; Rofellos wants Cradle and a mana-sink plan; the model names the card's job (v9/v10 mechanism step) but doesn't build the quantity the job needs. Same shape as Rector before the win line: the fix is a check, not advice.
 
 ---
 

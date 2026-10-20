@@ -27,7 +27,7 @@ export interface SavedList {
 
 export interface Round4Item {
   id: string;
-  track: "fill" | "brew" | "fresh" | "holdout" | "expert";
+  track: "fill" | "brew" | "fresh" | "holdout" | "expert" | "post";
   format: string;
   prompt: string;
   /** Data and cards are cut to before this date (YYYY-MM-DD); null = today's data. */
@@ -187,7 +187,7 @@ const titleCase = (f: string) => f[0].toUpperCase() + f.slice(1);
  * history (scripts/find-new-archetypes.ts), rebuilt from the day it first
  * appeared. No list of the archetype exists before that day, so it can't be copied.
  */
-function holdoutItems(file = "evals/brew-holdout/candidates.json", track: "holdout" | "expert" = "holdout", minSettled = 5): Round4Item[] {
+function holdoutItems(file = "evals/brew-holdout/candidates.json", track: "holdout" | "expert" | "post" = "holdout", minSettled = 5): Round4Item[] {
   if (!existsSync(file)) return [];
   const candidates = JSON.parse(readFileSync(file, "utf8")) as Candidate[];
   return candidates
@@ -235,5 +235,7 @@ export function round4Items(index: CardIndex): Round4Item[] {
     ...holdoutItems(),
     ...EXPERT_FRESH.map((f) => ({ ...f, track: "expert" as const, before: null })),
     ...holdoutItems("evals/brew-holdout/candidates-expert.json", "expert", 3),
+    // Post-cutoff: archetypes first seen after the models' training cutoff (June 2026). The future, for the model, today.
+    ...holdoutItems("evals/brew-holdout/candidates-post.json", "post", 0),
   ];
 }

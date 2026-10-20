@@ -179,14 +179,17 @@ for (const it of items.filter((i) => i.track === "brew")) {
 // Brew holdout: no list of the archetype exists before the cutoff. Score is mean main deck
 // overlap with its settled lists (days 30-90 after it appeared, up to 50 sampled evenly).
 const holdoutRows: Record<string, unknown>[] = [];
-const holdoutItems = items.filter((i) => (i.track === "holdout" || i.track === "expert") && i.target);
+const holdoutItems = items.filter((i) => (i.track === "holdout" || i.track === "expert" || i.track === "post") && i.target);
 if (runs.some((r) => holdoutItems.some((i) => r.results.has(i.id))) || process.argv.includes("--holdout")) {
   for (const it of holdoutItems) {
     const t = it.target!;
     const first = Date.parse(t.firstSeen);
+    // Post-cutoff decks are young: score against every list from a week after they appeared.
+    const [from, to] = it.track === "post" ? [7, 365] : [30, 90];
     const window = history.filter(
-      (l) => l.format === t.format && l.strategy === t.strategy && Date.parse(l.date) >= first + 30 * DAY && Date.parse(l.date) < first + 90 * DAY,
+      (l) => l.format === t.format && l.strategy === t.strategy && Date.parse(l.date) >= first + from * DAY && Date.parse(l.date) < first + to * DAY,
     );
+    if (!window.length) continue;
     const step = Math.max(1, Math.floor(window.length / 50));
     const settled = window.filter((_, i) => i % step === 0).slice(0, 50).map((l) => toCounts(index, l.main));
     const meanOverlap = (m: Map<string, number>) => settled.reduce((a, l) => a + overlap(m, l), 0) / settled.length;

@@ -27,7 +27,7 @@ Three things, and the third is turning out to be the most interesting.
 
 | Item | Total |
 | --- | --- |
-| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14. Total about $223.49. Plus one 17-token test call. |
+| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29. Total about $226.78. Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats); full history 143,721 (since 2025-07-01) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
 | Automated tests | 48 passing |
@@ -62,6 +62,27 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - Lesson to apply: any prompt or claim that names a card gets checked against the card index before it is used.
 - ~~Switch to pairwise~~: done; 36 pairs judged (v1 8 wins, v2 6, 22 ties; v2 100% faithful vs. 92%).
 - ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
+
+---
+
+## 2026-10-20 · Lookup vs. reasoning on the four combo misses: each fixes one, neither fixes two
+
+Owner's question before judging: "Are we just plugging gaps in specific combo builds vs fixing the actual AI deck building?" Answer: v8 (a `played_with` tool: what real decks in any format run the requested cards with) is general but supplies knowledge rather than judgment. So a control was added: **v9** = v5 plus a mechanism-first step ("for each requested card: what it is FOR, which part of its text matters, what it needs around it") and no lookup. Four prompts, three versions, 12 blind pairs ($3.29).
+
+| Prompt | v5 vs v8 | v5 vs v9 | v8 vs v9 |
+| --- | --- | --- | --- |
+| Living End (Legacy) | v8 | v9 | same |
+| Draco + Erratic Explosion | v8 | v9 | v8 |
+| Pande-Burst | neither | neither | neither |
+| Rector Combo | neither | neither | neither |
+
+- **Living End: fixed by either.** Asking the model what the cyclers are *for* was enough; it found Living End with no data. Reasoning that was in the model, unasked.
+- **Draco: fixed by lookup, partly by reasoning.** v8 (no Tribal Flames, burn shell) over v9 over v5. v9 still built an odd aggro shell: reasoning got it off "domain" but not onto the right plan.
+- **Pande-Burst and Rector: fixed by nothing.** Both Premodern, both decks whose line is specific (Pande-Burst is a Replenish deck with Intuition and Lion's Eye Diamond; Rector is about which enchantment it fetches). The data had both (11 and 14 lists) and v8 saw it: it still chose an Enchantress shell for Pande-Burst, which the owner says can't work. Knowledge on the table, wrong part borrowed.
+
+**Reading for the owner's question:** it's both, and the split is now measurable. The model's own reasoning fixes the "obvious inference" misses when asked (Living End). Lookup fixes misses where the data holds the answer and the model reads it right (Draco). Neither fixes a deck whose plan is specific and the model misreads what to borrow (the two Premodern combos). That last kind is the real ceiling of this approach, and the owner's formats are where it shows.
+
+**Decision:** combine both (mechanism step plus `played_with`) as the base harness going forward, since each fixed something and neither hurt. "Neither" rate on this round's four hardest prompts: 50%.
 
 ---
 

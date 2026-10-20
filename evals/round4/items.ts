@@ -27,7 +27,7 @@ export interface SavedList {
 
 export interface Round4Item {
   id: string;
-  track: "fill" | "brew" | "fresh" | "holdout" | "expert" | "post";
+  track: "fill" | "brew" | "fresh" | "holdout" | "expert" | "post" | "expert2";
   format: string;
   prompt: string;
   /** Data and cards are cut to before this date (YYYY-MM-DD); null = today's data. */
@@ -187,7 +187,7 @@ const titleCase = (f: string) => f[0].toUpperCase() + f.slice(1);
  * history (scripts/find-new-archetypes.ts), rebuilt from the day it first
  * appeared. No list of the archetype exists before that day, so it can't be copied.
  */
-function holdoutItems(file = "evals/brew-holdout/candidates.json", track: "holdout" | "expert" | "post" = "holdout", minSettled = 5): Round4Item[] {
+function holdoutItems(file = "evals/brew-holdout/candidates.json", track: Round4Item["track"] = "holdout", minSettled = 5): Round4Item[] {
   if (!existsSync(file)) return [];
   const candidates = JSON.parse(readFileSync(file, "utf8")) as Candidate[];
   return candidates
@@ -227,6 +227,22 @@ const EXPERT_FRESH: { id: string; format: string; prompt: string }[] = [
   { id: "expert-legacy-mystic-remora", format: "Legacy", prompt: "Brew me a Legacy control deck built around Mystic Remora." },
 ];
 
+/** Expert round 2 (2026-10-20): 14 proposed, owner cut 2. Run through v10 vs v5. */
+const EXPERT2_FRESH: { id: string; format: string; prompt: string }[] = [
+  { id: "expert2-premodern-rising-waters", format: "Premodern", prompt: "Brew me a Premodern deck built around Rising Waters." },
+  { id: "expert2-premodern-mind-over-matter", format: "Premodern", prompt: "Brew me a Premodern deck built around Mind Over Matter." },
+  { id: "expert2-premodern-phyrexian-processor", format: "Premodern", prompt: "Brew me a Premodern deck built around Phyrexian Processor." },
+  { id: "expert2-premodern-shapeshifter-phage", format: "Premodern", prompt: "Brew me a Premodern deck built around Volrath's Shapeshifter and Phage the Untouchable." },
+  { id: "expert2-premodern-seismic-assault", format: "Premodern", prompt: "Brew me a Premodern deck built around Seismic Assault." },
+  { id: "expert2-premodern-rofellos", format: "Premodern", prompt: "Brew me a mono-green Premodern ramp deck built around Rofellos, Llanowar Emissary." },
+  { id: "expert2-legacy-oracle-pact", format: "Legacy", prompt: "Brew me a Legacy deck built around Thassa's Oracle and Tainted Pact." },
+  { id: "expert2-legacy-glimpse-elves", format: "Legacy", prompt: "Brew me a Legacy Elves deck built around Glimpse of Nature and Heritage Druid." },
+  { id: "expert2-legacy-bomberman", format: "Legacy", prompt: "Brew me a Legacy deck built around Auriok Salvagers and Lion's Eye Diamond." },
+  { id: "expert2-legacy-hypergenesis", format: "Legacy", prompt: "Brew me a Legacy deck built around Hypergenesis." },
+  { id: "expert2-legacy-scapeshift", format: "Legacy", prompt: "Brew me a Legacy deck built around Scapeshift and Valakut, the Molten Pinnacle." },
+  { id: "expert2-legacy-kiki-pestermite", format: "Legacy", prompt: "Brew me a Legacy deck built around Kiki-Jiki, Mirror Breaker and Pestermite." },
+];
+
 export function round4Items(index: CardIndex): Round4Item[] {
   return [
     ...fillItems(index),
@@ -237,5 +253,6 @@ export function round4Items(index: CardIndex): Round4Item[] {
     ...holdoutItems("evals/brew-holdout/candidates-expert.json", "expert", 3),
     // Post-cutoff: archetypes first seen after the models' training cutoff (June 2026). The future, for the model, today.
     ...holdoutItems("evals/brew-holdout/candidates-post.json", "post", 0),
+    ...EXPERT2_FRESH.map((f) => ({ ...f, track: "expert2" as const, before: null })),
   ];
 }

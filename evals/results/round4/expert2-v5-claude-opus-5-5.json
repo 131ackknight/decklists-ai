@@ -1,0 +1,2647 @@
+{
+ "ranAt": "2026-10-20T20:22:47.287Z",
+ "harness": "v5",
+ "model": "claude-opus-5-5",
+ "tracks": [
+  "expert2"
+ ],
+ "results": [
+  {
+   "id": "expert2-premodern-rising-waters",
+   "track": "expert2",
+   "format": "Premodern",
+   "before": null,
+   "prompt": "Brew me a Premodern deck built around Rising Waters.",
+   "text": "I built **Merfolk Waters**, a mono-blue tempo-prison deck. Turns 1–2 you play cheap Merfolk, then land Rising Waters around turn 3 or 4. From then on each player untaps only one land per turn (\"lands don't untap… at the beginning of each player's upkeep, that player untaps a land they control\"). Your cheap creatures keep attacking with islandwalk while free spells keep you casting through your own lock: Daze, Gush and Foil can be paid by returning or discarding Islands instead of mana, and an Island returned by Gush comes back untapped when you replay it.\n\n**The three directions I sketched:**\n1. **Stiflenought + Rising Waters:** Rising Waters added to the Stiflenought deck from your list.\n2. **Stasis/Kismet lock:** Rising Waters stacked with Stasis and Kismet in the Stasis shell.\n3. **Merfolk + Orb lock:** the Merfolk deck that already wins with Winter Orb, with Rising Waters as extra Orb copies.\n\nI picked the third because Merfolk's 1–2 mana creatures are already on the board before the lock goes down. Rising Waters is also an enchantment, so the artifact removal that answers Winter Orb doesn't touch it. In Stasis it would mostly repeat what Stasis already does.\n\n**The deck:**\n- **Mana from my own find:** Sea Scryer ({T}: add {C}) is a Merfolk that makes mana and untaps normally under the lock. It also helps you reach 4 mana for Rising Waters.\n- **Lock odds:** with 4 Rising Waters and 2 Winter Orb, you have about a 68% chance to see a lock piece by turn 4 on the play.\n- **Islandwalk against non-Island decks:** Tidal Warrior can turn one of the opponent's lands into an Island, so the Lords' islandwalk still works against Terrageddon, Sligh and Enchantress.\n- **Where it comes from:** the counterspell and Gush package and the mana come from a recent 5-0 Merfolk league list.\n\n**Land count:** the deck checker suggests about 22 lands. I kept 17 on purpose: real Merfolk lists run about 18, the 5-0 list ran 16, and this deck has free spells and Sea Scryers for extra mana. A lock deck also wants to run out of lands later than the opponent does.\n\n**Sideboard:**\n- **Annul:** for Enchantress, Mox Diamond and Replenish.\n- **Blue Elemental Blast, Hydroblast and Chill:** for Sligh and Goblins.\n- **Tormod's Crypt:** for Hermit Druid and Psychatog.\n- **Back to Basics:** for decks that rely on nonbasic lands.\n\nThis is a brew that hasn't been tested: Rising Waters has no recent tournament results.",
+   "deck": {
+    "main": [
+     {
+      "qty": 4,
+      "name": "Rising Waters"
+     },
+     {
+      "qty": 2,
+      "name": "Winter Orb"
+     },
+     {
+      "qty": 4,
+      "name": "Lord of Atlantis"
+     },
+     {
+      "qty": 4,
+      "name": "Tidal Warrior"
+     },
+     {
+      "qty": 3,
+      "name": "Rootwater Mystic"
+     },
+     {
+      "qty": 3,
+      "name": "Sea Scryer"
+     },
+     {
+      "qty": 2,
+      "name": "Waterfront Bouncer"
+     },
+     {
+      "qty": 4,
+      "name": "Daze"
+     },
+     {
+      "qty": 4,
+      "name": "Gush"
+     },
+     {
+      "qty": 4,
+      "name": "Counterspell"
+     },
+     {
+      "qty": 4,
+      "name": "Opt"
+     },
+     {
+      "qty": 2,
+      "name": "Foil"
+     },
+     {
+      "qty": 2,
+      "name": "Stifle"
+     },
+     {
+      "qty": 1,
+      "name": "Unsummon"
+     },
+     {
+      "qty": 13,
+      "name": "Island"
+     },
+     {
+      "qty": 4,
+      "name": "Flooded Strand"
+     }
+    ],
+    "side": [
+     {
+      "qty": 3,
+      "name": "Annul"
+     },
+     {
+      "qty": 3,
+      "name": "Blue Elemental Blast"
+     },
+     {
+      "qty": 2,
+      "name": "Hydroblast"
+     },
+     {
+      "qty": 2,
+      "name": "Tormod's Crypt"
+     },
+     {
+      "qty": 2,
+      "name": "Back to Basics"
+     },
+     {
+      "qty": 3,
+      "name": "Chill"
+     }
+    ],
+    "commander": [],
+    "label": "brew",
+    "warnings": [
+     "17 lands; Premodern decks with an average mana value of 2.23 and 7 cheap draw or ramp spells run about 22.1. Add about 5."
+    ],
+    "winLine": [
+     {
+      "card": "Tidal Warrior",
+      "does": "Turn 1 one-drop that starts attacking and can turn an opponent's land into an Island for islandwalk"
+     },
+     {
+      "card": "Lord of Atlantis",
+      "does": "Turn 2: pumps the Merfolk and gives them islandwalk so the team can't be blocked"
+     },
+     {
+      "card": "Sea Scryer",
+      "does": "Creature mana that untaps normally, ramping to 4 and still producing mana once lands are frozen"
+     },
+     {
+      "card": "Rising Waters",
+      "does": "Turn 3-4: each player untaps only one land per turn, freezing the opponent while your cheap creatures keep attacking"
+     },
+     {
+      "card": "Gush",
+      "does": "Free card draw: return two Islands and replay one untapped, so you get around your own lock"
+     },
+     {
+      "card": "Daze",
+      "does": "Free counter that protects the lock from the opponent's one spell per turn"
+     },
+     {
+      "card": "Counterspell",
+      "does": "Holds off answers while the unblockable Merfolk deal the last points"
+     }
+    ],
+    "winTurn": 7
+   },
+   "toolCalls": [
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "reference_list",
+     "isError": false
+    },
+    {
+     "name": "meta",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "submit_deck",
+     "ok": true,
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 20,
+    "output": 7449,
+    "cacheRead": 155139,
+    "cacheWrite": 30774
+   },
+   "costUsd": 0.334,
+   "steps": 8,
+   "ms": 82899,
+   "errors": []
+  },
+  {
+   "id": "expert2-premodern-mind-over-matter",
+   "track": "expert2",
+   "format": "Premodern",
+   "before": null,
+   "prompt": "Brew me a Premodern deck built around Mind Over Matter.",
+   "text": "I built a two-card combo deck: **Mind Over Matter + Arcanis the Omnipotent**. Tapping Arcanis draws three cards. Discarding one card to Mind Over Matter untaps it, so each loop nets two cards, and you can pull almost your whole library in one turn. Spare cards then go to Mind Over Matter to untap Thran Dynamo (3 mana each) or Islands (1 each). That pays for a Kaervek's Torch with X of 20 or more. The backup finisher is Stroke of Genius aimed at the opponent with X bigger than their library. Show and Tell, Ancient Tomb and City of Traitors get the 6-drops down on turns 2–4. This is a brew; it borrows its fast mana and card draw from the Dream Halls deck.\n\n**The three directions I considered:**\n1. **Blue-red Arcanis combo** (chosen), using Dream Halls' fast mana and draw: Ancient Tomb, City of Traitors, Show and Tell, Rush of Knowledge, Intuition, Frantic Search.\n2. **White-blue, using the menu's Replenish package:** Attunement and Frantic Search throw Mind Over Matter into the graveyard, and Replenish brings it back cheaply. Then Mind Over Matter locks the opponent by tapping their lands and creatures, alongside Opalescence and Parallax Wave.\n3. **Mono-blue Stroke of Genius chain:** Mind Over Matter untaps Thran Dynamo, so each card Stroke draws becomes 3 mana for the next, bigger Stroke.\n\nI picked the first because Arcanis is the only card I found where Mind Over Matter's discard gives back more cards than it costs. That makes it a real one-turn kill, where the other two are a slow lock or a chain that needs several draws to line up.\n\n**Things to know when playing it:**\n- **Don't untap Ancient Tomb with Mind Over Matter.** It deals 2 damage to you every time it taps. Loop Islands, City of Traitors, Thran Dynamo and Shivan Reef instead.\n- **Stop drawing with a card or two left in your library.** Otherwise you lose at your next draw step if something goes wrong.\n- **Show and Tell lets the opponent put a card into play too,** for example Phyrexian Dreadnought or Terravore. Against those decks, hard-casting your 6-drops is often better.\n- **Arcanis needs a full turn in play before it can tap.** Usually you put it in with Show and Tell first, then cast Mind Over Matter the next turn.\n\n**Mana:**\n- **Red sources:** the deck checker warned there are only 4 red sources for Kaervek's Torch. That's fine here: you only cast Torch during the combo, after you've drawn your deck. Mind Over Matter can untap your one Shivan Reef, or you can use a Lotus Petal.\n- **Land count:** it runs 21 lands; the checker recommended about 23. Dream Halls decks average 19 plus Lotus Petals, so I stayed close to that.\n\n**Odds:** you have about a 43% chance to see Mind Over Matter (or Intuition), Arcanis (or Rush of Knowledge) and a fast-mana card all by turn 5 on the play. That figure leaves out Impulse and Opt, which help you find the pieces.\n\n**Sideboard:** Hydroblast for the Sligh and Goblins decks, Annul for Enchantress and Replenish, Stifle for Phyrexian Dreadnought and Hermit Druid, plus Tormod's Crypt, Powder Keg and Defense Grid.",
+   "deck": {
+    "main": [
+     {
+      "qty": 4,
+      "name": "Mind Over Matter"
+     },
+     {
+      "qty": 3,
+      "name": "Arcanis the Omnipotent"
+     },
+     {
+      "qty": 4,
+      "name": "Show and Tell"
+     },
+     {
+      "qty": 3,
+      "name": "Intuition"
+     },
+     {
+      "qty": 2,
+      "name": "Thran Dynamo"
+     },
+     {
+      "qty": 2,
+      "name": "Lotus Petal"
+     },
+     {
+      "qty": 2,
+      "name": "Rush of Knowledge"
+     },
+     {
+      "qty": 2,
+      "name": "Kaervek's Torch"
+     },
+     {
+      "qty": 1,
+      "name": "Stroke of Genius"
+     },
+     {
+      "qty": 4,
+      "name": "Counterspell"
+     },
+     {
+      "qty": 1,
+      "name": "Arcane Denial"
+     },
+     {
+      "qty": 4,
+      "name": "Impulse"
+     },
+     {
+      "qty": 4,
+      "name": "Opt"
+     },
+     {
+      "qty": 3,
+      "name": "Frantic Search"
+     },
+     {
+      "qty": 11,
+      "name": "Island"
+     },
+     {
+      "qty": 4,
+      "name": "Ancient Tomb"
+     },
+     {
+      "qty": 2,
+      "name": "City of Traitors"
+     },
+     {
+      "qty": 2,
+      "name": "Shivan Reef"
+     },
+     {
+      "qty": 2,
+      "name": "Svyelunite Temple"
+     }
+    ],
+    "side": [
+     {
+      "qty": 4,
+      "name": "Hydroblast"
+     },
+     {
+      "qty": 3,
+      "name": "Annul"
+     },
+     {
+      "qty": 2,
+      "name": "Stifle"
+     },
+     {
+      "qty": 2,
+      "name": "Powder Keg"
+     },
+     {
+      "qty": 2,
+      "name": "Tormod's Crypt"
+     },
+     {
+      "qty": 2,
+      "name": "Defense Grid"
+     }
+    ],
+    "commander": [],
+    "label": "brew",
+    "warnings": [
+     "4 R sources; Kaervek's Torch wants about 14 to cast on curve."
+    ],
+    "winLine": [
+     {
+      "card": "Show and Tell",
+      "does": "Turn 2-3 off Ancient Tomb/City of Traitors: put Arcanis the Omnipotent (or Mind Over Matter) onto the battlefield for 3 mana."
+     },
+     {
+      "card": "Mind Over Matter",
+      "does": "Hard-cast the next turn off Tomb/City/Thran Dynamo (or Show and Tell it if Arcanis was hard-cast); Arcanis is now free of summoning sickness."
+     },
+     {
+      "card": "Arcanis the Omnipotent",
+      "does": "Tap: draw three. Discard one card to Mind Over Matter to untap Arcanis, repeat: +2 cards per loop until nearly the whole library is in hand (leave a card or two so you don't deck yourself)."
+     },
+     {
+      "card": "Thran Dynamo",
+      "does": "Spare cards go to Mind Over Matter to untap Thran Dynamo (3 mana each) or Islands (1 each), making a huge pool of mana."
+     },
+     {
+      "card": "Kaervek's Torch",
+      "does": "Untap a Shivan Reef or use Lotus Petal for R, then cast it with X of 20 or more at the opponent's face. Spells that target it cost 2 more, so it's hard to counter."
+     },
+     {
+      "card": "Stroke of Genius",
+      "does": "Mono-blue backup: target the opponent with X bigger than their library, and they lose on their next draw."
+     }
+    ],
+    "winTurn": 5
+   },
+   "toolCalls": [
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "meta",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "submit_deck",
+     "ok": true,
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 22,
+    "output": 18215,
+    "cacheRead": 250658,
+    "cacheWrite": 42185
+   },
+   "costUsd": 0.6254,
+   "steps": 9,
+   "ms": 209318,
+   "errors": []
+  },
+  {
+   "id": "expert2-premodern-phyrexian-processor",
+   "track": "expert2",
+   "format": "Premodern",
+   "before": null,
+   "prompt": "Brew me a Premodern deck built around Phyrexian Processor.",
+   "text": "I built a mono-black brew around Phyrexian Processor. Discard spells clear the way, then Processor makes a big black Minion token every turn. Use Duress or Cabal Therapy to take their answer, then cast Processor on turn 2 or 3 using Dark Ritual or Ancient Tomb, paying about 6–8 life as it enters (less against burn). Ancient Tomb and City of Traitors also help pay the {4} it costs to make each Minion. Until it lands, the deck plays like a disruptive black deck: Hypnotic Specter, Phyrexian Negator and removal.\n\n**Three directions I considered:**\n1. **Mono-black Ritual Processor**, borrowing the discard, Ritual and removal package from Moneyball Black.\n2. **Colorless artifact ramp** with Metalworker, Thran Dynamo and Tangle Wire. Grim Monolith turned out to be banned, which leaves this direction slow.\n3. **Blue Tinker** that cheats Processor into play, using the Devourer Combo shell. Processor shows up in that deck's sideboard in 43% of its lists.\n\nI chose the first because Ritual and Ancient Tomb get Processor down early, and discard protects it from the counterspells, Swords to Plowshares and Seal of Cleansing in the field better than the other two directions could.\n\n**The deck (60):**\n- **Artifacts:** 4 Phyrexian Processor, 2 Masticore\n- **Fast mana and tutors:** 4 Dark Ritual, 2 Diabolic Intent (sacrifice a creature to find a Processor)\n- **Discard:** 4 Duress, 4 Cabal Therapy, 4 Ravenous Rats. The Rats and spare Minions pay for Therapy's flashback.\n- **Creatures:** 4 Hypnotic Specter, 3 Phyrexian Negator\n- **Removal:** 3 Smother, 2 Diabolic Edict, 2 Snuff Out\n- **Lands (22):** 15 Swamp, 4 Ancient Tomb, 2 Mishra's Factory, 1 City of Traitors\n- **Sideboard:** 3 Engineered Plague, 3 Dystopia, 2 Gloom, 3 Withered Wretch, 2 Perish, 2 Bottle Gnomes\n\n**Things to know:**\n- **Odds:** Without mulligans, you have a Processor by turn 3 49% of the time. Counting Diabolic Intent, you have a Processor or a way to find one by turn 2 59% of the time. You have both that and a fast-mana card (Ritual, Tomb or City) 43% of the time.\n- **Mana:** There are 15 black sources, fewer than Moneyball's usual 17. I gave up some for Ancient Tomb's colorless mana, which matters more for Processor. The deck check passed with no warnings.\n- **Life:** Processor, Ancient Tomb and Snuff Out all cost life. Against Sligh, pay less into Processor; the Bottle Gnomes in the sideboard help there.\n- **Banned cards:** Grim Monolith, Vampiric Tutor and Demonic Consultation are all banned, so Diabolic Intent is the tutor.",
+   "deck": {
+    "main": [
+     {
+      "qty": 4,
+      "name": "Phyrexian Processor"
+     },
+     {
+      "qty": 2,
+      "name": "Masticore"
+     },
+     {
+      "qty": 4,
+      "name": "Dark Ritual"
+     },
+     {
+      "qty": 4,
+      "name": "Duress"
+     },
+     {
+      "qty": 4,
+      "name": "Cabal Therapy"
+     },
+     {
+      "qty": 4,
+      "name": "Hypnotic Specter"
+     },
+     {
+      "qty": 3,
+      "name": "Phyrexian Negator"
+     },
+     {
+      "qty": 4,
+      "name": "Ravenous Rats"
+     },
+     {
+      "qty": 2,
+      "name": "Diabolic Intent"
+     },
+     {
+      "qty": 3,
+      "name": "Smother"
+     },
+     {
+      "qty": 2,
+      "name": "Diabolic Edict"
+     },
+     {
+      "qty": 2,
+      "name": "Snuff Out"
+     },
+     {
+      "qty": 15,
+      "name": "Swamp"
+     },
+     {
+      "qty": 4,
+      "name": "Ancient Tomb"
+     },
+     {
+      "qty": 1,
+      "name": "City of Traitors"
+     },
+     {
+      "qty": 2,
+      "name": "Mishra's Factory"
+     }
+    ],
+    "side": [
+     {
+      "qty": 3,
+      "name": "Engineered Plague"
+     },
+     {
+      "qty": 3,
+      "name": "Dystopia"
+     },
+     {
+      "qty": 2,
+      "name": "Gloom"
+     },
+     {
+      "qty": 3,
+      "name": "Withered Wretch"
+     },
+     {
+      "qty": 2,
+      "name": "Perish"
+     },
+     {
+      "qty": 2,
+      "name": "Bottle Gnomes"
+     }
+    ],
+    "commander": [],
+    "label": "brew",
+    "warnings": [],
+    "winLine": [
+     {
+      "card": "Duress",
+      "does": "Turn 1: take a counterspell or removal spell, so the opponent's hand is safe for Processor"
+     },
+     {
+      "card": "Dark Ritual",
+      "does": "Turn 2: Swamp into Ritual gives BBB, plus Ancient Tomb's CC, for 5 mana"
+     },
+     {
+      "card": "Phyrexian Processor",
+      "does": "Cast it for 4 and pay about 6-8 life as it enters (less against burn)"
+     },
+     {
+      "card": "Ancient Tomb",
+      "does": "Turn 3: Tomb plus two other lands pay {4} and tap Processor for a 6/6-8/8 Minion"
+     },
+     {
+      "card": "Cabal Therapy",
+      "does": "Name their removal. Rats and spare Minions pay the flashback cost"
+     },
+     {
+      "card": "Phyrexian Processor",
+      "does": "Make a new big Minion every turn until the opponent is dead, around turns 5-6"
+     }
+    ],
+    "winTurn": 6
+   },
+   "toolCalls": [
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "meta",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "submit_deck",
+     "ok": true,
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 18,
+    "output": 6750,
+    "cacheRead": 117306,
+    "cacheWrite": 25544
+   },
+   "costUsd": 0.2863,
+   "steps": 7,
+   "ms": 75867,
+   "errors": []
+  },
+  {
+   "id": "expert2-premodern-shapeshifter-phage",
+   "track": "expert2",
+   "format": "Premodern",
+   "before": null,
+   "prompt": "Brew me a Premodern deck built around Volrath's Shapeshifter and Phage the Untouchable.",
+   "text": "I submitted a brew: **UG Survival-Shapeshifter**, 21 lands plus 4 Birds of Paradise, with a 15-card sideboard.\n\n**How it wins:** Volrath's Shapeshifter copies the full text of whatever creature is on top of your graveyard. Phage the Untouchable never enters the battlefield, so its \"you lose if you didn't cast it\" trigger never happens. But Shapeshifter still gets Phage's \"deals combat damage to a player → that player loses the game.\" You attack with Shapeshifter, and after blockers are declared you discard Phage at instant speed. You can do that with Shapeshifter's own {2} discard ability, Wild Mongrel (free) or Survival of the Fittest ({G}), and the hit ends the game.\n\n**The key rule:** the discard has to come from an ability, not a spell. An instant or sorcery like Frantic Search or Intuition goes to the graveyard after it resolves and lands on top of Phage. That's why the outlets here are Shapeshifter's own ability, Mongrel, Survival and Merfolk Looter.\n\n**Getting through blockers:** Wonder gives all your creatures flying while it's anywhere in your graveyard and you control an Island. Phantom Warrior is a second option: while it's on top of the graveyard, Shapeshifter is unblockable, and you discard Phage after blocks.\n\n**Why I chose this direction:** I considered three:\n1. A UB Psychatog-style deck with Intuition and Looters.\n2. The 5-color Hermit Druid shell (which already runs 2 Shapeshifters) with Phage added.\n3. Green-blue (UG) Survival tempo with Wild Mongrel and Survival from the Survival Madness/Hermit Druid decks and counterspells from the blue control decks.\n\nI picked the UG Survival version because Survival does three jobs: it finds Shapeshifter, it finds Phage, and it's an instant-speed way to discard Phage. Phage is never cast, so black would only weigh down the mana.\n\n**Things to know:**\n- **Black mana warning:** check_deck flagged that Phage \"wants ~20 black sources.\" I left it because you never cast Phage.\n- **Odds** (on the play, no mulligans):\n  - Drawing Shapeshifter plus Phage or Survival by turn 4: **34.7%**.\n  - By turn 5, holding Survival or Shapeshifter plus a way to Phage (Survival, Phage or Impulse): **72.7%**.\n- **Weak spot:** Shapeshifter is a 0/1 that has to survive a turn before it can attack. Daze, Counterspell and Mana Leak are there to protect it.",
+   "deck": {
+    "main": [
+     {
+      "qty": 4,
+      "name": "Volrath's Shapeshifter"
+     },
+     {
+      "qty": 2,
+      "name": "Phage the Untouchable"
+     },
+     {
+      "qty": 1,
+      "name": "Wonder"
+     },
+     {
+      "qty": 1,
+      "name": "Phantom Warrior"
+     },
+     {
+      "qty": 4,
+      "name": "Wild Mongrel"
+     },
+     {
+      "qty": 4,
+      "name": "Birds of Paradise"
+     },
+     {
+      "qty": 2,
+      "name": "Merfolk Looter"
+     },
+     {
+      "qty": 4,
+      "name": "Survival of the Fittest"
+     },
+     {
+      "qty": 4,
+      "name": "Counterspell"
+     },
+     {
+      "qty": 4,
+      "name": "Daze"
+     },
+     {
+      "qty": 2,
+      "name": "Mana Leak"
+     },
+     {
+      "qty": 4,
+      "name": "Impulse"
+     },
+     {
+      "qty": 2,
+      "name": "Sylvan Library"
+     },
+     {
+      "qty": 1,
+      "name": "Fact or Fiction"
+     },
+     {
+      "qty": 4,
+      "name": "Yavimaya Coast"
+     },
+     {
+      "qty": 9,
+      "name": "Island"
+     },
+     {
+      "qty": 8,
+      "name": "Forest"
+     }
+    ],
+    "side": [
+     {
+      "qty": 3,
+      "name": "Naturalize"
+     },
+     {
+      "qty": 3,
+      "name": "Hydroblast"
+     },
+     {
+      "qty": 2,
+      "name": "Tormod's Crypt"
+     },
+     {
+      "qty": 2,
+      "name": "Annul"
+     },
+     {
+      "qty": 2,
+      "name": "Submerge"
+     },
+     {
+      "qty": 1,
+      "name": "Uktabi Orangutan"
+     },
+     {
+      "qty": 2,
+      "name": "Ravenous Baloth"
+     }
+    ],
+    "commander": [],
+    "label": "brew",
+    "warnings": [
+     "2 B sources; Phage the Untouchable wants about 20 to cast on curve."
+    ],
+    "winLine": [
+     {
+      "card": "Survival of the Fittest",
+      "does": "Turn 2: cast it. Later, pay G and discard a spare creature (Birds, Mongrel) to fetch Volrath's Shapeshifter, then again to fetch Phage the Untouchable."
+     },
+     {
+      "card": "Volrath's Shapeshifter",
+      "does": "Turn 3: cast it (1UU) and back it up with Daze/Counterspell while it loses summoning sickness."
+     },
+     {
+      "card": "Wonder",
+      "does": "Discard it to Survival or Wild Mongrel. While it's in the graveyard and you control an Island, your creatures have flying, so Shapeshifter can attack in the air."
+     },
+     {
+      "card": "Volrath's Shapeshifter",
+      "does": "Turn 4: attack. After blockers are declared, pay {2} with Shapeshifter's own discard ability (or use Mongrel or Survival for free/G) to discard Phage."
+     },
+     {
+      "card": "Phage the Untouchable",
+      "does": "Now on top of the graveyard, so Shapeshifter has Phage's text without casting or entering. The ETB lose clause never triggers, and combat damage makes the opponent lose the game."
+     }
+    ],
+    "winTurn": 4
+   },
+   "toolCalls": [
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "reference_list",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "meta",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "submit_deck",
+     "ok": true,
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 26,
+    "output": 15019,
+    "cacheRead": 279940,
+    "cacheWrite": 41349
+   },
+   "costUsd": 0.5632,
+   "steps": 11,
+   "ms": 169178,
+   "errors": []
+  },
+  {
+   "id": "expert2-premodern-seismic-assault",
+   "track": "expert2",
+   "format": "Premodern",
+   "before": null,
+   "prompt": "Brew me a Premodern deck built around Seismic Assault.",
+   "text": "I submitted it as a brew: **RG Terravore Assault**. The deck is 60 cards plus a 15-card sideboard, and it passed the legality check.\n\n**Directions I considered:**\n1. **UR Gush Assault.** Gush returns two Islands to your hand, and Seismic Assault turns each one into 2 damage. The problem is mana: Assault costs RRR and the counterspells want blue, so the mana base fights itself.\n2. **Mono-red land-dump burn.** The mana is simple, but it's just a weaker Sligh with no real use for Assault's discards.\n3. **RG Terravore Assault (chosen).** This takes the green package from Terrageddon (11% of the field): Mox Diamond, Terravore and Sylvan Library. The mana base is mostly borrowed from GR Zoo.\n\nI chose the third because each part makes the others better. Every land you discard to Assault or Mox Diamond, and every fetchland or Wasteland you crack, adds +1/+1 to Terravore. Sylvan Library finds you more lands to throw.\n\n**The plan:** You open with fast threats like Mox Diamond, Wild Mongrel, Werebear and Terravore. Lightning Bolt and Incinerate handle early creatures. Once Seismic Assault is out, every extra land in your hand becomes 2 damage to any target, which kills creatures and finishes the opponent. Late in the game, Groundskeeper returns a basic land from your graveyard to your hand for {1}{G}, so you can keep firing Assault.\n\n**Things to know:**\n- **Land count:** The deck plays 24 lands. The check said GR Zoo lists average 22.4 and suggested cutting about 2. I kept the extra lands on purpose, because here lands are ammunition for Assault and Mox Diamond, not just mana.\n- **How often you'll have Assault:** Four is the most copies you can play, and you'll see one by turn 4 only 52.8% of the time (no mulligans counted). The deck has to win without it some games, which is why it plays Terravore, Call of the Herd and the burn spells.\n- **Sideboard:** It's aimed at the top decks in the field. Naturalize is for Enchantress and Replenish. Pyroblast and Red Elemental Blast are for Stiflenought and UB Psychatog. Tormod's Crypt is for Hermit Druid. Ravenous Baloth, Pyroclasm and Simoon are for Sligh and Goblins.",
+   "deck": {
+    "main": [
+     {
+      "qty": 4,
+      "name": "Seismic Assault"
+     },
+     {
+      "qty": 4,
+      "name": "Terravore"
+     },
+     {
+      "qty": 4,
+      "name": "Wild Mongrel"
+     },
+     {
+      "qty": 3,
+      "name": "Werebear"
+     },
+     {
+      "qty": 2,
+      "name": "Groundskeeper"
+     },
+     {
+      "qty": 3,
+      "name": "Call of the Herd"
+     },
+     {
+      "qty": 4,
+      "name": "Mox Diamond"
+     },
+     {
+      "qty": 4,
+      "name": "Sylvan Library"
+     },
+     {
+      "qty": 4,
+      "name": "Lightning Bolt"
+     },
+     {
+      "qty": 4,
+      "name": "Incinerate"
+     },
+     {
+      "qty": 4,
+      "name": "Wooded Foothills"
+     },
+     {
+      "qty": 2,
+      "name": "Bloodstained Mire"
+     },
+     {
+      "qty": 4,
+      "name": "Karplusan Forest"
+     },
+     {
+      "qty": 2,
+      "name": "Treetop Village"
+     },
+     {
+      "qty": 2,
+      "name": "Wasteland"
+     },
+     {
+      "qty": 6,
+      "name": "Mountain"
+     },
+     {
+      "qty": 4,
+      "name": "Forest"
+     }
+    ],
+    "side": [
+     {
+      "qty": 3,
+      "name": "Naturalize"
+     },
+     {
+      "qty": 3,
+      "name": "Pyroblast"
+     },
+     {
+      "qty": 2,
+      "name": "Red Elemental Blast"
+     },
+     {
+      "qty": 2,
+      "name": "Tormod's Crypt"
+     },
+     {
+      "qty": 2,
+      "name": "Ravenous Baloth"
+     },
+     {
+      "qty": 2,
+      "name": "Pyroclasm"
+     },
+     {
+      "qty": 1,
+      "name": "Simoon"
+     }
+    ],
+    "commander": [],
+    "label": "brew",
+    "warnings": [],
+    "winLine": [
+     {
+      "card": "Mox Diamond",
+      "does": "Turn 1: discard a land to put it onto the battlefield, which puts the first land in the graveyard for Terravore and speeds up the mana"
+     },
+     {
+      "card": "Terravore",
+      "does": "Turn 2-3: comes down as a trampler that grows with every land in all graveyards (fetchlands, Wasteland, Mox Diamond and Assault discards)"
+     },
+     {
+      "card": "Seismic Assault",
+      "does": "Turn 3-4: every extra land in hand becomes 2 damage to a creature or the opponent, and each land discarded makes Terravore +1/+1 bigger"
+     },
+     {
+      "card": "Sylvan Library",
+      "does": "Digs 3 cards deep each turn, so you find more lands to fire off with Assault"
+     },
+     {
+      "card": "Groundskeeper",
+      "does": "Late game: pay {1}{G} to return a basic land from the graveyard, then discard it to Assault again, so you never run out of 2-damage shots"
+     },
+     {
+      "card": "Lightning Bolt",
+      "does": "Burn plus Assault shots finish the opponent once Terravore has attacked them low"
+     }
+    ],
+    "winTurn": 6
+   },
+   "toolCalls": [
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "meta",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "reference_list",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "reference_list",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "submit_deck",
+     "ok": true,
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 16,
+    "output": 7761,
+    "cacheRead": 88829,
+    "cacheWrite": 24538
+   },
+   "costUsd": 0.2957,
+   "steps": 6,
+   "ms": 92247,
+   "errors": []
+  },
+  {
+   "id": "expert2-premodern-rofellos",
+   "track": "expert2",
+   "format": "Premodern",
+   "before": null,
+   "prompt": "Brew me a mono-green Premodern ramp deck built around Rofellos, Llanowar Emissary.",
+   "text": "I built a mono-green deck that ramps with Rofellos and destroys lands. The deck uses your green mana to knock out the opponent's lands early, then lands big creatures before they can recover. Rofellos taps for one green per Forest you control. With 17 Forests and 2 Wood Elves (which put a Forest onto the battlefield untapped), he can make 3–4 mana by turn 3. That pays for Thermokarst and Winter's Grasp on turn 2–3, Plow Under on turn 3–4, and then Deranged Hermit, Masticore, Ravenous Baloth or Kamahl. Kamahl's +3/+3 and trample pump on the whole team ends the game. Sylvan Library keeps you drawing land destruction and threats. This is a brew: no Rofellos list shows up in the last 90 days of results.\n\n**Three directions I considered:**\n1. **Rofellos land destruction (chosen):** The 8 land-destruction spells (Thermokarst and Winter's Grasp) are taken from Oath Ponza, which shows up in 81 lists. Sylvan Library comes from Terrageddon and Oath Ponza.\n2. **Rofellos with Winter Orb / Tangle Wire lock:** Your creatures make mana even when the opponent's lands are locked down. This package is borrowed from Elves and Cradle Control.\n3. **Cradle Elves with a Kamahl pump finish:** Gaea's Cradle plus Survival of the Fittest.\n\nI picked #1 because it uses Rofellos's mana best. Hitting a land on turn 2 is a real threat to the top decks (Stiflenought, Psychatog, Enchantress, Replenish), which all need their lands to function. #3 would mostly have been the existing Elves deck with Rofellos added.\n\n**Notes:**\n- **Starts:** You'll have Rofellos by turn 2 only 44.5% of the time on the play. But 12 cards can come down on turn 1–2 and add mana (Rofellos plus 8 one-drop elves), and you'll draw at least one of those 85.3% of the time.\n- **20 lands:** check_deck suggests 21.3, but the Elves deck averages 19. You also have 14 creatures that make or fetch mana, and Krosan Tusker can be cycled to find a basic land.\n- **Sideboard:**\n  - Naturalize, Creeping Mold and Tranquil Domain for Enchantress and Replenish.\n  - Uktabi Orangutan for Phyrexian Dreadnought.\n  - Xantid Swarm for the counterspell decks.\n  - Tormod's Crypt for Hermit Druid Combo and Psychatog.\n  - Spike Feeder for Sligh.",
+   "deck": {
+    "main": [
+     {
+      "qty": 4,
+      "name": "Rofellos, Llanowar Emissary"
+     },
+     {
+      "qty": 4,
+      "name": "Llanowar Elves"
+     },
+     {
+      "qty": 4,
+      "name": "Fyndhorn Elves"
+     },
+     {
+      "qty": 2,
+      "name": "Wood Elves"
+     },
+     {
+      "qty": 4,
+      "name": "Sylvan Library"
+     },
+     {
+      "qty": 4,
+      "name": "Thermokarst"
+     },
+     {
+      "qty": 4,
+      "name": "Winter's Grasp"
+     },
+     {
+      "qty": 2,
+      "name": "Plow Under"
+     },
+     {
+      "qty": 3,
+      "name": "Deranged Hermit"
+     },
+     {
+      "qty": 2,
+      "name": "Masticore"
+     },
+     {
+      "qty": 3,
+      "name": "Ravenous Baloth"
+     },
+     {
+      "qty": 2,
+      "name": "Krosan Tusker"
+     },
+     {
+      "qty": 1,
+      "name": "Kamahl, Fist of Krosa"
+     },
+     {
+      "qty": 1,
+      "name": "Multani, Maro-Sorcerer"
+     },
+     {
+      "qty": 17,
+      "name": "Forest"
+     },
+     {
+      "qty": 3,
+      "name": "Treetop Village"
+     }
+    ],
+    "side": [
+     {
+      "qty": 3,
+      "name": "Naturalize"
+     },
+     {
+      "qty": 2,
+      "name": "Creeping Mold"
+     },
+     {
+      "qty": 2,
+      "name": "Uktabi Orangutan"
+     },
+     {
+      "qty": 2,
+      "name": "Tormod's Crypt"
+     },
+     {
+      "qty": 3,
+      "name": "Xantid Swarm"
+     },
+     {
+      "qty": 2,
+      "name": "Spike Feeder"
+     },
+     {
+      "qty": 1,
+      "name": "Tranquil Domain"
+     }
+    ],
+    "commander": [],
+    "label": "brew",
+    "warnings": [],
+    "winLine": [
+     {
+      "card": "Llanowar Elves",
+      "does": "Turn 1 dork so you can cast a 3-drop on turn 2"
+     },
+     {
+      "card": "Rofellos, Llanowar Emissary",
+      "does": "Turn 2: taps for G for each Forest you control, usually 3+ mana by turn 3"
+     },
+     {
+      "card": "Winter's Grasp",
+      "does": "Turn 2-3 land destruction powered by your dorks, keeping the opponent stuck on lands while your mana keeps growing"
+     },
+     {
+      "card": "Plow Under",
+      "does": "Puts two of their lands on top of their library, which costs them two draws as well as two lands"
+     },
+     {
+      "card": "Deranged Hermit",
+      "does": "Turn 3-4: four 2/2 squirrels, and Rofellos easily pays the echo"
+     },
+     {
+      "card": "Kamahl, Fist of Krosa",
+      "does": "Rofellos mana pays for +3/+3 and trample on the team to finish the game"
+     }
+    ],
+    "winTurn": 6
+   },
+   "toolCalls": [
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "meta",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "submit_deck",
+     "ok": true,
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 16,
+    "output": 6627,
+    "cacheRead": 116602,
+    "cacheWrite": 31018
+   },
+   "costUsd": 0.311,
+   "steps": 6,
+   "ms": 68828,
+   "errors": []
+  },
+  {
+   "id": "expert2-legacy-oracle-pact",
+   "track": "expert2",
+   "format": "Legacy",
+   "before": null,
+   "prompt": "Brew me a Legacy deck built around Thassa's Oracle and Tainted Pact.",
+   "text": "I submitted a 60-card Legacy brew, legal and accepted by the checker. It's built so Tainted Pact can exile your whole library: apart from the 2 Oracles and 2 Pacts, every card in the deck, lands included, has a different name.\n\n**The plan:** Cast Thassa's Oracle for UU and leave its trigger on the stack. In response, cast Tainted Pact for 1B and take nothing it shows you. Pact only stops early when it exiles two cards with the same name, so it exiles your whole library. Then the Oracle trigger resolves with 0 cards left in your library and you win. That's 4 mana, and Cavern of Souls naming Wizard stops counterspells against the Oracle.\n\n**Why two of each is safe:** If you're casting an Oracle or a Pact, at most one copy of it is still in your library, so it can't repeat.\n\n**Finding the pieces (the best tutors are banned):** Demonic Tutor, Vampiric Tutor, Imperial Seal and Mystical Tutor are all banned in Legacy, so I used tutors that are legal:\n- **Finds either piece:** Muddle the Mixture (its transmute finds any 2-mana card), Grim Tutor, Wishclaw Talisman, Intuition.\n- **Finds Pact:** Spellseeker, Solve the Equation, Waterlogged Teachings.\n- **Puts any card on top of your library:** Insatiable Avarice.\n- **Finds Oracle:** Tainted Pact itself.\n- **Backup wins:**\n  - **Doomsday** leaves you a 5-card library with no repeated names, which Pact clears easily.\n  - **Jace, Wielder of Mysteries** wins if you draw from an empty library. One catch: Pact with Jace fails if both Oracles are still in your library.\n\n**The three directions I considered:**\n1. **This one:** a Dimir deck where nearly every card is a single copy, so Pact clears the library.\n2. **The Doomsday package from the menu,** with Pact clearing the library after Doomsday. It's stronger on paper, but its four-copy cards stop Pact from working before Doomsday, so it just becomes stock Doomsday.\n3. **A Dimir Tempo shell** with Oracle and Pact as the finisher. Its four-copy cards break Pact the same way.\n\nI picked the first because it's the only one where Tainted Pact is the engine rather than an extra card, though I still borrowed the Doomsday shell's support cards and mana as single copies.\n\n**Honest odds:**\n- You'll draw Oracle, Pact or a tutor by turn 3 about 91% of the time.\n- Drawing both pieces naturally by turn 4 is only about 26%, so most wins come from a tutor on turn 4 or 5.\n- Most of your interaction is a single copy (one Force of Will, one Daze), so this is slower and less protected than real Doomsday.\n\n**Mana:** 16.5 lands (Waterlogged Teachings counts as half), the same as Doomsday lists. The checker counts 14.5 blue sources against Doomsday's 19. That's mostly because this deck has one Lotus Petal where Doomsday plays four, plus fetch-heavy mana with no repeated lands.\n\n**Sideboard:** 15 cards aimed at Dimir and Izzet Tempo, Ocelot Aggro, Eldrazi, Tron and graveyard decks. Every sideboard card has a name not already in the deck, so sideboarding never adds a repeat. If you change the list, keep that rule.",
+   "deck": {
+    "main": [
+     {
+      "qty": 2,
+      "name": "Thassa's Oracle"
+     },
+     {
+      "qty": 2,
+      "name": "Tainted Pact"
+     },
+     {
+      "qty": 1,
+      "name": "Doomsday"
+     },
+     {
+      "qty": 1,
+      "name": "Jace, Wielder of Mysteries"
+     },
+     {
+      "qty": 1,
+      "name": "Spellseeker"
+     },
+     {
+      "qty": 1,
+      "name": "Muddle the Mixture"
+     },
+     {
+      "qty": 1,
+      "name": "Solve the Equation"
+     },
+     {
+      "qty": 1,
+      "name": "Grim Tutor"
+     },
+     {
+      "qty": 1,
+      "name": "Insatiable Avarice"
+     },
+     {
+      "qty": 1,
+      "name": "Wishclaw Talisman"
+     },
+     {
+      "qty": 1,
+      "name": "Intuition"
+     },
+     {
+      "qty": 1,
+      "name": "Dark Ritual"
+     },
+     {
+      "qty": 1,
+      "name": "Cabal Ritual"
+     },
+     {
+      "qty": 1,
+      "name": "Lotus Petal"
+     },
+     {
+      "qty": 1,
+      "name": "Lion's Eye Diamond"
+     },
+     {
+      "qty": 1,
+      "name": "Chrome Mox"
+     },
+     {
+      "qty": 1,
+      "name": "Brainstorm"
+     },
+     {
+      "qty": 1,
+      "name": "Ponder"
+     },
+     {
+      "qty": 1,
+      "name": "Preordain"
+     },
+     {
+      "qty": 1,
+      "name": "Consider"
+     },
+     {
+      "qty": 1,
+      "name": "Opt"
+     },
+     {
+      "qty": 1,
+      "name": "Sleight of Hand"
+     },
+     {
+      "qty": 1,
+      "name": "Flow State"
+     },
+     {
+      "qty": 1,
+      "name": "Street Wraith"
+     },
+     {
+      "qty": 1,
+      "name": "Mishra's Bauble"
+     },
+     {
+      "qty": 1,
+      "name": "Impulse"
+     },
+     {
+      "qty": 1,
+      "name": "Stock Up"
+     },
+     {
+      "qty": 1,
+      "name": "Force of Will"
+     },
+     {
+      "qty": 1,
+      "name": "Force of Negation"
+     },
+     {
+      "qty": 1,
+      "name": "Daze"
+     },
+     {
+      "qty": 1,
+      "name": "Pact of Negation"
+     },
+     {
+      "qty": 1,
+      "name": "Misdirection"
+     },
+     {
+      "qty": 1,
+      "name": "Flusterstorm"
+     },
+     {
+      "qty": 1,
+      "name": "Spell Pierce"
+     },
+     {
+      "qty": 1,
+      "name": "Counterspell"
+     },
+     {
+      "qty": 1,
+      "name": "Thoughtseize"
+     },
+     {
+      "qty": 1,
+      "name": "Duress"
+     },
+     {
+      "qty": 1,
+      "name": "Inquisition of Kozilek"
+     },
+     {
+      "qty": 1,
+      "name": "Darkslick Shores"
+     },
+     {
+      "qty": 1,
+      "name": "Fatal Push"
+     },
+     {
+      "qty": 1,
+      "name": "Snuff Out"
+     },
+     {
+      "qty": 1,
+      "name": "Orcish Bowmasters"
+     },
+     {
+      "qty": 1,
+      "name": "Waterlogged Teachings // Inundated Archive"
+     },
+     {
+      "qty": 1,
+      "name": "Underground Sea"
+     },
+     {
+      "qty": 1,
+      "name": "Watery Grave"
+     },
+     {
+      "qty": 1,
+      "name": "Undercity Sewers"
+     },
+     {
+      "qty": 1,
+      "name": "Island"
+     },
+     {
+      "qty": 1,
+      "name": "Swamp"
+     },
+     {
+      "qty": 1,
+      "name": "Snow-Covered Island"
+     },
+     {
+      "qty": 1,
+      "name": "Snow-Covered Swamp"
+     },
+     {
+      "qty": 1,
+      "name": "Polluted Delta"
+     },
+     {
+      "qty": 1,
+      "name": "Flooded Strand"
+     },
+     {
+      "qty": 1,
+      "name": "Misty Rainforest"
+     },
+     {
+      "qty": 1,
+      "name": "Scalding Tarn"
+     },
+     {
+      "qty": 1,
+      "name": "Verdant Catacombs"
+     },
+     {
+      "qty": 1,
+      "name": "Marsh Flats"
+     },
+     {
+      "qty": 1,
+      "name": "Bloodstained Mire"
+     },
+     {
+      "qty": 1,
+      "name": "Cavern of Souls"
+     }
+    ],
+    "side": [
+     {
+      "qty": 1,
+      "name": "Toxic Deluge"
+     },
+     {
+      "qty": 1,
+      "name": "Hydroblast"
+     },
+     {
+      "qty": 1,
+      "name": "Consign to Memory"
+     },
+     {
+      "qty": 1,
+      "name": "Sheoldred's Edict"
+     },
+     {
+      "qty": 1,
+      "name": "Barrowgoyf"
+     },
+     {
+      "qty": 1,
+      "name": "Dauthi Voidwalker"
+     },
+     {
+      "qty": 1,
+      "name": "Engineered Explosives"
+     },
+     {
+      "qty": 1,
+      "name": "Surgical Extraction"
+     },
+     {
+      "qty": 1,
+      "name": "Nihil Spellbomb"
+     },
+     {
+      "qty": 1,
+      "name": "Tormod's Crypt"
+     },
+     {
+      "qty": 1,
+      "name": "Brazen Borrower"
+     },
+     {
+      "qty": 1,
+      "name": "Subtlety"
+     },
+     {
+      "qty": 1,
+      "name": "Long Goodbye"
+     },
+     {
+      "qty": 1,
+      "name": "Hurkyl's Recall"
+     },
+     {
+      "qty": 1,
+      "name": "Defense Grid"
+     }
+    ],
+    "commander": [],
+    "label": "brew",
+    "warnings": [],
+    "winLine": [
+     {
+      "card": "Muddle the Mixture",
+      "does": "Transmute for {1}{U}{U} to find a 2-mana card: Thassa's Oracle or Tainted Pact, whichever piece is missing (Spellseeker, Grim Tutor or Wishclaw can fill this role)"
+     },
+     {
+      "card": "Thassa's Oracle",
+      "does": "Cast for UU; hold its enter trigger on the stack (Cavern of Souls naming Wizard makes it uncounterable)"
+     },
+     {
+      "card": "Tainted Pact",
+      "does": "With the trigger on the stack, cast for 1B and decline every card. The library has no duplicate names, so it exiles the whole library"
+     },
+     {
+      "card": "Thassa's Oracle",
+      "does": "Trigger resolves: devotion to blue 2 is at least 0 cards in library, so you win"
+     }
+    ],
+    "winTurn": 4
+   },
+   "toolCalls": [
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "submit_deck",
+     "ok": true,
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 24,
+    "output": 19826,
+    "cacheRead": 357043,
+    "cacheWrite": 53500
+   },
+   "costUsd": 0.7355,
+   "steps": 10,
+   "ms": 200425,
+   "errors": []
+  },
+  {
+   "id": "expert2-legacy-glimpse-elves",
+   "track": "expert2",
+   "format": "Legacy",
+   "before": null,
+   "prompt": "Brew me a Legacy Elves deck built around Glimpse of Nature and Heritage Druid.",
+   "text": "I built Golgari Glimpse Elves, a brew based on the old Legacy Elves combo with a light black splash. It isn't in recent results as its own deck. Glimpse of Nature and Heritage Druid both show 0 lists in the last 90 days, so treat it as untested.\n\n**How it wins:** Get Heritage Druid out next to cheap Elves. Each three Elves become GGG, and Nettle Sentinel untaps every time you cast a green spell. Glimpse of Nature makes every creature you cast that turn draw a card, so a turn of one-drops keeps paying for itself. Wirewood Symbiote and Quirion Ranger untap your Elves and let you recast them for more draws. The chain ends with Natural Order (or Green Sun's Zenith for 8) fetching Craterhoof Behemoth, which has haste and gives every creature +X/+X and trample. Shaman of the Pack is a backup finisher: it makes the opponent lose life equal to your Elf count.\n\n**The three directions I considered:**\n1. **Mono-green all-in combo** with Summoner's Pact and Lotus Petal. It's the fastest, but it has no answer to the field's combo decks.\n2. **Golgari Elves using the GX Midrange package** (Thoughtseize, Gaea's Cradle, Natural Order + Craterhoof, Allosaurus Shepherd, plus Force of Vigor, Endurance and Leyline of the Void in the sideboard).\n3. **Simic Elves** with Beck // Call and Distant Melody for card draw. Those cards are clunky, and blue adds little here.\n\n**Why I picked direction 2:** The GX Midrange package already wins in this field and fits your two cards well. Thoughtseize handles Doomsday, Reanimator and OmniTell, and Allosaurus Shepherd stops counterspells against your green spells, which matters against Dimir and Izzet Tempo's Force of Will.\n\n**Odds and choices to know about:**\n- **Glimpse isn't guaranteed early.** You'll see a Glimpse by turn 3 only about 49% of the time. You'll have Heritage Druid or Green Sun's Zenith (which can fetch it) about 75% of the time.\n- **Plan B:** You'll find Natural Order or Green Sun's Zenith by turn 4 about 74% of the time. Leaf-Crowned Visionary is a second draw engine (pay G to draw whenever you cast an Elf), so the deck still works without Glimpse.\n- **Only 17 lands.** That's against a GX Midrange average of about 21, but the deck has 31 one-drops, plenty of mana Elves and three Cradles. The deck checker suggested about 18.\n- **Black mana:** The checker counted 5 black sources. In practice every fetch land can grab Bayou, so it's closer to 8.",
+   "deck": {
+    "main": [
+     {
+      "qty": 4,
+      "name": "Heritage Druid"
+     },
+     {
+      "qty": 4,
+      "name": "Nettle Sentinel"
+     },
+     {
+      "qty": 4,
+      "name": "Quirion Ranger"
+     },
+     {
+      "qty": 4,
+      "name": "Wirewood Symbiote"
+     },
+     {
+      "qty": 4,
+      "name": "Elvish Visionary"
+     },
+     {
+      "qty": 2,
+      "name": "Fyndhorn Elves"
+     },
+     {
+      "qty": 2,
+      "name": "Allosaurus Shepherd"
+     },
+     {
+      "qty": 2,
+      "name": "Leaf-Crowned Visionary"
+     },
+     {
+      "qty": 1,
+      "name": "Priest of Titania"
+     },
+     {
+      "qty": 1,
+      "name": "Shaman of the Pack"
+     },
+     {
+      "qty": 1,
+      "name": "Craterhoof Behemoth"
+     },
+     {
+      "qty": 4,
+      "name": "Glimpse of Nature"
+     },
+     {
+      "qty": 4,
+      "name": "Green Sun's Zenith"
+     },
+     {
+      "qty": 3,
+      "name": "Natural Order"
+     },
+     {
+      "qty": 3,
+      "name": "Thoughtseize"
+     },
+     {
+      "qty": 3,
+      "name": "Gaea's Cradle"
+     },
+     {
+      "qty": 1,
+      "name": "Dryad Arbor"
+     },
+     {
+      "qty": 4,
+      "name": "Forest"
+     },
+     {
+      "qty": 2,
+      "name": "Bayou"
+     },
+     {
+      "qty": 3,
+      "name": "Verdant Catacombs"
+     },
+     {
+      "qty": 2,
+      "name": "Misty Rainforest"
+     },
+     {
+      "qty": 1,
+      "name": "Windswept Heath"
+     },
+     {
+      "qty": 1,
+      "name": "Boseiju, Who Endures"
+     }
+    ],
+    "side": [
+     {
+      "qty": 2,
+      "name": "Force of Vigor"
+     },
+     {
+      "qty": 2,
+      "name": "Endurance"
+     },
+     {
+      "qty": 2,
+      "name": "Abrupt Decay"
+     },
+     {
+      "qty": 2,
+      "name": "Fatal Push"
+     },
+     {
+      "qty": 3,
+      "name": "Leyline of the Void"
+     },
+     {
+      "qty": 1,
+      "name": "Collector Ouphe"
+     },
+     {
+      "qty": 1,
+      "name": "Thoughtseize"
+     },
+     {
+      "qty": 2,
+      "name": "Snuff Out"
+     }
+    ],
+    "commander": [],
+    "label": "brew",
+    "warnings": [],
+    "winLine": [
+     {
+      "card": "Heritage Druid",
+      "does": "Turn 1-2 one-drop; with two other Elves (e.g. Nettle Sentinel, Quirion Ranger) taps three Elves for GGG, summoning sickness doesn't matter for the tapped ones"
+     },
+     {
+      "card": "Glimpse of Nature",
+      "does": "Cast for G: every creature spell this turn draws a card, turning each one-drop into a cantrip"
+     },
+     {
+      "card": "Nettle Sentinel",
+      "does": "Untaps every time you cast a green spell, so it can be tapped for Heritage Druid again and again in the chain"
+     },
+     {
+      "card": "Wirewood Symbiote",
+      "does": "Returns a used Elf to hand to untap a creature, and recasting that Elf draws another card off Glimpse"
+     },
+     {
+      "card": "Gaea's Cradle",
+      "does": "With a wide board, makes a burst of G mana to keep the chain going"
+     },
+     {
+      "card": "Natural Order",
+      "does": "Sacrifice a spent green Elf and put Craterhoof Behemoth onto the battlefield (or Green Sun's Zenith for X=8)"
+     },
+     {
+      "card": "Craterhoof Behemoth",
+      "does": "Haste; all creatures get +X/+X and trample where X = creature count, which is lethal with 8+ creatures"
+     }
+    ],
+    "winTurn": 3
+   },
+   "toolCalls": [
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "reference_list",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "submit_deck",
+     "ok": true,
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 18,
+    "output": 7643,
+    "cacheRead": 136754,
+    "cacheWrite": 31848
+   },
+   "costUsd": 0.3395,
+   "steps": 7,
+   "ms": 83253,
+   "errors": []
+  },
+  {
+   "id": "expert2-legacy-bomberman",
+   "track": "expert2",
+   "format": "Legacy",
+   "before": null,
+   "prompt": "Brew me a Legacy deck built around Auriok Salvagers and Lion's Eye Diamond.",
+   "text": "I submitted a **Boros \"Engineer Salvagers\"** brew. It's a new build, not a copy of an existing list.\n\n**The combo:** Auriok Salvagers can return an artifact with mana value 1 or less from your graveyard for {1}{W}. Lion's Eye Diamond costs 0 and sacrifices for three mana of one color. Each time you sacrifice the Diamond, return it with Salvagers and cast it again, you net one extra mana. That gives you as much mana of any color as you want. Salvagers has no tap ability, so it can start the loop the turn it comes down.\n\nThe Diamond makes you discard your hand, but that doesn't hurt here. Anything discarded can be returned with Salvagers too. That includes Pyrite Spellbomb ({1} to cast, then {R} and sacrifice for 2 damage, over and over) and Walking Ballista (cast it with a huge X). The plan is to set this up and win on turns 3–4. Fast 4-mana comes from Ancient Tomb, Lotus Petal and Chrome Mox.\n\n**Three directions I considered:**\n1. **Mono-White Stompy** (Ancient Tomb, Karn and Chalice prison). A small group of real lists already runs Salvagers this way. It's slow, and its only ways to find pieces are Karn and Urza's Saga.\n2. **Boros with the Sewer Combo package (chosen).** It borrows Goblin Engineer, Goblin Welder, Urza's Saga and the Petal/fast-mana base from Sewer Combo, which shows up in about 105 recent lists.\n3. **Azorius tempo** with Brainstorm, Force of Will and Enlightened Tutor.\n\n**Why I chose Boros:** Goblin Engineer's enter ability puts any artifact from your library straight into your graveyard. That's exactly where Salvagers wants the Diamond or the Spellbomb, so the deck gets the most ways to set up the combo.\n\n**How the deck finds the combo:**\n- **Salvagers:** 4 copies, plus 3 Imperial Recruiter (Salvagers has 2 power, so Recruiter can fetch it).\n- **Lion's Eye Diamond:** 4 copies. Engineer and Urza's Saga can also find it, and Karn can pull extras from the sideboard.\n- **Backup:** Agatha's Soul Cauldron lets a creature with a +1/+1 counter (like Walking Ballista) use Salvagers' ability if Salvagers gets removed.\n- **Interaction:** 4 Swords to Plowshares and 4 Lightning Bolt.\n\n**Honest odds:** On the play with no mulligans, you have a 74% chance to see Salvagers or Recruiter by turn 4. You have a 95% chance to see a way to get the Diamond. The chance of having both is about 70%.\n\n**Choices worth knowing about:**\n- **Land count:** The deck runs 21 lands. The checker suggested about 4 fewer, based on Sewer Combo. I kept 21 because six cards cost 4 and Urza's Saga eventually sacrifices itself. The Mono-White Salvagers lists also run about 20.\n- **Sideboard:** It's aimed at blue tempo, graveyard decks and storm. It also holds a spare Pyrite Spellbomb that Karn can fetch.\n- **Weak spot:** Chalice of the Void on 0 or 1 is a real problem, and Eldrazi Aggro runs it.",
+   "deck": {
+    "main": [
+     {
+      "qty": 4,
+      "name": "Auriok Salvagers"
+     },
+     {
+      "qty": 4,
+      "name": "Goblin Engineer"
+     },
+     {
+      "qty": 3,
+      "name": "Imperial Recruiter"
+     },
+     {
+      "qty": 2,
+      "name": "Walking Ballista"
+     },
+     {
+      "qty": 2,
+      "name": "Goblin Welder"
+     },
+     {
+      "qty": 4,
+      "name": "Lion's Eye Diamond"
+     },
+     {
+      "qty": 2,
+      "name": "Pyrite Spellbomb"
+     },
+     {
+      "qty": 4,
+      "name": "Lotus Petal"
+     },
+     {
+      "qty": 3,
+      "name": "Chrome Mox"
+     },
+     {
+      "qty": 1,
+      "name": "Agatha's Soul Cauldron"
+     },
+     {
+      "qty": 2,
+      "name": "Karn, the Great Creator"
+     },
+     {
+      "qty": 4,
+      "name": "Swords to Plowshares"
+     },
+     {
+      "qty": 4,
+      "name": "Lightning Bolt"
+     },
+     {
+      "qty": 4,
+      "name": "Urza's Saga"
+     },
+     {
+      "qty": 4,
+      "name": "Ancient Tomb"
+     },
+     {
+      "qty": 3,
+      "name": "Plateau"
+     },
+     {
+      "qty": 1,
+      "name": "Sacred Foundry"
+     },
+     {
+      "qty": 1,
+      "name": "Plains"
+     },
+     {
+      "qty": 1,
+      "name": "Mountain"
+     },
+     {
+      "qty": 3,
+      "name": "Arid Mesa"
+     },
+     {
+      "qty": 2,
+      "name": "Bloodstained Mire"
+     },
+     {
+      "qty": 2,
+      "name": "Wooded Foothills"
+     }
+    ],
+    "side": [
+     {
+      "qty": 3,
+      "name": "Pyroblast"
+     },
+     {
+      "qty": 1,
+      "name": "Red Elemental Blast"
+     },
+     {
+      "qty": 2,
+      "name": "Containment Priest"
+     },
+     {
+      "qty": 2,
+      "name": "Ethersworn Canonist"
+     },
+     {
+      "qty": 2,
+      "name": "Abrade"
+     },
+     {
+      "qty": 1,
+      "name": "Tormod's Crypt"
+     },
+     {
+      "qty": 1,
+      "name": "Pithing Needle"
+     },
+     {
+      "qty": 1,
+      "name": "Grafdigger's Cage"
+     },
+     {
+      "qty": 1,
+      "name": "Ensnaring Bridge"
+     },
+     {
+      "qty": 1,
+      "name": "Pyrite Spellbomb"
+     }
+    ],
+    "commander": [],
+    "label": "brew",
+    "warnings": [],
+    "winLine": [
+     {
+      "card": "Goblin Engineer",
+      "does": "Turn 2: its ETB searches Lion's Eye Diamond (or Pyrite Spellbomb) straight into the graveyard"
+     },
+     {
+      "card": "Auriok Salvagers",
+      "does": "Turn 3-4 off Ancient Tomb or Lotus Petal/Chrome Mox; no tap symbol, so summoning sickness doesn't matter. Pay {1}{W} to return LED to hand"
+     },
+     {
+      "card": "Lion's Eye Diamond",
+      "does": "Cast for 0, sacrifice for three mana of one color (hand is empty or irrelevant), pay {1}{W} to return it, recast: net +1 mana each loop = arbitrarily large mana of any color"
+     },
+     {
+      "card": "Pyrite Spellbomb",
+      "does": "Anything discarded to LED lands in the graveyard; Salvagers returns Spellbomb ({1}{W}), cast it ({1}), sacrifice for {R} to deal 2 damage, repeat until the opponent is dead (or use the {1} mode to draw cards)"
+     },
+     {
+      "card": "Walking Ballista",
+      "does": "Alternate kill: return it with Salvagers (MV 0 in graveyard) and cast with X as large as the mana pool, then ping the opponent out"
+     }
+    ],
+    "winTurn": 4
+   },
+   "toolCalls": [
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "reference_list",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "submit_deck",
+     "ok": true,
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 18,
+    "output": 12694,
+    "cacheRead": 156523,
+    "cacheWrite": 35319
+   },
+   "costUsd": 0.4619,
+   "steps": 7,
+   "ms": 126905,
+   "errors": []
+  },
+  {
+   "id": "expert2-legacy-hypergenesis",
+   "track": "expert2",
+   "format": "Legacy",
+   "before": null,
+   "prompt": "Brew me a Legacy deck built around Hypergenesis.",
+   "text": "I built a Temur cascade deck that casts Hypergenesis for free on turn 2. It's a brew, and it passed the deck check.\n\n**Three directions I considered:**\n1. **Temur cascade:** take the cascade-and-counterspell package from Legacy's Living End deck (4 Violent Outburst, 4 Shardless Agent, Force of Will, Force of Negation, Elvish Spirit Guide) and replace the graveyard creatures with big creatures and artifacts for Hypergenesis to put into play.\n2. **Creative Technique's shell:** about 30 lands, with Violent Outburst and Throes of Chaos as the cascade spells.\n3. **Free elementals:** Esper with Ardent Plea or Jund with Demonic Dread, built on the creatures you can cast for free by exiling a card (Solitude, Grief, Fury).\n\nI chose **direction 1**. It's the only one that has 8 three-mana cascade spells, counterspells to protect the combo, and Spirit Guides that are both free mana and extra bodies to put into play. The land-heavy shell would leave too few creatures in hand when Hypergenesis resolves.\n\n**The plan:** Every nonland card except Hypergenesis costs 3 or more. Lands count as 0, and cascade skips them. So when Violent Outburst or Shardless Agent cascades, it always flips Hypergenesis and casts it for free. Two lands, or one land plus a Spirit Guide, gets you there on turn 2. You go first in the Hypergenesis loop. You put in Fires of Yavimaya, Akroma's Memorial or Thundermaw Hellkite for haste, then Emrakul, Archon of Cruelty, Griselbrand or Atraxa. Fury's damage on entering clears out whatever creatures the opponent drops, and you attack that turn. Force of Will and Force of Negation protect the combo or stop the opponent's.\n\n**Odds:**\n- **Turn 2:** 70.6% to see a cascade spell by turn 2 on the play.\n- **Turn 3:** 35% to have a cascade spell, a haste card and a big creature all by turn 3, before mulligans.\n\n**About the two warnings:**\n- **Land count:** The check wants about 22 lands, but the big creatures are never cast, and Living End lists run about 14.5 lands. The 8 Spirit Guides make up the rest.\n- **No black mana:** The check flags that Griselbrand can't be cast, which is true and doesn't matter. Hypergenesis puts cards into play regardless of their color.\n\n**Watch out:**\n- **The rule cuts both ways.** Any card costing 0 to 2 that you add, including from the sideboard, can get flipped by cascade instead of Hypergenesis. The whole sideboard costs 3 or more for that reason.\n- **Leyline of the Void** only works if it's in your opening hand.\n- **Hypergenesis helps the opponent too.** They put cards in after you, so your haste and Fury matter.\n\n**Main deck (60)**\n- 3 Hypergenesis\n- 4 Violent Outburst\n- 4 Shardless Agent\n- 4 Force of Will\n- 3 Force of Negation\n- 3 Fury\n- 1 Endurance\n- 4 Elvish Spirit Guide\n- 4 Simian Spirit Guide\n- 3 Fires of Yavimaya\n- 1 Akroma's Memorial\n- 2 Thundermaw Hellkite\n- 3 Emrakul, the Aeons Torn\n- 2 Griselbrand\n- 2 Archon of Cruelty\n- 2 Atraxa, Grand Unifier\n- 15 lands:\n  - 4 Misty Rainforest\n  - 2 Scalding Tarn\n  - 2 Wooded Foothills\n  - 2 Tropical Island\n  - 2 Volcanic Island\n  - 2 Taiga\n  - 1 Forest\n\n**Sideboard (15)**\n- 3 Mystical Dispute\n- 3 Force of Vigor\n- 3 Leyline of the Void\n- 2 Magus of the Moon\n- 3 Pyrokinesis\n- 1 Endurance",
+   "deck": {
+    "main": [
+     {
+      "qty": 3,
+      "name": "Hypergenesis"
+     },
+     {
+      "qty": 4,
+      "name": "Violent Outburst"
+     },
+     {
+      "qty": 4,
+      "name": "Shardless Agent"
+     },
+     {
+      "qty": 4,
+      "name": "Force of Will"
+     },
+     {
+      "qty": 3,
+      "name": "Force of Negation"
+     },
+     {
+      "qty": 3,
+      "name": "Fury"
+     },
+     {
+      "qty": 1,
+      "name": "Endurance"
+     },
+     {
+      "qty": 4,
+      "name": "Elvish Spirit Guide"
+     },
+     {
+      "qty": 4,
+      "name": "Simian Spirit Guide"
+     },
+     {
+      "qty": 3,
+      "name": "Fires of Yavimaya"
+     },
+     {
+      "qty": 1,
+      "name": "Akroma's Memorial"
+     },
+     {
+      "qty": 2,
+      "name": "Thundermaw Hellkite"
+     },
+     {
+      "qty": 3,
+      "name": "Emrakul, the Aeons Torn"
+     },
+     {
+      "qty": 2,
+      "name": "Griselbrand"
+     },
+     {
+      "qty": 2,
+      "name": "Archon of Cruelty"
+     },
+     {
+      "qty": 2,
+      "name": "Atraxa, Grand Unifier"
+     },
+     {
+      "qty": 4,
+      "name": "Misty Rainforest"
+     },
+     {
+      "qty": 2,
+      "name": "Scalding Tarn"
+     },
+     {
+      "qty": 2,
+      "name": "Wooded Foothills"
+     },
+     {
+      "qty": 2,
+      "name": "Tropical Island"
+     },
+     {
+      "qty": 2,
+      "name": "Volcanic Island"
+     },
+     {
+      "qty": 2,
+      "name": "Taiga"
+     },
+     {
+      "qty": 1,
+      "name": "Forest"
+     }
+    ],
+    "side": [
+     {
+      "qty": 3,
+      "name": "Mystical Dispute"
+     },
+     {
+      "qty": 3,
+      "name": "Force of Vigor"
+     },
+     {
+      "qty": 3,
+      "name": "Leyline of the Void"
+     },
+     {
+      "qty": 2,
+      "name": "Magus of the Moon"
+     },
+     {
+      "qty": 3,
+      "name": "Pyrokinesis"
+     },
+     {
+      "qty": 1,
+      "name": "Endurance"
+     }
+    ],
+    "commander": [],
+    "label": "brew",
+    "warnings": [
+     "15 lands; Legacy decks with an average mana value of 4.71 and 3 cheap draw or ramp spells run about 22.4. Add about 7.",
+     "0 B sources; Griselbrand wants about 20 to cast on curve."
+    ],
+    "winLine": [
+     {
+      "card": "Taiga",
+      "does": "Turn 1 land; turn 2 play a second land (or exile a Spirit Guide from hand) to have 1RG available"
+     },
+     {
+      "card": "Violent Outburst",
+      "does": "Cascade: every other nonland card in the deck has mana value 3 or more, so it always hits Hypergenesis (mana value 0) and casts it for free"
+     },
+     {
+      "card": "Hypergenesis",
+      "does": "You go first putting cards from hand onto the battlefield, again and again until neither player adds one"
+     },
+     {
+      "card": "Fires of Yavimaya",
+      "does": "Put in first so every creature you drop has haste"
+     },
+     {
+      "card": "Emrakul, the Aeons Torn",
+      "does": "Put in as a 15/15 flier with annihilator 6"
+     },
+     {
+      "card": "Fury",
+      "does": "Put in for free; its enter trigger deals 4 damage split among whatever creatures the opponent dropped"
+     },
+     {
+      "card": "Archon of Cruelty",
+      "does": "Its enter trigger makes them sacrifice a creature, discard and lose 3 life; then the hasty attack (annihilator 6 plus the Archon trigger) ends the game"
+     }
+    ],
+    "winTurn": 2
+   },
+   "toolCalls": [
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "submit_deck",
+     "ok": true,
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 18,
+    "output": 12564,
+    "cacheRead": 163129,
+    "cacheWrite": 37276
+   },
+   "costUsd": 0.4704,
+   "steps": 7,
+   "ms": 140133,
+   "errors": []
+  },
+  {
+   "id": "expert2-legacy-scapeshift",
+   "track": "expert2",
+   "format": "Legacy",
+   "before": null,
+   "prompt": "Brew me a Legacy deck built around Scapeshift and Valakut, the Molten Pinnacle.",
+   "text": "I've built and submitted **Temur Omen-Shift**, a brew. Scapeshift and Valakut have essentially no recent Legacy results (Scapeshift appears in 1 rogue list in 90 days, Valakut in none), so there was no proven list to copy.\n\n**Directions I considered:**\n1. **Temur Scapeshift with the cantrip-and-Force package** from Dimir and Izzet Tempo: Brainstorm, Ponder and Force of Will around ramp and Scapeshift.\n2. **Gruul Valakut using the Lands package:** Exploration, Crop Rotation, Mox Diamond and Life from the Loam.\n3. **Mono-green ramp:** Summoner's Pact and Primeval Titan.\n\nI chose the first. The field is full of combo and blue tempo decks (Doomsday, OmniTell, Reanimator, Storm), and only Force of Will plus cantrips can both protect a slow combo and dig for it. Mox Diamond also works against Scapeshift, because it costs you a land.\n\n**The plan:** Taiga and Volcanic Island are Mountains, and Nature's Lore and Three Visits fetch Taiga or Tropical Island untapped, so your ramp builds the Mountain count Valakut needs.\n- **Main kill:** Prismatic Omen makes every land you control every basic land type, including Mountain. With Omen out, Scapeshift on 6 lands deals 18 damage, or 36 if it fetches both Valakuts.\n- **Without Omen:** Scapeshift on 7 lands fetches Valakut plus 6 Mountains, which is also 18.\n- **Backup:** Primeval Titan fetches Valakut and Mountains.\n- **Protection:** Veil of Summer stops Scapeshift from being countered, and Force of Will covers you against fast combo.\n- **The target is a turn-5 kill.** Without mulligans, you have about a 61% chance to see Scapeshift or Titan by turn 4 on the play. About 91% of your openers have Scapeshift, Titan or a cantrip by turn 3.\n\n**Notes on the build:**\n- **Land count:** The deck runs 21 lands even though the deck checker recommends about 15 based on the average mana value. A Scapeshift deck needs lands in play, and 21 matches what GX Midrange decks run.\n- **Fetchable sources:** The checker counts only 6 blue sources and 13 green ones because it doesn't credit the fetchlands' targets. In practice every fetchland can find a blue dual: Wooded Foothills can find Volcanic Island and Tropical Island.\n- **Sideboard:**\n  - Pyroblast and Carpet of Flowers for the blue decks\n  - Endurance and Tormod's Crypt for Reanimator\n  - Flusterstorm for Storm and Doomsday\n  - Pyroclasm for Ocelot Aggro\n  - Krosan Grip for The One Ring, Chalice of the Void and Omniscience",
+   "deck": {
+    "main": [
+     {
+      "qty": 2,
+      "name": "Valakut, the Molten Pinnacle"
+     },
+     {
+      "qty": 3,
+      "name": "Taiga"
+     },
+     {
+      "qty": 2,
+      "name": "Volcanic Island"
+     },
+     {
+      "qty": 2,
+      "name": "Tropical Island"
+     },
+     {
+      "qty": 4,
+      "name": "Wooded Foothills"
+     },
+     {
+      "qty": 2,
+      "name": "Misty Rainforest"
+     },
+     {
+      "qty": 4,
+      "name": "Mountain"
+     },
+     {
+      "qty": 2,
+      "name": "Forest"
+     },
+     {
+      "qty": 4,
+      "name": "Scapeshift"
+     },
+     {
+      "qty": 4,
+      "name": "Prismatic Omen"
+     },
+     {
+      "qty": 1,
+      "name": "Primeval Titan"
+     },
+     {
+      "qty": 4,
+      "name": "Brainstorm"
+     },
+     {
+      "qty": 4,
+      "name": "Ponder"
+     },
+     {
+      "qty": 4,
+      "name": "Force of Will"
+     },
+     {
+      "qty": 4,
+      "name": "Nature's Lore"
+     },
+     {
+      "qty": 2,
+      "name": "Three Visits"
+     },
+     {
+      "qty": 4,
+      "name": "Utopia Sprawl"
+     },
+     {
+      "qty": 3,
+      "name": "Sakura-Tribe Elder"
+     },
+     {
+      "qty": 3,
+      "name": "Lightning Bolt"
+     },
+     {
+      "qty": 2,
+      "name": "Veil of Summer"
+     }
+    ],
+    "side": [
+     {
+      "qty": 3,
+      "name": "Pyroblast"
+     },
+     {
+      "qty": 2,
+      "name": "Carpet of Flowers"
+     },
+     {
+      "qty": 2,
+      "name": "Endurance"
+     },
+     {
+      "qty": 2,
+      "name": "Tormod's Crypt"
+     },
+     {
+      "qty": 2,
+      "name": "Flusterstorm"
+     },
+     {
+      "qty": 2,
+      "name": "Pyroclasm"
+     },
+     {
+      "qty": 2,
+      "name": "Krosan Grip"
+     }
+    ],
+    "commander": [],
+    "label": "brew",
+    "warnings": [],
+    "winLine": [
+     {
+      "card": "Nature's Lore",
+      "does": "Turn 2: fetches Taiga/Tropical Island untapped (Forest card), putting a third land into play"
+     },
+     {
+      "card": "Prismatic Omen",
+      "does": "Turn 3: makes every land you control every basic type, so all of them (including Valakut) are Mountains"
+     },
+     {
+      "card": "Utopia Sprawl",
+      "does": "On a Forest (Taiga/Trop/Forest), adds extra mana so Scapeshift comes down a turn early"
+     },
+     {
+      "card": "Scapeshift",
+      "does": "With Omen and 6 lands: sacrifice all 6, fetch Valakut(s) plus 4-5 other lands; each entering land is a Mountain seeing 5 others, so 6 triggers x 3 = 18 damage (36 with both Valakuts). Without Omen, 7 lands -> Valakut + 6 Taiga/Volcanic/Mountain = 18"
+     },
+     {
+      "card": "Valakut, the Molten Pinnacle",
+      "does": "Deals 3 damage per Mountain-entering trigger to the opponent's face"
+     }
+    ],
+    "winTurn": 5
+   },
+   "toolCalls": [
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "meta",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "submit_deck",
+     "ok": true,
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 16,
+    "output": 10882,
+    "cacheRead": 135481,
+    "cacheWrite": 34508
+   },
+   "costUsd": 0.4173,
+   "steps": 6,
+   "ms": 111311,
+   "errors": []
+  },
+  {
+   "id": "expert2-legacy-kiki-pestermite",
+   "track": "expert2",
+   "format": "Legacy",
+   "before": null,
+   "prompt": "Brew me a Legacy deck built around Kiki-Jiki, Mirror Breaker and Pestermite.",
+   "text": "I built a red fast-mana deck that splashes blue: \"Sol-Land Kiki Twin.\" It borrows its mana base and Chalice of the Void from the Mono-Red Prison lists, and it's a brew. Neither main card has a current proven home: in the last 90 days Kiki-Jiki showed up in 1 list and Pestermite in none.\n\n**The plan:** Ancient Tomb, City of Traitors, Simian Spirit Guide, Chrome Mox and Lotus Petal pay for Kiki-Jiki's {2}{R}{R}{R} on turn 2–3. Before that, flash in Pestermite or Deceiver Exarch at the end of the opponent's turn. When Kiki lands it has haste, so it can copy the Pestermite right away; the copy untaps Kiki, and you repeat for as many hasty fliers as you need. Splinter Twin on either untapper is a second way to do the same loop. Zealous Conscripts also loops with Kiki and needs no blue at all. Imperial Recruiter can fetch Kiki, Pestermite or Exarch, so it counts as a combo piece. Chalice of the Void set to 1 shuts off the cheap removal and cantrips that would stop the combo (Swords to Plowshares, Fatal Push, Brainstorm, Ponder). Fury, Fable and The One Ring keep you in the game until the combo comes together.\n\n**Directions I considered:**\n1. **Izzet Tempo shell** (Brainstorm, Ponder, Force of Will, Daze) with Twin and Kiki. Those lists average about 8 red sources, which is too few for Kiki's RRR.\n2. **Mono-Red Prison fast-mana shell splashing blue** (chosen).\n3. **A white build with Restoration Angel** as an extra loop with Kiki. It's slower, adds a third color, and Angel can't loop with Pestermite.\n\nI picked option 2 because fast mana is the only way a five-mana creature with RRR in its cost comes down early, and Chalice protects the combo in a way counterspells can't in a mostly red deck.\n\n**Things to know:**\n- **Odds:** On the play, you have about a 67% chance to see both a Kiki/Twin/Recruiter and a Pestermite/Exarch by turn 4, with no mulligans.\n- **Land count:** The deck checker suggests about 23 lands and this list runs about 17.5. That's on purpose: the Prison lists average about 16.7 lands and lean on Spirit Guide, Chrome Mox and Petal the same way.\n- **Blue mana:** There are only 8 blue-producing lands. That's thin, but Pestermite and Exarch only need one blue each, and Petal or Chrome Mox can cover it.\n- **Blood Moon:** It's sideboard-only, because it turns Volcanic Island into a Mountain and cuts off your blue.\n\nThe sideboard is aimed at the current field: Blood Moon and Pithing Needle for Tron, Lands and Eldrazi; Pyroblast for the blue tempo decks and OmniTell; Leyline of the Void for Reanimator and Doomsday; Trinisphere and Mindbreak Trap for the storm and combo decks; Fiery Confluence for Ocelot Aggro.",
+   "deck": {
+    "main": [
+     {
+      "qty": 4,
+      "name": "Pestermite"
+     },
+     {
+      "qty": 4,
+      "name": "Deceiver Exarch"
+     },
+     {
+      "qty": 3,
+      "name": "Kiki-Jiki, Mirror Breaker"
+     },
+     {
+      "qty": 1,
+      "name": "Zealous Conscripts"
+     },
+     {
+      "qty": 3,
+      "name": "Splinter Twin"
+     },
+     {
+      "qty": 4,
+      "name": "Imperial Recruiter"
+     },
+     {
+      "qty": 4,
+      "name": "Fable of the Mirror-Breaker"
+     },
+     {
+      "qty": 4,
+      "name": "Chalice of the Void"
+     },
+     {
+      "qty": 3,
+      "name": "Fury"
+     },
+     {
+      "qty": 2,
+      "name": "The One Ring"
+     },
+     {
+      "qty": 4,
+      "name": "Simian Spirit Guide"
+     },
+     {
+      "qty": 4,
+      "name": "Chrome Mox"
+     },
+     {
+      "qty": 2,
+      "name": "Lotus Petal"
+     },
+     {
+      "qty": 4,
+      "name": "Ancient Tomb"
+     },
+     {
+      "qty": 3,
+      "name": "City of Traitors"
+     },
+     {
+      "qty": 4,
+      "name": "Volcanic Island"
+     },
+     {
+      "qty": 2,
+      "name": "Scalding Tarn"
+     },
+     {
+      "qty": 2,
+      "name": "Bloodstained Mire"
+     },
+     {
+      "qty": 2,
+      "name": "Mountain"
+     },
+     {
+      "qty": 1,
+      "name": "Shatterskull Smashing"
+     }
+    ],
+    "side": [
+     {
+      "qty": 2,
+      "name": "Blood Moon"
+     },
+     {
+      "qty": 2,
+      "name": "Trinisphere"
+     },
+     {
+      "qty": 2,
+      "name": "Fiery Confluence"
+     },
+     {
+      "qty": 3,
+      "name": "Leyline of the Void"
+     },
+     {
+      "qty": 3,
+      "name": "Pyroblast"
+     },
+     {
+      "qty": 2,
+      "name": "Mindbreak Trap"
+     },
+     {
+      "qty": 1,
+      "name": "Pithing Needle"
+     }
+    ],
+    "commander": [],
+    "label": "brew",
+    "warnings": [],
+    "winLine": [
+     {
+      "card": "Ancient Tomb",
+      "does": "Sol land plus Simian Spirit Guide / Chrome Mox / red lands cover Kiki-Jiki's {2}{R}{R}{R} on turn 2-3"
+     },
+     {
+      "card": "Pestermite",
+      "does": "Flashed in at the end of the opponent's turn (or found with Imperial Recruiter), so it is on the battlefield before Kiki lands"
+     },
+     {
+      "card": "Kiki-Jiki, Mirror Breaker",
+      "does": "Has haste: tap to make a hasty token copy of Pestermite"
+     },
+     {
+      "card": "Pestermite",
+      "does": "The token's ETB untaps Kiki-Jiki; repeat for as many hasty 2/1 fliers as you want, then attack for lethal"
+     },
+     {
+      "card": "Splinter Twin",
+      "does": "Backup line: enchant Pestermite or Deceiver Exarch, each token untaps the original for infinite hasty tokens"
+     }
+    ],
+    "winTurn": 3
+   },
+   "toolCalls": [
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "submit_deck",
+     "ok": true,
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 16,
+    "output": 10382,
+    "cacheRead": 119506,
+    "cacheWrite": 31842
+   },
+   "costUsd": 0.3908,
+   "steps": 6,
+   "ms": 114525,
+   "errors": []
+  }
+ ]
+}

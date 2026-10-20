@@ -76,7 +76,7 @@ details summary { cursor: pointer; color: var(--accent); font-size: 0.9rem; }
 .reply { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 20rem; overflow: auto; padding: 10px; border: 1px solid var(--line); border-radius: 8px; font-size: 0.9rem; margin-top: 6px; }
 .ask { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px; display: grid; gap: 12px; }
 .ask h2 { font-size: 1.1rem; }
-.picks { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.picks { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
 .picks button { font: 700 1.05rem var(--font-display); padding: 16px 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); color: var(--ink); cursor: pointer; }
 .picks button kbd { display: block; font: 0.75rem var(--font-mono); color: var(--muted); margin-top: 2px; }
 .picks button[aria-pressed="true"] { background: var(--pick); color: var(--surface); border-color: var(--pick); }
@@ -86,7 +86,7 @@ details summary { cursor: pointer; color: var(--accent); font-size: 0.9rem; }
 .why button[aria-pressed="true"] { background: var(--chip); border-color: var(--accent); color: var(--accent); }
 button:disabled { cursor: not-allowed; opacity: 0.6; }
 .saved { font-size: 0.8rem; color: var(--muted); min-height: 1.2em; }
-@media (max-width: 560px) { .picks { grid-template-columns: 1fr; } }
+@media (max-width: 560px) { .picks { grid-template-columns: 1fr 1fr; } }
 @media (prefers-reduced-motion: no-preference) { .picks button, .why button { transition: background 120ms ease, color 120ms ease; } }
 </style>
 
@@ -107,11 +107,12 @@ button:disabled { cursor: not-allowed; opacity: 0.6; }
   <div id="peek" role="tooltip"></div>
   <details class="shared" id="shared"></details>
   <section class="ask">
-    <h2>Which would you rather play for this request?</h2>
+    <h2>Which would you rather play for this request? (Same: either is fine. Neither: I wouldn't play either.)</h2>
     <div class="picks" id="picks">
       <button type="button" data-w="A">A<kbd>1</kbd></button>
       <button type="button" data-w="tie">Same<kbd>2</kbd></button>
       <button type="button" data-w="B">B<kbd>3</kbd></button>
+      <button type="button" data-w="neither">Neither<kbd>4</kbd></button>
     </div>
     <div class="why" id="why">
       <span>Why, if you like:</span>
@@ -358,7 +359,7 @@ button:disabled { cursor: not-allowed; opacity: 0.6; }
   }
   document.addEventListener("keydown", (e) => {
     if (e.target && /input|textarea/i.test(e.target.tagName)) return;
-    const map = { "1": "A", "2": "tie", "3": "B" };
+    const map = { "1": "A", "2": "tie", "3": "B", "4": "neither" };
     if (map[e.key] && canWrite) save({ winner: map[e.key] }, true);
     if (e.key === "ArrowRight") go(1);
     if (e.key === "ArrowLeft") go(-1);

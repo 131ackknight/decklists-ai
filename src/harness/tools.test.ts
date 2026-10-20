@@ -197,4 +197,15 @@ describe("lock fixes from the v3 run", () => {
     c.request = "Brew me a 62 card Modern deck";
     expect(JSON.parse(runTool("submit_deck", big, c).content).accepted).toBe(true);
   });
+
+  it("v12: a requested card needs its enablers in the deck in quantity, or a reason", () => {
+    const c: ToolContext = { index, data: noData, seen: new Set(["lightning bolt"]), submitted: null, strictBrew: true, requireNeeds: true, cardNoteRounds: 0, request: "Brew me a Modern deck built around Lightning Bolt" };
+    const base = { ...deck, label: "brew", winLine: [{ card: "Lightning Bolt", does: "burns them out" }], winTurn: 4 };
+    expect(JSON.parse(runTool("submit_deck", base, { ...c, requireWinLine: true }).content).errors[0]).toMatch(/State needs/);
+    const thin = { ...base, needs: [{ for: "Lightning Bolt", role: "red mana", cards: ["Mountain"], copies: 1 }] };
+    // Mountain is a basic: 56 copies clear the floor.
+    expect(JSON.parse(runTool("submit_deck", thin, c).content).accepted).toBe(true);
+    const absent = { ...base, needs: [{ for: "Lightning Bolt", role: "card draw", cards: ["Fireblast"], copies: 4 }] };
+    expect(JSON.parse(runTool("submit_deck", absent, c).content).errors[0]).toMatch(/not in the main deck/);
+  });
 });

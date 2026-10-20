@@ -33,6 +33,9 @@ export interface ToolContext {
   strictBrew?: boolean;
   /** The strategy most lists running the requested cards use, from played_with, when it is dominant. */
   dominantShell?: { format: string; strategy: string; lists: number; share: number } | null;
+  /** Harness v12: each requested card's enablers must be in the deck in quantity, and outclassed cards get one send-back. */
+  requireNeeds?: boolean;
+  cardNoteRounds?: number;
 }
 
 export interface EnginePlan {
@@ -70,6 +73,10 @@ export interface SubmittedDeck {
   winLine?: { card: string; does: string }[];
   winTurn?: number;
   winLineDrawnPct?: number;
+  /** Harness v12: what each requested card needs, and the cards that provide it. */
+  needs?: { for: string; role: string; cards: string[]; copies: number }[];
+  cardNotes?: CoachNote[];
+  cardNoteResponses?: { id: string; response: string }[];
   /** Harness v4: the plan, the coach's notes on the accepted deck, and the brewer's answers. */
   plan?: Plan | null;
   coach?: { notes: CoachNote[]; responses: { id: string; response: string }[]; rounds: number };
@@ -107,6 +114,9 @@ function formatKey(raw: string): string {
 }
 
 const pct = (x: number) => Math.round(x * 1000) / 10;
+
+/** v12: a build-around's enablers, as copies in the deck. One Thran Dynamo is not a plan. */
+export const ENABLER_FLOOR = 6;
 
 function checkSummary(result: CheckResult) {
   return {
@@ -509,6 +519,13 @@ export const TOOLS = [
         .describe("The exact sequence of named cards from this deck that wins the game, in order, with what each one does in the line."),
       winTurn: z.number().int().min(1).max(10).optional().describe("The turn the line is meant to be complete."),
       shellReason: z.string().optional().describe("If real decks mostly run the requested cards in one strategy and you built something else: why, in one or two sentences."),
+      needs: z
+        .array(z.object({ for: z.string(), role: z.string().min(3), cards: z.array(z.string()).min(1), copies: z.number().int().min(1) }))
+        .max(6)
+        .optional()
+        .describe("For each card the player asked for: what it needs around it to do its job (the role), the cards in this deck that provide it, and how many copies of them the deck runs."),
+      needsReason: z.string().optional().describe("If a requested card's enablers are fewer than the floor: why that is enough here."),
+      cardNoteResponses: z.array(z.object({ id: z.string(), response: z.string().min(5) })).optional().describe("Answers to card notes from a previous submission, by id, for cards you kept."),
     }),
     run: (input, ctx) => {
       const key = formatKey(input.format);
@@ -519,6 +536,41 @@ export const TOOLS = [
         const asked = /\b(6[1-9]|7\d|8\d|9\d|1\d\d) cards?\b/i.test(ctx.request ?? "");
         if (!rules.commander && size > rules.mainSize && !asked) {
           return { accepted: false, errors: [`${size} cards in the main deck. Real ${rules.name} lists are ${rules.mainSize} cards almost without exception: cut to ${rules.mainSize} unless the player asked for more.`] };
+        }
+        // v12: enablers in quantity. Every card the player named must have a needs entry, its cards in the deck, and enough copies.
+        if (ctx.requireNeeds) {
+          const asked = (ctx.request ?? "").toLowerCase();
+          const named = [...new Set(input.main.map((l) => ctx.index.getCard(l.name)?.name ?? l.name))].filter((n) => n.length > 3 && asked.includes(n.toLowerCase()));
+          const needs = input.needs ?? [];
+          const canonN = (n: string) => normalizeName(ctx.index.getCard(n)?.name ?? n);
+          const missingFor = named.filter((n) => !needs.some((x) => canonN(x.for) === canonN(n)));
+          if (!needs.length || missingFor.length) {
+            return {
+              accepted: false,
+              errors: [`State needs for each card the player asked for${missingFor.length ? ` (missing: ${missingFor.join(", ")})` : ""}: the role it needs filled, the cards in this deck that fill it, and their copies.`],
+            };
+          }
+          const count = (name: string) => input.main.filter((l) => canonN(l.name) === canonN(name)).reduce((n, l) => n + l.qty, 0);
+          for (const x of needs) {
+            const absent = x.cards.filter((c) => count(c) === 0);
+            if (absent.length) return { accepted: false, errors: [`needs for ${x.for} (${x.role}) names cards not in the main deck: ${absent.join(", ")}.`] };
+            const have = x.cards.reduce((n, c) => n + count(c), 0);
+            if (have < ENABLER_FLOOR && !input.needsReason) {
+              return {
+                accepted: false,
+                errors: [`${x.for} needs "${x.role}", and the deck has ${have} cop${have === 1 ? "y" : "ies"} of the cards that provide it (${x.cards.join(", ")}). A build-around's enablers are usually ${ENABLER_FLOOR}+ copies: add some, or resubmit with needsReason saying why ${have} is enough here.`],
+              };
+            }
+          }
+          // Card quality, once: cards real players choose far more often for the same job at the same cost.
+          const answered = new Set((input.cardNoteResponses ?? []).map((r) => r.id));
+          const notes = coachNotes(ctx.index, ctx.data, key, { format: key, kind: "fair", thesis: "", style: "midrange" }, input.main, ctx.request).filter(
+            (n) => n.id.startsWith("fair-card-") && !answered.has(n.id),
+          );
+          if (notes.length && (ctx.cardNoteRounds ?? 0) < 1) {
+            ctx.cardNoteRounds = (ctx.cardNoteRounds ?? 0) + 1;
+            return { accepted: false, cardNotes: notes, howToProceed: "Swap the card, or resubmit with cardNoteResponses saying why it stays (by note id)." };
+          }
         }
         const shell = ctx.dominantShell;
         if (shell && shell.format === key && !input.shellReason) {
@@ -579,6 +631,7 @@ export const TOOLS = [
         donor: input.donor ?? null,
         warnings: result.warnings.map((w) => w.message),
         ...(input.winLine ? { winLine: input.winLine, winTurn: input.winTurn, winLineDrawnPct } : {}),
+        ...(input.needs ? { needs: input.needs, cardNoteResponses: input.cardNoteResponses } : {}),
       };
       return {
         accepted: true,

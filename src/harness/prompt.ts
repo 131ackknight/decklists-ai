@@ -112,3 +112,14 @@ export const V11_SYSTEM_PROMPT = V10_SYSTEM_PROMPT.replace(
   "A deck that contains the requested cards but has no line to the win is not a brew.",
   "A deck that contains the requested cards but has no line to the win is not a brew. If played_with shows that most real decks running the requested cards are one strategy, start from that strategy's shell (reference_list has its latest list); if you build something else, say why in shellReason. Main decks are exactly 60 cards in 60-card formats unless the player asks for more; submit_deck sends back a 61+ card deck.",
 );
+
+/**
+ * Harness v12: v11 plus two checks from the first "would you play it?" round
+ * (2026-10-20). Owner on Mind Over Matter: "it needs to generate a ton of
+ * mana, but how does it do this in the list? It has only one Thran Dynamo."
+ * On Scapeshift: "cards like Sakura-Tribe Elder at this point are outclassed."
+ */
+export const V12_SYSTEM_PROMPT = V11_SYSTEM_PROMPT.replace(
+  "Main decks are exactly 60 cards",
+  "submit_deck also requires needs: for each card the player asked for, the role it needs filled to do its job (mana in quantity, extra land drops, a creature to copy), the cards in this deck that fill it, and their copies; a build-around's enablers are usually 6+ copies, and fewer needs a needsReason. If the checker returns card notes (cards real players choose far less often than an alternative for the same job at the same cost), swap the card or answer the note by id in cardNoteResponses. Main decks are exactly 60 cards",
+);

@@ -27,7 +27,7 @@ Three things, and the third is turning out to be the most interesting.
 
 | Item | Total |
 | --- | --- |
-| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80. Total about $254.64. Plus one 17-token test call. |
+| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80; v12 on six $2.61. Total about $257.25. Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats); full history 143,721 (since 2025-07-01) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
 | Automated tests | 48 passing |
@@ -62,6 +62,27 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - Lesson to apply: any prompt or claim that names a card gets checked against the card index before it is used.
 - ~~Switch to pairwise~~: done; 36 pairs judged (v1 8 wins, v2 6, 22 ties; v2 100% faithful vs. 92%).
 - ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
+
+---
+
+## 2026-10-20 · v12 on the six no's: three became yes, three moved closer, none got worse
+
+v12 = v11 plus two checks from the first "would you play it?" round: each requested card's enablers must be named and counted (under 6 copies is sent back unless justified), and one send-back for cards real players choose far less often than an alternative for the same job. Rerun on the six decks the owner had refused ($2.61); judged on a rebuild page with three answers, yes / no but closer / no, further away (owner's suggestion).
+
+| Deck | Round 1 (v11) | Round 2 (v12) | Owner's note |
+| --- | --- | --- | --- |
+| Hypergenesis | no | **yes** | |
+| Kiki-Pestermite | no | **yes** | |
+| Seismic Assault | no | **yes** | |
+| Scapeshift | no | closer | "still have Sak Tribes which I don't know if it needs" |
+| Bomberman | no | closer | "the Destined White Mages and Leonardo packages don't seem necessary and are kinda bad" |
+| Mind Over Matter | no | closer | "it's having some counterspell suite, but this is more of an all-in combo I think, right?" |
+
+**Would play, best version per prompt, across the 12 round-2 prompts: 9 of 12** (6 from v11, 3 more from v12). Nothing moved further away.
+
+**What the enabler rule did:** Seismic Assault got its extra-land engine; Hypergenesis got a backup way to cheat a fatty in. **What the card-quality note did:** it fired on 5 of 6, sometimes rightly (Devastating Dreams), sometimes on a rare deck's own staples (Violent Outburst, Pyrite Spellbomb), which have low play share because the deck is rare, not because they're bad. It needs to compare against lists of the same strategy before calling a card outclassed. The owner's new notes point at two more general things: unneeded packages (Bomberman's extra packages, Scapeshift's Elders) and plan coherence (an all-in combo deck carrying a counterspell suite).
+
+**Generality caveat, stated plainly (the owner asked):** every rule is general code, none knows a deck, but the last three were tested almost only on the decks that inspired them. The test that counts is fresh prompts the rules have never seen, plus the post-cutoff score.
 
 ---
 

@@ -1,0 +1,399 @@
+<title>Win Line Quick Pick</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one question per screen. The request, each answer's opening, only the cards that differ, then A / Same / B. */
+:root {
+  --bg: #f4f6fa;
+  --surface: #ffffff;
+  --ink: #1b2236;
+  --muted: #5d667d;
+  --line: #dde2ec;
+  --accent: #2459a6;
+  --pick: #b5650d;
+  --chip: #e8edf6;
+  --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #10141d; --surface: #181e2b; --ink: #e5e9f2; --muted: #9aa4ba; --line: #2a3346;
+    --accent: #6f9fe0; --pick: #e2a04f; --chip: #222b3d;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #10141d; --surface: #181e2b; --ink: #e5e9f2; --muted: #9aa4ba; --line: #2a3346;
+  --accent: #6f9fe0; --pick: #e2a04f; --chip: #222b3d;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 16px/1.5 var(--font-body); }
+.wrap { max-width: 1100px; margin: 0 auto; padding-inline: 16px; padding-block: 16px 64px; display: grid; gap: 16px; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; }
+.top { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 16px; }
+.top h1 { font-size: 1.3rem; }
+.progress { color: var(--muted); font-size: 0.9rem; font-variant-numeric: tabular-nums; }
+.progress b { color: var(--pick); }
+.controls { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; font-size: 0.9rem; color: var(--muted); }
+.controls label { display: inline-flex; gap: 6px; align-items: center; }
+.btn { font: 600 0.88rem var(--font-body); border: 1px solid var(--line); background: var(--surface); color: var(--ink); padding: 6px 12px; border-radius: 8px; cursor: pointer; }
+.btn:disabled { opacity: 0.5; cursor: default; }
+button:focus-visible, summary:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.notice { margin: 0; color: var(--muted); font-size: 0.9rem; }
+.request { display: grid; gap: 6px; }
+.fmt { font: 600 0.75rem var(--font-body); letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); }
+.prompt { font-family: var(--font-display); font-size: 1.25rem; font-weight: 600; margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.duel { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); gap: 14px; }
+.side { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px; display: grid; gap: 10px; align-content: start; min-width: 0; }
+.side-head { display: flex; gap: 10px; align-items: center; }
+.letter { font: 700 1.2rem var(--font-display); width: 2.1rem; height: 2.1rem; display: grid; place-items: center; border-radius: 8px; background: var(--ink); color: var(--surface); }
+.lead { margin: 0; font-size: 0.94rem; overflow-wrap: anywhere; }
+.only h3 { font: 600 0.78rem var(--font-body); text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin-bottom: 4px; }
+.only pre { margin: 0; font: 0.84rem/1.5 var(--font-mono); padding: 10px 12px; background: var(--bg); border-radius: 8px; overflow-x: auto; white-space: pre-wrap; }
+.none { color: var(--muted); font-style: italic; }
+.full summary { font-size: 0.85rem; }
+.full h4 { font: 600 0.72rem var(--font-body); text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin: 8px 0 2px; }
+.full ul { list-style: none; margin: 0; padding: 0; font: 0.8rem/1.5 var(--font-mono); columns: 2 170px; column-gap: 14px; }
+.full li { break-inside: avoid; overflow-wrap: anywhere; }
+.full li.uniq { color: var(--accent); font-weight: 600; }
+.only ul { list-style: none; margin: 0; padding: 10px 12px; background: var(--bg); border-radius: 8px; font: 0.84rem/1.5 var(--font-mono); }
+.only li { overflow-wrap: anywhere; }
+.card { cursor: help; border-bottom: 1px dotted var(--muted); }
+.card:hover, .card:focus-visible { color: var(--accent); }
+#peek { position: fixed; z-index: 10; width: min(300px, calc(100vw - 16px)); max-height: 60vh; overflow: auto; border-radius: 10px; border: 1px solid var(--line); box-shadow: 0 8px 28px rgba(0,0,0,0.3); background: var(--surface); color: var(--ink); padding: 10px 12px; display: none; pointer-events: none; font: 0.84rem/1.45 var(--font-body); }
+#peek.on { display: block; }
+#peek .pk-head { display: flex; justify-content: space-between; gap: 10px; font-weight: 700; }
+#peek .pk-cost { font-family: var(--font-mono); font-weight: 400; color: var(--muted); white-space: nowrap; }
+#peek .pk-type { color: var(--muted); font-size: 0.78rem; margin: 2px 0 6px; }
+#peek .pk-text { white-space: pre-wrap; }
+#peek .pk-pt { text-align: right; font-weight: 700; margin-top: 6px; }
+.peek-note { font-size: 0.78rem; color: var(--muted); margin: 0; }
+details summary { cursor: pointer; color: var(--accent); font-size: 0.9rem; }
+.shared pre { margin: 6px 0 0; font: 0.8rem/1.45 var(--font-mono); padding: 10px 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; columns: 2 220px; }
+.reply { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 20rem; overflow: auto; padding: 10px; border: 1px solid var(--line); border-radius: 8px; font-size: 0.9rem; margin-top: 6px; }
+.ask { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px; display: grid; gap: 12px; }
+.ask h2 { font-size: 1.1rem; }
+.picks { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.picks button { font: 700 1.05rem var(--font-display); padding: 16px 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); color: var(--ink); cursor: pointer; }
+.picks button kbd { display: block; font: 0.75rem var(--font-mono); color: var(--muted); margin-top: 2px; }
+.picks button[aria-pressed="true"] { background: var(--pick); color: var(--surface); border-color: var(--pick); }
+.picks button[aria-pressed="true"] kbd { color: var(--surface); }
+.why { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 0.85rem; color: var(--muted); }
+.why button { font: 0.85rem var(--font-body); border: 1px solid var(--line); background: var(--surface); color: var(--ink); padding: 4px 10px; border-radius: 999px; cursor: pointer; }
+.why button[aria-pressed="true"] { background: var(--chip); border-color: var(--accent); color: var(--accent); }
+button:disabled { cursor: not-allowed; opacity: 0.6; }
+.saved { font-size: 0.8rem; color: var(--muted); min-height: 1.2em; }
+@media (max-width: 560px) { .picks { grid-template-columns: 1fr 1fr; } }
+@media (prefers-reduced-motion: no-preference) { .picks button, .why button { transition: background 120ms ease, color 120ms ease; } }
+</style>
+
+<div class="wrap">
+  <div class="top">
+    <h1>Win Line Quick Pick</h1>
+    <span class="progress" id="progress"></span>
+  </div>
+  <div class="controls">
+    <button class="btn" id="prev" type="button">Previous</button>
+    <button class="btn" id="next" type="button">Next</button>
+    <label><input type="checkbox" id="brewsOnly" checked> Brews only</label>
+    <label><input type="checkbox" id="unjudgedOnly" checked> Not yet judged</label>
+  </div>
+  <p class="notice" id="notice">Loading saved picks…</p>
+  <section class="request" id="request"></section>
+  <div class="duel" id="duel"></div>
+  <div id="peek" role="tooltip"></div>
+  <details class="shared" id="shared"></details>
+  <section class="ask">
+    <h2>Which would you rather play for this request? (Same: either is fine. Neither: I wouldn't play either.)</h2>
+    <div class="picks" id="picks">
+      <button type="button" data-w="A">A<kbd>1</kbd></button>
+      <button type="button" data-w="tie">Same<kbd>2</kbd></button>
+      <button type="button" data-w="B">B<kbd>3</kbd></button>
+      <button type="button" data-w="neither">Neither<kbd>4</kbd></button>
+    </div>
+    <div class="why" id="why">
+      <span>Why, if you like:</span>
+      <button type="button" data-r="request">Closer to the request</button>
+      <button type="button" data-r="mana">Better mana</button>
+      <button type="button" data-r="power">Stronger cards</button>
+      <button type="button" data-r="plan">Clearer plan</button>
+      <button type="button" data-r="odd">Fewer odd cards</button>
+    </div>
+    <div class="saved" id="saved" aria-live="polite"></div>
+  </section>
+</div>
+
+<script type="application/json" id="data">{"prompts":{"expert-premodern-rector-combo":{"format":"Premodern","prompt":"Brew me a Premodern deck built around Future Sight, Academy Rector and Veteran Explorer.","lookFor":""},"expert-premodern-pandeburst":{"format":"Premodern","prompt":"Brew me a Premodern deck built around Pandemonium and Saproling Burst.","lookFor":""},"expert-premodern-draco-explosion":{"format":"Premodern","prompt":"Brew me a Premodern deck built around Erratic Explosion and Draco.","lookFor":""}},"pairs":[{"id":"0ad9e3cf29a0","prompt":"expert-premodern-rector-combo","brew":true,"left":{"text":"I built **Bant Rector Toolbox**, a brew. No published deck in the last 400 days plays all three of your cards together. The closest is one Pattern Combo list that runs Rector and Explorer with Goblin Bombardment.\n\n**The plan:** Veteran Explorer and Academy Rector only do something when they die, so the deck needs ways to kill them on purpose:\n- **Altar of Bone (GW):** sacrifice a creature as you cast it, then search for any creature.\n- **Natural Order:** sacrifice a green creature like Explorer, then put a green creature onto the battlefield.\n- **Phyrexian Tower:** a land that sacrifices a creature for mana.\n\nSacrificing Explorer gets you two basic lands, so you can cast Future Sight (5 mana, needs UUU) on turn 3 or 4. Sacrificing Rector puts an enchantment straight onto the battlefield: Future Sight for card advantage, or Opposition to tap down the opponent's lands and creatures. Using Altar of Bone on Rector gets you both an enchantment and a creature. Deranged Hermit's squirrels and Verdant Force's tokens give Opposition plenty of creatures to tap, and they win the game.\n\n**Three directions I considered:**\n1. **Bant toolbox (chosen):** borrows the Tradewind Survival deck's mana, its mana creatures (Birds, Elves, Wall of Blossoms) and its Opposition/Natural Order/Deranged Hermit package, plus Swords to Plowshares from the menu.\n2. **Pattern Combo with Future Sight added:** 4–5 colors and Goblin Bombardment. Future Sight's UUU is too hard to cast in that mana base.\n3. **Enchantress:** Rector and Explorer as tutors and ramp in the Argothian Enchantress deck. Explorer does little there, and Future Sight competes with that deck's own engine.\n\nI chose direction 1 because it's the only one where all three cards feed each other: Explorer pays for Future Sight, and Rector puts it onto the battlefield.\n\n**Odds (by turn 4 on the play, no mulligans):**\n- Rector, Explorer or Eladamri's Call: 83%\n- One of the 8 ways to sacrifice them: 79%\n- Both together: about 65%\n- At least one of Future Sight, Rector or Altar of Bone: 89%\n\n**Caveats:**\n- Explorer's trigger lets every player fetch two basics, so it can help opponents who play basic lands.\n- Rector and Explorer are 1/1 and 1/2, so the Lightning Bolt decks (Sligh, Zoo) can kill them easily. When that happens you still get the death trigger.\n- The deck check compared my mana to Tradewind Survival and flagged fewer green sources (16.5 against about 22) and no black or red. That's on purpose: this is a three-color deck, and the extra white and blue pay for Rector, Swords and Future Sight. Birds and Explorer fetching basics fill the gaps.\n- The 15-card sideboard is aimed at the top decks: Hydroblast and Xantid Swarm for Stiflenought (16% of the field), Seal of Cleansing and Naturalize for Enchantress (Rector can fetch Seal), Tormod's Crypt for graveyard decks, and Meddling Mage and Spike Feeder for combo and burn.","error":false,"deck":{"commander":[],"main":[{"qty":4,"name":"Veteran Explorer"},{"qty":4,"name":"Academy Rector"},{"qty":4,"name":"Birds of Paradise"},{"qty":3,"name":"Llanowar Elves"},{"qty":3,"name":"Wall of Blossoms"},{"qty":2,"name":"Deranged Hermit"},{"qty":1,"name":"Tradewind Rider"},{"qty":1,"name":"Verdant Force"},{"qty":3,"name":"Future Sight"},{"qty":2,"name":"Opposition"},{"qty":4,"name":"Altar of Bone"},{"qty":3,"name":"Natural Order"},{"qty":4,"name":"Swords to Plowshares"},{"qty":1,"name":"Eladamri's Call"},{"qty":4,"name":"Yavimaya Coast"},{"qty":2,"name":"Brushland"},{"qty":1,"name":"Adarkar Wastes"},{"qty":1,"name":"Phyrexian Tower"},{"qty":1,"name":"Windswept Heath"},{"qty":1,"name":"Flooded Strand"},{"qty":6,"name":"Forest"},{"qty":4,"name":"Island"},{"qty":1,"name":"Plains"}],"side":[{"qty":3,"name":"Hydroblast"},{"qty":3,"name":"Xantid Swarm"},{"qty":2,"name":"Seal of Cleansing"},{"qty":1,"name":"Naturalize"},{"qty":2,"name":"Tormod's Crypt"},{"qty":2,"name":"Meddling Mage"},{"qty":2,"name":"Spike Feeder"}],"mainCount":60,"sideCount":15}},"right":{"text":"I built a four-color brew I'm calling **Rector Sight**. It's a sacrifice-and-tutor deck: Veteran Explorer ramps you into Future Sight early, and Academy Rector turns each death into the enchantment you need.\n\n**How it plays:** On turn 1 you play Explorer. On turn 2 you cast Cabal Therapy, then flash it back by sacrificing Explorer, which fetches two basic Islands. That gives you 5 lands on turn 3 for Future Sight, and from then on you can play cards off the top of your library. Rector is your tutor. When it dies, it puts any enchantment from your library onto the battlefield: Future Sight, Opposition, Survival of the Fittest, or Pattern of Rebirth. Pattern goes onto a Wall or Birds, and when you sacrifice that creature it finds Akroma, a 6/6 flier with haste and protection from black and red.\n\n**Why this direction:** I compared three options:\n1. **Four-color (G/U/W plus black):** Uses Cabal Therapy, Phyrexian Tower and Carrion Feeder to kill your own creatures (the Pattern Combo package).\n2. **Black-green Living Death splashing white and blue:** Living Death's mass sacrifice triggers Explorer and Rector together.\n3. **Green-blue Survival splashing white:** Borrows Survival and Opposition from Tradewind Survival.\n\nI picked the first one. Explorer and Rector only do anything when they die, and black is the only color that kills your own creatures cheaply and repeatedly while also disrupting the opponent. Blue is still a main color here because Future Sight costs three blue mana.\n\n**Some things to know:**\n- **Mana:** I borrowed the mana base from the Pattern Combo list. Phyrexian Tower makes it possible to cast Future Sight on turn 2: sacrifice Explorer to the Tower for two black mana, and the two Islands Explorer fetches enter untapped. The deck checked clean against Pattern Combo with 22 lands and 18 blue sources. It runs 7 basics so Explorer always has lands to find, and 3 of them are Islands.\n- **Explorer helps your opponent too.** They also get two basic lands. That's a real cost against Stiflenought, the most-played deck (16% of results). Duress and Therapy are there to protect your turn-3 Future Sight from it.\n- **Odds:** Without mulligans, you see at least one Explorer by turn 3 only 52.8% of the time. You see one of the 7 sacrifice outlets or one of the 7 copies of Future Sight/Rector 74.1% of the time each, and all three together 26.3% of the time. Survival can also find Explorer, but that wasn't included in these numbers.\n- **The Akroma finish depends on tutors.** The submission tool said you naturally draw every card in that line by turn 6 in only about 0.1% of games, but it doesn't count tutors. Pattern and Akroma are almost always fetched by Rector, never drawn. On average this is a turn-5 or turn-6 deck that wins on card advantage, not a fast combo.\n- **Sideboard:**\n  - Against Goblins and Sligh: Hydroblast, Engineered Plague, Circle of Protection: Red and Spike Feeder. Rector can fetch Engineered Plague or the Circle straight onto the battlefield.\n  - Against Enchantress and Replenish: Seal of Cleansing and Tormod's Crypt.\n  - Against blue decks: Meddling Mage.\n  - Against artifacts like Cursed Scroll: Uktabi Orangutan.","error":false,"deck":{"commander":[],"main":[{"qty":4,"name":"Veteran Explorer"},{"qty":4,"name":"Academy Rector"},{"qty":4,"name":"Birds of Paradise"},{"qty":4,"name":"Wall of Blossoms"},{"qty":2,"name":"Carrion Feeder"},{"qty":1,"name":"Akroma, Angel of Wrath"},{"qty":3,"name":"Future Sight"},{"qty":4,"name":"Cabal Therapy"},{"qty":3,"name":"Survival of the Fittest"},{"qty":2,"name":"Pattern of Rebirth"},{"qty":1,"name":"Opposition"},{"qty":4,"name":"Swords to Plowshares"},{"qty":2,"name":"Duress"},{"qty":4,"name":"City of Brass"},{"qty":1,"name":"Grand Coliseum"},{"qty":4,"name":"Yavimaya Coast"},{"qty":2,"name":"Adarkar Wastes"},{"qty":2,"name":"Underground River"},{"qty":1,"name":"Brushland"},{"qty":1,"name":"Phyrexian Tower"},{"qty":3,"name":"Island"},{"qty":2,"name":"Forest"},{"qty":1,"name":"Plains"},{"qty":1,"name":"Swamp"}],"side":[{"qty":3,"name":"Hydroblast"},{"qty":2,"name":"Engineered Plague"},{"qty":1,"name":"Circle of Protection: Red"},{"qty":2,"name":"Seal of Cleansing"},{"qty":2,"name":"Tormod's Crypt"},{"qty":2,"name":"Meddling Mage"},{"qty":1,"name":"Uktabi Orangutan"},{"qty":2,"name":"Spike Feeder"}],"mainCount":60,"sideCount":15}}},{"id":"2b9a5140fc6f","prompt":"expert-premodern-pandeburst","brew":true,"left":{"text":"The deck is in: a Red-splash Enchantress deck that wins with **Pandemonium + Saproling Burst**.\n\n**How it wins:** Get Pandemonium onto the battlefield, then cast Saproling Burst. Burst enters with 7 fade counters. Take them off one at a time. Each Saproling enters at the size of the counters left (6/6, then 5/5, 4/4, 3/3, 2/2, 1/1), and Pandemonium lets each one deal damage equal to its power to any target. That's 21 damage. You can do it at instant speed, and there's no summoning sickness to wait out, because the tokens never attack.\n\n**How the deck gets there:** The engine is borrowed from the format's top deck, Enchantress:\n- Wild Growth and Serra's Sanctum for ramp\n- Argothian Enchantress and Enchantress's Presence to draw a card off every enchantment you cast\n- 3 Sterling Grove, 2 Enlightened Tutor and Mirri's Guile to find whichever piece is missing. Sterling Grove also gives your other enchantments shroud, so Seal of Cleansing and Disenchant effects can't target your combo pieces.\n- 2 Replenish as a backup. If both pieces end up in the graveyard, Replenish brings them back together.\n\nThe usual 22 Enchantress lands become 23 here because of the 5-mana Burst and the red splash, with 7 red sources for Pandemonium.\n\n**Directions I considered:**\n1. Fit the pair into the Replenish deck (Attunement to discard them, Replenish to return both). That's the only real list that has run them, but it needs all four of white, blue, red and green.\n2. Red-green ramp with mana creatures and burn, casting both pieces from hand.\n3. **Chosen:** Green-white Enchantress with a light red splash. It's the strongest because the card-draw engine and enchantment tutors dig for both pieces, and Sterling Grove keeps them from being targeted, all on proven mana.\n\n**Honest odds:** From natural draws alone, you have Pandemonium plus a Burst or a tutor by turn 6 in about 52% of games. That doesn't count any cards drawn off the Enchantresses, so the real number is higher. The 0.2% figure the submit tool gave is misleading: it counts only games where every card in the line, including the backup Replenish, has been drawn. On a good draw the kill is turn 4–5: Pandemonium on turn 3 with Wild Growth, then Burst next turn.\n\n**Sideboard:** It's built for the matchups the results show:\n- Xantid Swarm and Red Elemental Blast against Stiflenought and Psychatog countermagic\n- Warmth and a second Solitary Confinement against Sligh and Goblins\n- Tormod's Crypt against Hermit Druid and Replenish\n- Sacred Ground and Karmic Justice against Terrageddon and decks that destroy your enchantments\n- Aura of Silence for the Enchantress mirror","error":false,"deck":{"commander":[],"main":[{"qty":4,"name":"Argothian Enchantress"},{"qty":4,"name":"Enchantress's Presence"},{"qty":4,"name":"Wild Growth"},{"qty":3,"name":"Mirri's Guile"},{"qty":3,"name":"Sterling Grove"},{"qty":2,"name":"Enlightened Tutor"},{"qty":4,"name":"Pandemonium"},{"qty":4,"name":"Saproling Burst"},{"qty":2,"name":"Replenish"},{"qty":3,"name":"Swords to Plowshares"},{"qty":3,"name":"Seal of Cleansing"},{"qty":1,"name":"Solitary Confinement"},{"qty":4,"name":"Serra's Sanctum"},{"qty":4,"name":"Brushland"},{"qty":3,"name":"Karplusan Forest"},{"qty":1,"name":"City of Brass"},{"qty":4,"name":"Windswept Heath"},{"qty":2,"name":"Wooded Foothills"},{"qty":3,"name":"Forest"},{"qty":1,"name":"Plains"},{"qty":1,"name":"Mountain"}],"side":[{"qty":3,"name":"Xantid Swarm"},{"qty":2,"name":"Tormod's Crypt"},{"qty":2,"name":"Aura of Silence"},{"qty":2,"name":"Warmth"},{"qty":1,"name":"Solitary Confinement"},{"qty":1,"name":"Sacred Ground"},{"qty":1,"name":"Karmic Justice"},{"qty":1,"name":"Swords to Plowshares"},{"qty":2,"name":"Red Elemental Blast"}],"mainCount":60,"sideCount":15}},"right":{"text":"I submitted a brew: **Enchantress with a red splash, using Pandemonium and Saproling Burst as the kill.**\n\n**How the combo works:** Saproling Burst enters with 7 fade counters. Each token it makes has power equal to the counters left on Burst. With Pandemonium out, each token that enters can deal damage equal to its power. Remove one counter at a time and let each Pandemonium trigger resolve before removing the next. That deals 6+5+4+3+2+1 = 21 damage, enough to kill from 20 life. Two things to watch:\n- **Timing:** Burst loses a counter in each of your upkeeps, so the kill shrinks to 15 if it waits a turn. Set up Pandemonium first, then cast Burst and fire it all that turn.\n- **Pandemonium is symmetric:** your opponent's creatures trigger it too. Be careful against Goblins and Sligh.\n\n**Three directions I considered:**\n1. **Replenish shell (blue-white).** The only recorded list running both cards was a Replenish deck. But adding a red card and a green card to a blue-white deck strains the mana.\n2. **Red-green ramp.** This would hard-cast both cards off Wild Growth, but it has no card draw, no way to search for pieces and no way to bring them back.\n3. **Enchantress shell (green-white, splash red), the one I chose.** Enchantress is 13% of the field. Burst is already in its colors, and only Pandemonium needs the splash.\n\n**Why Enchantress won:** Argothian Enchantress, Enchantress's Presence and Mirri's Guile dig for the pieces. Sterling Grove searches for either piece and gives your other enchantments shroud. Serra's Sanctum makes enough mana to cast both in one turn. Replenish brings both back from the graveyard at once.\n\n**Changes from the stock Enchantress list:**\n- **Out:** 2 Aura of Silence, 1 Solitary Confinement, 1 Opalescence, 1 Seal of Cleansing.\n- **In:** 2 Pandemonium and 3 Saproling Burst. Burst is also a decent threat by itself.\n- **Mana:** swapped two Wild Growth for Fertile Ground (adds mana of any color) and two Forests for a Karplusan Forest and a Mountain. Wooded Foothills can also fetch the Mountain. That gives 6 red sources while keeping 15 green and 14 white, in line with real Enchantress lists. The deck check passed with no warnings.\n\n**Odds:** On the draw, without counting any extra cards the Enchantress engine draws, you'll see Pandemonium or a Sterling Grove by turn 6 71.9% of the time, and both halves 36.8% of the time. In practice the engine draws many extra cards, and the stock Parallax Wave and Opalescence plan is still there as a backup win. The sideboard is the stock Enchantress board, with Solitary Confinement in place of Karmic Justice for Sligh.","error":false,"deck":{"commander":[],"main":[{"qty":4,"name":"Argothian Enchantress"},{"qty":4,"name":"Enchantress's Presence"},{"qty":4,"name":"Mirri's Guile"},{"qty":2,"name":"Wild Growth"},{"qty":2,"name":"Fertile Ground"},{"qty":3,"name":"Sterling Grove"},{"qty":2,"name":"Seal of Cleansing"},{"qty":3,"name":"Swords to Plowshares"},{"qty":3,"name":"Parallax Wave"},{"qty":2,"name":"Opalescence"},{"qty":1,"name":"Solitary Confinement"},{"qty":3,"name":"Replenish"},{"qty":2,"name":"Pandemonium"},{"qty":3,"name":"Saproling Burst"},{"qty":4,"name":"Serra's Sanctum"},{"qty":4,"name":"Brushland"},{"qty":4,"name":"Windswept Heath"},{"qty":2,"name":"Wooded Foothills"},{"qty":4,"name":"Forest"},{"qty":2,"name":"Plains"},{"qty":1,"name":"Karplusan Forest"},{"qty":1,"name":"Mountain"}],"side":[{"qty":2,"name":"Aura of Silence"},{"qty":3,"name":"Xantid Swarm"},{"qty":3,"name":"Tormod's Crypt"},{"qty":2,"name":"Warmth"},{"qty":1,"name":"Sacred Ground"},{"qty":1,"name":"Gaea's Blessing"},{"qty":1,"name":"Solitary Confinement"},{"qty":1,"name":"Swords to Plowshares"},{"qty":1,"name":"Choke"}],"mainCount":60,"sideCount":15}}},{"id":"d75ea2d2b58e","prompt":"expert-premodern-draco-explosion","brew":true,"left":{"text":"I submitted the deck. It's a red-green burn deck with a one-shot finish: put **Draco** on top of your library, then cast **Erratic Explosion**. Explosion reveals cards until it hits a nonland card and deals damage equal to that card's mana value. Draco's mana value is 16, so that's 16 damage to the face. **Fireblast** (sacrifice two Mountains, 4 damage) brings it to exactly 20. Any earlier damage from Bolts or creatures means you need even less.\n\n**Three directions I considered:**\n1. **Red-white with Enlightened Tutor.** Draco is an artifact creature, so this tutor can put it on top of your library. But white gives you nothing else that sets up the top of your deck.\n2. **Blue-red with Portent and Scroll Rack.** The best tool for stacking your library, Brainstorm, is banned in Premodern. Portent only looks at three cards, so this version is weaker.\n3. **Red-green, borrowing the GR Zoo shell from the meta menu (my pick).** Green has three different ways to get Draco on top, and the Zoo burn package already covers the last 4 points.\n\nI chose red-green because it's the only direction where Draco can get on top of your library from three angles, and the burn shell is already proven.\n\n**How Draco gets on top:**\n- **Worldly Tutor** (G, 4 copies): finds a creature and puts it on top. Cast it in your own main phase, then Explosion right away. If you cast it on the opponent's turn, you'll just draw Draco in your draw step.\n- **Sylvan Library** (3 copies): if you draw Draco with it, it's one of the cards you put back.\n- **Draco stuck in hand:** discard it to **Wild Mongrel**, then cast **Reclaim** (G, instant) to put it back on top.\n\nThe main line is Worldly Tutor plus Explosion on turn 4 (4 mana total), with Fireblast available as a free spell.\n\n**Honest odds:**\n- You'll have Tutor or Library by turn 4 about 74% of the time, but the full Tutor-or-Library-plus-Explosion combination only about 38% of the time. Treat the combo as a strong finisher, not a consistent turn-4 kill.\n- The submit check reported 0.5%. That number only counts games where you naturally draw all the combo cards, Draco included, and ignores the tutors. You don't want to draw Draco, so it doesn't reflect the real plan.\n- Explosion isn't dead without Draco on top. It still hits creatures or the opponent for 1 to 3 damage off your cheap spells.\n- Erratic Explosion puts Draco on the bottom of your library after it fires, so a second Explosion needs a fresh tutor.\n- I'm assuming you never want to cast Draco. With just Mountains and Forests it would cost 12 and need upkeep payments.\n\nThe mana copies GR Zoo's land setup: 22 lands, 16 red sources and 14 green. I kept 8 basic Mountains so Fireblast is always castable. The sideboard is the usual GR Zoo plan against Enchantress and the blue decks: Pyroblast, Red Elemental Blast, Tranquil Domain, Naturalize and Tormod's Crypt.","error":false,"deck":{"commander":[],"main":[{"qty":1,"name":"Draco"},{"qty":4,"name":"Erratic Explosion"},{"qty":4,"name":"Worldly Tutor"},{"qty":3,"name":"Sylvan Library"},{"qty":2,"name":"Reclaim"},{"qty":4,"name":"Wild Mongrel"},{"qty":4,"name":"Grim Lavamancer"},{"qty":4,"name":"Mogg Fanatic"},{"qty":4,"name":"Lightning Bolt"},{"qty":4,"name":"Incinerate"},{"qty":4,"name":"Fireblast"},{"qty":4,"name":"Wooded Foothills"},{"qty":2,"name":"Windswept Heath"},{"qty":4,"name":"Karplusan Forest"},{"qty":8,"name":"Mountain"},{"qty":3,"name":"Forest"},{"qty":1,"name":"Treetop Village"}],"side":[{"qty":3,"name":"Pyroblast"},{"qty":1,"name":"Red Elemental Blast"},{"qty":2,"name":"Naturalize"},{"qty":2,"name":"Tormod's Crypt"},{"qty":2,"name":"Tranquil Domain"},{"qty":2,"name":"Ravenous Baloth"},{"qty":1,"name":"Simoon"},{"qty":2,"name":"Pyroclasm"}],"mainCount":60,"sideCount":15}},"right":{"text":"I built **RG \"Dragon Bomb\"**, a brew. It's tagged as borrowing from GR Zoo because that's the mana base I compared against, but the burn cards come from the Sligh and GR Zoo lists.\n\n**The plan:** Erratic Explosion deals damage equal to the mana value of the first nonland card it reveals. Draco's mana value is 16, so if Draco is on top of your library, Explosion deals 16. Add a Fireblast (sacrifice two Mountains instead of paying its cost, 4 damage) and that's exactly 20, a kill from full life. Before that, Lightning Bolt, Incinerate, Mogg Fanatic, Grim Lavamancer and Seal of Fire control the board and lower the opponent's life, so the combo doesn't always need the full 20.\n\n**How Draco gets on top:**\n- **Worldly Tutor** finds any creature and puts it on top of your library. Cast it in your main phase, not at the opponent's end step, or you'll just draw Draco.\n- **Sylvan Library** lets you draw Draco and put it right back on top.\n- **Scroll Rack** puts a Draco that's stuck in your hand back on top.\n- **Burning Wish** fetches a sorcery from your sideboard, so it works as extra copies of Explosion. The 4th Explosion sits in the sideboard because the rules cap you at four total. Wish can also grab Flame Rift (4 damage to each player), Pyroclasm or Anarchy.\n\n**Honest odds:** You'll have both an Explosion (or Wish) and a way to stack Draco by turn 4 about 55% of the time on the play, before mulligans. When the combo isn't there, the deck plays like a weaker burn deck. Explosion without Draco on top usually hits a 1-drop for 1 damage, and a Draco in your hand does nothing unless you have Library or Rack.\n\n**The three directions I considered:**\n1. **RG with Sylvan Library and Worldly Tutor, plus the Sligh/GR Zoo burn cards.** This is the one I chose.\n2. **Red-white with Enlightened Tutor.** It can find Draco because Draco is an artifact, and white adds Swords to Plowshares.\n3. **Five-color domain that actually casts Draco.** Draco gets cheaper for each basic land type you control. But Premodern doesn't allow dual lands that have land types (Plateau is not legal), so Draco would stay too expensive to cast.\n\nI picked RG because Fireblast's extra 4 damage is exactly what turns a 16-point Explosion into a kill. Green also gives two stacking cards that are already proven in the format, and the RG mana is cleaner than adding white.\n\n**Mana and sideboard:** The mana base is 21 lands with 18 red and 11 green sources. The deck check passed with no warnings, but it suggests about 23 lands and GR Zoo runs about 22. I stayed at 21 because the curve is very low. The sideboard targets what the format is playing right now:\n- Pyroblast and Red Elemental Blast against the blue decks (Stiflenought, Psychatog)\n- Naturalize and Anarchy against Enchantress and Replenish\n- Pyroclasm against creature decks\n- Tormod's Crypt against graveyard decks","error":false,"deck":{"commander":[],"main":[{"qty":3,"name":"Erratic Explosion"},{"qty":2,"name":"Draco"},{"qty":4,"name":"Worldly Tutor"},{"qty":4,"name":"Sylvan Library"},{"qty":3,"name":"Burning Wish"},{"qty":1,"name":"Scroll Rack"},{"qty":4,"name":"Lightning Bolt"},{"qty":4,"name":"Incinerate"},{"qty":4,"name":"Fireblast"},{"qty":4,"name":"Grim Lavamancer"},{"qty":4,"name":"Mogg Fanatic"},{"qty":2,"name":"Seal of Fire"},{"qty":4,"name":"Wooded Foothills"},{"qty":4,"name":"Karplusan Forest"},{"qty":10,"name":"Mountain"},{"qty":3,"name":"Forest"}],"side":[{"qty":1,"name":"Erratic Explosion"},{"qty":2,"name":"Pyroclasm"},{"qty":1,"name":"Flame Rift"},{"qty":2,"name":"Anarchy"},{"qty":3,"name":"Pyroblast"},{"qty":2,"name":"Red Elemental Blast"},{"qty":3,"name":"Naturalize"},{"qty":1,"name":"Tormod's Crypt"}],"mainCount":60,"sideCount":15}}}],"cards":{"Veteran Explorer":{"cost":"{G}","type":"Creature — Human Soldier Scout","text":"When this creature dies, each player may search their library for up to two basic land cards, put them onto the battlefield, then shuffle.","pt":"1/1"},"Academy Rector":{"cost":"{3}{W}","type":"Creature — Human Cleric","text":"When this creature dies, you may exile it. If you do, search your library for an enchantment card, put that card onto the battlefield, then shuffle.","pt":"1/2"},"Birds of Paradise":{"cost":"{G}","type":"Creature — Bird","text":"Flying\n{T}: Add one mana of any color.","pt":"0/1"},"Llanowar Elves":{"cost":"{G}","type":"Creature — Elf Druid","text":"{T}: Add {G}.","pt":"1/1"},"Wall of Blossoms":{"cost":"{1}{G}","type":"Creature — Plant Wall","text":"Defender\nWhen this creature enters, draw a card.","pt":"0/4"},"Deranged Hermit":{"cost":"{3}{G}{G}","type":"Creature — Elf","text":"Echo {3}{G}{G} (At the beginning of your upkeep, if this came under your control since the beginning of your last upkeep, sacrifice it unless you pay its echo cost.)\nWhen this creature enters, create four 1/1 green Squirrel creature tokens.\nSquirrel creatures get +1/+1.","pt":"1/1"},"Tradewind Rider":{"cost":"{3}{U}","type":"Creature — Spirit","text":"Flying\n{T}, Tap two untapped creatures you control: Return target permanent to its owner's hand.","pt":"1/4"},"Verdant Force":{"cost":"{5}{G}{G}{G}","type":"Creature — Elemental","text":"At the beginning of each upkeep, create a 1/1 green Saproling creature token.","pt":"7/7"},"Future Sight":{"cost":"{2}{U}{U}{U}","type":"Enchantment","text":"Play with the top card of your library revealed.\nYou may play lands and cast spells from the top of your library."},"Opposition":{"cost":"{2}{U}{U}","type":"Enchantment","text":"Tap an untapped creature you control: Tap target artifact, creature, or land."},"Altar of Bone":{"cost":"{G}{W}","type":"Sorcery","text":"As an additional cost to cast this spell, sacrifice a creature.\nSearch your library for a creature card, reveal it, put it into your hand, then shuffle."},"Natural Order":{"cost":"{2}{G}{G}","type":"Sorcery","text":"As an additional cost to cast this spell, sacrifice a green creature.\nSearch your library for a green creature card, put it onto the battlefield, then shuffle."},"Swords to Plowshares":{"cost":"{W}","type":"Instant","text":"Exile target creature. Its controller gains life equal to its power."},"Eladamri's Call":{"cost":"{G}{W}","type":"Instant","text":"Search your library for a creature card, reveal that card, put it into your hand, then shuffle."},"Yavimaya Coast":{"cost":"","type":"Land","text":"{T}: Add {C}.\n{T}: Add {G} or {U}. This land deals 1 damage to you."},"Brushland":{"cost":"","type":"Land","text":"{T}: Add {C}.\n{T}: Add {G} or {W}. This land deals 1 damage to you."},"Adarkar Wastes":{"cost":"","type":"Land","text":"{T}: Add {C}.\n{T}: Add {W} or {U}. This land deals 1 damage to you."},"Phyrexian Tower":{"cost":"","type":"Legendary Land","text":"{T}: Add {C}.\n{T}, Sacrifice a creature: Add {B}{B}."},"Windswept Heath":{"cost":"","type":"Land","text":"{T}, Pay 1 life, Sacrifice this land: Search your library for a Forest or Plains card, put it onto the battlefield, then shuffle."},"Flooded Strand":{"cost":"","type":"Land","text":"{T}, Pay 1 life, Sacrifice this land: Search your library for a Plains or Island card, put it onto the battlefield, then shuffle."},"Forest":{"cost":"","type":"Basic Land — Forest","text":"({T}: Add {G}.)"},"Island":{"cost":"","type":"Basic Land — Island","text":"({T}: Add {U}.)"},"Plains":{"cost":"","type":"Basic Land — Plains","text":"({T}: Add {W}.)"},"Hydroblast":{"cost":"{U}","type":"Instant","text":"Choose one —\n• Counter target spell if it's red.\n• Destroy target permanent if it's red."},"Xantid Swarm":{"cost":"{G}","type":"Creature — Insect","text":"Flying\nWhenever this creature attacks, defending player can't cast spells this turn.","pt":"0/1"},"Seal of Cleansing":{"cost":"{1}{W}","type":"Enchantment","text":"Sacrifice this enchantment: Destroy target artifact or enchantment."},"Naturalize":{"cost":"{1}{G}","type":"Instant","text":"Destroy target artifact or enchantment."},"Tormod's Crypt":{"cost":"{0}","type":"Artifact","text":"{T}, Sacrifice this artifact: Exile target player's graveyard."},"Meddling Mage":{"cost":"{W}{U}","type":"Creature — Human Wizard","text":"As this creature enters, choose a nonland card name.\nSpells with the chosen name can't be cast.","pt":"2/2"},"Spike Feeder":{"cost":"{1}{G}{G}","type":"Creature — Spike","text":"This creature enters with two +1/+1 counters on it.\n{2}, Remove a +1/+1 counter from this creature: Put a +1/+1 counter on target creature.\nRemove a +1/+1 counter from this creature: You gain 2 life.","pt":"0/0"},"Carrion Feeder":{"cost":"{B}","type":"Creature — Zombie","text":"This creature can't block.\nSacrifice a creature: Put a +1/+1 counter on this creature.","pt":"1/1"},"Akroma, Angel of Wrath":{"cost":"{5}{W}{W}{W}","type":"Legendary Creature — Angel","text":"Flying, first strike, vigilance, trample, haste, protection from black and from red","pt":"6/6"},"Cabal Therapy":{"cost":"{B}","type":"Sorcery","text":"Choose a nonland card name. Target player reveals their hand and discards all cards with that name.\nFlashback—Sacrifice a creature. (You may cast this card from your graveyard for its flashback cost. Then exile it.)"},"Survival of the Fittest":{"cost":"{1}{G}","type":"Enchantment","text":"{G}, Discard a creature card: Search your library for a creature card, reveal that card, put it into your hand, then shuffle."},"Pattern of Rebirth":{"cost":"{3}{G}","type":"Enchantment — Aura","text":"Enchant creature\nWhen enchanted creature dies, that creature's controller may search their library for a creature card, put that card onto the battlefield, then shuffle."},"Duress":{"cost":"{B}","type":"Sorcery","text":"Target opponent reveals their hand. You choose a noncreature, nonland card from it. That player discards that card."},"City of Brass":{"cost":"","type":"Land","text":"Whenever this land becomes tapped, it deals 1 damage to you.\n{T}: Add one mana of any color."},"Grand Coliseum":{"cost":"","type":"Land","text":"This land enters tapped.\n{T}: Add {C}.\n{T}: Add one mana of any color. This land deals 1 damage to you."},"Underground River":{"cost":"","type":"Land","text":"{T}: Add {C}.\n{T}: Add {U} or {B}. This land deals 1 damage to you."},"Swamp":{"cost":"","type":"Basic Land — Swamp","text":"({T}: Add {B}.)"},"Engineered Plague":{"cost":"{2}{B}","type":"Enchantment","text":"As this enchantment enters, choose a creature type.\nAll creatures of the chosen type get -1/-1."},"Circle of Protection: Red":{"cost":"{1}{W}","type":"Enchantment","text":"{1}: The next time a red source of your choice would deal damage to you this turn, prevent that damage."},"Uktabi Orangutan":{"cost":"{2}{G}","type":"Creature — Ape","text":"When this creature enters, destroy target artifact.","pt":"2/2"},"Argothian Enchantress":{"cost":"{1}{G}","type":"Creature — Human Druid","text":"Shroud (This creature can't be the target of spells or abilities.)\nWhenever you cast an enchantment spell, draw a card.","pt":"0/1"},"Enchantress's Presence":{"cost":"{2}{G}","type":"Enchantment","text":"Whenever you cast an enchantment spell, draw a card."},"Wild Growth":{"cost":"{G}","type":"Enchantment — Aura","text":"Enchant land\nWhenever enchanted land is tapped for mana, its controller adds an additional {G}."},"Mirri's Guile":{"cost":"{G}","type":"Enchantment","text":"At the beginning of your upkeep, you may look at the top three cards of your library, then put them back in any order."},"Sterling Grove":{"cost":"{G}{W}","type":"Enchantment","text":"Other enchantments you control have shroud. (They can't be the targets of spells or abilities.)\n{1}, Sacrifice this enchantment: Search your library for an enchantment card, reveal it, then shuffle and put that card on top."},"Enlightened Tutor":{"cost":"{W}","type":"Instant","text":"Search your library for an artifact or enchantment card, reveal it, then shuffle and put that card on top."},"Pandemonium":{"cost":"{3}{R}","type":"Enchantment","text":"Whenever a creature enters, that creature's controller may have it deal damage equal to its power to any target of their choice."},"Saproling Burst":{"cost":"{4}{G}","type":"Enchantment","text":"Fading 7 (This enchantment enters with seven fade counters on it. At the beginning of your upkeep, remove a fade counter from it. If you can't, sacrifice it.)\nRemove a fade counter from this enchantment: Create a green Saproling creature token. It has \"This token's power and toughness are each equal to the number of fade counters on Saproling Burst.\"\nWhen this enchantment leaves the battlefield, destroy all tokens created with this enchantment. They can't be regenerated."},"Replenish":{"cost":"{3}{W}","type":"Sorcery","text":"Return all enchantment cards from your graveyard to the battlefield. (Auras with nothing to enchant remain in your graveyard.)"},"Solitary Confinement":{"cost":"{2}{W}","type":"Enchantment","text":"At the beginning of your upkeep, sacrifice this enchantment unless you discard a card.\nSkip your draw step.\nYou have shroud. (You can't be the target of spells or abilities.)\nPrevent all damage that would be dealt to you."},"Serra's Sanctum":{"cost":"","type":"Legendary Land","text":"{T}: Add {W} for each enchantment you control."},"Karplusan Forest":{"cost":"","type":"Land","text":"{T}: Add {C}.\n{T}: Add {R} or {G}. This land deals 1 damage to you."},"Wooded Foothills":{"cost":"","type":"Land","text":"{T}, Pay 1 life, Sacrifice this land: Search your library for a Mountain or Forest card, put it onto the battlefield, then shuffle."},"Mountain":{"cost":"","type":"Basic Land — Mountain","text":"({T}: Add {R}.)"},"Aura of Silence":{"cost":"{1}{W}{W}","type":"Enchantment","text":"Artifact and enchantment spells your opponents cast cost {2} more to cast.\nSacrifice this enchantment: Destroy target artifact or enchantment."},"Warmth":{"cost":"{1}{W}","type":"Enchantment","text":"Whenever an opponent casts a red spell, you gain 2 life."},"Sacred Ground":{"cost":"{1}{W}","type":"Enchantment","text":"Whenever a spell or ability an opponent controls causes a land to be put into your graveyard from the battlefield, return that card to the battlefield."},"Karmic Justice":{"cost":"{2}{W}","type":"Enchantment","text":"Whenever a spell or ability an opponent controls destroys a noncreature permanent you control, you may destroy target permanent that opponent controls."},"Red Elemental Blast":{"cost":"{R}","type":"Instant","text":"Choose one —\n• Counter target blue spell.\n• Destroy target blue permanent."},"Fertile Ground":{"cost":"{1}{G}","type":"Enchantment — Aura","text":"Enchant land\nWhenever enchanted land is tapped for mana, its controller adds an additional one mana of any color."},"Parallax Wave":{"cost":"{2}{W}{W}","type":"Enchantment","text":"Fading 5 (This enchantment enters with five fade counters on it. At the beginning of your upkeep, remove a fade counter from it. If you can't, sacrifice it.)\nRemove a fade counter from this enchantment: Exile target creature.\nWhen this enchantment leaves the battlefield, each player returns to the battlefield all cards they own exiled with it."},"Opalescence":{"cost":"{2}{W}{W}","type":"Enchantment","text":"Each other non-Aura enchantment is a creature in addition to its other types and has base power and base toughness each equal to its mana value."},"Gaea's Blessing":{"cost":"{1}{G}","type":"Sorcery","text":"Target player shuffles up to three target cards from their graveyard into their library.\nDraw a card.\nWhen this card is put into your graveyard from your library, shuffle your graveyard into your library."},"Choke":{"cost":"{2}{G}","type":"Enchantment","text":"Islands don't untap during their controllers' untap steps."},"Draco":{"cost":"{16}","type":"Artifact Creature — Dragon","text":"Domain — This spell costs {2} less to cast for each basic land type among lands you control.\nFlying\nDomain — At the beginning of your upkeep, sacrifice this creature unless you pay {10}. This cost is reduced by {2} for each basic land type among lands you control.","pt":"9/9"},"Erratic Explosion":{"cost":"{2}{R}","type":"Sorcery","text":"Choose any target. Reveal cards from the top of your library until you reveal a nonland card. Erratic Explosion deals damage equal to that card's mana value to that permanent or player. Put the revealed cards on the bottom of your library in any order."},"Worldly Tutor":{"cost":"{G}","type":"Instant","text":"Search your library for a creature card, reveal it, then shuffle and put the card on top."},"Sylvan Library":{"cost":"{1}{G}","type":"Enchantment","text":"At the beginning of your draw step, you may draw two additional cards. If you do, choose two cards in your hand drawn this turn. For each of those cards, pay 4 life or put the card on top of your library."},"Reclaim":{"cost":"{G}","type":"Instant","text":"Put target card from your graveyard on top of your library."},"Wild Mongrel":{"cost":"{1}{G}","type":"Creature — Dog","text":"Discard a card: This creature gets +1/+1 and becomes the color of your choice until end of turn.","pt":"2/2"},"Grim Lavamancer":{"cost":"{R}","type":"Creature — Human Wizard","text":"{R}, {T}, Exile two cards from your graveyard: This creature deals 2 damage to any target.","pt":"1/1"},"Mogg Fanatic":{"cost":"{R}","type":"Creature — Goblin","text":"Sacrifice this creature: It deals 1 damage to any target.","pt":"1/1"},"Lightning Bolt":{"cost":"{R}","type":"Instant","text":"Lightning Bolt deals 3 damage to any target."},"Incinerate":{"cost":"{1}{R}","type":"Instant","text":"Incinerate deals 3 damage to any target. A creature dealt damage this way can't be regenerated this turn."},"Fireblast":{"cost":"{4}{R}{R}","type":"Instant","text":"You may sacrifice two Mountains rather than pay this spell's mana cost.\nFireblast deals 4 damage to any target."},"Treetop Village":{"cost":"","type":"Land","text":"This land enters tapped.\n{T}: Add {G}.\n{1}{G}: This land becomes a 3/3 green Ape creature with trample until end of turn. It's still a land. (It can deal excess combat damage to the player or planeswalker it's attacking.)"},"Pyroblast":{"cost":"{R}","type":"Instant","text":"Choose one —\n• Counter target spell if it's blue.\n• Destroy target permanent if it's blue."},"Tranquil Domain":{"cost":"{1}{G}","type":"Instant","text":"Destroy all non-Aura enchantments."},"Ravenous Baloth":{"cost":"{2}{G}{G}","type":"Creature — Beast","text":"Sacrifice a Beast: You gain 4 life.","pt":"4/4"},"Simoon":{"cost":"{R}{G}","type":"Instant","text":"Simoon deals 1 damage to each creature target opponent controls."},"Pyroclasm":{"cost":"{1}{R}","type":"Sorcery","text":"Pyroclasm deals 2 damage to each creature."},"Burning Wish":{"cost":"{1}{R}","type":"Sorcery","text":"You may reveal a sorcery card you own from outside the game and put it into your hand. Exile Burning Wish."},"Scroll Rack":{"cost":"{2}","type":"Artifact","text":"{1}, {T}: Exile any number of cards from your hand face down. Put that many cards from the top of your library into your hand. Then look at the exiled cards and put them on top of your library in any order."},"Seal of Fire":{"cost":"{R}","type":"Enchantment","text":"Sacrifice this enchantment: It deals 2 damage to any target."},"Flame Rift":{"cost":"{1}{R}","type":"Sorcery","text":"Flame Rift deals 4 damage to each player."},"Anarchy":{"cost":"{2}{R}{R}","type":"Sorcery","text":"Destroy all white permanents."}}}</script>
+<script>
+(function () {
+  const DATA = JSON.parse(document.getElementById("data").textContent);
+  const picks = new Map();
+  let db = null;
+  let canWrite = false;
+  let current = 0;
+  let chain = Promise.resolve();
+  let advanceTimer = null;
+  const brewsOnly = document.getElementById("brewsOnly");
+  const unjudgedOnly = document.getElementById("unjudgedOnly");
+
+  const el = (tag, attrs, ...kids) => {
+    const n = document.createElement(tag);
+    for (const [k, v] of Object.entries(attrs || {})) {
+      if (k === "class") n.className = v;
+      else if (k === "text") n.textContent = v;
+      else if (v !== null && v !== undefined && v !== false) n.setAttribute(k, v);
+    }
+    for (const kid of kids) if (kid) n.append(kid);
+    return n;
+  };
+  const judged = (id) => Boolean(picks.get(id) && picks.get(id).winner);
+  const inView = (i) => (!brewsOnly.checked || DATA.pairs[i].brew) && (!unjudgedOnly.checked || !judged(DATA.pairs[i].id) || i === current);
+
+  /** Card -> copies across main, side and commander. */
+  function counts(deck) {
+    const m = new Map();
+    if (!deck) return m;
+    for (const zone of ["commander", "main", "side"]) {
+      for (const c of deck[zone] || []) {
+        const k = (zone === "side" ? "SB: " : "") + c.name;
+        m.set(k, (m.get(k) || 0) + c.qty);
+      }
+    }
+    return m;
+  }
+  function diff(a, b) {
+    const onlyA = [];
+    const onlyB = [];
+    const both = [];
+    for (const k of new Set([...a.keys(), ...b.keys()])) {
+      const x = a.get(k) || 0;
+      const y = b.get(k) || 0;
+      const shared = Math.min(x, y);
+      if (shared) both.push(`${shared} ${k}`);
+      if (x > shared) onlyA.push(`${x - shared} ${k}`);
+      if (y > shared) onlyB.push(`${y - shared} ${k}`);
+    }
+    const byMain = (s) => (s.includes("SB: ") ? 1 : 0);
+    const sort = (xs) => xs.sort((p, q) => byMain(p) - byMain(q) || p.replace(/^\d+ /, "").localeCompare(q.replace(/^\d+ /, "")));
+    return { onlyA: sort(onlyA), onlyB: sort(onlyB), both: sort(both) };
+  }
+  /** The reply's opening: its first two sentences, where answers put the plan. */
+  function opening(text) {
+    if (!text) return "";
+    const clean = text.replace(/\*\*/g, "").replace(/\s+/g, " ").trim();
+    const parts = clean.match(/[^.!?]+[.!?]+/g) || [clean];
+    const out = parts.slice(0, 2).join(" ").trim();
+    return out.length > 360 ? out.slice(0, 357) + "…" : out;
+  }
+
+  function renderProgress() {
+    const pool = DATA.pairs.filter((p) => !brewsOnly.checked || p.brew);
+    const done = pool.filter((p) => judged(p.id)).length;
+    document.getElementById("progress").replaceChildren(el("b", { text: `${done} of ${pool.length}` }), brewsOnly.checked ? " brew pairs judged" : " pairs judged");
+  }
+
+  function save(patch, advance) {
+    if (!db || !canWrite) return;
+    const p = DATA.pairs[current];
+    const body = { ...(picks.get(p.id) || {}), ...patch, pair: p.id, prompt: p.prompt, quick: true, updatedAt: new Date().toISOString() };
+    picks.set(p.id, body);
+    sync();
+    renderProgress();
+    const status = document.getElementById("saved");
+    status.textContent = "Saving…";
+    chain = chain
+      .then(() => db.collection("pairs").doc(p.id).set(body))
+      .then(() => { status.textContent = advance ? "Saved. Next pair in a moment (change your mind with Previous)." : "Saved"; })
+      .catch((e) => { status.textContent = e && e.code === "invalid_argument" ? "Only the owner can save picks on this page." : "Could not save. Try again in a moment."; });
+    if (advance) {
+      clearTimeout(advanceTimer);
+      advanceTimer = setTimeout(() => go(1), 900);
+    }
+  }
+
+  /** The whole list, by zone; lines with more copies than the other deck are highlighted. */
+  /** A card name that shows the card's text on hover, focus or tap (artifact pages can't load outside images). */
+  function cardName(name) {
+    return el("span", { class: "card", "data-card": name, tabindex: "0", text: name });
+  }
+  const peek = document.getElementById("peek");
+  let peekFor = null;
+  function showPeek(target, x, y) {
+    const name = target.dataset.card;
+    const c = DATA.cards && DATA.cards[name];
+    if (name !== peekFor) {
+      peekFor = name;
+      // el() skips null children; replaceChildren would render them as the text "null".
+      peek.replaceChildren(
+        ...[
+          el("div", { class: "pk-head" }, el("span", { text: name }), c ? el("span", { class: "pk-cost", text: c.cost }) : null),
+          c ? el("div", { class: "pk-type", text: c.type }) : el("div", { class: "pk-type", text: "No card text on file." }),
+          c ? el("div", { class: "pk-text", text: c.text }) : null,
+          c && c.pt ? el("div", { class: "pk-pt", text: c.pt }) : null,
+        ].filter(Boolean),
+      );
+    }
+    peek.classList.add("on");
+    const w = peek.offsetWidth;
+    const h = peek.offsetHeight;
+    peek.style.left = Math.max(8, Math.min(window.innerWidth - w - 8, x + 16)) + "px";
+    peek.style.top = Math.max(8, Math.min(window.innerHeight - h - 8, y - h / 2)) + "px";
+  }
+  function hidePeek() { peek.classList.remove("on"); }
+  document.addEventListener("mouseover", (e) => { const t = e.target.closest && e.target.closest(".card"); if (t) showPeek(t, e.clientX, e.clientY); });
+  document.addEventListener("mousemove", (e) => { if (peek.classList.contains("on") && e.target.closest && e.target.closest(".card")) showPeek(e.target.closest(".card"), e.clientX, e.clientY); });
+  document.addEventListener("mouseout", (e) => { if (e.target.closest && e.target.closest(".card")) hidePeek(); });
+  document.addEventListener("focusin", (e) => { const t = e.target.closest && e.target.closest(".card"); if (t) { const r = t.getBoundingClientRect(); showPeek(t, r.right, r.top + r.height / 2); } });
+  document.addEventListener("focusout", (e) => { if (e.target.closest && e.target.closest(".card")) hidePeek(); });
+  // Touch: tap a name to show, tap anywhere else to hide.
+  document.addEventListener("click", (e) => { const t = e.target.closest && e.target.closest(".card"); if (t) { if (peek.classList.contains("on") && peekFor === t.dataset.card) hidePeek(); else showPeek(t, e.clientX, e.clientY); } else hidePeek(); });
+
+  /** "4 Card Name" or "1 SB: Card Name" as a list item with a hoverable name. */
+  function cardLine(line) {
+    const m = line.match(/^(\d+) (SB: )?(.+)$/);
+    if (!m) return el("li", { text: line });
+    return el("li", {}, `${m[1]} ${m[2] || ""}`, cardName(m[3]));
+  }
+
+  function fullList(deck, other) {
+    const d = el("details", { class: "full", open: "" }, el("summary", { text: "Full decklist" }));
+    const theirs = counts(other);
+    for (const [zone, label] of [["commander", "Commander"], ["main", "Main"], ["side", "Sideboard"]]) {
+      const lines = deck[zone] || [];
+      if (!lines.length) continue;
+      const total = lines.reduce((n, c) => n + c.qty, 0);
+      const ul = el("ul");
+      for (const c of lines) {
+        const k = (zone === "side" ? "SB: " : "") + c.name;
+        ul.append(el("li", { class: c.qty > (theirs.get(k) || 0) ? "uniq" : null }, `${c.qty} `, cardName(c.name)));
+      }
+      d.append(el("h4", { text: `${label} (${total})` }), ul);
+    }
+    return d;
+  }
+
+  function side(letter, ans, only, other) {
+    const box = el("article", { class: "side" });
+    box.append(el("div", { class: "side-head" }, el("span", { class: "letter", text: letter }), ans.deck ? null : el("span", { class: "fmt", text: "No deck" })));
+    if (ans.text) box.append(el("p", { class: "lead", text: opening(ans.text) }));
+    const o = el("div", { class: "only" }, el("h3", { text: `Only in ${letter}` }));
+    o.append(only.length ? el("ul", {}, ...only.map(cardLine)) : el("p", { class: "none", text: "Nothing: every card is also in the other deck." }));
+    box.append(o);
+    if (ans.deck) box.append(fullList(ans.deck, other));
+    if (ans.text) {
+      const d = el("details", {}, el("summary", { text: "Full reply" }));
+      d.append(el("div", { class: "reply", text: ans.text }));
+      box.append(d);
+    }
+    return box;
+  }
+
+  function sync() {
+    const s = picks.get(DATA.pairs[current].id) || {};
+    for (const b of document.querySelectorAll("#picks button")) {
+      b.setAttribute("aria-pressed", String(s.winner === b.dataset.w));
+      b.disabled = !canWrite;
+    }
+    for (const b of document.querySelectorAll("#why button")) {
+      b.setAttribute("aria-pressed", String((s.reasons || []).includes(b.dataset.r)));
+      b.disabled = !canWrite;
+    }
+  }
+
+  function render() {
+    const p = DATA.pairs[current];
+    const pr = DATA.prompts[p.prompt];
+    const first = pr.prompt.split("\n")[0];
+    const req = [el("span", { class: "fmt", text: pr.format }), el("p", { class: "prompt", text: first })];
+    if (pr.prompt.includes("\n") && pr.prompt.length > 220) {
+      const d = el("details", {}, el("summary", { text: "Show the pasted list" }));
+      d.append(el("div", { class: "reply", text: pr.prompt.slice(first.length).trim() }));
+      req.push(d);
+    }
+    document.getElementById("request").replaceChildren(...req);
+    const d = diff(counts(p.left.deck), counts(p.right.deck));
+    document.getElementById("duel").replaceChildren(side("A", p.left, d.onlyA, p.right.deck), side("B", p.right, d.onlyB, p.left.deck));
+    const shared = document.getElementById("shared");
+    shared.replaceChildren(el("summary", { text: `Both decks play ${d.both.length} of the same card lines` }), el("pre", { text: d.both.join("\n") || "None" }));
+    shared.open = false;
+    document.getElementById("saved").textContent = "";
+    document.getElementById("prev").disabled = !DATA.pairs.some((_, i) => i < current && inView(i));
+    document.getElementById("next").disabled = !DATA.pairs.some((_, i) => i > current && inView(i));
+    sync();
+    renderProgress();
+  }
+
+  function go(dir) {
+    let i = current + dir;
+    while (i >= 0 && i < DATA.pairs.length && !inView(i)) i += dir;
+    if (i < 0 || i >= DATA.pairs.length) {
+      if (dir > 0) document.getElementById("saved").textContent = "That was the last one in this view. Thank you!";
+      return;
+    }
+    current = i;
+    try { localStorage.setItem("quick-pair", String(current)); } catch (e) {}
+    render();
+    window.scrollTo(0, 0);
+  }
+  function jumpToFirst() {
+    const i = DATA.pairs.findIndex((_, j) => (!brewsOnly.checked || DATA.pairs[j].brew) && (!unjudgedOnly.checked || !judged(DATA.pairs[j].id)));
+    if (i >= 0) { current = i; render(); }
+  }
+
+  document.getElementById("prev").addEventListener("click", () => go(-1));
+  document.getElementById("next").addEventListener("click", () => go(1));
+  brewsOnly.addEventListener("change", jumpToFirst);
+  unjudgedOnly.addEventListener("change", jumpToFirst);
+  for (const b of document.querySelectorAll("#picks button")) b.addEventListener("click", () => save({ winner: b.dataset.w }, true));
+  for (const b of document.querySelectorAll("#why button")) {
+    b.addEventListener("click", () => {
+      clearTimeout(advanceTimer);
+      const s = picks.get(DATA.pairs[current].id) || {};
+      const set = new Set(s.reasons || []);
+      set.has(b.dataset.r) ? set.delete(b.dataset.r) : set.add(b.dataset.r);
+      save({ reasons: [...set] }, false);
+    });
+  }
+  document.addEventListener("keydown", (e) => {
+    if (e.target && /input|textarea/i.test(e.target.tagName)) return;
+    const map = { "1": "A", "2": "tie", "3": "B", "4": "neither" };
+    if (map[e.key] && canWrite) save({ winner: map[e.key] }, true);
+    if (e.key === "ArrowRight") go(1);
+    if (e.key === "ArrowLeft") go(-1);
+  });
+
+  try { current = Math.min(Number(localStorage.getItem("quick-pair") || 0), DATA.pairs.length - 1) || 0; } catch (e) {}
+  render();
+
+  (async () => {
+    const notice = document.getElementById("notice");
+    const claude = window.claude;
+    const dbNs = claude && claude.use ? await claude.use("db") : null;
+    const user = claude && claude.use ? await claude.use("user") : null;
+    if (!dbNs) { notice.textContent = "Picks save only when this page is open on claude.ai and you're signed in."; return; }
+    db = dbNs;
+    canWrite = user ? (user.isOwner() ?? false) : false;
+    let first = true;
+    db.collection("pairs").onSnapshot(
+      (snap) => {
+        picks.clear();
+        for (const d of snap.docs) picks.set(d.id, d.data());
+        if (first) {
+          first = false;
+          notice.textContent = canWrite
+            ? "Hover (or tap) any card name to see what it does. The cards that differ are at the top; full lists are below, with those cards highlighted. Press 1, 2 or 3 (or click) and it moves on. The opening two sentences of each reply say what the deck is going for."
+            : "Read-only: only the page owner can judge.";
+          jumpToFirst();
+          return;
+        }
+        sync();
+        renderProgress();
+      },
+      () => { notice.textContent = "Saved picks could not be loaded. Reload the page to try again."; },
+    );
+  })();
+})();
+</script>

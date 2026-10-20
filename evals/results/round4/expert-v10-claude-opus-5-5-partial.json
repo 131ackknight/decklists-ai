@@ -1,0 +1,652 @@
+{
+ "ranAt": "2026-10-20T18:30:29.267Z",
+ "harness": "v10",
+ "model": "claude-opus-5-5",
+ "tracks": [
+  "expert"
+ ],
+ "results": [
+  {
+   "id": "expert-premodern-pandeburst",
+   "track": "expert",
+   "format": "Premodern",
+   "before": null,
+   "prompt": "Brew me a Premodern deck built around Pandemonium and Saproling Burst.",
+   "text": "The deck is in: a Red-splash Enchantress deck that wins with **Pandemonium + Saproling Burst**.\n\n**How it wins:** Get Pandemonium onto the battlefield, then cast Saproling Burst. Burst enters with 7 fade counters. Take them off one at a time. Each Saproling enters at the size of the counters left (6/6, then 5/5, 4/4, 3/3, 2/2, 1/1), and Pandemonium lets each one deal damage equal to its power to any target. That's 21 damage. You can do it at instant speed, and there's no summoning sickness to wait out, because the tokens never attack.\n\n**How the deck gets there:** The engine is borrowed from the format's top deck, Enchantress:\n- Wild Growth and Serra's Sanctum for ramp\n- Argothian Enchantress and Enchantress's Presence to draw a card off every enchantment you cast\n- 3 Sterling Grove, 2 Enlightened Tutor and Mirri's Guile to find whichever piece is missing. Sterling Grove also gives your other enchantments shroud, so Seal of Cleansing and Disenchant effects can't target your combo pieces.\n- 2 Replenish as a backup. If both pieces end up in the graveyard, Replenish brings them back together.\n\nThe usual 22 Enchantress lands become 23 here because of the 5-mana Burst and the red splash, with 7 red sources for Pandemonium.\n\n**Directions I considered:**\n1. Fit the pair into the Replenish deck (Attunement to discard them, Replenish to return both). That's the only real list that has run them, but it needs all four of white, blue, red and green.\n2. Red-green ramp with mana creatures and burn, casting both pieces from hand.\n3. **Chosen:** Green-white Enchantress with a light red splash. It's the strongest because the card-draw engine and enchantment tutors dig for both pieces, and Sterling Grove keeps them from being targeted, all on proven mana.\n\n**Honest odds:** From natural draws alone, you have Pandemonium plus a Burst or a tutor by turn 6 in about 52% of games. That doesn't count any cards drawn off the Enchantresses, so the real number is higher. The 0.2% figure the submit tool gave is misleading: it counts only games where every card in the line, including the backup Replenish, has been drawn. On a good draw the kill is turn 4–5: Pandemonium on turn 3 with Wild Growth, then Burst next turn.\n\n**Sideboard:** It's built for the matchups the results show:\n- Xantid Swarm and Red Elemental Blast against Stiflenought and Psychatog countermagic\n- Warmth and a second Solitary Confinement against Sligh and Goblins\n- Tormod's Crypt against Hermit Druid and Replenish\n- Sacred Ground and Karmic Justice against Terrageddon and decks that destroy your enchantments\n- Aura of Silence for the Enchantress mirror",
+   "deck": {
+    "main": [
+     {
+      "qty": 4,
+      "name": "Argothian Enchantress"
+     },
+     {
+      "qty": 4,
+      "name": "Enchantress's Presence"
+     },
+     {
+      "qty": 4,
+      "name": "Wild Growth"
+     },
+     {
+      "qty": 3,
+      "name": "Mirri's Guile"
+     },
+     {
+      "qty": 3,
+      "name": "Sterling Grove"
+     },
+     {
+      "qty": 2,
+      "name": "Enlightened Tutor"
+     },
+     {
+      "qty": 4,
+      "name": "Pandemonium"
+     },
+     {
+      "qty": 4,
+      "name": "Saproling Burst"
+     },
+     {
+      "qty": 2,
+      "name": "Replenish"
+     },
+     {
+      "qty": 3,
+      "name": "Swords to Plowshares"
+     },
+     {
+      "qty": 3,
+      "name": "Seal of Cleansing"
+     },
+     {
+      "qty": 1,
+      "name": "Solitary Confinement"
+     },
+     {
+      "qty": 4,
+      "name": "Serra's Sanctum"
+     },
+     {
+      "qty": 4,
+      "name": "Brushland"
+     },
+     {
+      "qty": 3,
+      "name": "Karplusan Forest"
+     },
+     {
+      "qty": 1,
+      "name": "City of Brass"
+     },
+     {
+      "qty": 4,
+      "name": "Windswept Heath"
+     },
+     {
+      "qty": 2,
+      "name": "Wooded Foothills"
+     },
+     {
+      "qty": 3,
+      "name": "Forest"
+     },
+     {
+      "qty": 1,
+      "name": "Plains"
+     },
+     {
+      "qty": 1,
+      "name": "Mountain"
+     }
+    ],
+    "side": [
+     {
+      "qty": 3,
+      "name": "Xantid Swarm"
+     },
+     {
+      "qty": 2,
+      "name": "Tormod's Crypt"
+     },
+     {
+      "qty": 2,
+      "name": "Aura of Silence"
+     },
+     {
+      "qty": 2,
+      "name": "Warmth"
+     },
+     {
+      "qty": 1,
+      "name": "Solitary Confinement"
+     },
+     {
+      "qty": 1,
+      "name": "Sacred Ground"
+     },
+     {
+      "qty": 1,
+      "name": "Karmic Justice"
+     },
+     {
+      "qty": 1,
+      "name": "Swords to Plowshares"
+     },
+     {
+      "qty": 2,
+      "name": "Red Elemental Blast"
+     }
+    ],
+    "commander": [],
+    "label": "brew",
+    "warnings": [],
+    "winLine": [
+     {
+      "card": "Wild Growth",
+      "does": "Turn 1 ramp so Pandemonium can come down turn 3 (Serra's Sanctum also adds W per enchantment)"
+     },
+     {
+      "card": "Argothian Enchantress",
+      "does": "Draws a card on every enchantment cast, digging toward the two combo pieces"
+     },
+     {
+      "card": "Sterling Grove",
+      "does": "Gives your other enchantments shroud against Seal/Disenchant effects, or sacrifice it for {1} to put the missing combo piece on top of your library"
+     },
+     {
+      "card": "Pandemonium",
+      "does": "Cast first; each creature that enters can deal damage equal to its power to any target"
+     },
+     {
+      "card": "Saproling Burst",
+      "does": "Enters with 7 fade counters; remove them one at a time at instant speed, making Saprolings that enter as 6/6, 5/5, 4/4, 3/3, 2/2, 1/1. Pandemonium has each one hit the opponent: 21 damage"
+     },
+     {
+      "card": "Replenish",
+      "does": "Backup line: if both pieces are in the graveyard (discarded to Solitary Confinement or destroyed), return them together and fire off the 21 damage"
+     }
+    ],
+    "winTurn": 5,
+    "winLineDrawnPct": 0.2
+   },
+   "toolCalls": [
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "played_with",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "reference_list",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "submit_deck",
+     "ok": true,
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 18,
+    "output": 9515,
+    "cacheRead": 126317,
+    "cacheWrite": 28134
+   },
+   "costUsd": 0.3563,
+   "steps": 7,
+   "ms": 100695,
+   "errors": []
+  },
+  {
+   "id": "expert-premodern-draco-explosion",
+   "track": "expert",
+   "format": "Premodern",
+   "before": null,
+   "prompt": "Brew me a Premodern deck built around Erratic Explosion and Draco.",
+   "text": "I submitted the deck. It's a red-green burn deck with a one-shot finish: put **Draco** on top of your library, then cast **Erratic Explosion**. Explosion reveals cards until it hits a nonland card and deals damage equal to that card's mana value. Draco's mana value is 16, so that's 16 damage to the face. **Fireblast** (sacrifice two Mountains, 4 damage) brings it to exactly 20. Any earlier damage from Bolts or creatures means you need even less.\n\n**Three directions I considered:**\n1. **Red-white with Enlightened Tutor.** Draco is an artifact creature, so this tutor can put it on top of your library. But white gives you nothing else that sets up the top of your deck.\n2. **Blue-red with Portent and Scroll Rack.** The best tool for stacking your library, Brainstorm, is banned in Premodern. Portent only looks at three cards, so this version is weaker.\n3. **Red-green, borrowing the GR Zoo shell from the meta menu (my pick).** Green has three different ways to get Draco on top, and the Zoo burn package already covers the last 4 points.\n\nI chose red-green because it's the only direction where Draco can get on top of your library from three angles, and the burn shell is already proven.\n\n**How Draco gets on top:**\n- **Worldly Tutor** (G, 4 copies): finds a creature and puts it on top. Cast it in your own main phase, then Explosion right away. If you cast it on the opponent's turn, you'll just draw Draco in your draw step.\n- **Sylvan Library** (3 copies): if you draw Draco with it, it's one of the cards you put back.\n- **Draco stuck in hand:** discard it to **Wild Mongrel**, then cast **Reclaim** (G, instant) to put it back on top.\n\nThe main line is Worldly Tutor plus Explosion on turn 4 (4 mana total), with Fireblast available as a free spell.\n\n**Honest odds:**\n- You'll have Tutor or Library by turn 4 about 74% of the time, but the full Tutor-or-Library-plus-Explosion combination only about 38% of the time. Treat the combo as a strong finisher, not a consistent turn-4 kill.\n- The submit check reported 0.5%. That number only counts games where you naturally draw all the combo cards, Draco included, and ignores the tutors. You don't want to draw Draco, so it doesn't reflect the real plan.\n- Explosion isn't dead without Draco on top. It still hits creatures or the opponent for 1 to 3 damage off your cheap spells.\n- Erratic Explosion puts Draco on the bottom of your library after it fires, so a second Explosion needs a fresh tutor.\n- I'm assuming you never want to cast Draco. With just Mountains and Forests it would cost 12 and need upkeep payments.\n\nThe mana copies GR Zoo's land setup: 22 lands, 16 red sources and 14 green. I kept 8 basic Mountains so Fireblast is always castable. The sideboard is the usual GR Zoo plan against Enchantress and the blue decks: Pyroblast, Red Elemental Blast, Tranquil Domain, Naturalize and Tormod's Crypt.",
+   "deck": {
+    "main": [
+     {
+      "qty": 1,
+      "name": "Draco"
+     },
+     {
+      "qty": 4,
+      "name": "Erratic Explosion"
+     },
+     {
+      "qty": 4,
+      "name": "Worldly Tutor"
+     },
+     {
+      "qty": 3,
+      "name": "Sylvan Library"
+     },
+     {
+      "qty": 2,
+      "name": "Reclaim"
+     },
+     {
+      "qty": 4,
+      "name": "Wild Mongrel"
+     },
+     {
+      "qty": 4,
+      "name": "Grim Lavamancer"
+     },
+     {
+      "qty": 4,
+      "name": "Mogg Fanatic"
+     },
+     {
+      "qty": 4,
+      "name": "Lightning Bolt"
+     },
+     {
+      "qty": 4,
+      "name": "Incinerate"
+     },
+     {
+      "qty": 4,
+      "name": "Fireblast"
+     },
+     {
+      "qty": 4,
+      "name": "Wooded Foothills"
+     },
+     {
+      "qty": 2,
+      "name": "Windswept Heath"
+     },
+     {
+      "qty": 4,
+      "name": "Karplusan Forest"
+     },
+     {
+      "qty": 8,
+      "name": "Mountain"
+     },
+     {
+      "qty": 3,
+      "name": "Forest"
+     },
+     {
+      "qty": 1,
+      "name": "Treetop Village"
+     }
+    ],
+    "side": [
+     {
+      "qty": 3,
+      "name": "Pyroblast"
+     },
+     {
+      "qty": 1,
+      "name": "Red Elemental Blast"
+     },
+     {
+      "qty": 2,
+      "name": "Naturalize"
+     },
+     {
+      "qty": 2,
+      "name": "Tormod's Crypt"
+     },
+     {
+      "qty": 2,
+      "name": "Tranquil Domain"
+     },
+     {
+      "qty": 2,
+      "name": "Ravenous Baloth"
+     },
+     {
+      "qty": 1,
+      "name": "Simoon"
+     },
+     {
+      "qty": 2,
+      "name": "Pyroclasm"
+     }
+    ],
+    "commander": [],
+    "label": "brew",
+    "warnings": [],
+    "winLine": [
+     {
+      "card": "Lightning Bolt",
+      "does": "Early burn and creature beats (Mogg Fanatic, Grim Lavamancer, Wild Mongrel) chip the opponent below 20"
+     },
+     {
+      "card": "Worldly Tutor",
+      "does": "Cast in your own main phase (G): puts Draco on top of the library. Sylvan Library can also put a drawn Draco back on top, and Wild Mongrel discard + Reclaim works too"
+     },
+     {
+      "card": "Draco",
+      "does": "Sits on top of the library as a mana value 16 card"
+     },
+     {
+      "card": "Erratic Explosion",
+      "does": "For 2R, reveals Draco and deals 16 damage to the opponent"
+     },
+     {
+      "card": "Fireblast",
+      "does": "Sacrifice two Mountains for the last 4 damage: 16 + 4 = 20"
+     }
+    ],
+    "winTurn": 4,
+    "winLineDrawnPct": 0.5
+   },
+   "toolCalls": [
+    {
+     "name": "played_with",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "submit_deck",
+     "ok": true,
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 16,
+    "output": 7963,
+    "cacheRead": 89001,
+    "cacheWrite": 23582
+   },
+   "costUsd": 0.295,
+   "steps": 6,
+   "ms": 92259,
+   "errors": []
+  },
+  {
+   "id": "expert-premodern-rector-combo",
+   "track": "expert",
+   "format": "Premodern",
+   "before": "2026-05-16",
+   "prompt": "Brew me a Premodern deck built around Future Sight, Academy Rector and Veteran Explorer.",
+   "text": "I built a four-color brew I'm calling **Rector Sight**. It's a sacrifice-and-tutor deck: Veteran Explorer ramps you into Future Sight early, and Academy Rector turns each death into the enchantment you need.\n\n**How it plays:** On turn 1 you play Explorer. On turn 2 you cast Cabal Therapy, then flash it back by sacrificing Explorer, which fetches two basic Islands. That gives you 5 lands on turn 3 for Future Sight, and from then on you can play cards off the top of your library. Rector is your tutor. When it dies, it puts any enchantment from your library onto the battlefield: Future Sight, Opposition, Survival of the Fittest, or Pattern of Rebirth. Pattern goes onto a Wall or Birds, and when you sacrifice that creature it finds Akroma, a 6/6 flier with haste and protection from black and red.\n\n**Why this direction:** I compared three options:\n1. **Four-color (G/U/W plus black):** Uses Cabal Therapy, Phyrexian Tower and Carrion Feeder to kill your own creatures (the Pattern Combo package).\n2. **Black-green Living Death splashing white and blue:** Living Death's mass sacrifice triggers Explorer and Rector together.\n3. **Green-blue Survival splashing white:** Borrows Survival and Opposition from Tradewind Survival.\n\nI picked the first one. Explorer and Rector only do anything when they die, and black is the only color that kills your own creatures cheaply and repeatedly while also disrupting the opponent. Blue is still a main color here because Future Sight costs three blue mana.\n\n**Some things to know:**\n- **Mana:** I borrowed the mana base from the Pattern Combo list. Phyrexian Tower makes it possible to cast Future Sight on turn 2: sacrifice Explorer to the Tower for two black mana, and the two Islands Explorer fetches enter untapped. The deck checked clean against Pattern Combo with 22 lands and 18 blue sources. It runs 7 basics so Explorer always has lands to find, and 3 of them are Islands.\n- **Explorer helps your opponent too.** They also get two basic lands. That's a real cost against Stiflenought, the most-played deck (16% of results). Duress and Therapy are there to protect your turn-3 Future Sight from it.\n- **Odds:** Without mulligans, you see at least one Explorer by turn 3 only 52.8% of the time. You see one of the 7 sacrifice outlets or one of the 7 copies of Future Sight/Rector 74.1% of the time each, and all three together 26.3% of the time. Survival can also find Explorer, but that wasn't included in these numbers.\n- **The Akroma finish depends on tutors.** The submission tool said you naturally draw every card in that line by turn 6 in only about 0.1% of games, but it doesn't count tutors. Pattern and Akroma are almost always fetched by Rector, never drawn. On average this is a turn-5 or turn-6 deck that wins on card advantage, not a fast combo.\n- **Sideboard:**\n  - Against Goblins and Sligh: Hydroblast, Engineered Plague, Circle of Protection: Red and Spike Feeder. Rector can fetch Engineered Plague or the Circle straight onto the battlefield.\n  - Against Enchantress and Replenish: Seal of Cleansing and Tormod's Crypt.\n  - Against blue decks: Meddling Mage.\n  - Against artifacts like Cursed Scroll: Uktabi Orangutan.",
+   "deck": {
+    "main": [
+     {
+      "qty": 4,
+      "name": "Veteran Explorer"
+     },
+     {
+      "qty": 4,
+      "name": "Academy Rector"
+     },
+     {
+      "qty": 4,
+      "name": "Birds of Paradise"
+     },
+     {
+      "qty": 4,
+      "name": "Wall of Blossoms"
+     },
+     {
+      "qty": 2,
+      "name": "Carrion Feeder"
+     },
+     {
+      "qty": 1,
+      "name": "Akroma, Angel of Wrath"
+     },
+     {
+      "qty": 3,
+      "name": "Future Sight"
+     },
+     {
+      "qty": 4,
+      "name": "Cabal Therapy"
+     },
+     {
+      "qty": 3,
+      "name": "Survival of the Fittest"
+     },
+     {
+      "qty": 2,
+      "name": "Pattern of Rebirth"
+     },
+     {
+      "qty": 1,
+      "name": "Opposition"
+     },
+     {
+      "qty": 4,
+      "name": "Swords to Plowshares"
+     },
+     {
+      "qty": 2,
+      "name": "Duress"
+     },
+     {
+      "qty": 4,
+      "name": "City of Brass"
+     },
+     {
+      "qty": 1,
+      "name": "Grand Coliseum"
+     },
+     {
+      "qty": 4,
+      "name": "Yavimaya Coast"
+     },
+     {
+      "qty": 2,
+      "name": "Adarkar Wastes"
+     },
+     {
+      "qty": 2,
+      "name": "Underground River"
+     },
+     {
+      "qty": 1,
+      "name": "Brushland"
+     },
+     {
+      "qty": 1,
+      "name": "Phyrexian Tower"
+     },
+     {
+      "qty": 3,
+      "name": "Island"
+     },
+     {
+      "qty": 2,
+      "name": "Forest"
+     },
+     {
+      "qty": 1,
+      "name": "Plains"
+     },
+     {
+      "qty": 1,
+      "name": "Swamp"
+     }
+    ],
+    "side": [
+     {
+      "qty": 3,
+      "name": "Hydroblast"
+     },
+     {
+      "qty": 2,
+      "name": "Engineered Plague"
+     },
+     {
+      "qty": 1,
+      "name": "Circle of Protection: Red"
+     },
+     {
+      "qty": 2,
+      "name": "Seal of Cleansing"
+     },
+     {
+      "qty": 2,
+      "name": "Tormod's Crypt"
+     },
+     {
+      "qty": 2,
+      "name": "Meddling Mage"
+     },
+     {
+      "qty": 1,
+      "name": "Uktabi Orangutan"
+     },
+     {
+      "qty": 2,
+      "name": "Spike Feeder"
+     }
+    ],
+    "commander": [],
+    "label": "brew",
+    "warnings": [],
+    "winLine": [
+     {
+      "card": "Veteran Explorer",
+      "does": "Turn 1 play. It's the fodder you sacrifice for ramp."
+     },
+     {
+      "card": "Cabal Therapy",
+      "does": "Turn 2: cast it to strip a key card, then flash it back by sacrificing Explorer. Explorer's death trigger puts two basic Islands onto the battlefield, so you have 4 lands on turn 2 (Phyrexian Tower or Carrion Feeder can do the sacrifice instead)."
+     },
+     {
+      "card": "Future Sight",
+      "does": "Turn 3 with 5 lands: cast it. From then on you play lands and spells off the top of your library, so every turn gives you extra cards."
+     },
+     {
+      "card": "Academy Rector",
+      "does": "Cast from hand or off the top. When it dies to a sacrifice outlet, exile it and put any enchantment from your library onto the battlefield."
+     },
+     {
+      "card": "Pattern of Rebirth",
+      "does": "Rector puts it onto the battlefield attached to Wall of Blossoms or Birds. Sacrifice that creature to Carrion Feeder or a Therapy flashback and search out a creature."
+     },
+     {
+      "card": "Akroma, Angel of Wrath",
+      "does": "The Pattern target: a hasty 6/6 flier with first strike and protection from black and red that ends the game in about 3 swings."
+     }
+    ],
+    "winTurn": 6,
+    "winLineDrawnPct": 0.1
+   },
+   "toolCalls": [
+    {
+     "name": "played_with",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "reference_list",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "submit_deck",
+     "ok": true,
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 22,
+    "output": 15391,
+    "cacheRead": 213595,
+    "cacheWrite": 39289
+   },
+   "costUsd": 0.5471,
+   "steps": 9,
+   "ms": 156434,
+   "errors": []
+  }
+ ]
+}

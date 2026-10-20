@@ -65,6 +65,16 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-10-20 · Owner on the two unfixed combos: "missing a way to win"
+
+Asked what v8's Rector and Pande-Burst decks got wrong with the right cards in front of them, the owner pointed to two real Rector lists (one saved in `evals/expert-refs/`) and summed up: **"it was missing a way to win really, or a focused strategy on how to leverage Rector on top of normal interaction suites."**
+
+The saved reference (Premodern, Aug 2026, "Name Sexy Rector") shows what that means: Rector plus **Pattern of Rebirth** and **Recurring Nightmare** as the engine, **Nantuko Husk** as the sacrifice outlet that makes Rector and Pattern go, and **Form of the Dragon / Worship / Akroma** as what Rector fetches to actually win, on top of Cabal Therapy, Survival and the usual green creature suite. None of the three AI builds had Pattern of Rebirth, Recurring Nightmare or a Rector target that wins the game: they had Rector, the interaction, and no line.
+
+This names the gap more precisely than "combo": **the model builds the shell and the interaction but not the win.** It is the same thing the owner saw in Pande-Burst (two combo cards, no plan to resolve them). A plan has a line to the win; the model's brews often stop at "a deck containing the cards."
+
+---
+
 ## 2026-10-20 · Lookup vs. reasoning on the four combo misses: each fixes one, neither fixes two
 
 Owner's question before judging: "Are we just plugging gaps in specific combo builds vs fixing the actual AI deck building?" Answer: v8 (a `played_with` tool: what real decks in any format run the requested cards with) is general but supplies knowledge rather than judgment. So a control was added: **v9** = v5 plus a mechanism-first step ("for each requested card: what it is FOR, which part of its text matters, what it needs around it") and no lookup. Four prompts, three versions, 12 blind pairs ($3.29).

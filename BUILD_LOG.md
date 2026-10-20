@@ -27,7 +27,7 @@ Three things, and the third is turning out to be the most interesting.
 
 | Item | Total |
 | --- | --- |
-| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92. Total about $245.61. Plus one 17-token test call. |
+| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37. Total about $246.98. Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats); full history 143,721 (since 2025-07-01) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
 | Automated tests | 48 passing |
@@ -62,6 +62,20 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - Lesson to apply: any prompt or claim that names a card gets checked against the card index before it is used.
 - ~~Switch to pairwise~~: done; 36 pairs judged (v1 8 wins, v2 6, 22 ties; v2 100% faithful vs. 92%).
 - ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
+
+---
+
+## 2026-10-20 · v11 (exactly 60, build on the dominant shell): Pande-Burst solved, Rofellos better, Mind Over Matter still not
+
+v11 = v10 plus two checks from expert round 2: main decks are exactly 60 in 60-card formats (real lists: Premodern 97.5%, Standard 99%, Modern 96.5%, Legacy 90.8% exactly 60) unless the player asks for more; and when `played_with` shows most real lists running the requested cards are one strategy (60%+ of 5+ lists), a brew sharing under 35% with that strategy's latest list is sent back unless it gives a `shellReason`. 53 tests. Run on the three prompts the owner had diagnosed ($1.37).
+
+**For the first time, Pande-Burst came out as the real deck:** Attunement, Replenish, Intuition, Frantic Search, Parallax Wave, 4 Pandemonium, 4 Saproling Burst. Every earlier version (v5, v8, v9, v10) had chosen an Enchantress shell the owner said can't work. Rofellos came out as a Survival toolbox at 60 cards with Gaea's Cradle. Mind Over Matter went Shallow Grave + Arcanis, still without the rocks and engines the owner asked for.
+
+**Owner's blind picks, v11 vs v10:** Pande-Burst **v11**; Rofellos **v11**; Mind Over Matter neither.
+
+**Tally of the diagnose-then-check loop today:** six prompts the owner had marked "neither" (Pande-Burst, Draco, Living End, Rector, Rofellos, Mind Over Matter); after the fixes, five have a version the owner would pick, one (Mind Over Matter) does not. Each fix was a check the model can't talk around, aimed at one sentence from the owner. Cost of the whole loop, brews and all: about $13.
+
+**v11 is the base harness from here.** Owner's question at the end: "what's the point of comparing these A and Bs?" Answered in chat: the pair tells us whether a change helped without the judge knowing which is new; Neither tells us whether either is any good. Now that the base is settled, single-deck "would you play it?" judging is the better question for the next round.
 
 ---
 

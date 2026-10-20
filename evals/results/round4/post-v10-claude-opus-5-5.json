@@ -1,0 +1,1362 @@
+{
+ "ranAt": "2026-10-20T19:57:51.682Z",
+ "harness": "v10",
+ "model": "claude-opus-5-5",
+ "tracks": [
+  "post"
+ ],
+ "results": [
+  {
+   "id": "post-standard-gearhulk",
+   "track": "post",
+   "format": "Standard",
+   "before": "2026-06-21",
+   "prompt": "Brew me a Standard deck built around The Jolly Balloon Man, Sewer-veillance Cam and Bloom Tender.",
+   "text": "**Balloon Hoof (4-color, Standard brew)**\n\n**How it wins:** Bloom Tender taps for one mana of each color among your permanents. The Jolly Balloon Man adds red and white, Sewer-veillance Cam adds blue, and the green creatures fill in the rest, so Bloom Tender usually taps for 4. Flashing in the Cam untaps it for a second tap, which is enough to hardcast Craterhoof Behemoth on turn 4 (or fetch it with Nature's Rhythm). Then the Balloon Man pays {1} and taps to make a hasty, flying copy of Craterhoof. The copy's enter trigger fires again, so every creature gets +X/+X twice. Earlier in the game the Balloon Man copies Explosive Prodigy for repeat removal (it deals damage equal to your color count) and Brightglass Gearhulk for a second search, which can find Cams, Elves or Seam Rip.\n\n**Direction chosen:** I looked at three options:\n1. A Jeskai deck where the Balloon Man copies creatures with \"untap\" enter abilities (Flash Thompson, Glamermite).\n2. An enter-ability value deck built around Quantum Riddler.\n3. A four-color deck borrowing the Nature's Rhythm + Craterhoof package from the menu's Selesnya Offense and the tournament Aang lists.\n\nI went with option 3. Copying Craterhoof gives the Balloon Man a real kill, and Bloom Tender actually gets to four colors here.\n\n**Things to know:**\n- **No infinite combo.** I searched for one and didn't find it. Every Standard card that untaps on entering (Flash Thompson, Glamermite) only untaps one creature. That pays back the Balloon Man's tap but never the {1}, so the loop always runs out.\n- **Badgermole Cub is banned.** The card tool lists it as banned in Standard, even though the menu shows it in Selesnya Offense, so I left it out.\n- **The turn-4 kill is a best case.** The tool puts the odds of drawing every card in that line by turn 4 at about 1%; it doesn't count tutors. Seen another way, you have about a 60% chance of a Balloon Man and 75% of Craterhoof or Nature's Rhythm by turn 5 on the draw. A Craterhoof alone off your mana creatures is often enough to win.\n- **Mana and sideboard:** The 23 lands are modeled on the Aang lists, and check_deck raised no issues. The sideboard is aimed at Prowess, Lessons and the green creature decks.",
+   "deck": {
+    "main": [
+     {
+      "qty": 4,
+      "name": "Llanowar Elves"
+     },
+     {
+      "qty": 4,
+      "name": "Gene Pollinator"
+     },
+     {
+      "qty": 4,
+      "name": "Sewer-veillance Cam"
+     },
+     {
+      "qty": 2,
+      "name": "Seam Rip"
+     },
+     {
+      "qty": 4,
+      "name": "Bloom Tender"
+     },
+     {
+      "qty": 2,
+      "name": "Spider Manifestation"
+     },
+     {
+      "qty": 4,
+      "name": "Explosive Prodigy"
+     },
+     {
+      "qty": 3,
+      "name": "Nature's Rhythm"
+     },
+     {
+      "qty": 4,
+      "name": "The Jolly Balloon Man"
+     },
+     {
+      "qty": 3,
+      "name": "Brightglass Gearhulk"
+     },
+     {
+      "qty": 3,
+      "name": "Craterhoof Behemoth"
+     },
+     {
+      "qty": 4,
+      "name": "Temple Garden"
+     },
+     {
+      "qty": 4,
+      "name": "Stomping Ground"
+     },
+     {
+      "qty": 3,
+      "name": "Breeding Pool"
+     },
+     {
+      "qty": 4,
+      "name": "Starting Town"
+     },
+     {
+      "qty": 2,
+      "name": "Multiversal Passage"
+     },
+     {
+      "qty": 2,
+      "name": "Hushwood Verge"
+     },
+     {
+      "qty": 4,
+      "name": "Forest"
+     }
+    ],
+    "side": [
+     {
+      "qty": 2,
+      "name": "Get Lost"
+     },
+     {
+      "qty": 2,
+      "name": "Rest in Peace"
+     },
+     {
+      "qty": 2,
+      "name": "Disdainful Stroke"
+     },
+     {
+      "qty": 2,
+      "name": "Authority of the Consuls"
+     },
+     {
+      "qty": 2,
+      "name": "Pawpatch Formation"
+     },
+     {
+      "qty": 2,
+      "name": "Sear"
+     },
+     {
+      "qty": 1,
+      "name": "Surrak, Elusive Hunter"
+     },
+     {
+      "qty": 2,
+      "name": "Keen-Eyed Curator"
+     }
+    ],
+    "commander": [],
+    "label": "brew",
+    "warnings": [],
+    "winLine": [
+     {
+      "card": "Llanowar Elves",
+      "does": "Turn 1 mana creature, accelerates into Bloom Tender / Balloon Man"
+     },
+     {
+      "card": "Bloom Tender",
+      "does": "Turn 2; once green, red, white and blue permanents are out it taps for 4 mana by itself"
+     },
+     {
+      "card": "The Jolly Balloon Man",
+      "does": "Turn 3, haste; adds red and white to Bloom Tender's color count"
+     },
+     {
+      "card": "Sewer-veillance Cam",
+      "does": "Flashed in for U after Bloom Tender taps: adds blue and its ETB untaps Bloom Tender for a second 4-mana tap"
+     },
+     {
+      "card": "Craterhoof Behemoth",
+      "does": "Hardcast turn 4 off lands + Elves + double Bloom Tender (or fetched with Nature's Rhythm); haste, every creature gets +X/+X and trample"
+     },
+     {
+      "card": "The Jolly Balloon Man",
+      "does": "{1},{T}: makes a hasty flying 1/1 token copy of Craterhoof, which triggers the ETB a second time, so every creature gets +X/+X twice. Swing for lethal"
+     }
+    ],
+    "winTurn": 4,
+    "winLineDrawnPct": 1
+   },
+   "toolCalls": [
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "played_with",
+     "isError": false
+    },
+    {
+     "name": "played_with",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "submit_deck",
+     "ok": true,
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 30,
+    "output": 12224,
+    "cacheRead": 331053,
+    "cacheWrite": 44990
+   },
+   "costUsd": 0.5358,
+   "steps": 13,
+   "ms": 152506,
+   "errors": []
+  },
+  {
+   "id": "post-standard-boros-dwarves",
+   "track": "post",
+   "format": "Standard",
+   "before": "2026-08-12",
+   "prompt": "Brew me a Standard deck built around Dáin's Company, Dwarven Mauler and Kíli the Resourceful.",
+   "text": "I built a Boros (red-white) Dwarves Equipment aggro deck, submitted as a **brew**. No published list in the last 400 days plays these three cards together, so this is a new deck.\n\n**The plan:** Dwarven Mauler makes every equip cost {2} less on itself, so Leyline Axe moves onto it for {1} and Lost Jitte for {0}. Kíli turns on once you control 3 artifacts or legendary cards. After that, your first equip each turn is free, and each Dwarf or Equipment that enters draws a card (once per turn). Dáin's Company looks at the top 4 cards for one of the 24 Dwarves or 8 Equipment, and it has lifelink while you control another Dwarf.\n\n**A sample winning game:**\n- **Before turn 1:** Leyline Axe starts on the battlefield for free if it's in your opening hand.\n- **Turn 1:** Mauler.\n- **Turn 2:** Company.\n- **Turn 3:** Kíli plus Jitte. Kíli's ability is now on, so move the Axe onto the Mauler for free and Jitte for {0}. That makes a 3/2 double-strike trampler that puts 2 counters on Jitte every attack.\n- **Turns 4–5:** Giott (1/1 double strike) and Mjölnir. Mjölnir's arrival deals 4 damage to a blocker, then it equips to Giott for {1}. Double strike plus doubled damage means Giott hits for 8 or more.\n\n**Directions I considered:**\n1. A pure Dwarves-Equipment deck.\n2. The same core plus the cheap burn from the format's Boros Aggro decks (Burst Lightning, Shock).\n3. Splashing green for Llanowar Elves and Badgermole Cub from the Selesnya decks.\n\nI chose option 2. Kíli and Company need lots of Dwarves to work, which rules out option 3. The burn kills the cheap creatures in Prowess, the most-played deck at 22%. The manabase uses the dual lands Boros decks are playing now. It has 22 lands with 18 red and 18 white sources, and the deck check came back with no warnings.\n\n**Things to know:**\n- **Drawing the pieces:** Your 8-card hand on turn 2 holds Kíli or Company 70.6% of the time and Mauler 44.5% of the time. The submit tool says you'll almost never have every card from the sample game by turn 5 (it counts draws only, not Company or Kíli digging). The deck wins through overlap instead: 7 double strikers or Dáin Ironfoot, and 8 Equipment.\n- **Legendary duplicates:** I ran 3 Jitte, 2 Mjölnir and 4 each of Kíli and Giott, so you'll sometimes draw a second copy you can't use well. If you keep one, Giott's loot can discard it.\n- **Removal is the main risk:** The deck is built from small creatures. Thorin's ward {1}, Bofur's protection spell and Dawn's Truce in the sideboard soften that, but sweepers from the control decks will hurt.\n- **Sideboard:** It targets the top decks:\n  - Sear and Abrade for Prowess and Selesnya creatures (Abrade also hits Tablet of Discovery).\n  - Magebane Lizard against the spell-heavy decks.\n  - Ghost Vacuum against Kavaero and graveyard decks.\n  - Shattered Acolyte, a Dwarf that can destroy enchantments like Stormchaser's Talent, Earthbender Ascension and Case of the Uneaten Feast.\n  - Sunspine Lynx against Lifegain.",
+   "deck": {
+    "main": [
+     {
+      "qty": 4,
+      "name": "Dwarven Mauler"
+     },
+     {
+      "qty": 2,
+      "name": "Bofur, Reliable Guardian // Concerted Care"
+     },
+     {
+      "qty": 4,
+      "name": "Dáin's Company"
+     },
+     {
+      "qty": 4,
+      "name": "Kíli the Resourceful"
+     },
+     {
+      "qty": 4,
+      "name": "Giott, King of the Dwarves"
+     },
+     {
+      "qty": 3,
+      "name": "Thorin Oakenshield"
+     },
+     {
+      "qty": 2,
+      "name": "Dáin Ironfoot"
+     },
+     {
+      "qty": 1,
+      "name": "Fíli the Pathfinder"
+     },
+     {
+      "qty": 3,
+      "name": "Lost Jitte"
+     },
+     {
+      "qty": 3,
+      "name": "Leyline Axe"
+     },
+     {
+      "qty": 2,
+      "name": "Mjölnir, Hammer of Thor"
+     },
+     {
+      "qty": 4,
+      "name": "Burst Lightning"
+     },
+     {
+      "qty": 2,
+      "name": "Shock"
+     },
+     {
+      "qty": 4,
+      "name": "Sacred Foundry"
+     },
+     {
+      "qty": 4,
+      "name": "Inspiring Vantage"
+     },
+     {
+      "qty": 4,
+      "name": "Sunbillow Verge"
+     },
+     {
+      "qty": 2,
+      "name": "Sundown Pass"
+     },
+     {
+      "qty": 4,
+      "name": "Mountain"
+     },
+     {
+      "qty": 4,
+      "name": "Plains"
+     }
+    ],
+    "side": [
+     {
+      "qty": 3,
+      "name": "Sear"
+     },
+     {
+      "qty": 2,
+      "name": "Abrade"
+     },
+     {
+      "qty": 2,
+      "name": "Ghost Vacuum"
+     },
+     {
+      "qty": 2,
+      "name": "Magebane Lizard"
+     },
+     {
+      "qty": 2,
+      "name": "Sunspine Lynx"
+     },
+     {
+      "qty": 2,
+      "name": "Dawn's Truce"
+     },
+     {
+      "qty": 2,
+      "name": "Shattered Acolyte"
+     }
+    ],
+    "commander": [],
+    "label": "brew",
+    "warnings": [],
+    "winLine": [
+     {
+      "card": "Leyline Axe",
+      "does": "Starts the game on the battlefield from the opening hand: a free artifact for storied, and later grants +1/+1, double strike and trample"
+     },
+     {
+      "card": "Dwarven Mauler",
+      "does": "Turn 1 two-power body. Equip costs aimed at it are {2} cheaper, so the Axe equips for {1} and Jitte for free"
+     },
+     {
+      "card": "Dáin's Company",
+      "does": "Turn 2: digs 4 cards deep for a Dwarf or Equipment (Kíli/Giott/Jitte) and gains lifelink next to another Dwarf"
+     },
+     {
+      "card": "Kíli the Resourceful",
+      "does": "Turn 3 with Lost Jitte: Axe + Kíli + Jitte make 3 artifacts/legendaries, so storied is on. First equip each turn is free, and each Dwarf or Equipment that enters draws a card"
+     },
+     {
+      "card": "Lost Jitte",
+      "does": "Goes on the double-striking Mauler for {0} and gets 2 counters per hit, which become +1/+1 counters or 'can't block' to push damage through"
+     },
+     {
+      "card": "Giott, King of the Dwarves",
+      "does": "Turn 4: a legendary 1/1 double striker that loots whenever a Dwarf or Equipment enters"
+     },
+     {
+      "card": "Mjölnir, Hammer of Thor",
+      "does": "Turn 4-5: the ETB deals 4 to a blocker, then worthy equip {1} onto Giott. Doubled damage plus double strike (and Kíli's free Axe move) makes Giott hit for 8+ alongside the Mauler to finish the game"
+     }
+    ],
+    "winTurn": 5,
+    "winLineDrawnPct": 0
+   },
+   "toolCalls": [
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "played_with",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "submit_deck",
+     "ok": true,
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 22,
+    "output": 8168,
+    "cacheRead": 233743,
+    "cacheWrite": 39843
+   },
+   "costUsd": 0.4094,
+   "steps": 9,
+   "ms": 98930,
+   "errors": []
+  },
+  {
+   "id": "post-standard-jund-sacrifice",
+   "track": "post",
+   "format": "Standard",
+   "before": "2026-08-22",
+   "prompt": "Brew me a Standard deck built around Greedy Freebooter, The Sackville-Bagginses and Umbral Collar Zealot.",
+   "text": "I built Rakdos Sacrifice, a Standard brew that is legal and was accepted. It plays 22 lands and runs your three cards as one engine.\n\n**The plan:** Greedy Freebooter, Bloodghast and Reassembling Skeleton are bodies you can sacrifice. Freebooter also leaves a Treasure when it dies, and the other two come back from the graveyard (Bloodghast when a land enters, Skeleton for {1}{B}). Umbral Collar Zealot lets you sacrifice them for free, any time, as often as you like. The Sackville-Bagginses draws a card and makes a Treasure when it enters. After that, every token you sacrifice makes the opponent lose 1 life, and that includes cracking a Treasure for mana.\n\nThree payoffs turn this into damage:\n- **Sawblade Skinripper:** at your end step, it deals damage equal to the number of permanents you sacrificed that turn.\n- **Popular Egotist:** each sacrifice also drains 1.\n- **Sephiroth:** each creature death drains 1, and four deaths in one turn flips him for a permanent drain emblem.\n\nA turn where you sacrifice four or five things usually deals 5–8 damage. Burst Lightning, Worthy Cost, Bitter Triumph and Abrade remove blockers. Worthy Cost's \"sacrifice a creature\" cost triggers your payoffs too.\n\n**The three directions I considered:**\n1. **Mono-black aristocrats:** Acolyte of Aclazotz and Lord Skitter's Butcher as the drain pieces.\n2. **Orzhov:** Vito and Tolls of War.\n3. **Rakdos (chosen):** Skinripper and Burst Lightning, plus the Bloodghast package and the Blood Crypt/Blazemire Verge mana taken from Mardu Discard on your menu.\n\nI chose Rakdos because Skinripper counts Treasure sacrifices, so each Treasure your three cards make deals damage two or three times, and red adds instant-speed removal.\n\n**Things to know:**\n- **Honest odds:** no published list has played these three cards together, so this is untested. You need one sacrifice enabler (Zealot or Sackville, 7 copies) and one damage payoff (10 copies). Having both by turn 3 on the play happens about 57% of the time.\n- **About the win-turn check:** the submit tool reported 0% for drawing all eight cards of my sample line by turn 5. That's expected: the line is an example sequence, and in practice any outlet plus any payoff does the job.\n- **Mana warning:** the check compared my mana to Mardu Discard and flagged that I have almost no white sources. You can ignore it, since the deck has no white cards.\n- **Sideboard:** the 15 cards are aimed at Prowess (Tectonic Hazard, extra Abrade), the control and Lessons decks (Duress, Rush of Dread), and the big-creature decks (Heartless Act, Feed the Swarm, Acolyte).",
+   "deck": {
+    "main": [
+     {
+      "qty": 4,
+      "name": "Greedy Freebooter"
+     },
+     {
+      "qty": 4,
+      "name": "Umbral Collar Zealot"
+     },
+     {
+      "qty": 3,
+      "name": "The Sackville-Bagginses"
+     },
+     {
+      "qty": 4,
+      "name": "Bloodghast"
+     },
+     {
+      "qty": 3,
+      "name": "Reassembling Skeleton"
+     },
+     {
+      "qty": 4,
+      "name": "Sawblade Skinripper"
+     },
+     {
+      "qty": 3,
+      "name": "Popular Egotist"
+     },
+     {
+      "qty": 3,
+      "name": "Sephiroth, Fabled SOLDIER // Sephiroth, One-Winged Angel"
+     },
+     {
+      "qty": 4,
+      "name": "Burst Lightning"
+     },
+     {
+      "qty": 2,
+      "name": "Worthy Cost"
+     },
+     {
+      "qty": 2,
+      "name": "Bitter Triumph"
+     },
+     {
+      "qty": 2,
+      "name": "Abrade"
+     },
+     {
+      "qty": 4,
+      "name": "Blood Crypt"
+     },
+     {
+      "qty": 4,
+      "name": "Blazemire Verge"
+     },
+     {
+      "qty": 4,
+      "name": "Haunted Ridge"
+     },
+     {
+      "qty": 7,
+      "name": "Swamp"
+     },
+     {
+      "qty": 3,
+      "name": "Mountain"
+     }
+    ],
+    "side": [
+     {
+      "qty": 3,
+      "name": "Duress"
+     },
+     {
+      "qty": 3,
+      "name": "Tectonic Hazard"
+     },
+     {
+      "qty": 2,
+      "name": "Abrade"
+     },
+     {
+      "qty": 2,
+      "name": "Heartless Act"
+     },
+     {
+      "qty": 2,
+      "name": "Feed the Swarm"
+     },
+     {
+      "qty": 1,
+      "name": "Rush of Dread"
+     },
+     {
+      "qty": 2,
+      "name": "Acolyte of Aclazotz"
+     }
+    ],
+    "commander": [],
+    "label": "brew",
+    "warnings": [],
+    "winLine": [
+     {
+      "card": "Greedy Freebooter",
+      "does": "Turn 1 fodder: when it dies you scry 1 and make a Treasure token."
+     },
+     {
+      "card": "Umbral Collar Zealot",
+      "does": "Turn 2 free sac outlet: sacrifice a creature or artifact to surveil 1, as often as you want, at instant speed."
+     },
+     {
+      "card": "The Sackville-Bagginses",
+      "does": "Turn 3: enters and sacrifices Freebooter to draw a card and make a Treasure (2 Treasures total). From now on, every token you sacrifice, including each Treasure cracked for mana, makes the opponent lose 1 life."
+     },
+     {
+      "card": "Sawblade Skinripper",
+      "does": "Turn 4 (paid for with Treasures): at your end step it deals damage equal to the number of permanents you sacrificed that turn to any target."
+     },
+     {
+      "card": "Popular Egotist",
+      "does": "Every permanent you sacrifice (Treasures, creatures) drains 1 more on top of Sackville's trigger."
+     },
+     {
+      "card": "Bloodghast",
+      "does": "Comes back from the graveyard every time a land enters, so Zealot can sacrifice it again each turn."
+     },
+     {
+      "card": "Reassembling Skeleton",
+      "does": "Pay {1}{B} to bring it back and sacrifice it again. With Sephiroth out, each death drains 1, and four deaths in a turn flips him into the emblem."
+     },
+     {
+      "card": "Sephiroth, Fabled SOLDIER // Sephiroth, One-Winged Angel",
+      "does": "Drains 1 whenever another creature dies and draws a card when he enters or attacks. Each sac turn deals 5-8 damage across Skinripper, Egotist, Sackville and Sephiroth."
+     }
+    ],
+    "winTurn": 5,
+    "winLineDrawnPct": 0
+   },
+   "toolCalls": [
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "played_with",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "submit_deck",
+     "ok": true,
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 20,
+    "output": 7168,
+    "cacheRead": 225785,
+    "cacheWrite": 46451
+   },
+   "costUsd": 0.4209,
+   "steps": 8,
+   "ms": 77970,
+   "errors": []
+  },
+  {
+   "id": "post-standard-boros-planeswalkers",
+   "track": "post",
+   "format": "Standard",
+   "before": "2026-10-05",
+   "prompt": "Brew me a Standard deck built around Gideon's Memorial, Solitary Cell and Ajani Unrelenting.",
+   "text": "This is a Boros token deck built around planeswalkers (\"Superfriends\"). It's a brew: no published list in the last 400 days plays these three cards together.\n\n**The plan:** Gideon's Memorial comes down on turn 2. Its mana can only be spent on planeswalkers, so a 4-mana walker lands on turn 3 and Ajani Unrelenting can arrive as early as turn 5. Solitary Cell and the burn spells protect your walkers early, and every walker makes creature tokens.\n\n**How Ajani wins:**\n- Every time you use a loyalty ability, Ajani makes a 2/2 Cadet. With Elspeth, Storm Slayer out, you get two instead.\n- His −3 deals 4 damage to every creature except your tokens, so it wipes their side and leaves yours.\n- Next turn, his +1 gives the team +1/+0 and haste. Memorial adds another +1/+0 and vigilance to tokens, which should be enough to finish them.\n\nThe deck has no creatures except tokens, so Ajani's −3 never hits your own board.\n\n**Directions I considered:**\n1. **Jeskai Control with Ajani as a finisher.** This borrows the Jeskai Control package (Stock Up, counterspells, Day of Judgment), and Ajani does show up in a few Jeskai Control lists. But Memorial does nothing there, and Day of Judgment kills your own tokens.\n2. **Boros Aggro with Ajani on top.** This borrows the menu's Boros mana base and creatures like Voice of Victory. The problem is that Ajani's −3 would kill your own real creatures.\n3. **Boros tokens built around planeswalkers (chosen).** All three requested cards have a job here. Memorial speeds out 13 walkers and pumps their tokens, Cell handles cheap threats and can discard spare walkers (they're legendary) to draw, and Ajani is both the board wipe and the finisher.\n\nI took the mana base from Boros Aggro: Sacred Foundry, Inspiring Vantage and Sunbillow Verge. I run 24 lands instead of their roughly 23 because of the 6-drops. check_deck found no errors or warnings.\n\n**Honest odds:**\n- You'll see at least one of the 13 walkers by turn 4 in about 93% of games.\n- On the play, you'll have Memorial by turn 5 about 57% of the time, Ajani about 57%, and both together only about 31%.\n- The full six-step line above, every card drawn by turn 7, comes up only about 4% of the time. In practice the deck wins through whichever walkers you draw, not that exact order.\n\nThe sideboard is aimed at the top decks:\n- **Elementals and Prowess:** Seam Rip, Sear, Slagstorm.\n- **Jund Sacrifice and Reanimator:** Rest in Peace.\n- **Control:** Voice of Victory, Caretaker's Talent.\n- **Big threats:** Stroke of Midnight.",
+   "deck": {
+    "main": [
+     {
+      "qty": 4,
+      "name": "Gideon's Memorial"
+     },
+     {
+      "qty": 4,
+      "name": "Solitary Cell"
+     },
+     {
+      "qty": 4,
+      "name": "Ajani Unrelenting"
+     },
+     {
+      "qty": 3,
+      "name": "Elspeth, Storm Slayer"
+     },
+     {
+      "qty": 3,
+      "name": "Chandra, Torch of Defiance"
+     },
+     {
+      "qty": 3,
+      "name": "Ajani, Outland Chaperone"
+     },
+     {
+      "qty": 3,
+      "name": "Windcrag Siege"
+     },
+     {
+      "qty": 3,
+      "name": "Hop to It"
+     },
+     {
+      "qty": 4,
+      "name": "Burst Lightning"
+     },
+     {
+      "qty": 3,
+      "name": "Lightning Helix"
+     },
+     {
+      "qty": 2,
+      "name": "Get Lost"
+     },
+     {
+      "qty": 4,
+      "name": "Sacred Foundry"
+     },
+     {
+      "qty": 4,
+      "name": "Inspiring Vantage"
+     },
+     {
+      "qty": 4,
+      "name": "Sunbillow Verge"
+     },
+     {
+      "qty": 2,
+      "name": "Elegant Parlor"
+     },
+     {
+      "qty": 1,
+      "name": "Fountainport"
+     },
+     {
+      "qty": 5,
+      "name": "Mountain"
+     },
+     {
+      "qty": 4,
+      "name": "Plains"
+     }
+    ],
+    "side": [
+     {
+      "qty": 3,
+      "name": "Seam Rip"
+     },
+     {
+      "qty": 2,
+      "name": "Sear"
+     },
+     {
+      "qty": 2,
+      "name": "Slagstorm"
+     },
+     {
+      "qty": 2,
+      "name": "Stroke of Midnight"
+     },
+     {
+      "qty": 2,
+      "name": "Rest in Peace"
+     },
+     {
+      "qty": 2,
+      "name": "Voice of Victory"
+     },
+     {
+      "qty": 2,
+      "name": "Caretaker's Talent"
+     }
+    ],
+    "commander": [],
+    "label": "brew",
+    "warnings": [],
+    "winLine": [
+     {
+      "card": "Gideon's Memorial",
+      "does": "Turn 2: taps for any color, but only to cast planeswalkers, so walkers come down a turn early. Also gives creature tokens +1/+0 and vigilance."
+     },
+     {
+      "card": "Solitary Cell",
+      "does": "Exiles their best permanent with mana value 3 or less. Later it turns extra legendary cards (spare walkers) into new cards."
+     },
+     {
+      "card": "Ajani, Outland Chaperone",
+      "does": "Turn 3: +1 makes 1/1 Kithkin tokens to guard your walkers, and −2 deals 4 to a tapped attacker."
+     },
+     {
+      "card": "Elspeth, Storm Slayer",
+      "does": "Turn 4 with Memorial: doubles every token you make. +1 makes two Soldiers, and her 0 gives everyone +1/+1 counters and flying."
+     },
+     {
+      "card": "Ajani Unrelenting",
+      "does": "Turn 5 with Memorial: each loyalty activation makes a 2/2 Cadet (two with Elspeth). −3 deals 4 to every creature except your tokens, a one-sided board wipe."
+     },
+     {
+      "card": "Ajani Unrelenting",
+      "does": "Next turn: +1 gives the token army +1/+0 and haste. Stacked with Memorial's +1/+0, that's lethal on an empty board."
+     }
+    ],
+    "winTurn": 7,
+    "winLineDrawnPct": 4
+   },
+   "toolCalls": [
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "played_with",
+     "isError": false
+    },
+    {
+     "name": "played_with",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "find_tags",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "submit_deck",
+     "ok": true,
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 26,
+    "output": 7053,
+    "cacheRead": 249826,
+    "cacheWrite": 38363
+   },
+   "costUsd": 0.3829,
+   "steps": 11,
+   "ms": 93733,
+   "errors": []
+  },
+  {
+   "id": "post-pioneer-4c-control",
+   "track": "post",
+   "format": "Pioneer",
+   "before": "2026-06-19",
+   "prompt": "Brew me a Pioneer deck built around Jeskai Revelation, Inevitable Defeat and Tablet of Discovery.",
+   "text": "I built 4-color (white-blue-red-black) Revelation Control and submitted it as a brew. It passes the legality and mana checks with no warnings.\n\n**How the three cards fit together.** All three of your cards appear together in one real deck: Standard 4C Control, 135 lists. It's a control deck where the cheap spells buy time for big instants, so I rebuilt that idea with Pioneer-legal cards.\n- **Tablet of Discovery** is the ramp. It taps for R, or for RR that can only be spent on instants and sorceries, and nearly every spell here is one. When it enters you also mill a card that you may play that turn.\n- **Jeskai Revelation** (7 mana) is the payoff. With 5 lands plus Tablet you can cast it on turn 5. It bounces a threat, deals 4 damage, makes two Monk tokens, draws 2 cards and gains 4 life, all at instant speed.\n- **Inevitable Defeat** is removal that can't be countered. It exiles a Sheoldred, Parhelion or Cori-Steel Cutter, and the 3-life drain doubles as damage toward the win.\n\n**Directions I considered:**\n1. **Jeskai or Lessons spells** using Tablet with Stormchaser's Talent. I dropped it because Inevitable Defeat forces black regardless.\n2. **The 5-color Niv-Mizzet shell.** I dropped it because it would turn your cards into extras in somebody else's deck.\n3. **UW Control's package plus red and black (chosen).** I took UW Control's proven package: No More Lies, Consult the Star Charts, The Wandering Emperor, Teferi and Supreme Verdict, then added red and black. It won because that package already wins at 8% of the field. Your three cards slot in as the ramp, the finisher and the removal instead of replacing the core.\n\n**The plan:** Trade one-for-one early with Lightning Helix, Sear, Get Lost, No More Lies and cheap Leyline Binding. All four basic land types come from the triomes and shocklands, so Binding usually costs just 2 mana. Tablet comes down on turn 3. After that, Inevitable Defeat and Revelation handle threats and do damage at the same time. The Wandering Emperor and Teferi are the clock, with Helix, Revelation's 4 damage and Defeat's drain as reach.\n\n**Odds:**\n- With 4 Tablets you draw one by turn 3 only about half the time. Without it, Revelation is a late-game card.\n- The submit tool says you'll have drawn every card in the win line by turn 8 in just 1.3% of games. That's expected: the planeswalkers, burn and removal fill in for each other, so you rarely need that exact sequence.\n\n**Mana:**\n- 26 lands plus 4 Tablets, against UW Control's average of about 28 lands.\n- Colored sources: 20 white, 19 blue, 12 red, 7 black.\n- Eight of the lands are triomes that enter tapped, which costs some tempo against Prowess.\n\nThe sideboard is aimed at the current top decks: Rest in Peace for graveyard decks (Phoenix, Greasefang), sweepers for Prowess, and counterspells for UW Control and Lotus Field.",
+   "deck": {
+    "main": [
+     {
+      "qty": 4,
+      "name": "Tablet of Discovery"
+     },
+     {
+      "qty": 3,
+      "name": "Jeskai Revelation"
+     },
+     {
+      "qty": 3,
+      "name": "Inevitable Defeat"
+     },
+     {
+      "qty": 4,
+      "name": "No More Lies"
+     },
+     {
+      "qty": 3,
+      "name": "Consult the Star Charts"
+     },
+     {
+      "qty": 2,
+      "name": "Stock Up"
+     },
+     {
+      "qty": 3,
+      "name": "Lightning Helix"
+     },
+     {
+      "qty": 1,
+      "name": "Sear"
+     },
+     {
+      "qty": 2,
+      "name": "Leyline Binding"
+     },
+     {
+      "qty": 2,
+      "name": "Get Lost"
+     },
+     {
+      "qty": 2,
+      "name": "Supreme Verdict"
+     },
+     {
+      "qty": 3,
+      "name": "The Wandering Emperor"
+     },
+     {
+      "qty": 2,
+      "name": "Teferi, Hero of Dominaria"
+     },
+     {
+      "qty": 3,
+      "name": "Raugrin Triome"
+     },
+     {
+      "qty": 2,
+      "name": "Savai Triome"
+     },
+     {
+      "qty": 2,
+      "name": "Raffine's Tower"
+     },
+     {
+      "qty": 1,
+      "name": "Xander's Lounge"
+     },
+     {
+      "qty": 4,
+      "name": "Hallowed Fountain"
+     },
+     {
+      "qty": 2,
+      "name": "Sacred Foundry"
+     },
+     {
+      "qty": 2,
+      "name": "Steam Vents"
+     },
+     {
+      "qty": 1,
+      "name": "Godless Shrine"
+     },
+     {
+      "qty": 1,
+      "name": "Watery Grave"
+     },
+     {
+      "qty": 3,
+      "name": "Floodfarm Verge"
+     },
+     {
+      "qty": 1,
+      "name": "Sunbillow Verge"
+     },
+     {
+      "qty": 1,
+      "name": "Riverpyre Verge"
+     },
+     {
+      "qty": 1,
+      "name": "Fabled Passage"
+     },
+     {
+      "qty": 1,
+      "name": "Plains"
+     },
+     {
+      "qty": 1,
+      "name": "Island"
+     }
+    ],
+    "side": [
+     {
+      "qty": 2,
+      "name": "Rest in Peace"
+     },
+     {
+      "qty": 2,
+      "name": "Dovin's Veto"
+     },
+     {
+      "qty": 2,
+      "name": "Fire Magic"
+     },
+     {
+      "qty": 2,
+      "name": "Kutzil's Flanker"
+     },
+     {
+      "qty": 2,
+      "name": "Deafening Clarion"
+     },
+     {
+      "qty": 2,
+      "name": "Mystical Dispute"
+     },
+     {
+      "qty": 1,
+      "name": "Beza, the Bounding Spring"
+     },
+     {
+      "qty": 2,
+      "name": "Temporary Lockdown"
+     }
+    ],
+    "commander": [],
+    "label": "brew",
+    "warnings": [],
+    "winLine": [
+     {
+      "card": "Tablet of Discovery",
+      "does": "Turn 3: mills a card you may play this turn, then taps for RR for instants and sorceries, putting you two mana ahead"
+     },
+     {
+      "card": "Inevitable Defeat",
+      "does": "Can't be countered: exiles their best threat (Sheoldred, Parhelion, Cutter), drains 3 and gains you 3"
+     },
+     {
+      "card": "The Wandering Emperor",
+      "does": "Flashed in at end of turn to exile an attacker or make 2/2 Samurai; your main clock"
+     },
+     {
+      "card": "Jeskai Revelation",
+      "does": "Turn 5 with 5 lands + Tablet's RR: bounce a threat, 4 damage to face or a creature, two prowess Monks, draw 2, gain 4"
+     },
+     {
+      "card": "Teferi, Hero of Dominaria",
+      "does": "Draws every turn and untaps lands so you can hold up No More Lies; tucks their permanents"
+     },
+     {
+      "card": "Lightning Helix",
+      "does": "Burn reach to finish them alongside Revelation's 4 damage and Defeat's 3-point drain"
+     }
+    ],
+    "winTurn": 8,
+    "winLineDrawnPct": 1.3
+   },
+   "toolCalls": [
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "played_with",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "submit_deck",
+     "ok": true,
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 16,
+    "output": 8657,
+    "cacheRead": 110310,
+    "cacheWrite": 33257
+   },
+   "costUsd": 0.3616,
+   "steps": 6,
+   "ms": 89920,
+   "errors": []
+  },
+  {
+   "id": "post-pioneer-simic-beanstalk",
+   "track": "post",
+   "format": "Pioneer",
+   "before": "2026-07-18",
+   "prompt": "Brew me a Pioneer deck built around Tolarian Terror, Bushwhack and Eddymurk Crab.",
+   "text": "I built **Simic Spells**, labeled as a brew. No published list plays all three of your cards together. The closest is a single Izzet Crab list (10th place, Pioneer Challenge, May 17 2026), and I borrowed its cantrip-and-counter shell.\n\n**The plan:** In the first few turns you cast 1-mana spells: Consider, Opt, Sleight of Hand and Bushwhack. Each one goes to the graveyard, and each instant or sorcery there makes Tolarian Terror and Eddymurk Crab cost 1 less. So both 7-drops usually come down for 2–4 mana. Each card's job:\n- **Bushwhack** gets you a basic land early. Later it makes one of your 5/5s fight their creature, which works as removal.\n- **Tolarian Terror** is the threat that's hard to remove, since ward 2 makes their removal cost 2 more.\n- **Eddymurk Crab** has flash. Cast it on your own turn so it enters untapped, tap two blockers, and swing with both 5/5s.\n- **Tail Swipe and Decisive Denial** back up Bushwhack's fight. Tail Swipe gives +1/+1 when cast in your main phase. Decisive Denial can also counter a removal spell or sweeper.\n\nThe planned kill is around turn 7. You see at least one Terror or Crab by turn 4 in 79% of games (without mulligans). The submit tool says you'll draw every card in my example line by turn 7 only about 1.2% of the time. That's because it checks for each specific card, and the deck doesn't need them all. Any of the 1-mana spells fills the graveyard, and the fight spells fill in for each other.\n\n**Directions I considered:**\n1. **Simic Spells (chosen):** your cards plus Stormchaser's Talent, Flow State, Sleight of Hand and Spell Pierce, taken from Izzet Prowess (Izzet Prowess is on the menu).\n2. **Temur Prowess:** the same package plus Burst Lightning, splashing green for Bushwhack.\n3. **Sultai:** Fatal Push and Thoughtseize as the cheap spells, taken from the Golgari and Dimir decks on the menu.\n\nI chose Simic because it has the cleanest two-color mana. It also keeps Bushwhack doing both its jobs, and the 5/5 fight spells become the deck's removal without needing a third color.\n\n**Things to know:**\n- **Land count:** I run 19 lands. The deck checker suggests about 23, but that's because it counts Terror and Crab as 7-drops, and they almost never cost that much. The Izzet Crab list also runs 19, and Bushwhack can fetch a basic.\n- **Haughty Djinn (2 copies):** it's a flier, and it makes your instants and sorceries cost 1 less.\n- **Sideboard:** aimed at the current field:\n  - Aether Gust for red and green threats\n  - Soul-Guide Lantern and Tormod's Crypt for Greasefang\n  - Mystical Dispute, Negate and Disdainful Stroke for UW Control\n  - Pawpatch Formation for fliers and enchantments",
+   "deck": {
+    "main": [
+     {
+      "qty": 4,
+      "name": "Tolarian Terror"
+     },
+     {
+      "qty": 4,
+      "name": "Eddymurk Crab"
+     },
+     {
+      "qty": 4,
+      "name": "Stormchaser's Talent"
+     },
+     {
+      "qty": 2,
+      "name": "Haughty Djinn"
+     },
+     {
+      "qty": 4,
+      "name": "Bushwhack"
+     },
+     {
+      "qty": 4,
+      "name": "Consider"
+     },
+     {
+      "qty": 4,
+      "name": "Opt"
+     },
+     {
+      "qty": 4,
+      "name": "Sleight of Hand"
+     },
+     {
+      "qty": 3,
+      "name": "Tail Swipe"
+     },
+     {
+      "qty": 3,
+      "name": "Decisive Denial"
+     },
+     {
+      "qty": 2,
+      "name": "Spell Pierce"
+     },
+     {
+      "qty": 2,
+      "name": "Flow State"
+     },
+     {
+      "qty": 1,
+      "name": "Snakeskin Veil"
+     },
+     {
+      "qty": 4,
+      "name": "Breeding Pool"
+     },
+     {
+      "qty": 4,
+      "name": "Botanical Sanctum"
+     },
+     {
+      "qty": 2,
+      "name": "Yavimaya Coast"
+     },
+     {
+      "qty": 2,
+      "name": "Hinterland Harbor"
+     },
+     {
+      "qty": 5,
+      "name": "Island"
+     },
+     {
+      "qty": 2,
+      "name": "Forest"
+     }
+    ],
+    "side": [
+     {
+      "qty": 3,
+      "name": "Aether Gust"
+     },
+     {
+      "qty": 2,
+      "name": "Soul-Guide Lantern"
+     },
+     {
+      "qty": 1,
+      "name": "Tormod's Crypt"
+     },
+     {
+      "qty": 2,
+      "name": "Mystical Dispute"
+     },
+     {
+      "qty": 2,
+      "name": "Negate"
+     },
+     {
+      "qty": 2,
+      "name": "Disdainful Stroke"
+     },
+     {
+      "qty": 2,
+      "name": "Pawpatch Formation"
+     },
+     {
+      "qty": 1,
+      "name": "Snakeskin Veil"
+     }
+    ],
+    "commander": [],
+    "label": "brew",
+    "warnings": [],
+    "winLine": [
+     {
+      "card": "Consider",
+      "does": "Turn 1 cantrip; one instant in the graveyard (more if it surveils another spell away)"
+     },
+     {
+      "card": "Bushwhack",
+      "does": "Early on, finds a basic land so you hit land drops, and goes to the graveyard as a sorcery"
+     },
+     {
+      "card": "Sleight of Hand",
+      "does": "Digs for a threat and becomes the 3rd-4th spell in the graveyard"
+     },
+     {
+      "card": "Tolarian Terror",
+      "does": "With 4 spells in the graveyard it costs 3: a 5/5 with ward 2 that dodges cheap removal"
+     },
+     {
+      "card": "Eddymurk Crab",
+      "does": "Flashed in on your own turn for 2-3 mana, so it enters untapped and taps two blockers, letting both 5/5s attack"
+     },
+     {
+      "card": "Tail Swipe",
+      "does": "Cast in your main phase, a 5/5 becomes 6/6 and fights their best blocker or threat, then you keep attacking"
+     },
+     {
+      "card": "Decisive Denial",
+      "does": "Another fight with a 5/5, or counters a removal/sweeper unless they pay 3, to protect the finishing attacks"
+     }
+    ],
+    "winTurn": 7,
+    "winLineDrawnPct": 1.2
+   },
+   "toolCalls": [
+    {
+     "name": "played_with",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "played_with",
+     "isError": false
+    },
+    {
+     "name": "played_with",
+     "isError": false
+    },
+    {
+     "name": "played_with",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "reference_list",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "submit_deck",
+     "ok": true,
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 26,
+    "output": 8880,
+    "cacheRead": 245587,
+    "cacheWrite": 34008
+   },
+   "costUsd": 0.3969,
+   "steps": 11,
+   "ms": 111758,
+   "errors": []
+  }
+ ]
+}

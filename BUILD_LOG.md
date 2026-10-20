@@ -27,7 +27,7 @@ Three things, and the third is turning out to be the most interesting.
 
 | Item | Total |
 | --- | --- |
-| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20. Total about $227.98. Plus one 17-token test call. |
+| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33. Total about $235.69. Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats); full history 143,721 (since 2025-07-01) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
 | Automated tests | 48 passing |
@@ -62,6 +62,25 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - Lesson to apply: any prompt or claim that names a card gets checked against the card index before it is used.
 - ~~Switch to pairwise~~: done; 36 pairs judged (v1 8 wins, v2 6, 22 ties; v2 100% faithful vs. 92%).
 - ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
+
+---
+
+## 2026-10-20 · The future, today: decks that appeared after the models' training cutoff
+
+Owner: "I don't want a verdict in January, can't we test with the future stuff now?" Yes: the forward test waits for the *data* to settle, but the *models* have their own clock. Their knowledge ends in June 2026, so any archetype that appeared after that is the future to them, even where players have already settled it in our data. `find-new-archetypes.ts` with a 5-list bar finds **6 such decks** (first seen after 2026-06-15): Pioneer 4C Control, Standard Gearhulk, Pioneer Simic Beanstalk, Standard Boros Dwarves, Standard Jund Sacrifice, Standard Boros Planeswalkers. Scored against every list from a week after each appeared (`post` track). Two caveats: Dwarves and Jund were in the 21-deck set used to tune v5 and v6 (clean for the model, not fully for us); Beanstalk and Planeswalkers have 1-2 lists to score against and are noise.
+
+| Opus, 6 post-cutoff decks | Match to the lists players played |
+| --- | --- |
+| Best earlier list, with hindsight | 41.8% |
+| v2 | 42.5% |
+| v5 | 45.2% |
+| **v10** | **45.7%** |
+
+Per deck (v2 / v5 / v10 vs. oracle): Gearhulk 33 / 47 / 47 vs. 65; Dwarves 50 / 56 / 54 vs. 29; Jund Sacrifice 24 / 22 / 24 vs. 45; 4C Control 41 / 40 / 40 vs. 29.
+
+**Reading:** on decks no model has seen, v5 and v10 are about 3 points above v2 and above the hindsight oracle, the same shape as the holdout, with the same caveat (6 decks, one run; Gearhulk alone moves the mean). v10 did not lose anything against v5 on four fair and synergy decks, which was the open question after today's combo work. Jund Sacrifice is the recurring miss: every version builds a different sacrifice deck from the same three cards.
+
+**What this changes:** the forward test no longer needs 90 days per deck to say anything. Every new archetype is a future deck for the models from the day it appears; the "settled" score firms up over weeks, and the sample grows by one every few weeks. Cost: $7.33 (v2 $2.52, v5 $2.37, v10 about $2.44).
 
 ---
 

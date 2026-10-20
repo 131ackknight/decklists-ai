@@ -4,7 +4,8 @@ import { getFormat } from "@/cards/formats";
 import type { DataSource } from "@/data/source";
 import { costUsd, type ModelConfig, type Usage } from "./models";
 import { formatMenu } from "./menu";
-import { SYSTEM_PROMPT, V4_SYSTEM_PROMPT, V5_SYSTEM_PROMPT, V6_SYSTEM_PROMPT } from "./prompt";
+import { examplesText, loadBrewerLists, type BrewerList } from "./examples";
+import { SYSTEM_PROMPT, V4_SYSTEM_PROMPT, V5_SYSTEM_PROMPT, V6_SYSTEM_PROMPT, V7_SYSTEM_PROMPT } from "./prompt";
 import { runTool, toolParams, type SubmittedDeck, type ToolContext } from "./tools";
 
 export interface BrewRequest {
@@ -213,16 +214,18 @@ export async function brewV5(
   req: BrewRequest,
   deps: { index: CardIndex; data: DataSource },
   onStep?: (step: number, note: string) => void,
-  variant: { system: string; maxCopyRate?: number } = { system: V5_SYSTEM_PROMPT },
+  variant: { system: string; maxCopyRate?: number; examples?: { lists: BrewerList[]; before: string } } = { system: V5_SYSTEM_PROMPT },
 ): Promise<BrewResult> {
   const started = Date.now();
   const ctx: ToolContext = { ...deps, seen: new Set(), submitted: null };
   if (variant.maxCopyRate != null) ctx.lock = { cards: [], maxCopyRate: variant.maxCopyRate };
   const key = req.format ? getFormat(req.format)?.key : undefined;
   const menu = key ? formatMenu(deps.index, deps.data, key) : null;
+  const examples = variant.examples ? examplesText(deps.index, deps.data, variant.examples.lists, variant.examples.before) : null;
   const userText =
     (req.format ? `Format: ${req.format}\n\n${req.prompt}` : req.prompt) +
-    (menu ? `\n\nWhat is working in ${req.format} right now (last 30 days of results):\n${menu}` : "");
+    (menu ? `\n\nWhat is working in ${req.format} right now (last 30 days of results):\n${menu}` : "") +
+    (examples ? `\n\n${examples}` : "");
   const V5_TOOLS = ["search_cards", "find_tags", "card_info", "meta", "archetype", "reference_list", "draw_odds", "check_deck", "submit_deck"];
   const r = await runStage({ client, model, system: variant.system, userText, tools: V5_TOOLS, ctx, onStep });
   return {
@@ -247,4 +250,25 @@ export function brewV6(
   onStep?: (step: number, note: string) => void,
 ): Promise<BrewResult> {
   return brewV5(client, model, req, deps, onStep, { system: V6_SYSTEM_PROMPT, maxCopyRate: V6_MAX_COPY_RATE });
+}
+
+/** Where the worked examples come from: a strong brewer's public lists, saved by scripts/fetch-dld-deck.ts. */
+export const EXAMPLE_BREWER_DIR = "evals/brewers/lists/aspiringspike";
+let exampleLists: BrewerList[] | null = null;
+
+/**
+ * Harness v7: v5 plus annotated examples of a strong brewer's brews, dated
+ * before `before` (today when not given) so a historical run sees nothing
+ * from after its cutoff. Returns to plain v5 when fewer than two examples qualify.
+ */
+export function brewV7(
+  client: Anthropic,
+  model: ModelConfig,
+  req: BrewRequest,
+  deps: { index: CardIndex; data: DataSource },
+  onStep?: (step: number, note: string) => void,
+  before: string = new Date().toISOString().slice(0, 10),
+): Promise<BrewResult> {
+  exampleLists ??= loadBrewerLists(EXAMPLE_BREWER_DIR);
+  return brewV5(client, model, req, deps, onStep, { system: V7_SYSTEM_PROMPT, examples: { lists: exampleLists, before } });
 }

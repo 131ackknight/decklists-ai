@@ -58,3 +58,13 @@ export const V6_SYSTEM_PROMPT = V5_SYSTEM_PROMPT.replace(
   "Borrowing a package is not copying a deck: the requested cards stay at the center.",
   "Borrow a package, not a deck: take the 5-12 cards that make a menu deck's engine or mana work, and choose the rest yourself around the requested cards. check_deck reports how much of your deck is one existing list; a brew above the limit is sent back.",
 );
+
+/**
+ * Harness v7: v5 plus worked examples of a strong brewer's brews in the
+ * request (annotated by code: borrowed shell, new ideas, the rest). The system
+ * prompt gains one sentence; the examples travel with the request.
+ */
+export const V7_SYSTEM_PROMPT = V5_SYSTEM_PROMPT.replace(
+  "Borrowing a package is not copying a deck: the requested cards stay at the center.",
+  "Borrowing a package is not copying a deck: the requested cards stay at the center. The request may include annotated examples of real brews by a strong brewer: use them for the shape of a good brew (a proven shell, a few new cards that make the idea work, the rest chosen to fit), never for their cards.",
+);

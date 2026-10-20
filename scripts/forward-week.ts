@@ -28,7 +28,7 @@ import { loadCardIndex } from "../src/cards/load";
 import { normalizeName } from "../src/cards/names";
 import { FileDataSource } from "../src/data/source";
 import { MODELS } from "../src/harness/models";
-import { brew, brewV5, brewV6, type BrewResult } from "../src/harness/run";
+import { brew, brewV5, brewV6, brewV7, type BrewResult } from "../src/harness/run";
 
 try {
   process.loadEnvFile(".env.local");
@@ -193,7 +193,14 @@ async function main() {
         continue;
       }
       const deps = { index: pool, data };
-      const r: BrewResult = h === "v6" ? await brewV6(client, model, req, deps) : h === "v5" ? await brewV5(client, model, req, deps) : await brew(client, model, req, deps);
+      const r: BrewResult =
+        h === "v7"
+          ? await brewV7(client, model, req, deps, undefined, c.firstSeen)
+          : h === "v6"
+            ? await brewV6(client, model, req, deps)
+            : h === "v5"
+              ? await brewV5(client, model, req, deps)
+              : await brew(client, model, req, deps);
       spent += r.costUsd;
       const sum = (xs: Line[]) => xs.reduce((n, x) => n + x.qty, 0);
       console.log(`  ${c.id} ${h}: ${r.deck ? `deck ${sum(r.deck.main)}+${sum(r.deck.side)}` : "no deck"}, $${r.costUsd.toFixed(3)}${r.error ? `, error: ${r.error}` : ""}`);

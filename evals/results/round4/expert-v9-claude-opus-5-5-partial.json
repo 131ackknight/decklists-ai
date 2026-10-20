@@ -1,0 +1,780 @@
+{
+ "ranAt": "2026-10-20T17:52:46.214Z",
+ "harness": "v9",
+ "model": "claude-opus-5-5",
+ "tracks": [
+  "expert"
+ ],
+ "results": [
+  {
+   "id": "expert-premodern-pandeburst",
+   "track": "expert",
+   "format": "Premodern",
+   "before": null,
+   "prompt": "Brew me a Premodern deck built around Pandemonium and Saproling Burst.",
+   "text": "I built a Boros-splash Enchantress deck (green-white with a red splash). It's a brew: Pandemonium and Saproling Burst each showed up in exactly one list in the last 90 days, a four-color Replenish deck.\n\n**What each card does here:**\n- **Saproling Burst** is the win condition. It enters with 7 fade counters, and each token's power equals the counters still on it. You can remove counters any time, as often as you like, so with Pandemonium already out, one Burst is the whole kill.\n- **Pandemonium** turns each token into burn: every creature that enters can deal damage equal to its power to any target. Remove one counter at a time and let each trigger resolve before the next. The tokens deal 6+5+4+3+2+1 = 21 damage. Don't stack the triggers. Power is checked when the damage happens, so stacked tokens shrink first. The last counter makes a 0/0 that deals nothing.\n- **What they need:** about 9 mana across two turns, ways to find a 4-drop and a 5-drop, and protection from enchantment removal.\n\n**The three directions I considered:**\n1. **Red-green ramp** with Wild Growth and burn, casting both cards normally. It has no card draw or tutors, so assembling the pair is slow.\n2. **Four-color Replenish** (blue-white Attunement shell plus red and green). Replenish puts both back at once, but the mana base is a mess.\n3. **Borrow the Enchantress package** (the top deck at 12.5% of the field) and splash red. **I chose this one.** It fixes every need above: Wild Growth and Serra's Sanctum make the mana, Argothian Enchantress and Enchantress's Presence draw a card off each of the pair, Sterling Grove and Enlightened Tutor find them, Sterling Grove gives your other enchantments shroud, and Replenish brings both back together with Burst at a fresh 7 counters.\n\n**The plan:** Play it like Enchantress. Draw through cheap enchantments, ramp with Wild Growth and Sanctum, and hold the board with Swords, Parallax Wave and Solitary Confinement. Then land Pandemonium, follow with Saproling Burst, and remove all its counters the same turn for 21. Replenish is the backup, and with Opalescence out, every enchantment Replenish brings back also deals damage equal to its mana value.\n\n**Notes:**\n- **Red mana:** there are 7 red sources: 2 Karplusan Forest, 2 City of Brass, 1 Mountain, and 2 Wooded Foothills that can fetch the Mountain. That gives about a 72% chance of red by turn 5.\n- **Odds:** you only have about a 23% chance of drawing both pieces naturally by turn 6. The 4 tutors and the Enchantress draw engine are what make the combo reliable.\n- **Pandemonium is symmetric.** Your opponent's creatures trigger it too, which matters against Goblins.\n- **Sideboard:** 15 cards aimed at the top decks: Xantid Swarm, Choke and Red Elemental Blast against the blue decks, Sacred Ground against Armageddon, Warmth against Sligh, Tormod's Crypt against Hermit Druid and Psychatog, Aura of Silence against Enchantress and Replenish, and a fourth Swords.\n\nThe deck passed the deck check with no warnings. Its mana closely matches real Enchantress lists, except for the extra red sources.",
+   "deck": {
+    "main": [
+     {
+      "qty": 4,
+      "name": "Argothian Enchantress"
+     },
+     {
+      "qty": 4,
+      "name": "Enchantress's Presence"
+     },
+     {
+      "qty": 4,
+      "name": "Wild Growth"
+     },
+     {
+      "qty": 2,
+      "name": "Mirri's Guile"
+     },
+     {
+      "qty": 3,
+      "name": "Sterling Grove"
+     },
+     {
+      "qty": 1,
+      "name": "Enlightened Tutor"
+     },
+     {
+      "qty": 3,
+      "name": "Seal of Cleansing"
+     },
+     {
+      "qty": 2,
+      "name": "Solitary Confinement"
+     },
+     {
+      "qty": 2,
+      "name": "Parallax Wave"
+     },
+     {
+      "qty": 2,
+      "name": "Opalescence"
+     },
+     {
+      "qty": 3,
+      "name": "Pandemonium"
+     },
+     {
+      "qty": 3,
+      "name": "Saproling Burst"
+     },
+     {
+      "qty": 2,
+      "name": "Replenish"
+     },
+     {
+      "qty": 3,
+      "name": "Swords to Plowshares"
+     },
+     {
+      "qty": 4,
+      "name": "Serra's Sanctum"
+     },
+     {
+      "qty": 4,
+      "name": "Brushland"
+     },
+     {
+      "qty": 4,
+      "name": "Windswept Heath"
+     },
+     {
+      "qty": 2,
+      "name": "Wooded Foothills"
+     },
+     {
+      "qty": 2,
+      "name": "Karplusan Forest"
+     },
+     {
+      "qty": 2,
+      "name": "City of Brass"
+     },
+     {
+      "qty": 1,
+      "name": "Mountain"
+     },
+     {
+      "qty": 2,
+      "name": "Forest"
+     },
+     {
+      "qty": 1,
+      "name": "Plains"
+     }
+    ],
+    "side": [
+     {
+      "qty": 3,
+      "name": "Xantid Swarm"
+     },
+     {
+      "qty": 2,
+      "name": "Tormod's Crypt"
+     },
+     {
+      "qty": 2,
+      "name": "Aura of Silence"
+     },
+     {
+      "qty": 2,
+      "name": "Warmth"
+     },
+     {
+      "qty": 2,
+      "name": "Sacred Ground"
+     },
+     {
+      "qty": 2,
+      "name": "Red Elemental Blast"
+     },
+     {
+      "qty": 1,
+      "name": "Swords to Plowshares"
+     },
+     {
+      "qty": 1,
+      "name": "Choke"
+     }
+    ],
+    "commander": [],
+    "label": "brew",
+    "warnings": []
+   },
+   "toolCalls": [
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "meta",
+     "isError": false
+    },
+    {
+     "name": "reference_list",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "submit_deck",
+     "ok": true,
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 18,
+    "output": 9202,
+    "cacheRead": 113949,
+    "cacheWrite": 27893
+   },
+   "costUsd": 0.3464,
+   "steps": 7,
+   "ms": 98160,
+   "errors": []
+  },
+  {
+   "id": "expert-premodern-draco-explosion",
+   "track": "expert",
+   "format": "Premodern",
+   "before": null,
+   "prompt": "Brew me a Premodern deck built around Erratic Explosion and Draco.",
+   "text": "I built a Naya (red-green-white) burn deck that wins by putting Draco on top of the library and casting Erratic Explosion for 16 damage. It's a brew: neither card shows up in any recent Premodern list.\n\n**What each requested card does here**\n- **Erratic Explosion** (3 mana, sorcery): it flips cards off the top of your library until it hits a nonland card, then deals damage equal to that card's mana value. The deck needs a way to choose that top card and the mana to do it in the same main phase, because it's a sorcery and can't be cast on the opponent's turn.\n- **Draco** (an artifact creature that costs 16): its mana value of 16 is all that matters. In a three-color deck it would still cost 10 to cast, so it never gets cast. It sits in the library until a tutor puts it on top.\n\n**Three directions I considered**\n1. **Naya burn with tutors (chosen).** It borrows the burn-and-creatures package from GR Zoo/Sligh (Bolt, Incinerate, Lavamancer, Fanatic, Jackal Pup, Quirion Dryad). Worldly Tutor (finds a creature) and Enlightened Tutor (finds an artifact) each cost 1 mana, work at instant speed, and put Draco on top.\n2. **Five-color domain.** Run all five basic land types to cast Draco for 6. I rejected it because the format has no dual lands with basic land types, so the mana would be terrible.\n3. **Blue-black-red control** using Lim-Dûl's Vault, Doomsday or Scroll Rack to set up the top card. I rejected it because those cards are slower, cost life, and are harder to cast than 1-mana tutors.\n\nDirection 1 won because it gives eight 1-mana ways to stack Draco, and the burn makes up the last 4 points. The more obvious ways to set up your top card don't work: Brainstorm, Mystical Tutor and Vampiric Tutor are banned, and Personal Tutor isn't legal.\n\n**The plan**\n- Hit with cheap creatures and burn for the first few turns.\n- Once the opponent is at 16 or less, spend 4 mana in your main phase: tutor Draco to the top, then cast Explosion for 16.\n- Every tutor also grows Quirion Dryad, since it gets a counter whenever you cast a white or red spell.\n- With no Explosion in hand, the deck just plays as a normal burn deck. Explosion can also kill a creature.\n\n**Things to know when playing it**\n- **Fetchlands shuffle your library.** Always crack them before you tutor.\n- **Tutor in your own main phase, not at the end of the opponent's turn.** Otherwise you just draw Draco.\n- **I run only one Draco.** If you draw it, the combo is gone for that game. Sylvan Library can put it back if you drew it that same turn.\n- **Odds:** the chance of seeing both an Explosion and a tutor by turn 5 on the play is 45.5%. Explosion is the limit: there are only 4 copies, and the deck has no way to search for a sorcery. Enlightened Tutor can also find Sylvan Library to dig.\n\n**Mana:** 22 lands, compared against the GR Zoo lists the mana is borrowed from: 16 red, 14 green and 10 white sources. The deck check came back with no errors or warnings.\n\n**Sideboard:** it's aimed at the current top decks.\n- Swords to Plowshares for Terravore and Phyrexian Dreadnought.\n- Pyroblast and Red Elemental Blast against Stiflenought and Psychatog.\n- Tranquil Domain and Naturalize against Enchantress.\n- Tormod's Crypt against Hermit Druid and Psychatog.\n- Pyroclasm against Goblins and Sligh.",
+   "deck": {
+    "main": [
+     {
+      "qty": 1,
+      "name": "Draco"
+     },
+     {
+      "qty": 4,
+      "name": "Erratic Explosion"
+     },
+     {
+      "qty": 4,
+      "name": "Worldly Tutor"
+     },
+     {
+      "qty": 4,
+      "name": "Enlightened Tutor"
+     },
+     {
+      "qty": 4,
+      "name": "Lightning Bolt"
+     },
+     {
+      "qty": 4,
+      "name": "Incinerate"
+     },
+     {
+      "qty": 4,
+      "name": "Jackal Pup"
+     },
+     {
+      "qty": 4,
+      "name": "Grim Lavamancer"
+     },
+     {
+      "qty": 4,
+      "name": "Quirion Dryad"
+     },
+     {
+      "qty": 3,
+      "name": "Mogg Fanatic"
+     },
+     {
+      "qty": 2,
+      "name": "Sylvan Library"
+     },
+     {
+      "qty": 4,
+      "name": "Wooded Foothills"
+     },
+     {
+      "qty": 2,
+      "name": "Windswept Heath"
+     },
+     {
+      "qty": 4,
+      "name": "Karplusan Forest"
+     },
+     {
+      "qty": 4,
+      "name": "Battlefield Forge"
+     },
+     {
+      "qty": 2,
+      "name": "Brushland"
+     },
+     {
+      "qty": 1,
+      "name": "City of Brass"
+     },
+     {
+      "qty": 3,
+      "name": "Mountain"
+     },
+     {
+      "qty": 1,
+      "name": "Forest"
+     },
+     {
+      "qty": 1,
+      "name": "Plains"
+     }
+    ],
+    "side": [
+     {
+      "qty": 3,
+      "name": "Swords to Plowshares"
+     },
+     {
+      "qty": 3,
+      "name": "Pyroblast"
+     },
+     {
+      "qty": 1,
+      "name": "Red Elemental Blast"
+     },
+     {
+      "qty": 2,
+      "name": "Tranquil Domain"
+     },
+     {
+      "qty": 2,
+      "name": "Naturalize"
+     },
+     {
+      "qty": 2,
+      "name": "Tormod's Crypt"
+     },
+     {
+      "qty": 2,
+      "name": "Pyroclasm"
+     }
+    ],
+    "commander": [],
+    "label": "brew",
+    "warnings": []
+   },
+   "toolCalls": [
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "submit_deck",
+     "ok": true,
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 18,
+    "output": 13378,
+    "cacheRead": 138769,
+    "cacheWrite": 30868
+   },
+   "costUsd": 0.4497,
+   "steps": 7,
+   "ms": 152617,
+   "errors": []
+  },
+  {
+   "id": "expert-legacy-living-end",
+   "track": "expert",
+   "format": "Legacy",
+   "before": "2025-12-28",
+   "prompt": "Brew me a Legacy deck built around Curator of Mysteries, Waker of Waves and Colossal Skyturtle.",
+   "text": "I built **Temur Living End**. It's a brew: none of your three cards shows up in recent Legacy results except one rogue list with Skyturtle.\n\n**What each requested card does here**\n- **Curator of Mysteries:** costs {U} to cycle, so it puts a 4/4 flier in the graveyard on turn 1. Its \"scry 1 whenever you cycle or discard another card\" smooths every later cycle.\n- **Waker of Waves:** pay {1}{U} and discard it to look at the top two cards, keep one, and put the other in the graveyard. That digs for the combo and leaves a 7/7 that gives the opponent's creatures -1/-0.\n- **Colossal Skyturtle:** its two discard abilities (\"channel\") both put a 6/5 flier with ward 2 in the graveyard. {1}{U} bounces a creature, which slows tempo and aggro decks. {2}{G} returns any card from your graveyard to your hand. After a cascade, that card can be Violent Outburst, which gives you a second Living End.\n\n**Three directions I considered**\n1. **Sultai Reanimator**, using the Reanimate and Animate Dead package from the menu.\n2. **Simic Tempo**, using Brainstorm, Ponder and Force from the tempo decks, with the big creatures as backup spells.\n3. **Living End cascade**, borrowing the shell of the Crashing Footfalls deck.\n\nI picked the third because it's the only one where all three cards are both how you set up and how you win. The cheap discard abilities fill the graveyard, and Living End puts every creature back on the battlefield at once while wiping out the opponent's creatures.\n\n**The plan**\nSpend turns 1–2 cycling and discarding (Street Wraith and Striped Riverwinder add more of this). On turn 3, cast Shardless Agent or Violent Outburst. Cascade finds Living End, the only spell in the deck with mana value under 3, and you get back a team of 4/4 to 7/7 creatures, most of them fliers. Force of Will, Force of Negation and Fire // Ice protect the combo and handle cheap threats. All of them have mana value 3 or more, so cascade can never hit them instead of Living End.\n\n**Odds and trade-offs**\n- **Turn-3 combo:** on the play, you have a cascade spell by turn 3 74% of the time with no mulligans. You have at least one discard creature 99% of the time.\n- **Lands:** I borrowed Footfalls' fetch-and-dual mana but cut Wasteland and the Spirit Guides to make room for the creatures, ending at 18 lands. The checker's suggestion of 24 lands comes from the average mana value, which is inflated because the creatures are almost never cast.\n- **No black mana:** this is on purpose. Street Wraith cycles for 2 life, Archfiend of Ifnir cycles for {2}, and Living End is only ever cast through cascade.\n- **Sideboard:** cascade would hit any card with mana value 1 or 2, so the sideboard avoids them. That rules out Pyroblast, Hydroblast and similar cards.\n- **Leyline of the Void (sideboard):** it's only useful in your opening hand, since you can't pay its {2}{B}{B}. It's there so a Living End doesn't hand Reanimator back its Griselbrand.",
+   "deck": {
+    "main": [
+     {
+      "qty": 4,
+      "name": "Curator of Mysteries"
+     },
+     {
+      "qty": 4,
+      "name": "Waker of Waves"
+     },
+     {
+      "qty": 4,
+      "name": "Colossal Skyturtle"
+     },
+     {
+      "qty": 4,
+      "name": "Striped Riverwinder"
+     },
+     {
+      "qty": 4,
+      "name": "Street Wraith"
+     },
+     {
+      "qty": 2,
+      "name": "Archfiend of Ifnir"
+     },
+     {
+      "qty": 4,
+      "name": "Shardless Agent"
+     },
+     {
+      "qty": 4,
+      "name": "Violent Outburst"
+     },
+     {
+      "qty": 3,
+      "name": "Living End"
+     },
+     {
+      "qty": 4,
+      "name": "Force of Will"
+     },
+     {
+      "qty": 3,
+      "name": "Force of Negation"
+     },
+     {
+      "qty": 2,
+      "name": "Fire // Ice"
+     },
+     {
+      "qty": 4,
+      "name": "Misty Rainforest"
+     },
+     {
+      "qty": 4,
+      "name": "Wooded Foothills"
+     },
+     {
+      "qty": 3,
+      "name": "Tropical Island"
+     },
+     {
+      "qty": 2,
+      "name": "Volcanic Island"
+     },
+     {
+      "qty": 1,
+      "name": "Taiga"
+     },
+     {
+      "qty": 1,
+      "name": "Thundering Falls"
+     },
+     {
+      "qty": 1,
+      "name": "Island"
+     },
+     {
+      "qty": 1,
+      "name": "Forest"
+     },
+     {
+      "qty": 1,
+      "name": "Otawara, Soaring City"
+     }
+    ],
+    "side": [
+     {
+      "qty": 3,
+      "name": "Leyline of the Void"
+     },
+     {
+      "qty": 2,
+      "name": "Force of Vigor"
+     },
+     {
+      "qty": 2,
+      "name": "Mystical Dispute"
+     },
+     {
+      "qty": 2,
+      "name": "Fury"
+     },
+     {
+      "qty": 2,
+      "name": "Brazen Borrower"
+     },
+     {
+      "qty": 2,
+      "name": "Kozilek's Return"
+     },
+     {
+      "qty": 2,
+      "name": "Subtlety"
+     }
+    ],
+    "commander": [],
+    "label": "brew",
+    "warnings": [
+     "0 B sources; Street Wraith wants about 15 to cast on curve."
+    ]
+   },
+   "toolCalls": [
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "submit_deck",
+     "ok": true,
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 20,
+    "output": 10766,
+    "cacheRead": 166166,
+    "cacheWrite": 34356
+   },
+   "costUsd": 0.4204,
+   "steps": 8,
+   "ms": 120708,
+   "errors": []
+  },
+  {
+   "id": "expert-premodern-rector-combo",
+   "track": "expert",
+   "format": "Premodern",
+   "before": "2026-05-16",
+   "prompt": "Brew me a Premodern deck built around Future Sight, Academy Rector and Veteran Explorer.",
+   "text": "I built **Four-Color Rector Sight**. It's a brew: the deck legally passed check_deck and was accepted.\n\n**What each requested card does here**\n- **Academy Rector** gets Future Sight into play. When it dies, you can exile it to put an enchantment from your library onto the battlefield. So the 4-mana Rector is really \"put Future Sight into play without paying its 5 mana.\" It needs ways to die: sacrifice outlets or a chump block.\n- **Veteran Explorer** fixes your colors and ramps you. When it dies, each player may put two basic lands onto the battlefield. That lets a deck with four colors run basics and still reach Future Sight's {2}{U}{U}{U} and Exalted Angel's double white. It also needs ways to die.\n- **Future Sight** is your card-advantage engine. You play with the top card of your library revealed, and you can play lands and cast spells from it. Cheap creatures (Birds, Explorer, Wall of Blossoms) chain off the top, and the sacrifice outlets keep the cards flowing. Counting the 3 Future Sights, 4 Rectors and 2 Diabolic Intents, you have one of those 9 cards by turn 4 about 83% of the time.\n\n**Three directions I considered**\n1. **Green-white-blue with Counterspells:** Altar of Bone, High Market and Phyrexian Tower as the ways to kill your own creatures, plus Counterspell and Swords to Plowshares. Its sacrifice outlets were too weak.\n2. **Survival toolbox (based on the Pattern Combo list):** Survival of the Fittest, Goblin Bombardment and five colors. Future Sight would only be a side piece there.\n3. **Four colors with Moneyball Black's discard (Cabal Therapy, Duress):** Therapy's flashback (sacrifice a creature) kills Explorer or Rector while also stripping a card from the opponent. Diabolic Intent sacrifices a creature too, as a tutor for any card.\n\n**I chose direction 3** because black's sacrifice outlets give you a second card's worth of value every time. Cabal Therapy is already played in 17.3% of recent lists, and it attacks the blue decks that lead the meta (Stiflenought is 16% of the field).\n\n**How the deck plays:** On turns 1–2, play Birds, Explorer or Wall of Blossoms. Then sacrifice Explorer to Therapy or Intent for two extra lands plus discard or a tutor. Sacrificing Rector to Intent puts Future Sight into play and also fetches any card. After that, Future Sight and three Exalted Angels win the long game. Swords to Plowshares and a Pernicious Deed (the second Rector target) deal with Goblins, Sligh and Enchantress.\n\n**Notes**\n- Having both an Explorer or Rector and a sacrifice outlet by turn 4 only happens about 57% of the time. Chump-blocking with Rector covers some of the gap.\n- The deck runs 24 lands. The checker recommended about 21, but you have several 5- and 6-mana cards, and Explorer's lands don't come off your own land count.",
+   "deck": {
+    "main": [
+     {
+      "qty": 4,
+      "name": "Birds of Paradise"
+     },
+     {
+      "qty": 4,
+      "name": "Veteran Explorer"
+     },
+     {
+      "qty": 4,
+      "name": "Academy Rector"
+     },
+     {
+      "qty": 4,
+      "name": "Wall of Blossoms"
+     },
+     {
+      "qty": 3,
+      "name": "Exalted Angel"
+     },
+     {
+      "qty": 1,
+      "name": "Karmic Guide"
+     },
+     {
+      "qty": 4,
+      "name": "Cabal Therapy"
+     },
+     {
+      "qty": 2,
+      "name": "Diabolic Intent"
+     },
+     {
+      "qty": 2,
+      "name": "Duress"
+     },
+     {
+      "qty": 4,
+      "name": "Swords to Plowshares"
+     },
+     {
+      "qty": 3,
+      "name": "Future Sight"
+     },
+     {
+      "qty": 1,
+      "name": "Pernicious Deed"
+     },
+     {
+      "qty": 2,
+      "name": "City of Brass"
+     },
+     {
+      "qty": 2,
+      "name": "Adarkar Wastes"
+     },
+     {
+      "qty": 2,
+      "name": "Yavimaya Coast"
+     },
+     {
+      "qty": 1,
+      "name": "Brushland"
+     },
+     {
+      "qty": 1,
+      "name": "Underground River"
+     },
+     {
+      "qty": 1,
+      "name": "Llanowar Wastes"
+     },
+     {
+      "qty": 1,
+      "name": "Caves of Koilos"
+     },
+     {
+      "qty": 2,
+      "name": "Flooded Strand"
+     },
+     {
+      "qty": 1,
+      "name": "Polluted Delta"
+     },
+     {
+      "qty": 2,
+      "name": "Windswept Heath"
+     },
+     {
+      "qty": 1,
+      "name": "Phyrexian Tower"
+     },
+     {
+      "qty": 3,
+      "name": "Island"
+     },
+     {
+      "qty": 2,
+      "name": "Plains"
+     },
+     {
+      "qty": 2,
+      "name": "Forest"
+     },
+     {
+      "qty": 1,
+      "name": "Swamp"
+     }
+    ],
+    "side": [
+     {
+      "qty": 2,
+      "name": "Duress"
+     },
+     {
+      "qty": 2,
+      "name": "Engineered Plague"
+     },
+     {
+      "qty": 2,
+      "name": "Seal of Cleansing"
+     },
+     {
+      "qty": 2,
+      "name": "Tormod's Crypt"
+     },
+     {
+      "qty": 1,
+      "name": "Pernicious Deed"
+     },
+     {
+      "qty": 2,
+      "name": "Hydroblast"
+     },
+     {
+      "qty": 2,
+      "name": "Spike Feeder"
+     },
+     {
+      "qty": 2,
+      "name": "Counterspell"
+     }
+    ],
+    "commander": [],
+    "label": "brew",
+    "warnings": []
+   },
+   "toolCalls": [
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "reference_list",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "submit_deck",
+     "ok": true,
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 18,
+    "output": 10925,
+    "cacheRead": 170072,
+    "cacheWrite": 37241
+   },
+   "costUsd": 0.4388,
+   "steps": 7,
+   "ms": 116134,
+   "errors": []
+  }
+ ]
+}

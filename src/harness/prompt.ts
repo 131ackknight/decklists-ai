@@ -79,3 +79,14 @@ export const V8_SYSTEM_PROMPT = V5_SYSTEM_PROMPT.replace(
   "- Brew (anything without a proven list): start from the requested cards and plan.",
   "- Brew (anything without a proven list): first call played_with on the requested cards. If real decks in any format run them together, learn the mechanism from those decks (what each card is actually for, what else makes it work) before you plan; then check what carries over to the requested format. Start from the requested cards and plan.",
 );
+
+/**
+ * Harness v9: v5 plus a mechanism-first step and no played_with. The control
+ * for v8 (2026-10-20): if the model can reason its way to a combo's mechanism
+ * when asked, the fix is in the asking; if only v8's lookup fixes it, the
+ * ceiling of this approach is knowledge, not reasoning.
+ */
+export const V9_SYSTEM_PROMPT = V5_SYSTEM_PROMPT.replace(
+  "- Brew (anything without a proven list): start from the requested cards and plan.",
+  "- Brew (anything without a proven list): before any plan, write one line per requested card: what it is FOR in this deck, which part of its text or numbers actually matters for that, and what it needs around it to do its job. A card's theme words (a keyword, a creature type, a mana-cost gimmick) are not its job; its job is the line it enables. Only then start from the requested cards and plan.",
+);

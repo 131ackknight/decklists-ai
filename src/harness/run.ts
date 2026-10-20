@@ -5,7 +5,7 @@ import type { DataSource } from "@/data/source";
 import { costUsd, type ModelConfig, type Usage } from "./models";
 import { formatMenu } from "./menu";
 import { examplesText, loadBrewerLists, type BrewerList } from "./examples";
-import { SYSTEM_PROMPT, V4_SYSTEM_PROMPT, V5_SYSTEM_PROMPT, V6_SYSTEM_PROMPT, V7_SYSTEM_PROMPT, V8_SYSTEM_PROMPT } from "./prompt";
+import { SYSTEM_PROMPT, V4_SYSTEM_PROMPT, V5_SYSTEM_PROMPT, V6_SYSTEM_PROMPT, V7_SYSTEM_PROMPT, V8_SYSTEM_PROMPT, V9_SYSTEM_PROMPT } from "./prompt";
 import { runTool, toolParams, type SubmittedDeck, type ToolContext } from "./tools";
 
 export interface BrewRequest {
@@ -282,4 +282,15 @@ export function brewV8(
   onStep?: (step: number, note: string) => void,
 ): Promise<BrewResult> {
   return brewV5(client, model, req, deps, onStep, { system: V8_SYSTEM_PROMPT, extraTools: ["played_with"] });
+}
+
+/** Harness v9: v5 plus a mechanism-first step, no played_with (the control for v8). */
+export function brewV9(
+  client: Anthropic,
+  model: ModelConfig,
+  req: BrewRequest,
+  deps: { index: CardIndex; data: DataSource },
+  onStep?: (step: number, note: string) => void,
+): Promise<BrewResult> {
+  return brewV5(client, model, req, deps, onStep, { system: V9_SYSTEM_PROMPT });
 }

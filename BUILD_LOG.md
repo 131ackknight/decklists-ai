@@ -77,6 +77,15 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-10-22 · In progress: v17 on both tests, and a gem test
+
+Owner, on the stall since v13 ("I dont like that we are getting worse"): the base didn't get worse (v14-v16 were tried and not kept), but three tries in a row didn't beat it, and gems never moved. All three gave the brewer more to read; v17 instead reviews the finished deck. Owner agreed to run it.
+
+- **v17, two runs on the future test** (about $22), started; logs in `evals/results/round4/logs/future-v17-r*.log`. To score: `scripts/score-tests.ts` on `future-v17-claude-opus-5-5.json` and `-r2.json`.
+- **Gem test** (`scripts/gem-test.ts`, about $3 for two runs), started. Owner asked whether showing the AI a pile of cards is really cheap; yes: one call per deck rating 30 cards costs about $0.10, against about $0.60 for a brew. For 14 decks it mixes the inventor's gems with look-alikes that are just as under-played, legal, in the right colors and ranked highly by the synergy tool. Score: how often a gem is rated above a look-alike (50% = can't tell). High means the AI recognizes gems and the problem is search; about 50% means it's a judgment gap that more tools won't fix. Results in `evals/results/round4/gem-test*.json`.
+
+---
+
 ## 2026-10-22 · Correction: v2 isn't the better brewer; one-list decks were hiding v13's gain
 
 Owner, on the table below: **"So v2 brewing is just better??? we didnt get any better at all."** The table did suggest v2 at least tied v13 on brewing. The cause: 4 of the 17 decks (Jund Sacrifice, Persist, Riddlesmith Combo, Sneak Attack) have a single first-week list, so their Brewing score is one player's choices, and v2 happened to land close to two of them (Jund Sacrifice 50% vs v13's 18%; Sneak Attack 55% vs 38 / 42%). **Fix:** the Brewing Test now uses only decks with 2+ first-week lists (13 decks). The Tuning Test keeps all 17.

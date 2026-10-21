@@ -27,7 +27,7 @@ export interface SavedList {
 
 export interface Round4Item {
   id: string;
-  track: "fill" | "brew" | "fresh" | "holdout" | "expert" | "post" | "expert2" | "expert3";
+  track: "fill" | "brew" | "fresh" | "holdout" | "expert" | "post" | "expert2" | "expert3" | "future";
   format: string;
   prompt: string;
   /** Data and cards are cut to before this date (YYYY-MM-DD); null = today's data. */
@@ -264,5 +264,8 @@ export function round4Items(index: CardIndex): Round4Item[] {
     ...holdoutItems("evals/brew-holdout/candidates-post.json", "post", 0),
     ...EXPERT2_FRESH.map((f) => ({ ...f, track: "expert2" as const, before: null })),
     ...EXPERT3_FRESH.map((f) => ({ ...f, track: "expert3" as const, before: null })),
+    // Future test (2026-10-21, owner: "cutoff can be earlier too like April"): every constructed archetype
+    // first seen since 2026-04-01 with 3+ lists. Scored against every list from a week after it appeared.
+    ...holdoutItems("evals/brew-holdout/candidates-future.json", "future", 0),
   ];
 }

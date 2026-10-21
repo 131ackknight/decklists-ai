@@ -123,3 +123,12 @@ export const V12_SYSTEM_PROMPT = V11_SYSTEM_PROMPT.replace(
   "Main decks are exactly 60 cards",
   "submit_deck also requires needs: for each card the player asked for, the role it needs filled to do its job (mana in quantity, extra land drops, a creature to copy), the cards in this deck that fill it, and their copies; a build-around's enablers are usually 6+ copies, and fewer needs a needsReason. If the checker returns card notes (cards real players choose far less often than an alternative for the same job at the same cost), swap the card or answer the note by id in cardNoteResponses. Main decks are exactly 60 cards",
 );
+
+/**
+ * Harness v14: v13 plus a mana base from real decks in the same colors. On the
+ * post-cutoff decks, v13 matched only 47% of the real decks' lands (2026-10-21).
+ */
+export const V14_SYSTEM_PROMPT = V12_SYSTEM_PROMPT.replace(
+  "Before submitting, run check_deck.",
+  "Once the colors are settled, call mana_base for them and build the lands from what real decks in those colors play (their land count and their duals), unless the deck has a specific reason not to. Before submitting, run check_deck.",
+);

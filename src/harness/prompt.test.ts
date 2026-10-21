@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { SYSTEM_PROMPT, V5_SYSTEM_PROMPT, V6_SYSTEM_PROMPT, V7_SYSTEM_PROMPT, V8_SYSTEM_PROMPT, V9_SYSTEM_PROMPT } from "./prompt";
+import { SYSTEM_PROMPT, V5_SYSTEM_PROMPT, V6_SYSTEM_PROMPT, V7_SYSTEM_PROMPT, V8_SYSTEM_PROMPT, V9_SYSTEM_PROMPT, V14_SYSTEM_PROMPT } from "./prompt";
 
 describe("harness prompts", () => {
   it("v5 keeps v2's rules and swaps only the final answer", () => {
@@ -26,5 +26,9 @@ describe("harness prompts", () => {
   it("v9 asks for each card's job before planning, without played_with", () => {
     expect(V9_SYSTEM_PROMPT).toContain("what it is FOR");
     expect(V9_SYSTEM_PROMPT).not.toContain("played_with");
+  });
+
+  it("v14 asks for the mana base from real decks in the same colors", () => {
+    expect(V14_SYSTEM_PROMPT).toContain("call mana_base");
   });
 });

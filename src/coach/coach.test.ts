@@ -68,6 +68,7 @@ const data: DataSource = {
   copyRate: () => null,
   recentLists: () => lists,
   playedWith: () => null,
+  manaBase: () => null,
 };
 
 const combo: Plan = {

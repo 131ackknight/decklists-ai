@@ -36,6 +36,7 @@ const noData: DataSource = {
   copyRate: () => null,
   recentLists: () => [],
   playedWith: () => null,
+  manaBase: () => null,
 };
 
 const ctx = (): ToolContext => ({ index, data: noData, seen: new Set(), submitted: null });

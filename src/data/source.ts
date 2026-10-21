@@ -28,6 +28,16 @@ export interface DataSource {
    * The mechanism of a combo, read off the decks that actually run it.
    */
   playedWith(cards: string[], opts?: Window): PlayedWith | null;
+  /** The lands real decks in exactly these colors play (by the colors of their spells), last 90 days. */
+  manaBase(format: string, colors: string, opts?: Window): ManaBase | null;
+}
+
+export interface ManaBase {
+  colors: string;
+  lists: number;
+  avgLands: number;
+  lands: { name: string; share: number; avgCopies: number }[];
+  strategies: { strategy: string; lists: number }[];
 }
 
 export interface PlayedWith {
@@ -206,6 +216,47 @@ export class FileDataSource implements DataSource {
 
   recentLists(format: string, opts?: Window): RefList[] {
     return this.window(format, { days: 90, ...opts });
+  }
+
+  manaBase(format: string, colors: string, opts: Window = {}): ManaBase | null {
+    const want = [...new Set(colors.toUpperCase().replace(/[^WUBRG]/g, ""))].sort().join("");
+    const isLand = (n: string) => /\bLand\b/.test(this.index.getCard(n)?.typeLine.split(" // ")[0] ?? "");
+    const spellColors = (l: RefList) => {
+      const set = new Set<string>();
+      for (const c of l.main) {
+        if (isLand(c.name)) continue;
+        const cost = this.index.getCard(c.name)?.manaCost.split(" // ")[0] ?? "";
+        for (const m of cost.matchAll(/\{([WUBRG])(?:\/[WUBRGP])?\}/g)) set.add(m[1]);
+      }
+      return [...set].sort().join("");
+    };
+    const lists = this.window(format, { days: 90, ...opts }).filter((l) => spellColors(l) === want);
+    if (lists.length < 5) return null;
+    const seen = new Map<string, { lists: number; copies: number; name: string }>();
+    const byStrategy = new Map<string, number>();
+    let landTotal = 0;
+    for (const l of lists) {
+      byStrategy.set(l.strategy, (byStrategy.get(l.strategy) ?? 0) + 1);
+      for (const c of l.main) {
+        if (!isLand(c.name)) continue;
+        landTotal += c.qty;
+        const k = normalizeName(c.name);
+        const row = seen.get(k) ?? { lists: 0, copies: 0, name: this.index.getCard(c.name)?.name ?? c.name };
+        row.lists++;
+        row.copies += c.qty;
+        seen.set(k, row);
+      }
+    }
+    return {
+      colors: want,
+      lists: lists.length,
+      avgLands: Math.round((landTotal / lists.length) * 10) / 10,
+      lands: [...seen.values()]
+        .map((r) => ({ name: r.name, share: r.lists / lists.length, avgCopies: Math.round((r.copies / r.lists) * 10) / 10 }))
+        .sort((a, b) => b.share - a.share)
+        .slice(0, 20),
+      strategies: [...byStrategy].map(([strategy, n]) => ({ strategy, lists: n })).sort((a, b) => b.lists - a.lists).slice(0, 5),
+    };
   }
 
   playedWith(cards: string[], opts: Window = {}): PlayedWith | null {

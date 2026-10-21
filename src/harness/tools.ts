@@ -305,6 +305,18 @@ export const TOOLS = [
     },
   }),
   tool({
+    name: "mana_base",
+    description:
+      "The lands real decks in exactly these colors play in this format (last 90 days): how many lists, their average land count, and each land's share and usual copies. Real brewers take their mana base from decks in their colors; use these lands unless the deck has a specific reason not to.",
+    schema: z.object({ format: z.string(), colors: z.string().describe("The deck's colors as letters, e.g. 'WU' or 'BRG'.") }),
+    run: ({ format, colors }, ctx) => {
+      const r = ctx.data.manaBase(formatKey(format), colors);
+      if (!r) return { lists: 0, note: "Fewer than 5 recent lists in exactly these colors; build the mana from the card pool and check_deck." };
+      remember(ctx, r.lands.map((l) => l.name));
+      return { ...r, lands: r.lands.map((l) => ({ name: l.name, inPercentOfLists: pct(l.share), avgCopies: l.avgCopies })) };
+    },
+  }),
+  tool({
     name: "draw_odds",
     description:
       "Exact draw odds with no mulligans: chance to have at least one card from each group by a turn. Use it to size engines and to give honest odds.",

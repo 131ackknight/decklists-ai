@@ -69,6 +69,7 @@ const data: DataSource = {
   recentLists: () => lists,
   playedWith: () => null,
   manaBase: () => null,
+  mainDecks: () => [],
 };
 
 const combo: Plan = {

@@ -5,7 +5,7 @@ import type { DataSource } from "@/data/source";
 import { costUsd, type ModelConfig, type Usage } from "./models";
 import { formatMenu } from "./menu";
 import { examplesText, loadBrewerLists, type BrewerList } from "./examples";
-import { SYSTEM_PROMPT, V4_SYSTEM_PROMPT, V5_SYSTEM_PROMPT, V6_SYSTEM_PROMPT, V7_SYSTEM_PROMPT, V8_SYSTEM_PROMPT, V9_SYSTEM_PROMPT, V10_SYSTEM_PROMPT, V11_SYSTEM_PROMPT, V12_SYSTEM_PROMPT, V14_SYSTEM_PROMPT, V15_SYSTEM_PROMPT } from "./prompt";
+import { SYSTEM_PROMPT, V4_SYSTEM_PROMPT, V5_SYSTEM_PROMPT, V6_SYSTEM_PROMPT, V7_SYSTEM_PROMPT, V8_SYSTEM_PROMPT, V9_SYSTEM_PROMPT, V10_SYSTEM_PROMPT, V11_SYSTEM_PROMPT, V12_SYSTEM_PROMPT, V14_SYSTEM_PROMPT, V15_SYSTEM_PROMPT, V16_SYSTEM_PROMPT } from "./prompt";
 import { runTool, toolParams, type SubmittedDeck, type ToolContext } from "./tools";
 
 export interface BrewRequest {
@@ -407,5 +407,23 @@ export function brewV15(
     requireNeeds: true,
     cardChecksV2: true,
     spellChecks: true,
+  });
+}
+
+/** Harness v16: v13 plus the synergy shortlist tool. */
+export function brewV16(
+  client: Anthropic,
+  model: ModelConfig,
+  req: BrewRequest,
+  deps: { index: CardIndex; data: DataSource },
+  onStep?: (step: number, note: string) => void,
+): Promise<BrewResult> {
+  return brewV5(client, model, req, deps, onStep, {
+    system: V16_SYSTEM_PROMPT,
+    extraTools: ["played_with", "synergy_candidates"],
+    requireWinLine: true,
+    strictBrew: true,
+    requireNeeds: true,
+    cardChecksV2: true,
   });
 }

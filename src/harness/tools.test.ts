@@ -37,6 +37,7 @@ const noData: DataSource = {
   recentLists: () => [],
   playedWith: () => null,
   manaBase: () => null,
+  mainDecks: () => [],
 };
 
 const ctx = (): ToolContext => ({ index, data: noData, seen: new Set(), submitted: null });

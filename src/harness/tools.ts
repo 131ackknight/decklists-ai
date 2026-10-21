@@ -9,6 +9,7 @@ import { cardsSeen, probAtLeast, probEachGroup } from "@/checker/odds";
 import type { Card } from "@/cards/types";
 import type { DataSource, QtyName } from "@/data/source";
 import { goldfish } from "@/sim/goldfish";
+import { synergyModelFor, synergyScore } from "@/synergy/feature-synergy";
 import { coachNotes, formatStaples, partnerNotes, PlanInput, type CoachNote, type Plan } from "@/coach/coach";
 
 /** State shared by one brew's tool calls. */
@@ -331,6 +332,37 @@ export const TOOLS = [
       const byJob: Record<string, { name: string; inPercentOfLists: number; avgCopies: number }[]> = {};
       for (const x of staples.slice(0, 40)) (byJob[x.job] ??= []).push({ name: x.name, inPercentOfLists: pct(x.share), avgCopies: x.avgCopies });
       return { colors, byJob };
+    },
+  }),
+  tool({
+    name: "synergy_candidates",
+    description:
+      "A shortlist of up to 150 cards that real decks most often pair with the KINDS of cards requested (learned from what cards do, not their names), in the given colors, including cards almost nobody plays yet. Use it to find partners that make the requested cards better; it's a list to choose from, not a list to add.",
+    schema: z.object({
+      format: z.string(),
+      cards: z.array(z.string()).min(1).max(4).describe("The requested cards (or the core of your plan)."),
+      colors: z.string().optional().describe("Colors to search in, e.g. 'RW'. Defaults to the requested cards' colors."),
+      limit: z.number().int().min(20).max(150).default(150),
+    }),
+    run: ({ format, cards, colors, limit }, ctx) => {
+      const key = formatKey(format);
+      const requested = cards.map((n) => ctx.index.getCard(n)).filter((c): c is Card => !!c);
+      if (!requested.length) return { candidates: [], note: "None of those cards were found." };
+      const allowed = new Set((colors ?? requested.flatMap((c) => c.colors).join("")).toUpperCase().replace(/[^WUBRG]/g, "").split("").filter(Boolean));
+      const model = synergyModelFor(ctx.index, ctx.data);
+      const skip = new Set(requested.map((c) => normalizeName(c.name)));
+      const ranked = ctx.index.cards
+        .filter((c) => !/\bLand\b/.test(c.typeLine.split(" // ")[0]) && (c.legal[key] === "legal" || c.legal[key] === "restricted") && !skip.has(normalizeName(c.name)))
+        .filter((c) => allowed.size === 0 || c.colors.every((x) => allowed.has(x)))
+        .map((c) => ({ c, s: synergyScore(model, requested, c) }))
+        .filter((x) => x.s > 0)
+        .sort((a, b) => b.s - a.s)
+        .slice(0, limit);
+      remember(ctx, ranked.map((x) => x.c.name));
+      return {
+        colors: [...allowed].join("") || "any",
+        candidates: ranked.map(({ c }) => ({ name: c.name, cost: c.manaCost, type: c.typeLine, text: c.text.length > 110 ? `${c.text.slice(0, 107)}...` : c.text })),
+      };
     },
   }),
   tool({

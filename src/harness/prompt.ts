@@ -142,3 +142,14 @@ export const V15_SYSTEM_PROMPT = V12_SYSTEM_PROMPT.replace(
   "Before submitting, run check_deck.",
   "Once the colors are settled, call format_staples for them: the format's most-played cards in your colors, by job. Use the ones that fit the plan (a strong player plays the format's best removal and disruption in their colors unless the deck has a reason not to). The requested cards and the cards in your win line run 4 copies unless legendary, restricted, or there's a reason (copiesReason). Before submitting, run check_deck.",
 );
+
+/**
+ * Harness v16: v13 plus synergy_candidates, a generic tool that grants
+ * specific knowledge (owner, 2026-10-21): a shortlist of the cards real decks
+ * pair with the kinds of cards requested, including unplayed ones. The AI
+ * picks; nothing is forced, so it can't push generic cards in (v15's failure).
+ */
+export const V16_SYSTEM_PROMPT = V12_SYSTEM_PROMPT.replace(
+  "Then write one line per requested card:",
+  "Then call synergy_candidates for the requested cards: a shortlist of cards real decks most often pair with these kinds of cards, including cards almost nobody plays. Read it for partners that make the requested cards stronger or complete the line (a good brew often has two or three cards nobody else is playing); take only the ones that fit. Then write one line per requested card:",
+);

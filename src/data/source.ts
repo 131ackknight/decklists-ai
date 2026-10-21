@@ -30,6 +30,8 @@ export interface DataSource {
   playedWith(cards: string[], opts?: Window): PlayedWith | null;
   /** The lands real decks in exactly these colors play (by the colors of their spells), last 90 days. */
   manaBase(format: string, colors: string, opts?: Window): ManaBase | null;
+  /** Every main deck in the data (constructed formats), as card names: training data for the synergy model. */
+  mainDecks(): string[][];
 }
 
 export interface ManaBase {
@@ -216,6 +218,10 @@ export class FileDataSource implements DataSource {
 
   recentLists(format: string, opts?: Window): RefList[] {
     return this.window(format, { days: 90, ...opts });
+  }
+
+  mainDecks(): string[][] {
+    return this.lists.filter((l) => l.format !== "duel").map((l) => l.main.map((c) => c.name));
   }
 
   manaBase(format: string, colors: string, opts: Window = {}): ManaBase | null {

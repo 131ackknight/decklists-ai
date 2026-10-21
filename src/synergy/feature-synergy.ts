@@ -117,3 +117,14 @@ export function synergyScore(model: SynergyModel, requested: Card[], candidate: 
   }
   return pairs ? total / pairs / Math.sqrt(cf.length) : 0;
 }
+
+/** One model per data source: a brew trains once (about 3 seconds) on the data it is allowed to see. */
+const models = new WeakMap<object, SynergyModel>();
+export function synergyModelFor(index: CardIndex, data: { mainDecks(): string[][] }): SynergyModel {
+  let m = models.get(data);
+  if (!m) {
+    m = trainSynergy(index, data.mainDecks());
+    models.set(data, m);
+  }
+  return m;
+}

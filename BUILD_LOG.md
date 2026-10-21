@@ -65,6 +65,27 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-10-21 · A generic tool that grants specific knowledge: feature synergy, tested for free
+
+Owner: "We need to create a tool or structure that is generic but grants specific knowledge. I don't want to plug gaps about specific engines that are bespoke to specific cards." The tools that worked (v5's menu, v8's played_with) were exactly that, generic code returning specific facts, but both only know cards people already play together, and the missing "discoveries" (16 of the 51 missing spell points) are by definition cards almost nobody plays.
+
+**The idea:** learn at the level of what cards *do*, not which cards they are. `src/synergy/feature-synergy.ts` describes every card by about 1,900 features (Scryfall function tags with their parents, keywords, types, creature types; only features on 15+ cards and at most 5% of all cards) and learns from 37k decklists which features real decks pair (positive pointwise mutual information between features present in the same deck). Any card, played or not, can then be scored against the requested cards. Trains in 3 seconds.
+
+**Free test** (`scripts/synergy-eval.ts`, no API calls): train only on lists before 2026-04-01; for each future-test deck, rank the format's card pool on its first day by synergy with its signature cards, and see where the real deck's discoveries (core cards with under 5% format share beforehand) land. Baseline: rank by plain feature overlap ("similar cards").
+
+| Discoveries found | All colors (pool ~10k) | Deck's colors (pool ~3.2k) |
+| --- | --- | --- |
+| Top 25 | 1/41 | 2/34 |
+| Top 100 | 3/41 | 4/34 |
+| Top 300 | 7/41 | **14/34 (41%)** |
+| Median rank | 1,048 (baseline 2,587) | **464** (baseline 1,236) |
+
+Hits: Mockingbird #10, Dragonfire Blade #29, Ornithopter #56. Misses: Pernicious Deed, Inside Out. 7 of 41 discoveries are outside the signature cards' colors, which a color filter can never find.
+
+**Reading:** the signal is real and generic (5x random, 2.5x "similar cards"), but it is a coarse filter, not a picker. **Proposed v16:** the tool narrows the pool to the ~150 most likely partners with a line of text each; the AI, which reads mechanisms well (v9 found Living End unprompted), picks from the shortlist. No forced notes, so it can't push generic cards in the way v15 did.
+
+---
+
 ## 2026-10-21 · v15 (format staples, 4-ofs): worse, and why
 
 Owner: "How do we get 60% on spells?" Breakdown of v13's missing spell points on the future test (51 of 100): core cards of the real deck absent 28 (format staples 8, the deck's own discoveries 16, brand-new cards 3), core present with too few copies 3, common flex cards absent 13, rare choices 6. Plan: the two cheap parts first.

@@ -27,7 +27,7 @@ Three things, and the third is turning out to be the most interesting.
 
 | Item | Total |
 | --- | --- |
-| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80; v12 on six $2.61; round 3 $1.90; v13 post-cutoff $2.85; v14 and future test $41.28; v15 round $25.87; v16 round $17.46. Total about $346.61. Plus one 17-token test call. |
+| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80; v12 on six $2.61; round 3 $1.90; v13 post-cutoff $2.85; v14 and future test $41.28; v15 round $25.87; v16 round $17.46; reviewer checks $0.78. Total about $347.39. Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats); full history 145,131 (since 2025-07-01, merged weekly) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
 | Automated tests | 57 passing |
@@ -74,6 +74,27 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - Lesson to apply: any prompt or claim that names a card gets checked against the card index before it is used.
 - ~~Switch to pairwise~~: done; 36 pairs judged (v1 8 wins, v2 6, 22 ties; v2 100% faithful vs. 92%).
 - ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
+
+---
+
+## 2026-10-21 · A reviewer for card-level mistakes, and why it won't read the owner's notes
+
+Owner: "Let's fix card-level mistakes and unneeded packages, then run some brews to see if I would play them." Generic approach: **v17** = v13, then a reviewer (a fresh call that didn't build the deck) sees every nonland card with evidence from real decks (play share, which decks it lives in, what it's usually played beside, from `src/harness/review.ts`) and flags cards in the wrong role for the plan, cards missing their usual partner, unneeded packages, and outclassed choices; the brewer fixes each flag or says why the card stays, once.
+
+**Cheap checks first ($0.78), on four decks the owner had criticized:**
+
+| Deck | Owner's complaint | Reviewer, evidence only | Reviewer + owner's notes on other decks |
+| --- | --- | --- | --- |
+| Bomberman | Destined White Mage + Leonardo packages | Missed (flagged Haliya, Chalice) | **Caught both** |
+| Wildfire | Kills its own creatures | Missed (flagged Fellwar Stone) | **Caught** (Wildfire kills Birds) |
+| Mill | 3 Vision Charm, Traumatize | Missed (flagged Mishra's Factory) | Missed |
+| Scapeshift | Sakura-Tribe Elder | Missed (flagged Loam, Crop Rotation) | Missed |
+
+With the owner's 15 past notes as examples (the note on the same request always hidden), the reviewer went from 0 of 4 to 2 of 4. On four decks the owner approved, it raised 0-4 flags each, some plausible (Pernicious Deed's green under Contamination; four copies of a legendary Serra's Sanctum).
+
+**Owner: "The reviewer shouldn't read my notes, that's just going to plug gaps, yes?"** Yes, for two reasons: it tailors the system to one person's verdicts on specific situations, and it would make the owner's future judging circular (grading a system trained on their own grades), the same trap as tuning on the test. **Decision: the reviewer uses only general per-card evidence.** The notes stay in `evals/owner-notes/` as a record of verdicts, never as input. v17 as built never passed them; only the side test did.
+
+**Expectation, stated before the test:** the evidence-only reviewer caught none of the owner's four complaints but did catch other likely problems. Whether it makes decks the owner would play is what the next batch, judged blind, will show.
 
 ---
 

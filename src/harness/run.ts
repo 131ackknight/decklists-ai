@@ -1,9 +1,11 @@
 import Anthropic from "@anthropic-ai/sdk";
 import type { CardIndex } from "@/cards/card-index";
+import { normalizeName } from "@/cards/names";
 import { getFormat } from "@/cards/formats";
 import type { DataSource } from "@/data/source";
 import { costUsd, type ModelConfig, type Usage } from "./models";
 import { formatMenu } from "./menu";
+import { reviewDeck, type Review } from "./review";
 import { examplesText, loadBrewerLists, type BrewerList } from "./examples";
 import { SYSTEM_PROMPT, V4_SYSTEM_PROMPT, V5_SYSTEM_PROMPT, V6_SYSTEM_PROMPT, V7_SYSTEM_PROMPT, V8_SYSTEM_PROMPT, V9_SYSTEM_PROMPT, V10_SYSTEM_PROMPT, V11_SYSTEM_PROMPT, V12_SYSTEM_PROMPT, V14_SYSTEM_PROMPT, V15_SYSTEM_PROMPT, V16_SYSTEM_PROMPT } from "./prompt";
 import { runTool, toolParams, type SubmittedDeck, type ToolContext } from "./tools";
@@ -38,6 +40,8 @@ export interface StageResult {
 export interface BrewResult {
   text: string;
   deck: SubmittedDeck | null;
+  /** Harness v17: the reviewer's flags on the first submitted deck, and the deck before revision. */
+  review?: { flags: Review["flags"]; firstDeck: SubmittedDeck | null };
   toolCalls: ToolCallRecord[];
   usage: Usage;
   costUsd: number;
@@ -427,3 +431,84 @@ export function brewV16(
     cardChecksV2: true,
   });
 }
+
+/**
+ * Harness v17: v13, then a reviewer that didn't build the deck flags cards
+ * that don't serve the plan (wrong role, missing partner, unneeded package,
+ * outclassed) using evidence from real decks about each card; the brewer then
+ * fixes each flag or says why the card stays, and resubmits. Once.
+ */
+export async function brewV17(
+  client: Anthropic,
+  model: ModelConfig,
+  req: BrewRequest,
+  deps: { index: CardIndex; data: DataSource },
+  onStep?: (step: number, note: string) => void,
+): Promise<BrewResult> {
+  const started = Date.now();
+  const first = await brewV13(client, model, req, deps, onStep);
+  if (!first.deck) return first;
+  const usage = { ...first.usage };
+  let cost = first.costUsd;
+  let reviewed: Awaited<ReturnType<typeof reviewDeck>>;
+  try {
+    reviewed = await reviewDeck(client, model, req, first.deck, deps, first.text);
+  } catch (err) {
+    return { ...first, error: `review failed: ${(err as Error).message}` };
+  }
+  addUsage(usage, reviewed.usage);
+  cost += reviewed.costUsd;
+  const flags = reviewed.review.flags;
+  if (!flags.length) return { ...first, usage, costUsd: Math.round(cost * 10000) / 10000, review: { flags, firstDeck: first.deck }, ms: Date.now() - started };
+
+  // Revision: same tools and checks, a fresh conversation with the deck and the flags.
+  const ctx: ToolContext = {
+    ...deps,
+    seen: new Set(),
+    submitted: null,
+    requireWinLine: true,
+    strictBrew: true,
+    requireNeeds: true,
+    cardChecksV2: true,
+    cardNoteRounds: 1,
+    request: req.prompt,
+  };
+  for (const l of [...first.deck.main, ...first.deck.side]) ctx.seen.add(normalizeName(deps.index.getCard(l.name)?.name ?? l.name));
+  const lines = (xs: { qty: number; name: string }[]) => xs.map((l) => `${l.qty} ${l.name}`).join("\n");
+  const userText = [
+    req.format ? `Format: ${req.format}` : "",
+    `The player asked: ${req.prompt}`,
+    `You built this deck:\n${lines(first.deck.main)}\n\nSideboard\n${lines(first.deck.side)}`,
+    first.deck.winLine ? `Its win line: ${first.deck.winLine.map((w) => `${w.card} (${w.does})`).join(" -> ")}` : "",
+    `A reviewer who didn't build it flagged these cards:\n${flags.map((f, i) => `${i + 1}. ${f.card} (${f.problem}): ${f.why} Suggested fix: ${f.fix}`).join("\n")}`,
+    "For each flag, either make the fix (or a better one) or keep the card and say why in one line. Look up any new card with card_info. Then resubmit the whole deck with submit_deck (same rules: winLine, winTurn, needs, exactly 60). Final answer: what you changed and why, in a few lines.",
+  ]
+    .filter(Boolean)
+    .join("\n\n");
+  const revised = await runStage({
+    client,
+    model,
+    system: V13_REVISE_SYSTEM,
+    userText,
+    tools: ["search_cards", "find_tags", "card_info", "played_with", "draw_odds", "check_deck", "submit_deck"],
+    ctx,
+    onStep,
+    maxSteps: 20,
+  });
+  addUsage(usage, revised.usage);
+  cost += costUsd(model, revised.usage);
+  return {
+    text: `${first.text}\n\n--- After review ---\n${revised.text}`,
+    deck: ctx.submitted ?? first.deck,
+    toolCalls: [...first.toolCalls, ...revised.toolCalls.map((c) => ({ ...c, stage: "revise" }))],
+    usage,
+    costUsd: Math.round(cost * 10000) / 10000,
+    steps: first.steps + revised.steps,
+    stopReason: revised.stopReason,
+    error: revised.error,
+    ms: Date.now() - started,
+    review: { flags, firstDeck: first.deck },
+  };
+}
+
+const V13_REVISE_SYSTEM = `You revise a Magic: The Gathering brew you built, after a review. The player's request and your plan stay the same; you are fixing specific cards. Every card fact you state must come from a tool result. Every card you add must be looked up with card_info first. The deck must stay legal and keep its line to the win.`;

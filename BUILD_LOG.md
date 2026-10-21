@@ -77,6 +77,22 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-10-22 · "Why Haliya?" A combo only visible when you trace it
+
+Owner, reviewing the v17 Bomberman (Auriok Salvagers) deck: "can you find out from the AI who wrote the list why they chose Haliya? Maybe I am missing something."
+
+**The brewer's own reason:** with Agatha's Soul Cauldron, creatures with +1/+1 counters gain Salvagers' ability, and "Haliya, Guided by Light and The Destined White Mage add more [counters]."
+
+**Checked against card text:** Haliya adds no counters by itself (it gains 1 life whenever a creature or artifact enters); White Mage turns life gain into counters. And Cauldron already puts a counter on a creature when it exiles one, so the package isn't needed for the Cauldron line. Claude called it redundant.
+
+**Owner: "I see it's a second combo."** Right: each Lion's Eye Diamond loop makes an artifact enter, Haliya gains a life, White Mage adds a counter, so infinite LED loops give infinite life and an arbitrarily large creature: a second way to win if Walking Ballista and Pyrite Spellbomb are answered. Claude corrected itself. The brewer had the right idea and described the wrong reason.
+
+**Owner's judgment:** "probably still the wrong way to go for a Bomberman build" (seven slots of a lifegain package in a deck built to be lean).
+
+**Lesson for the post:** both the reviewer and Claude judged the cards one at a time and missed the value; it only shows when you trace the combo loop by loop. And whether a valid second line is worth seven slots is a player's call, not a fact a check can verify.
+
+---
+
 ## 2026-10-21 · A reviewer for card-level mistakes, and why it won't read the owner's notes
 
 Owner: "Let's fix card-level mistakes and unneeded packages, then run some brews to see if I would play them." Generic approach: **v17** = v13, then a reviewer (a fresh call that didn't build the deck) sees every nonland card with evidence from real decks (play share, which decks it lives in, what it's usually played beside, from `src/harness/review.ts`) and flags cards in the wrong role for the plan, cards missing their usual partner, unneeded packages, and outclassed choices; the brewer fixes each flag or says why the card stays, once.

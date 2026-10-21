@@ -23,16 +23,17 @@ Three things, and the third is turning out to be the most interesting.
 
 **A side effect worth a paragraph:** building this keeps improving Decklist Data itself. On the day of this answer, 34k lists got their junk sideboard lines removed.
 
-## Running totals (as of 2026-10-14)
+## Running totals (as of 2026-10-21)
 
 | Item | Total |
 | --- | --- |
 | Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80; v12 on six $2.61; round 3 $1.90; v13 post-cutoff $2.85; v14 and future test $41.28; v15 round $25.87. Total about $329.15. Plus one 17-token test call. |
-| Real decklists analyzed | 30,102 (last 90 days, 8 formats); full history 143,721 (since 2025-07-01) |
+| Real decklists analyzed | 30,102 (last 90 days, 8 formats); full history 145,131 (since 2025-07-01, merged weekly) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
-| Automated tests | 55 passing |
-| Decklist Data PRs merged | 4 (#181 export, #182 baseline eval, #183 baseline on `main`, #184 model comparison) |
-| Plan steps done | 1, 4, 5, 6; step 8 pipeline built and run (48 decks, all legal); round 3 pairwise open |
+| Automated tests | 57 passing |
+| Decklist Data PRs merged | 5 (#181 export, #182 baseline eval, #183 baseline on `main`, #184 model comparison, #188 sideboard junk cleanup: 34,432 lists cleaned) |
+| Plan steps done | 1, 4, 5, 6, 8; harness at v13 (15 versions tried); evals: owner's "would you play it?" plus the 18-deck future test |
+| Current harness | **v13**: future test 48.3% / 47.9% (two runs), v2 44.9%; owner would play 12 of 17 of their prompts after one rebuild |
 
 ## The story so far (for the post)
 
@@ -48,12 +49,23 @@ Three things, and the third is turning out to be the most interesting.
 10. **Structure isn't skill.** The step 8 pipeline (intent routing, staged brews, simulator, novelty rules) made brews more original (copy rate 87% in v1, 76% in v2, 65% in v3) but, in 17 judged pairs, not better: on brews v2 was "would play" 86% vs. v3 50%. The pipeline knows how to brew, not what is good.
 11. **Where it goes next.** A scorer built from real tournament results, validated against real records, so construction becomes search judged by data rather than guesses. The new harness: card search decides what exists, data only informs mana, interaction and the meta, then the same five models again to separate what the model buys from what the harness buys.
 
-Recurring theme for the post: the owner's pushback improved the work at nearly every turn (no bracket scraping, no new database, no Neon credentials, use our own data instead of re-scraping MTGO, every list instead of a sample, fix `main` instead of running an old build, compare models).
+12. **Not ready to give up.** After four null results the owner pushed on, and a diagnosis replaced guessing: the AI doesn't build an unfinished version of the human's deck, it builds a *different* deck, dropping the requested cards into a familiar template. Giving it what's working in the format (v5) was the first change the owner preferred blind (6-0, then 8-4).
+13. **What are we doing wrong?** A hard look at the method: the yardstick rewarded copying, the "humans 70%" baseline was partly circular, versions were built before diagnosing, noise was never measured, and the owner had stopped judging. Fixes: two runs per version, a future test on decks no model has seen, and the owner judging in formats they know cold.
+14. **The owner's sentences became checks.** In Premodern and Legacy the owner explained each deck they wouldn't play in one line ("missing a way to win", "one Thran Dynamo", "Tribal Flames is bad here"). Each became a rule the model can't talk its way around: learn how real decks run the cards, say each card's job, name a win line that must be in the deck, build on the shell the data points to, count the enablers. "Neither" on the hardest combos went from 50% to 0%; 12 of 17 prompts reached a deck the owner would play.
+15. **Specific beats generic, every time.** Over 15 harness versions, everything that helped was knowledge about *these* cards or *this* plan (v5, v8, v10-v12); everything generic hurt or did nothing (stages, an in-code coach, originality limits, example brews, format staples). On 14 decks that appeared after April, the best version matches 48% of what players settled on (v2: 45%); lands never moved (47% in every version) and the biggest remaining gap is the creative pick, the under-played card a human found.
+16. **Generic tools, specific knowledge.** The owner's rule for what to build next: no fixes bespoke to an engine. A first such tool learns which *kinds* of cards real decks pair (by function, not name) and finds 41% of the human brewers' discoveries in a 300-card shortlist from 3,200, for free, before any brew uses it.
+
+Recurring theme for the post: the owner's pushback improved the work at nearly every turn (no bracket scraping, no new database, no Neon credentials, use our own data instead of re-scraping MTGO, every list instead of a sample, fix `main` instead of running an old build, compare models, not ready to give up, judge decks I know intimately, an April cutoff for the future test, generic tools not bespoke fixes).
 
 ## Open decisions
 
+- **Next build (proposed 2026-10-21):** v16 = v13 plus a synergy shortlist tool (the feature-synergy model narrows the card pool to the ~150 likeliest partners; the AI picks). Two runs on the future test, about $17.
+- **Lands and colors:** flat at 47% land match in every version; wrong colors on about half the decks. Owner: "we can figure out lands later."
+- **Owner's 60% target** on the future test: v13 is at 48%; spells 49%, lands 47%.
+- **Weekly forward test** with the current base harness; every new constructed archetype joins the future test.
+- **Card-level misses the checks can't catch** (Traumatize in draw-go, Vision Charm without Dreadnought): shown to the reader as hints, not enforced.
 - ~~Round 4 (fresh evals)~~: done; v3 did not beat v2 on any track.
-- **v4 (agreed 2026-10-15):** two modes, fair decks (principles, best card per job) and specialist decks (model's engine, checked by simulation). First: brew to archetype at scale.
+- ~~v4 (agreed 2026-10-15)~~: built and measured; no change. Superseded by the owner-diagnosis checks (v10-v12).
 - **Research direction (agreed in principle):** after round 3, build scorer v0 from the data, validate it against real records and the owner's picks, then add search to the pipeline.
 - ~~Passes 2 and 3 of the v1 comparison~~: skipped in favor of building the new harness (owner agreed).
 - Harness v2 across the five models: about $59 for one pass of 24 prompts (Fable ~$34 of it).
@@ -62,6 +74,34 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - Lesson to apply: any prompt or claim that names a card gets checked against the card index before it is used.
 - ~~Switch to pairwise~~: done; 36 pairs judged (v1 8 wins, v2 6, 22 ties; v2 100% faithful vs. 92%).
 - ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
+
+---
+
+## 2026-10-21 · Summary of the session (Oct 19-21): what we learned
+
+**Progress, version by version** (future test = 14 constructed decks first seen since April 2026, card overlap with what players actually ended up playing; owner = blind judging):
+
+| Version | What it added | Owner's verdict | Objective | Kept |
+| --- | --- | --- | --- | --- |
+| v2 | Card search, checker, data tools | Tied v1 on quality; faithful 100% vs 92% | Future 44.9% | Base |
+| v3, v4 | Staged pipeline; coach in code | Lost to v2 / not judged | No gain | No |
+| v5 | What's working in the format | Beat v2 and v6 6-0; expert round 8-4 | Holdout 42.7%, post-cutoff 45.2% | Yes |
+| v6, v7 | Copy limit; example brews | v6 lost to v5 3-0 | No gain | No |
+| v8, v9 | How real decks run the cards; each card's job | Fixed Living End, Draco | | Yes |
+| v10 | Win line checked in the deck | Fixed Rector; "Neither" 50% → 0% on the hardest | | Yes |
+| v11 | Exactly 60; dominant shell | Pande-Burst solved; 6/12 would play | Post-cutoff 46.8% | Yes |
+| v12 | Enablers in quantity; card notes | 6 no's → 3 yes, 3 closer; fresh prompts 3/5 | | Yes |
+| **v13** | Card notes fixed; partner hints | | **Future 48.3% / 47.9%** | **Base** |
+| v14, v15 | Mana-base tool; format staples, 4-ofs | | 47.3%; 44.8% / 46.9% | No |
+
+**Five findings, with the data in the entries below:**
+1. **Specific knowledge helps; generic advice doesn't.** Every gain came from knowledge about the requested cards or the deck's plan, or from a check aimed at one of the owner's diagnoses. Every generic addition (structure, originality limits, examples, format staples) did nothing or pushed the deck's own cards out.
+2. **The owner's one-line diagnoses are the engine.** The loop "owner says what's wrong, Claude turns it into a check the model can't argue with, owner judges blind" fixed 5 of 6 "neither" decks in a day for about $13.
+3. **All the gains are in spells; lands are flat** (47% in every version). Wrong colors on about half the decks; with the right colors, 58% land match.
+4. **The remaining spell gap is the creative pick.** Of v13's 51 missing spell points: the deck's own under-played discoveries 16-17, common flex cards 13, format staples 8-9 (and "most played in your colors" doesn't recover them: v15), rare choices 6, new cards 3, copies 2-3.
+5. **Measurement now works.** The future test widened to an April cutoff (14 scoreable decks, 5 never tuned on, where v13's gain is larger); two runs per version agree within half a point. Earlier mistakes (circular baseline, tuning on the test, no noise estimate) are corrected in place.
+
+**State:** v13 is the base. The owner wants a generic tool that grants specific knowledge rather than engine-specific fixes; the feature-synergy model is the first candidate (41% of discoveries in a 300-card shortlist, free test), proposed as v16. Session spend about $142 (Oct 19-21); project total about $329.
 
 ---
 

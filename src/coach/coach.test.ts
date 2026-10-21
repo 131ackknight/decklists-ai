@@ -125,4 +125,15 @@ describe("coach", () => {
     expect(answered.accepted).toBe(true);
     expect(ctx.submitted?.coach?.responses).toHaveLength(1);
   });
+
+  it("doesn't call a rare deck's own staple outclassed when asked to skip staples", () => {
+    const fair: Plan = { format: "modern", kind: "fair", style: "aggro", thesis: "Attack." };
+    const rare: RefList[] = Array.from({ length: 6 }, () => ({ ...lists[0], strategy: "Twig Burn", main: [{ qty: 4, name: "Searing Twig" }, { qty: 36, name: "Filler" }, { qty: 20, name: "Mountain" }] }));
+    // 6 rare lists among 306: the staple's format-wide share is about 2%, under the 3% bar.
+    const field = Array.from({ length: 300 }, () => lists[0]);
+    const withRare: DataSource = { ...data, recentLists: () => [...field, ...rare] };
+    const main = [{ qty: 4, name: "Searing Twig" }, { qty: 36, name: "Filler" }, { qty: 20, name: "Mountain" }];
+    expect(coachNotes(index, withRare, "modern", fair, main).map((n) => n.id)).toContain("fair-card-searing twig");
+    expect(coachNotes(index, withRare, "modern", fair, main, "", { skipStaples: true }).map((n) => n.id)).not.toContain("fair-card-searing twig");
+  });
 });

@@ -223,6 +223,7 @@ export async function brewV5(
     requireWinLine?: boolean;
     strictBrew?: boolean;
     requireNeeds?: boolean;
+    cardChecksV2?: boolean;
   } = { system: V5_SYSTEM_PROMPT },
 ): Promise<BrewResult> {
   const started = Date.now();
@@ -233,6 +234,7 @@ export async function brewV5(
     requireWinLine: variant.requireWinLine,
     strictBrew: variant.strictBrew,
     requireNeeds: variant.requireNeeds,
+    cardChecksV2: variant.cardChecksV2,
     cardNoteRounds: 0,
     request: req.prompt,
   };
@@ -344,4 +346,25 @@ export function brewV12(
   onStep?: (step: number, note: string) => void,
 ): Promise<BrewResult> {
   return brewV5(client, model, req, deps, onStep, { system: V12_SYSTEM_PROMPT, extraTools: ["played_with"], requireWinLine: true, strictBrew: true, requireNeeds: true });
+}
+
+/**
+ * Harness v13: v12 with the card-quality note fixed (a rare deck's own staples
+ * are not "outclassed") and partner hints attached for the reader. Same prompt as v12.
+ */
+export function brewV13(
+  client: Anthropic,
+  model: ModelConfig,
+  req: BrewRequest,
+  deps: { index: CardIndex; data: DataSource },
+  onStep?: (step: number, note: string) => void,
+): Promise<BrewResult> {
+  return brewV5(client, model, req, deps, onStep, {
+    system: V12_SYSTEM_PROMPT,
+    extraTools: ["played_with"],
+    requireWinLine: true,
+    strictBrew: true,
+    requireNeeds: true,
+    cardChecksV2: true,
+  });
 }

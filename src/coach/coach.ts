@@ -180,7 +180,7 @@ const quantile = (xs: number[], q: number) => {
 };
 
 /** Per data source and format: role profiles of recent lists and main deck play share per card. */
-const formatCache = new WeakMap<DataSource, Map<string, { profiles: Profile[]; share: Map<string, number>; newest: string }>>();
+const formatCache = new WeakMap<DataSource, Map<string, { profiles: Profile[]; share: Map<string, number>; newest: string; staples: Set<string> }>>();
 
 function formatStats(reader: RoleReader, index: CardIndex, data: DataSource, format: string) {
   let byFormat = formatCache.get(data);
@@ -195,12 +195,23 @@ function formatStats(reader: RoleReader, index: CardIndex, data: DataSource, for
   }
   const share = new Map([...count].map(([k, n]) => [k, n / Math.max(1, lists.length)]));
   const newest = lists.reduce((d, l) => (l.date > d ? l.date : d), "0000-00-00");
-  const stats = { profiles, share, newest };
+  // Staples: in 60%+ of some strategy's lists (5+ lists) over the last year. A rare deck's own
+  // pieces have low format-wide share because the deck is rare, not because they're weak.
+  const staples = new Set<string>();
+  const byStrategy = new Map<string, RefList[]>();
+  for (const l of data.recentLists(format, { days: 365 })) byStrategy.set(l.strategy, [...(byStrategy.get(l.strategy) ?? []), l]);
+  for (const ls of byStrategy.values()) {
+    if (ls.length < 5) continue;
+    const n = new Map<string, number>();
+    for (const l of ls) for (const k of new Set(l.main.map((c) => normalizeName(index.getCard(c.name)?.name ?? c.name)))) n.set(k, (n.get(k) ?? 0) + 1);
+    for (const [k, c] of n) if (c / ls.length >= 0.6) staples.add(k);
+  }
+  const stats = { profiles, share, newest, staples };
   byFormat.set(format, stats);
   return stats;
 }
 
-function fairNotes(index: CardIndex, data: DataSource, format: string, plan: Plan, main: QtyName[], request: string): CoachNote[] {
+function fairNotes(index: CardIndex, data: DataSource, format: string, plan: Plan, main: QtyName[], request: string, skipStaples = false): CoachNote[] {
   const reader = new RoleReader(index);
   const stats = formatStats(reader, index, data, format);
   const notes: CoachNote[] = [];
@@ -248,6 +259,7 @@ function fairNotes(index: CardIndex, data: DataSource, format: string, plan: Pla
   for (const l of main) {
     const card = reader.card(l.name);
     if (!card || isLand(card) || tooNew(card) || named(card)) continue;
+    if (skipStaples && stats.staples.has(normalizeName(card.name))) continue;
     const job = reader.job(card);
     if (!job) continue;
     const mine = stats.share.get(normalizeName(card.name)) ?? 0;
@@ -276,13 +288,77 @@ function fairNotes(index: CardIndex, data: DataSource, format: string, plan: Pla
   return [...notes, ...quality.slice(0, 4).map((q) => q.note)];
 }
 
+/** Per data source and format: for each card, the indexes of last year's lists that play it. */
+const partnerCache = new WeakMap<DataSource, Map<string, { lists: string[][]; strategy: string[]; byCard: Map<string, number[]> }>>();
+
+/**
+ * Cards out of context. A card that real lists play almost only alongside a
+ * partner (Vision Charm with Phyrexian Dreadnought) is usually doing a job
+ * that needs the partner; without it, the card is probably here for the wrong
+ * reason. Partners that are generic staples (in a quarter of all lists) don't count.
+ */
+export function partnerNotes(index: CardIndex, data: DataSource, format: string, main: QtyName[], request = ""): CoachNote[] {
+  const canon = (n: string) => normalizeName(index.getCard(n)?.name ?? n);
+  const isLandName = (n: string) => isLand(index.getCard(n));
+  let byFormat = partnerCache.get(data);
+  if (!byFormat) partnerCache.set(data, (byFormat = new Map()));
+  let fmt = byFormat.get(format);
+  if (!fmt) {
+    const raw = data.recentLists(format, { days: 365 });
+    const lists = raw.map((l) => [...new Set(l.main.filter((c) => !isLandName(c.name)).map((c) => canon(c.name)))]);
+    const byCard = new Map<string, number[]>();
+    lists.forEach((l, i) => {
+      for (const k of l) {
+        const xs = byCard.get(k);
+        if (xs) xs.push(i);
+        else byCard.set(k, [i]);
+      }
+    });
+    fmt = { lists, strategy: raw.map((l) => l.strategy), byCard };
+    byFormat.set(format, fmt);
+  }
+  const total = Math.max(1, fmt.lists.length);
+  const asked = request.toLowerCase();
+  const inDeck = new Set(main.map((l) => canon(l.name)));
+  // Cards with a general job stand on their own; only narrow cards can be out of context.
+  const reader = new RoleReader(index);
+  const ramp = new Set([...index.tagWithDescendants("ramp"), ...index.tagWithDescendants("mana-dork"), ...index.tagWithDescendants("mana-rock")]);
+  const hasGeneralJob = (c: Card) => reader.job(c) !== null || c.tags.some((t) => ramp.has(t)) || (c.producedMana?.length ?? 0) > 0;
+  const notes: CoachNote[] = [];
+  for (const l of main) {
+    const card = index.getCard(l.name);
+    if (!card || isLand(card) || hasGeneralJob(card)) continue;
+    if ([card.name, ...(card.faces ?? [])].some((n) => asked.includes(n.toLowerCase()))) continue;
+    const mine = fmt.byCard.get(canon(card.name)) ?? [];
+    if (mine.length < 8) continue;
+    // Only an archetype's own card: 80%+ of the lists that run it are one strategy.
+    const strat = new Map<string, number>();
+    for (const i of mine) strat.set(fmt.strategy[i], (strat.get(fmt.strategy[i]) ?? 0) + 1);
+    const [home, homeCount] = [...strat].sort((a, b) => b[1] - a[1])[0];
+    if (homeCount / mine.length < 0.8) continue;
+    const co = new Map<string, number>();
+    for (const i of mine) for (const k of fmt.lists[i]) if (k !== canon(card.name)) co.set(k, (co.get(k) ?? 0) + 1);
+    const partner = [...co]
+      .map(([k, n]) => ({ k, given: n / mine.length, base: (fmt!.byCard.get(k)?.length ?? 0) / total }))
+      .filter((x) => x.given >= 0.8 && x.base <= 0.25 && x.given / Math.max(x.base, 0.001) >= 3 && !inDeck.has(x.k))
+      .sort((a, b) => b.given - a.given)[0];
+    if (!partner) continue;
+    const pname = index.getCard(partner.k)?.name ?? partner.k;
+    notes.push({
+      id: `partner-${canon(card.name)}`,
+      message: `${card.name}: ${Math.round((homeCount / mine.length) * 100)}% of the ${mine.length} ${format} lists that run it are ${home}, and ${Math.round(partner.given * 100)}% play it alongside ${pname}, which this deck doesn't have. It's usually there for a job that needs ${pname}. Cut it, or say what it does here.`,
+    });
+  }
+  return notes.slice(0, 4);
+}
+
 /**
  * Every note the coach has for this deck and plan. Empty means the coach is satisfied.
  * `request` is the player's message: cards it names are never questioned.
  */
-export function coachNotes(index: CardIndex, data: DataSource, format: string, plan: Plan, main: QtyName[], request = ""): CoachNote[] {
+export function coachNotes(index: CardIndex, data: DataSource, format: string, plan: Plan, main: QtyName[], request = "", opts: { skipStaples?: boolean } = {}): CoachNote[] {
   const kinds = [plan.kind, ...(plan.alsoKind && plan.alsoKind !== plan.kind ? [plan.alsoKind] : [])];
   return kinds.flatMap((k) =>
-    k === "fair" ? (data.hasFormat(format) ? fairNotes(index, data, format, plan, main, request) : []) : piecesNotes(index, k, plan, main),
+    k === "fair" ? (data.hasFormat(format) ? fairNotes(index, data, format, plan, main, request, opts.skipStaples) : []) : piecesNotes(index, k, plan, main),
   );
 }

@@ -9,7 +9,7 @@ import { cardsSeen, probAtLeast, probEachGroup } from "@/checker/odds";
 import type { Card } from "@/cards/types";
 import type { DataSource, QtyName } from "@/data/source";
 import { goldfish } from "@/sim/goldfish";
-import { coachNotes, PlanInput, type CoachNote, type Plan } from "@/coach/coach";
+import { coachNotes, partnerNotes, PlanInput, type CoachNote, type Plan } from "@/coach/coach";
 
 /** State shared by one brew's tool calls. */
 export interface ToolContext {
@@ -36,6 +36,8 @@ export interface ToolContext {
   /** Harness v12: each requested card's enablers must be in the deck in quantity, and outclassed cards get one send-back. */
   requireNeeds?: boolean;
   cardNoteRounds?: number;
+  /** Harness v13: skip a rare deck's own staples in card notes; attach partner hints for the reader (not enforced). */
+  cardChecksV2?: boolean;
 }
 
 export interface EnginePlan {
@@ -77,6 +79,8 @@ export interface SubmittedDeck {
   needs?: { for: string; role: string; cards: string[]; copies: number }[];
   cardNotes?: CoachNote[];
   cardNoteResponses?: { id: string; response: string }[];
+  /** Harness v13: cards that real lists almost always run with a partner this deck lacks. For the reader; not enforced. */
+  partnerHints?: CoachNote[];
   /** Harness v4: the plan, the coach's notes on the accepted deck, and the brewer's answers. */
   plan?: Plan | null;
   coach?: { notes: CoachNote[]; responses: { id: string; response: string }[]; rounds: number };
@@ -564,7 +568,9 @@ export const TOOLS = [
           }
           // Card quality, once: cards real players choose far more often for the same job at the same cost.
           const answered = new Set((input.cardNoteResponses ?? []).map((r) => r.id));
-          const notes = coachNotes(ctx.index, ctx.data, key, { format: key, kind: "fair", thesis: "", style: "midrange" }, input.main, ctx.request).filter(
+          const notes = coachNotes(ctx.index, ctx.data, key, { format: key, kind: "fair", thesis: "", style: "midrange" }, input.main, ctx.request, {
+            skipStaples: ctx.cardChecksV2,
+          }).filter(
             (n) => n.id.startsWith("fair-card-") && !answered.has(n.id),
           );
           if (notes.length && (ctx.cardNoteRounds ?? 0) < 1) {
@@ -632,6 +638,7 @@ export const TOOLS = [
         warnings: result.warnings.map((w) => w.message),
         ...(input.winLine ? { winLine: input.winLine, winTurn: input.winTurn, winLineDrawnPct } : {}),
         ...(input.needs ? { needs: input.needs, cardNoteResponses: input.cardNoteResponses } : {}),
+        ...(ctx.cardChecksV2 && input.label !== "stock" ? { partnerHints: partnerNotes(ctx.index, ctx.data, key, input.main, ctx.request) } : {}),
       };
       return {
         accepted: true,

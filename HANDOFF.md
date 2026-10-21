@@ -14,7 +14,7 @@ An AI that brews Magic decks as well as the best human brewers. The owner judges
 
 ## Next steps
 
-1. Build the judging page for the 8 v17 decks with `scripts/build-play-page.ts --compare` (answers: yes / no but better than last time / no and worse) and send the owner the link.
+1. Judging page for the 8 v17 decks is built and sent: https://claude.ai/artifact/D3Fjqz8oET59q3i8VN4fmR (answers in its `decks` collection; key `evals/results/round4/play-rejudge-v17-key.json`). Read the answers with ArtifactData list on that URL.
 2. Unblind with the key file, log the result in BUILD_LOG.md, send the link.
 3. If v17 helps: run it twice on the future test (`--track future --harness v17`), compare with v13's 48.3 / 47.9.
 4. Then 5 fresh prompts (the owner picks from a proposed list) to check it generalizes.

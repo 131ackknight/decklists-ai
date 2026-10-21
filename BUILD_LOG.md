@@ -27,7 +27,7 @@ Three things, and the third is turning out to be the most interesting.
 
 | Item | Total |
 | --- | --- |
-| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80; v12 on six $2.61; round 3 $1.90; v13 post-cutoff $2.85; v14 and future test $41.28. Total about $303.28. Plus one 17-token test call. |
+| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80; v12 on six $2.61; round 3 $1.90; v13 post-cutoff $2.85; v14 and future test $41.28; v15 round $25.87. Total about $329.15. Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats); full history 143,721 (since 2025-07-01) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
 | Automated tests | 55 passing |
@@ -62,6 +62,26 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - Lesson to apply: any prompt or claim that names a card gets checked against the card index before it is used.
 - ~~Switch to pairwise~~: done; 36 pairs judged (v1 8 wins, v2 6, 22 ties; v2 100% faithful vs. 92%).
 - ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
+
+---
+
+## 2026-10-21 · v15 (format staples, 4-ofs): worse, and why
+
+Owner: "How do we get 60% on spells?" Breakdown of v13's missing spell points on the future test (51 of 100): core cards of the real deck absent 28 (format staples 8, the deck's own discoveries 16, brand-new cards 3), core present with too few copies 3, common flex cards absent 13, rare choices 6. Plan: the two cheap parts first.
+
+**v15** = v13 plus a `format_staples` tool (the format's most-played nonland cards in the deck's colors, by job), a one-time note listing the top staples in the deck's colors it skipped (add or answer), and a rule that the requested cards and win-line cards run 4 copies unless legendary, restricted or explained. Two runs each, v13 rerun for a fair baseline ($25.87).
+
+| Future test, 14 decks | Run 1 | Run 2 | Spells |
+| --- | --- | --- | --- |
+| v13 | 48.3% | 47.9% | 49%, 49% |
+| v15 | 44.8% | 46.9% | 46%, 47% |
+
+- **Missing staples didn't shrink** (8.3/9.1 → 9.5/9.1 points). The note pushed the format's most-played cards in the colors (any blue Legacy deck got Brainstorm, Ponder, Force of Will); the real decks used the staples that fit their plan (Thoughtseize in Persist, Sear in 4C Control). Most-played in your colors is not right for this deck.
+- **Missing discoveries grew** (16.4/17.3 → 19.3/17.7): the added staples took the deck's own slots.
+- **Copies rule: small** (3.4/2.5 → 2.2/2.5 points lost to copies).
+- **v13's two runs agree within 0.4 points**, so two runs per version separates differences of about 2 points.
+
+**Dropped.** Same lesson as v6 and v7: generic advice the model can't fit to the deck displaces the deck's own choices. What worked (v5, v8, v10, v11) was knowledge about *these* cards or *this* plan, not the format at large.
 
 ---
 

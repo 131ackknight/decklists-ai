@@ -132,3 +132,13 @@ export const V14_SYSTEM_PROMPT = V12_SYSTEM_PROMPT.replace(
   "Before submitting, run check_deck.",
   "Once the colors are settled, call mana_base for them and build the lands from what real decks in those colors play (their land count and their duals), unless the deck has a specific reason not to. Before submitting, run check_deck.",
 );
+
+/**
+ * Harness v15: v13 plus the two cheapest spell fixes from the future test
+ * (2026-10-21): format staples in the deck's colors (8 of 51 missing points),
+ * and 4 copies of the cards the plan rests on (3 more).
+ */
+export const V15_SYSTEM_PROMPT = V12_SYSTEM_PROMPT.replace(
+  "Before submitting, run check_deck.",
+  "Once the colors are settled, call format_staples for them: the format's most-played cards in your colors, by job. Use the ones that fit the plan (a strong player plays the format's best removal and disruption in their colors unless the deck has a reason not to). The requested cards and the cards in your win line run 4 copies unless legendary, restricted, or there's a reason (copiesReason). Before submitting, run check_deck.",
+);

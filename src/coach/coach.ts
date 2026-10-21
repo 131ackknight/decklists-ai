@@ -362,3 +362,47 @@ export function coachNotes(index: CardIndex, data: DataSource, format: string, p
     k === "fair" ? (data.hasFormat(format) ? fairNotes(index, data, format, plan, main, request, opts.skipStaples) : []) : piecesNotes(index, k, plan, main),
   );
 }
+
+export interface Staple {
+  name: string;
+  share: number;
+  avgCopies: number;
+  job: string;
+}
+
+/**
+ * The format's most-played nonland cards that a deck in these colors can cast,
+ * grouped by job. What a strong player adds on autopilot: missing staples were
+ * 8 of the 51 points the brews lost on spells in the future test (2026-10-21).
+ */
+export function formatStaples(index: CardIndex, data: DataSource, format: string, colors: string, minShare = 0.08): Staple[] {
+  const allowed = new Set(colors.toUpperCase().replace(/[^WUBRG]/g, "").split(""));
+  const reader = new RoleReader(index);
+  const lists = data.recentLists(format);
+  if (lists.length < 30) return [];
+  const seen = new Map<string, { lists: number; copies: number; name: string }>();
+  for (const l of lists) {
+    const counted = new Set<string>();
+    for (const c of l.main) {
+      const card = reader.card(c.name);
+      if (!card || isLand(card)) continue;
+      const k = normalizeName(card.name);
+      const row = seen.get(k) ?? { lists: 0, copies: 0, name: card.name };
+      if (!counted.has(k)) row.lists++;
+      counted.add(k);
+      row.copies += c.qty;
+      seen.set(k, row);
+    }
+  }
+  const out: Staple[] = [];
+  for (const r of seen.values()) {
+    const share = r.lists / lists.length;
+    if (share < minShare) continue;
+    const card = reader.card(r.name)!;
+    const pips = [...card.manaCost.split(" // ")[0].matchAll(/\{([WUBRG])/g)].map((m) => m[1]);
+    if (!pips.every((p) => allowed.has(p))) continue;
+    const job = reader.job(card) ?? (/\bCreature\b/.test(card.typeLine.split(" // ")[0]) ? "creature" : "other");
+    out.push({ name: r.name, share, avgCopies: Math.round((r.copies / r.lists) * 10) / 10, job });
+  }
+  return out.sort((a, b) => b.share - a.share);
+}

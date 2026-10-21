@@ -5,7 +5,7 @@ import type { DataSource } from "@/data/source";
 import { costUsd, type ModelConfig, type Usage } from "./models";
 import { formatMenu } from "./menu";
 import { examplesText, loadBrewerLists, type BrewerList } from "./examples";
-import { SYSTEM_PROMPT, V4_SYSTEM_PROMPT, V5_SYSTEM_PROMPT, V6_SYSTEM_PROMPT, V7_SYSTEM_PROMPT, V8_SYSTEM_PROMPT, V9_SYSTEM_PROMPT, V10_SYSTEM_PROMPT, V11_SYSTEM_PROMPT, V12_SYSTEM_PROMPT, V14_SYSTEM_PROMPT } from "./prompt";
+import { SYSTEM_PROMPT, V4_SYSTEM_PROMPT, V5_SYSTEM_PROMPT, V6_SYSTEM_PROMPT, V7_SYSTEM_PROMPT, V8_SYSTEM_PROMPT, V9_SYSTEM_PROMPT, V10_SYSTEM_PROMPT, V11_SYSTEM_PROMPT, V12_SYSTEM_PROMPT, V14_SYSTEM_PROMPT, V15_SYSTEM_PROMPT } from "./prompt";
 import { runTool, toolParams, type SubmittedDeck, type ToolContext } from "./tools";
 
 export interface BrewRequest {
@@ -134,6 +134,7 @@ export async function runStage(opts: {
               ...(body.reason ? [body.reason, ...(body.cards ?? [])] : []),
               ...(body.coachNotes ?? []).map((n: { id: string; message: string }) => `coach ${n.id}: ${n.message}`),
               ...(body.cardNotes ?? []).map((n: { id: string; message: string }) => `card ${n.id}: ${n.message}`),
+              ...(body.stapleNote ?? []).map((n: string) => `staple: ${n}`),
             ];
           }
         }
@@ -224,6 +225,7 @@ export async function brewV5(
     strictBrew?: boolean;
     requireNeeds?: boolean;
     cardChecksV2?: boolean;
+    spellChecks?: boolean;
   } = { system: V5_SYSTEM_PROMPT },
 ): Promise<BrewResult> {
   const started = Date.now();
@@ -235,6 +237,8 @@ export async function brewV5(
     strictBrew: variant.strictBrew,
     requireNeeds: variant.requireNeeds,
     cardChecksV2: variant.cardChecksV2,
+    spellChecks: variant.spellChecks,
+    stapleRounds: 0,
     cardNoteRounds: 0,
     request: req.prompt,
   };
@@ -384,5 +388,24 @@ export function brewV14(
     strictBrew: true,
     requireNeeds: true,
     cardChecksV2: true,
+  });
+}
+
+/** Harness v15: v13 plus format staples in the deck's colors and 4 copies of the cards the plan rests on. */
+export function brewV15(
+  client: Anthropic,
+  model: ModelConfig,
+  req: BrewRequest,
+  deps: { index: CardIndex; data: DataSource },
+  onStep?: (step: number, note: string) => void,
+): Promise<BrewResult> {
+  return brewV5(client, model, req, deps, onStep, {
+    system: V15_SYSTEM_PROMPT,
+    extraTools: ["played_with", "format_staples"],
+    requireWinLine: true,
+    strictBrew: true,
+    requireNeeds: true,
+    cardChecksV2: true,
+    spellChecks: true,
   });
 }

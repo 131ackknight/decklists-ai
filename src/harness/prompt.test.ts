@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { SYSTEM_PROMPT, V5_SYSTEM_PROMPT, V6_SYSTEM_PROMPT, V7_SYSTEM_PROMPT, V8_SYSTEM_PROMPT, V9_SYSTEM_PROMPT, V14_SYSTEM_PROMPT } from "./prompt";
+import { SYSTEM_PROMPT, V5_SYSTEM_PROMPT, V6_SYSTEM_PROMPT, V7_SYSTEM_PROMPT, V8_SYSTEM_PROMPT, V9_SYSTEM_PROMPT, V14_SYSTEM_PROMPT, V15_SYSTEM_PROMPT } from "./prompt";
 
 describe("harness prompts", () => {
   it("v5 keeps v2's rules and swaps only the final answer", () => {
@@ -30,5 +30,10 @@ describe("harness prompts", () => {
 
   it("v14 asks for the mana base from real decks in the same colors", () => {
     expect(V14_SYSTEM_PROMPT).toContain("call mana_base");
+  });
+
+  it("v15 asks for format staples and 4-ofs of the plan's cards", () => {
+    expect(V15_SYSTEM_PROMPT).toContain("format_staples");
+    expect(V15_SYSTEM_PROMPT).toContain("4 copies");
   });
 });

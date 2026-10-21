@@ -9,7 +9,7 @@ import { cardsSeen, probAtLeast, probEachGroup } from "@/checker/odds";
 import type { Card } from "@/cards/types";
 import type { DataSource, QtyName } from "@/data/source";
 import { goldfish } from "@/sim/goldfish";
-import { coachNotes, partnerNotes, PlanInput, type CoachNote, type Plan } from "@/coach/coach";
+import { coachNotes, formatStaples, partnerNotes, PlanInput, type CoachNote, type Plan } from "@/coach/coach";
 
 /** State shared by one brew's tool calls. */
 export interface ToolContext {
@@ -38,6 +38,9 @@ export interface ToolContext {
   cardNoteRounds?: number;
   /** Harness v13: skip a rare deck's own staples in card notes; attach partner hints for the reader (not enforced). */
   cardChecksV2?: boolean;
+  /** Harness v15: one note for skipped format staples in the deck's colors, and 4 copies of the cards the plan rests on. */
+  spellChecks?: boolean;
+  stapleRounds?: number;
 }
 
 export interface EnginePlan {
@@ -317,6 +320,20 @@ export const TOOLS = [
     },
   }),
   tool({
+    name: "format_staples",
+    description:
+      "The format's most-played nonland cards that a deck in these colors can cast (recent results), grouped by job: removal, counterspell, discard, card advantage, creature, other. What a strong player puts in on autopilot; a brew skips one only for a reason.",
+    schema: z.object({ format: z.string(), colors: z.string().describe("The deck's colors as letters, e.g. 'UB'.") }),
+    run: ({ format, colors }, ctx) => {
+      const staples = formatStaples(ctx.index, ctx.data, formatKey(format), colors);
+      if (!staples.length) return { staples: [], note: "No recent results for this format (or too few lists)." };
+      remember(ctx, staples.map((x) => x.name));
+      const byJob: Record<string, { name: string; inPercentOfLists: number; avgCopies: number }[]> = {};
+      for (const x of staples.slice(0, 40)) (byJob[x.job] ??= []).push({ name: x.name, inPercentOfLists: pct(x.share), avgCopies: x.avgCopies });
+      return { colors, byJob };
+    },
+  }),
+  tool({
     name: "draw_odds",
     description:
       "Exact draw odds with no mulligans: chance to have at least one card from each group by a turn. Use it to size engines and to give honest odds.",
@@ -542,6 +559,7 @@ export const TOOLS = [
         .describe("For each card the player asked for: what it needs around it to do its job (the role), the cards in this deck that provide it, and how many copies of them the deck runs."),
       needsReason: z.string().optional().describe("If a requested card's enablers are fewer than the floor: why that is enough here."),
       cardNoteResponses: z.array(z.object({ id: z.string(), response: z.string().min(5) })).optional().describe("Answers to card notes from a previous submission, by id, for cards you kept."),
+      copiesReason: z.string().optional().describe("If a requested card or a card in the win line runs fewer than 4 copies (and isn't legendary or restricted): why."),
     }),
     run: (input, ctx) => {
       const key = formatKey(input.format);
@@ -576,6 +594,42 @@ export const TOOLS = [
                 accepted: false,
                 errors: [`${x.for} needs "${x.role}", and the deck has ${have} cop${have === 1 ? "y" : "ies"} of the cards that provide it (${x.cards.join(", ")}). A build-around's enablers are usually ${ENABLER_FLOOR}+ copies: add some, or resubmit with needsReason saying why ${have} is enough here.`],
               };
+            }
+          }
+          // v15: the cards the plan rests on (requested cards, win line) at 4 copies unless legendary, restricted, or a reason.
+          if (ctx.spellChecks) {
+            const rules = getFormat(key)!;
+            if (rules.maxCopies >= 4 && !input.copiesReason) {
+              const plan = new Set([...named.map(canonN), ...(input.winLine ?? []).map((w) => canonN(w.card))]);
+              const short = [...plan]
+                .map((k) => ({ k, card: ctx.index.getCard(k), have: count(k) }))
+                .filter(({ card, have }) => card && !isBasic(card) && !/\bLegendary\b/.test(card.typeLine) && card.legal[key] !== "restricted" && have > 0 && have < 4)
+                .map(({ card, have }) => `${card!.name} (${have})`);
+              if (short.length) {
+                return {
+                  accepted: false,
+                  errors: [`The cards the plan rests on should be 4-ofs so they show up: ${short.join(", ")}. Raise them to 4, or resubmit with copiesReason (e.g. a one-of fetched by a tutor).`],
+                };
+              }
+            }
+            // Format staples in the deck's colors it skipped, once.
+            if ((ctx.stapleRounds ?? 0) < 1) {
+              const colorSet = new Set<string>();
+              for (const l of input.main) {
+                const c = ctx.index.getCard(l.name);
+                if (c && !/\bLand\b/.test(c.typeLine.split(" // ")[0])) for (const m of c.manaCost.split(" // ")[0].matchAll(/\{([WUBRG])/g)) colorSet.add(m[1]);
+              }
+              const skipped = formatStaples(ctx.index, ctx.data, key, [...colorSet].join(""), 0.15)
+                .filter((x) => count(x.name) === 0 && x.job !== "other")
+                .slice(0, 6);
+              if (skipped.length) {
+                ctx.stapleRounds = (ctx.stapleRounds ?? 0) + 1;
+                return {
+                  accepted: false,
+                  stapleNote: skipped.map((x) => `${x.name} (${x.job}, in ${pct(x.share)}% of recent ${key} decks, usually ${x.avgCopies} copies)`),
+                  howToProceed: "These are the format's most-played cards in your colors that this deck doesn't run. Add the ones that fit the plan; for the rest, resubmit with cardNoteResponses using id 'staple-<card name>' saying why not.",
+                };
+              }
             }
           }
           // Card quality, once: cards real players choose far more often for the same job at the same cost.

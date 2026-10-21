@@ -58,6 +58,7 @@ button:focus-visible, summary:focus-visible, input:focus-visible { outline: 2px 
 .full h4 { font: 600 0.72rem var(--font-body); text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin: 8px 0 2px; }
 .full ul { list-style: none; margin: 0; padding: 0; font: 0.8rem/1.5 var(--font-mono); columns: 2 170px; column-gap: 14px; }
 .full li { break-inside: avoid; overflow-wrap: anywhere; }
+.full h4.sub { margin-top: 6px; padding-left: 8px; border-left: 2px solid var(--line); }
 .full li.uniq { color: var(--accent); font-weight: 600; }
 .only ul { list-style: none; margin: 0; padding: 10px 12px; background: var(--bg); border-radius: 8px; font: 0.84rem/1.5 var(--font-mono); }
 .only li { overflow-wrap: anywhere; }
@@ -261,8 +262,20 @@ button:disabled { cursor: not-allowed; opacity: 0.6; }
   function fullList(deck, other) {
     const d = el("details", { class: "full", open: "" }, el("summary", { text: "Full decklist" }));
     const theirs = counts(other);
-    for (const [zone, label] of [["commander", "Commander"], ["main", "Main"], ["side", "Sideboard"]]) {
-      const lines = deck[zone] || [];
+    // The main deck splits into creatures, spells and lands (front face type), the way a decklist is read.
+    const front = (name) => ((DATA.cards && DATA.cards[name] && DATA.cards[name].type) || "").split(" // ")[0];
+    const kind = (name) => (/\bLand\b/.test(front(name)) ? "land" : /\bCreature\b/.test(front(name)) ? "creature" : "spell");
+    const main = deck.main || [];
+    const groups = [
+      ["commander", "Commander", deck.commander || []],
+      ["main", "Creatures", main.filter((c) => kind(c.name) === "creature")],
+      ["main", "Spells", main.filter((c) => kind(c.name) === "spell")],
+      ["main", "Lands", main.filter((c) => kind(c.name) === "land")],
+      ["side", "Sideboard", deck.side || []],
+    ];
+    const mainTotal = main.reduce((n, c) => n + c.qty, 0);
+    if (mainTotal) d.append(el("h4", { text: `Main deck (${mainTotal})` }));
+    for (const [zone, label, lines] of groups) {
       if (!lines.length) continue;
       const total = lines.reduce((n, c) => n + c.qty, 0);
       const ul = el("ul");
@@ -270,7 +283,7 @@ button:disabled { cursor: not-allowed; opacity: 0.6; }
         const k = (zone === "side" ? "SB: " : "") + c.name;
         ul.append(el("li", { class: c.qty > (theirs.get(k) || 0) ? "uniq" : null }, `${c.qty} `, cardName(c.name)));
       }
-      d.append(el("h4", { text: `${label} (${total})` }), ul);
+      d.append(el("h4", { class: zone === "main" ? "sub" : null, text: `${label} (${total})` }), ul);
     }
     return d;
   }

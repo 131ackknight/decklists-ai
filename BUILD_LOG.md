@@ -27,7 +27,7 @@ Three things, and the third is turning out to be the most interesting.
 
 | Item | Total |
 | --- | --- |
-| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80; v12 on six $2.61; round 3 $1.90; v13 post-cutoff $2.85; v14 and future test $41.28; v15 round $25.87; v16 round $17.46; reviewer checks $0.78. Total about $347.39. Plus one 17-token test call. |
+| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80; v12 on six $2.61; round 3 $1.90; v13 post-cutoff $2.85; v14 and future test $41.28; v15 round $25.87; v16 round $17.46; reviewer checks $0.78; v17 on eight $4.80. Total about $352.19. Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats); full history 145,131 (since 2025-07-01, merged weekly) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
 | Automated tests | 57 passing |
@@ -74,6 +74,27 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - Lesson to apply: any prompt or claim that names a card gets checked against the card index before it is used.
 - ~~Switch to pairwise~~: done; 36 pairs judged (v1 8 wins, v2 6, 22 ties; v2 100% faithful vs. 92%).
 - ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
+
+---
+
+## 2026-10-22 · v17 (card-by-card reviewer) on eight prompts judged before: 6 yes, 2 closer, 0 worse
+
+Same prompts as earlier rounds, so the owner could judge "better or worse than last time" (owner: "should we not be using the same prompts to see improvement?"). v17 = v13 plus a reviewer that sees per-card evidence from real decks (no owner notes) and makes the brewer fix or explain each flag. $4.80. The judging page now splits the main deck into creatures, spells and lands (owner's request).
+
+| Deck | Last verdict | v17 | Owner's note |
+| --- | --- | --- | --- |
+| Mill | no | **yes** | "About as close as it gets for mill in Premodern" |
+| Wildfire | no | **yes** | |
+| Mind Over Matter | closer | **yes** | |
+| Scapeshift | closer | closer | "I wonder why this deck isn't playing Arboreal Grazer or..." (cut off) |
+| Bomberman | closer | closer | (the Haliya + White Mage second combo; owner: wrong way to go for Bomberman) |
+| Rising Waters | yes | yes | |
+| Nether Spirit | yes | yes | "Close enough! Typically the decks want Contamination but I like the brew" |
+| Zur's Weirding | yes | yes | |
+
+**Would play, across all 17 of the owner's prompts (best version each): 15 of 17**, up from 12. None of the previously approved decks got worse.
+
+**Caveat:** each rebuild is a fresh attempt, so part of this may be a luckier roll rather than the reviewer (Vision Charm, for instance, disappeared in the fresh build, not by a review flag). The check: v17 twice on the 18-deck future test against v13's 48.3 / 47.9. If it holds, v17 becomes the base.
 
 ---
 

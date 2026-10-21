@@ -10,7 +10,9 @@
  * inventor's version, before the crowd tuned it), plus the inventor's gems: core
  * nonland cards of those first lists (in 80%+ of them) that had under 5% play
  * in the format in the 90 days before, not counting the requested cards.
- * Both split into spells and lands. No model calls.
+ * Decks with a single first-week list stay in the Tuning Test but not the
+ * Brewing Test: one list is one player's choices, and it swung single decks by
+ * 30 points between runs. Both split into spells and lands. No model calls.
  */
 import { readFileSync } from "node:fs";
 import { loadCardIndex } from "../src/cards/load";
@@ -82,10 +84,12 @@ async function main() {
       tot.tune.push(tune.all);
       tot.tuneSpells.push(tune.spells);
       tot.tuneLands.push(tune.lands);
-      tot.brew.push(brew.all);
-      tot.brewSpells.push(brew.spells);
-      tot.gems += found;
-      tot.gemsOf += gems.length;
+      if (firstWeek.length >= 2) {
+        tot.brew.push(brew.all);
+        tot.brewSpells.push(brew.spells);
+        tot.gems += found;
+        tot.gemsOf += gems.length;
+      }
       totals.set(run.file, tot);
       row[run.file] = `T ${Math.round(tune.all * 100)} / B ${Math.round(brew.all * 100)} / gems ${found}`;
     }
@@ -96,7 +100,8 @@ async function main() {
   console.table(
     [...totals].map(([run, t]) => ({
       run,
-      decks: t.tune.length,
+      "tune decks": t.tune.length,
+      "brew decks": t.brew.length,
       "Tuning Test": mean(t.tune),
       "tune spells": mean(t.tuneSpells),
       "tune lands": mean(t.tuneLands),

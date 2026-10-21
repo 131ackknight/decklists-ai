@@ -77,6 +77,22 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-10-22 · Correction: v2 isn't the better brewer; one-list decks were hiding v13's gain
+
+Owner, on the table below: **"So v2 brewing is just better??? we didnt get any better at all."** The table did suggest v2 at least tied v13 on brewing. The cause: 4 of the 17 decks (Jund Sacrifice, Persist, Riddlesmith Combo, Sneak Attack) have a single first-week list, so their Brewing score is one player's choices, and v2 happened to land close to two of them (Jund Sacrifice 50% vs v13's 18%; Sneak Attack 55% vs 38 / 42%). **Fix:** the Brewing Test now uses only decks with 2+ first-week lists (13 decks). The Tuning Test keeps all 17.
+
+| Version | Tuning (17 decks) | Brewing (13 decks) | Brew spells | Gems (of 52) |
+| --- | --- | --- | --- | --- |
+| v2 | 45.9% | 50.3% | 49.6% | 16 |
+| **v13** (2 runs) | 47.4 / 49.2% | **54.2 / 53.5%** | **54.3 / 54.3%** | 19 / 17 |
+| v14 | 47.5% | 50.8% | 50.4% | 15 |
+| v15 (2 runs) | 46.2 / 47.7% | 47.8 / 51.1% | 50.4 / 51.1% | 17 / 15 |
+| v16 (2 runs) | 47.3 / 48.3% | 49.9 / 51.7% | 49.0 / 50.6% | 13 / 15 |
+
+**Corrected reading:** v13 is the better brewer: +3.6 points on Brewing and +4.7 on brew spells over v2, in both runs, larger than its Tuning gain (+2.4). v14-v16 each gave part of it back, which fits their verdicts (not kept). Gems are still flat (16 vs 18 of 52): the creative pick is still the gap. The section below is kept as first written; its Brewing column and first reading bullet are superseded by this one.
+
+---
+
 ## 2026-10-22 · Two yardsticks: a Tuning Test and a Brewing Test
 
 Before spending on v17, the owner stopped to ask: "We need a consistent yard stick to measure success against, what is it? how do we know we are improving." Claude's first answer was the owner's play rate on a frozen panel as the main number and the future test as a guard rail. It also admitted that "15 of 17 playable" overstates progress, because it counts the best of several tries and only failed decks were rebuilt. The owner wanted a % to watch go up, "something like the future test", then asked: **"isn't it more like a tuning test?"**

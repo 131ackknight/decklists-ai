@@ -27,7 +27,7 @@ Three things, and the third is turning out to be the most interesting.
 
 | Item | Total |
 | --- | --- |
-| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80; v12 on six $2.61; round 3 $1.90; v13 post-cutoff $2.85. Total about $262.00. Plus one 17-token test call. |
+| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80; v12 on six $2.61; round 3 $1.90; v13 post-cutoff $2.85; v14 and future test $41.28. Total about $303.28. Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats); full history 143,721 (since 2025-07-01) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
 | Automated tests | 55 passing |
@@ -62,6 +62,28 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - Lesson to apply: any prompt or claim that names a card gets checked against the card index before it is used.
 - ~~Switch to pairwise~~: done; 36 pairs judged (v1 8 wins, v2 6, 22 ties; v2 100% faithful vs. 92%).
 - ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
+
+---
+
+## 2026-10-21 · The future test, widened to April: v13 48.3%, and the lands never moved
+
+Owner on the 6-deck post-cutoff test: "cutoff can be earlier too like April, why not?" Since 2026-06-15 there were 48 new archetype labels, but 36 were Duel Commander (excluded) and 5 more were an older deck under a new name or had 2 lists. From 2026-04-01: **18 new constructed archetypes, 14 with 3+ lists to score against.** That is the future test now (`future` track; scored against every list from a week after each appeared). Caveats, measured not assumed: April-June decks may be faintly in training data, and 9 of the 14 were in sets Claude developed against (the 21-deck holdout, plus Rector from the expert round).
+
+| Opus, one run each | All 14 | Never tuned on (5) | Tuned on (9) |
+| --- | --- | --- | --- |
+| Best older list, with hindsight | 49.0% | 54.8% | 45.8% |
+| v2 | 44.9% | 43.2% | 45.9% |
+| **v13** | **48.3%** | **49.8%** | 47.4% |
+| v14 (+ mana_base) | 47.3% | 49.6% | 46.0% |
+
+- **v13 is +3.4 over v2, and the gain is larger on the decks never tuned on (+6.6) than on the ones that were (+1.5).** The opposite of what overfitting would look like.
+- **v14's mana_base tool did nothing:** it was called on all 21 holdout decks, and land match stayed at 47% (v2 48%, v5 47%, v13 46%, v14 47%). The owner asked whether lands were a regression: no, they have been flat in every version since v2; every gain came from spells (38% → 43% on the holdout).
+- **Why the lands don't match:** the brew picks different colors than the real deck on 11 of 21 holdout decks (land match 42% when colors differ); with the right colors, land match is still only 58%.
+- **Single-run noise is large:** Fanatic Eldrazi scored 61% with v13 and 39% with v14. One run per version on 14 decks can't separate v13 from v14.
+
+**Toward the owner's 60% target:** about 12 points to go. Most of the available points are in mana and colors, not card choice: right colors everywhere is worth about +4, real-deck lands within the right colors up to about +10. Fixing those is legitimate (brewers copy mana bases) but is not the interesting part of brewing, and the write-up should say so.
+
+Cost: holdout v13 $8.95 and v14 $8.99; future v2 $7.49, v13 $8.06, v14 $7.79.
 
 ---
 

@@ -10,7 +10,7 @@ An AI that brews Magic decks as well as the best human brewers. The owner judges
 
 - **Base harness: v13** (`brewV13` in `src/harness/run.ts`). It builds a legal, on-plan deck the owner would play for most prompts: 12 of 17 of the owner's prompts after one rebuild; "I'd play neither" on the hardest combos went from 50% to 0%.
 - **Future test** (14 decks that appeared since April 2026, so no model has seen them): v13 matches 48.3% / 47.9% of what players actually played (two runs); v2 started at 44.9%. Owner's target: 60%.
-- **Being tested right now: v17** = v13 plus a reviewer that checks every card against evidence from real decks (play share, home deck, usual partners) and makes the brewer fix or explain each flag. Running on 8 prompts the owner judged before (Mill, Wildfire, Mind Over Matter, Scapeshift, Bomberman, Rising Waters, Nether Spirit, Zur's Weirding). Results land in `evals/results/round4/expert2-v17-*.json` and `expert3-v17-*.json`.
+- **v17** = v13 plus a reviewer that checks every card against evidence from real decks (play share, home deck, usual partners) and makes the brewer fix or explain each flag. On 8 repeat prompts the owner judged it 6 yes, 2 closer, 0 worse (15 of 17 prompts now playable). Not yet the base: confirm on the future test first.
 
 ## Next steps
 

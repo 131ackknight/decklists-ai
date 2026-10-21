@@ -86,7 +86,7 @@ Same prompts as earlier rounds, so the owner could judge "better or worse than l
 | Mill | no | **yes** | "About as close as it gets for mill in Premodern" |
 | Wildfire | no | **yes** | |
 | Mind Over Matter | closer | **yes** | |
-| Scapeshift | closer | closer | "I wonder why this deck isn't playing Arboreal Grazer or..." (cut off) |
+| Scapeshift | closer | closer | "I wonder why this deck isn't playing Arboreal Grazer"; in chat: "it probably should include it, too many 2 drop ramps in that deck" |
 | Bomberman | closer | closer | (the Haliya + White Mage second combo; owner: wrong way to go for Bomberman) |
 | Rising Waters | yes | yes | |
 | Nether Spirit | yes | yes | "Close enough! Typically the decks want Contamination but I like the brew" |

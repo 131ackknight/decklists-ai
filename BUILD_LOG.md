@@ -27,10 +27,10 @@ Three things, and the third is turning out to be the most interesting.
 
 | Item | Total |
 | --- | --- |
-| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80; v12 on six $2.61; round 3 $1.90. Total about $259.15. Plus one 17-token test call. |
+| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80; v12 on six $2.61; round 3 $1.90; v13 post-cutoff $2.85. Total about $262.00. Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats); full history 143,721 (since 2025-07-01) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
-| Automated tests | 48 passing |
+| Automated tests | 55 passing |
 | Decklist Data PRs merged | 4 (#181 export, #182 baseline eval, #183 baseline on `main`, #184 model comparison) |
 | Plan steps done | 1, 4, 5, 6; step 8 pipeline built and run (48 decks, all legal); round 3 pairwise open |
 
@@ -62,6 +62,27 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - Lesson to apply: any prompt or claim that names a card gets checked against the card index before it is used.
 - ~~Switch to pairwise~~: done; 36 pairs judged (v1 8 wins, v2 6, 22 ties; v2 100% faithful vs. 92%).
 - ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
+
+---
+
+## 2026-10-21 · v13: one card check fixed, one card check demoted to a hint
+
+Two card-level checks, from the owner's round 2 and 3 notes.
+
+**1. The card-quality note stopped calling a rare deck's own pieces "outclassed."** It compared each card's share across the whole format, so Violent Outburst (Hypergenesis) and Pyrite Spellbomb (Bomberman) looked unplayed because their decks are rare. Now a card that is in 60%+ of some strategy's lists (5+ lists, last year) is never flagged. Checked on the earlier decks: Violent Outburst and Stone Rain stop being flagged. Shipped.
+
+**2. A "card out of context" check, tried and demoted.** Idea from the Mill note (3 Vision Charm, "usually used to cheat Dreadnought into play"): flag a card real lists almost always run with a partner this deck lacks. The loose version caught Vision Charm/Dreadnought exactly, but also told the brewer Birds of Paradise "needs" Squee, because most Birds decks are Survival decks. Tightened (only cards that live in one archetype and have no general job), it lost Vision Charm and still flagged cards in a Glimpse Elves deck the owner had approved. **Co-occurrence can't tell "this card needs that one" from "this card is mostly played in one archetype."** So it ships as a hint attached to the deck for the reader, not a rule the brewer must obey. On a site, "Vision Charm is almost always a Dreadnought card" is useful to a person even when it's sometimes wrong.
+
+**Post-cutoff check (six decks no model has seen), v13 vs v11 vs v2:**
+
+| | Mean | Gearhulk | Dwarves | Jund Sac | Planeswalkers | 4C Control | Beanstalk |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Hindsight oracle | 41.8% | 65 | 29 | 45 | 53 | 29 | 30 |
+| v2 | 42.5% | 33 | 50 | 24 | 57 | 41 | 50 |
+| v11 | 46.8% | 44 | 57 | 29 | 62 | 44 | 45 |
+| **v13** | **50.0%** | 50 | 54 | 22 | 60 | 57 | 57 |
+
+v13 includes v12's enabler rule, which had not been on this test before; most of the jump is 4C Control (44 → 57) and Beanstalk (one list to score against). One run each; the honest reading is "no slip, possibly better," not +3 points. v13 is the base. Cost $2.85.
 
 ---
 

@@ -77,6 +77,35 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-10-22 · Two yardsticks: a Tuning Test and a Brewing Test
+
+Before spending on v17, the owner stopped to ask: "We need a consistent yard stick to measure success against, what is it? how do we know we are improving." Claude's first answer was the owner's play rate on a frozen panel as the main number and the future test as a guard rail. It also admitted that "15 of 17 playable" overstates progress, because it counts the best of several tries and only failed decks were rebuilt. The owner wanted a % to watch go up, "something like the future test", then asked: **"isn't it more like a tuning test?"**
+
+Yes. The future test hands the AI the deck's key cards and scores it against the lists players settled on after a week or more of tuning by the crowd. That measures predicting the tuned deck, not brewing it. Owner: **"lets have a specific Tuning Test and a Brewing Test."** Owner, while it was being built: "give the AI a prompt to a deck with a cut off a week before the actual new deck shows up?" That is already how every future-test brew runs (data and card pool cut at the day the deck first appeared); only the scoring changes.
+
+**The two tests** (`scripts/score-tests.ts`, same brews, no model calls):
+- **Tuning Test:** mean overlap with the lists from a week after the deck appeared onward (the old future test score).
+- **Brewing Test:** mean overlap with the deck's **first week** of lists (the inventor's version, before the crowd tuned it), plus **gems**: nonland cards in 80%+ of those first lists that had under 5% play in the format in the 90 days before, not counting the requested cards.
+
+**Free rescore of every past future-test run** (17 decks with both first and later lists; the old future test scored 14, and each overlap is now taken as a share of the real list's size, so the Tuning numbers differ slightly from the 48.3 / 47.9 logged before):
+
+| Version | Tuning Test | Brewing Test | Brew spells | Gems (of 85) |
+| --- | --- | --- | --- | --- |
+| v2 | 45.9% | 49.0% | 47.7% | 20 |
+| v13 (2 runs) | 47.4 / 49.2% | 49.8 / 49.4% | 51.1 / 50.7% | 22 / 21 |
+| v14 | 47.5% | 48.1% | 48.7% | 19 |
+| v15 (2 runs) | 46.2 / 47.7% | 48.0 / 47.8% | 49.8 / 49.3% | 19 / 20 |
+| v16 (2 runs) | 47.3 / 48.3% | 47.4 / 49.2% | 47.3 / 49.4% | 17 / 19 |
+
+**Reading:**
+- From v2 to v13, Tuning rose about 2.4 points; Brewing rose about 0.6, and brew spells about 3. The harness work mostly made the AI better at predicting the tuned deck, not at building what the inventor built. That matches the project's running theme: the harness buys reliability, not judgment.
+- Gems are the clearest brewing signal and barely move: 20 for v2, about 21.5 for v13, fewer for every version since. No version finds more than a quarter of the inventor's own picks.
+- The Brewing Test is noisy: 5 of the 17 decks have only one first-week list (Jund Sacrifice swings from 18% to 50% on one list). It needs more decks before small differences mean anything.
+
+**Decision:** every version now gets both numbers (two runs each). Tuning shows whether the deck comes out right; Brewing and gems show whether the AI finds the ideas. v17 is the next row.
+
+---
+
 ## 2026-10-22 · v17 (card-by-card reviewer) on eight prompts judged before: 6 yes, 2 closer, 0 worse
 
 Same prompts as earlier rounds, so the owner could judge "better or worse than last time" (owner: "should we not be using the same prompts to see improvement?"). v17 = v13 plus a reviewer that sees per-card evidence from real decks (no owner notes) and makes the brewer fix or explain each flag. $4.80. The judging page now splits the main deck into creatures, spells and lands (owner's request).

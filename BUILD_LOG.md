@@ -77,6 +77,31 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-10-22 · v18 built: the reviewer can now see what's missing (not run yet)
+
+Owner, on the v17 Scapeshift deck: it "should run Arboreal Grazer because there are too many 2-drop ramp cards. The reviewer only checks cards already in the deck and never finds missing ones." Asked for a generic fix, not a Grazer rule.
+
+**The gap:** v17's reviewer gets evidence only about cards in the deck, so it can flag a bad card but never a missing one. And Legacy has only one Scapeshift list in the data, so "what do real Scapeshift decks play" has no answer.
+
+**v18 = v17 plus role evidence** (`roleEvidence` in `src/harness/review.ts`). For each role the deck leans on (a Scryfall function tag on 4+ copies), it finds real decks from the last year that lean on the same role (same format if 10+ do, else any format) and shows the reviewer:
+- the deck's copies of that role by mana value next to the real decks' median;
+- cards with that role in 20%+ of those decks that this deck lacks (legal here).
+
+Only roles that look different from real decks are shown (3+ copies apart at some mana value, or a card most of them run). Trivia tags (meme, type-errata) are dropped by keeping only tags that sit under a broader one in Scryfall's tree. The reviewer gets one new kind of flag, "missing card or role imbalance" (name the card to add and what it replaces), and is told to use the comparison only when it fits the deck's plan. Nothing in it names a card. The owner's notes are not used.
+
+**Free check on the eight v17 decks** (evidence only, no model calls):
+
+| Deck | What the evidence shows |
+| --- | --- |
+| Scapeshift | land-ramp: this deck 14 copies at 2 mana, 0 at 1 mana; 495 real decks (any format) leaning on land-ramp: median 2 at 2 mana. Common cards it lacks include Arboreal Grazer (24%). Real Legacy decks putting lands into play: median 7 at 1 mana (Elvish Reclaimer, Crop Rotation). |
+| Mill | mill: this deck 7 at 2 mana; 21 real Premodern mill decks: median 4 at 1 mana, Vision Charm in 100% |
+| Nether Spirit | discard matches real decks (8 at 1 mana, 3 at 2); Ravenous Rats (55%) and Hypnotic Specter (49%) missing |
+| Bomberman, Wildfire, Zur's Weirding | mostly matches; a few side suggestions (Armageddon, Devastating Dreams) |
+
+**Expectation, stated before running:** it should surface the Scapeshift curve problem; whether the reviewer acts on it, and whether it adds noise elsewhere, is what a run shows.
+
+---
+
 ## 2026-10-22 · Gem test: the AI does recognize gems when shown them
 
 The question: when the AI sees the inventor's under-played picks side by side with look-alikes (just as under-played, legal, in the right colors, ranked highly by the synergy tool, but not played by the real deck), can it tell which is which? 14 decks, 30 cards each, one rating call per deck, two runs, $1.82.

@@ -5,7 +5,7 @@ import { getFormat } from "@/cards/formats";
 import type { DataSource } from "@/data/source";
 import { costUsd, type ModelConfig, type Usage } from "./models";
 import { formatMenu } from "./menu";
-import { reviewDeck, type Review } from "./review";
+import { reviewDeck, type Review, type RoleEvidence } from "./review";
 import { examplesText, loadBrewerLists, type BrewerList } from "./examples";
 import { SYSTEM_PROMPT, V4_SYSTEM_PROMPT, V5_SYSTEM_PROMPT, V6_SYSTEM_PROMPT, V7_SYSTEM_PROMPT, V8_SYSTEM_PROMPT, V9_SYSTEM_PROMPT, V10_SYSTEM_PROMPT, V11_SYSTEM_PROMPT, V12_SYSTEM_PROMPT, V14_SYSTEM_PROMPT, V15_SYSTEM_PROMPT, V16_SYSTEM_PROMPT } from "./prompt";
 import { runTool, toolParams, type SubmittedDeck, type ToolContext } from "./tools";
@@ -41,7 +41,7 @@ export interface BrewResult {
   text: string;
   deck: SubmittedDeck | null;
   /** Harness v17: the reviewer's flags on the first submitted deck, and the deck before revision. */
-  review?: { flags: Review["flags"]; firstDeck: SubmittedDeck | null };
+  review?: { flags: Review["flags"]; firstDeck: SubmittedDeck | null; roles?: RoleEvidence[] };
   toolCalls: ToolCallRecord[];
   usage: Usage;
   costUsd: number;
@@ -444,6 +444,8 @@ export async function brewV17(
   req: BrewRequest,
   deps: { index: CardIndex; data: DataSource },
   onStep?: (step: number, note: string) => void,
+  /** v18: the reviewer also sees role evidence and may flag missing cards. */
+  roles = false,
 ): Promise<BrewResult> {
   const started = Date.now();
   const first = await brewV13(client, model, req, deps, onStep);
@@ -452,7 +454,7 @@ export async function brewV17(
   let cost = first.costUsd;
   let reviewed: Awaited<ReturnType<typeof reviewDeck>>;
   try {
-    reviewed = await reviewDeck(client, model, req, first.deck, deps, first.text);
+    reviewed = await reviewDeck(client, model, req, first.deck, deps, first.text, undefined, roles);
   } catch (err) {
     return { ...first, error: `review failed: ${(err as Error).message}` };
   }
@@ -480,7 +482,7 @@ export async function brewV17(
     `The player asked: ${req.prompt}`,
     `You built this deck:\n${lines(first.deck.main)}\n\nSideboard\n${lines(first.deck.side)}`,
     first.deck.winLine ? `Its win line: ${first.deck.winLine.map((w) => `${w.card} (${w.does})`).join(" -> ")}` : "",
-    `A reviewer who didn't build it flagged these cards:\n${flags.map((f, i) => `${i + 1}. ${f.card} (${f.problem}): ${f.why} Suggested fix: ${f.fix}`).join("\n")}`,
+    `A reviewer who didn't build it flagged these cards${roles ? ' (for "missing card or role imbalance", the card named is one to add)' : ""}:\n${flags.map((f, i) => `${i + 1}. ${f.card} (${f.problem}): ${f.why} Suggested fix: ${f.fix}`).join("\n")}`,
     "For each flag, either make the fix (or a better one) or keep the card and say why in one line. Look up any new card with card_info. Then resubmit the whole deck with submit_deck (same rules: winLine, winTurn, needs, exactly 60). Final answer: what you changed and why, in a few lines.",
   ]
     .filter(Boolean)
@@ -507,8 +509,19 @@ export async function brewV17(
     stopReason: revised.stopReason,
     error: revised.error,
     ms: Date.now() - started,
-    review: { flags, firstDeck: first.deck },
+    review: { flags, firstDeck: first.deck, ...(reviewed.roles ? { roles: reviewed.roles } : {}) },
   };
+}
+
+/**
+ * Harness v18 (2026-10-22): v17, with the reviewer also seeing how the deck's
+ * roles compare with real decks that lean on them (copies by mana value, and
+ * the role's common cards this deck lacks), so it can flag what's missing, not
+ * only what's wrong. Owner's Scapeshift note was the prompt for it; nothing in
+ * it is about that deck.
+ */
+export function brewV18(client: Anthropic, model: ModelConfig, req: BrewRequest, deps: { index: CardIndex; data: DataSource }, onStep?: (step: number, note: string) => void) {
+  return brewV17(client, model, req, deps, onStep, true);
 }
 
 const V13_REVISE_SYSTEM = `You revise a Magic: The Gathering brew you built, after a review. The player's request and your plan stay the same; you are fixing specific cards. Every card fact you state must come from a tool result. Every card you add must be looked up with card_info first. The deck must stay legal and keep its line to the win.`;

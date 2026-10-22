@@ -27,7 +27,7 @@ Three things, and the third is turning out to be the most interesting.
 
 | Item | Total |
 | --- | --- |
-| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80; v12 on six $2.61; round 3 $1.90; v13 post-cutoff $2.85; v14 and future test $41.28; v15 round $25.87; v16 round $17.46; reviewer checks $0.78; v17 on eight $4.80. v17 future test $19.00. Total about $371.19. Plus one 17-token test call. |
+| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80; v12 on six $2.61; round 3 $1.90; v13 post-cutoff $2.85; v14 and future test $41.28; v15 round $25.87; v16 round $17.46; reviewer checks $0.78; v17 on eight $4.80. v17 future test $19.00; gem test $1.82. Total about $373.01. Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats); full history 145,131 (since 2025-07-01, merged weekly) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
 | Automated tests | 57 passing |
@@ -77,6 +77,24 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-10-22 · Gem test: the AI does recognize gems when shown them
+
+The question: when the AI sees the inventor's under-played picks side by side with look-alikes (just as under-played, legal, in the right colors, ranked highly by the synergy tool, but not played by the real deck), can it tell which is which? 14 decks, 30 cards each, one rating call per deck, two runs, $1.82.
+
+| | Run 1 | Run 2 |
+| --- | --- | --- |
+| Gem rated above a look-alike (50% = can't tell) | **81%** | **77%** |
+| Mean rating, gems vs look-alikes (1-5) | 3.3 vs 2.2 | 3.2 vs 2.2 |
+| Gems rated 4+ and in the top-5 tier | 25 of 57 | 25 of 57 |
+
+Clearest: Premodern Rector Combo (Pernicious Deed, Krosan Tusker, Innocent Blood: 100% / 85%), Standard 4C Control (96% both). Weakest: Gearhulk (70% / 47%) and Pioneer Boros Aggro (one gem, 66% / 53%).
+
+**Reading:** recognition is not the main gap. Asked directly, the AI picks the real gems over strong look-alikes about 4 times in 5. But it rates them "likely" (3-4), rarely "clearly belongs" (5), and brews include only about 18 of 52. Two things lose them: they never come up while the AI builds (search), and when they do, a safe, well-known card wins the slot (confidence). v16 showed the gems inside a 150-card list and the brewer still skipped them; rating each card one by one is what made the difference here.
+
+**Idea this suggests (generic, not built):** before building, take the synergy tool's top ~100 under-played candidates, have a separate call rate each one (as here, about $0.10-0.30 a deck), and pass only the 4+ rated cards to the brewer as "strong candidates for this plan." The open risk: the gem must be in the shortlist first (the synergy tool's top 300 holds about 41% of them).
+
+---
+
 ## 2026-10-22 · v17 on both tests: no gain over v13
 
 Two runs on the future test, $19.00 ($9.49 + $9.51).
@@ -87,7 +105,7 @@ Two runs on the future test, $19.00 ($9.49 + $9.51).
 | **v13** (2 runs) | 47.4 / 49.2% (avg 48.3) | **54.2 / 53.5% (avg 53.9)** | 54.3 / 54.3% | 19 / 17 |
 | v17 (2 runs) | 48.3 / 45.9% (avg 47.1) | 51.6 / 50.4% (avg 51.0) | 53.1 / 50.0% | 17 / 18 |
 
-**Reading:** v17 doesn't beat v13 on either test; Brewing is about 3 points lower in both runs. So the owner's 6 yes / 2 closer on repeat prompts isn't confirmed here: either the reviewer helps on the owner's Premodern and Legacy combo prompts but not on these mostly Standard and Pioneer decks, or the 6 yes were partly a luckier roll. The reviewer pulls decks away from what real players built, which these tests count as a loss even when the change is defensible. **v13 stays the base.** Gem test results still to come.
+**Reading:** v17 doesn't beat v13 on either test; Brewing is about 3 points lower in both runs. So the owner's 6 yes / 2 closer on repeat prompts isn't confirmed here: either the reviewer helps on the owner's Premodern and Legacy combo prompts but not on these mostly Standard and Pioneer decks, or the 6 yes were partly a luckier roll. The reviewer pulls decks away from what real players built, which these tests count as a loss even when the change is defensible. **v13 stays the base.** Gem test: see the entry above.
 
 ---
 

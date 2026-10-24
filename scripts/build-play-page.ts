@@ -48,7 +48,9 @@ const key: Record<string, { item: string; harness: string; model: string }> = {}
 const decks = runs
   .flatMap((run) => run.results.filter((r) => r && (!only || only.includes(r.id))).map((r) => ({ run, r })))
   .map(({ run, r }) => {
-    const id = createHash("sha256").update(`${run.harness}|${run.model}|${r.id}`).digest("hex").slice(0, 12);
+    // Two runs of one version on one page (a reliability round) need their file in the hash to stay apart.
+    const twin = runs.filter((x) => x.harness === run.harness && x.model === run.model).length > 1;
+    const id = createHash("sha256").update(`${run.harness}|${run.model}|${r.id}${twin ? `|${runFiles[runs.indexOf(run)]}` : ""}`).digest("hex").slice(0, 12);
     key[id] = { item: r.id, harness: run.harness, model: run.model };
     for (const l of [...(r.deck?.main ?? []), ...(r.deck?.side ?? []), ...(r.deck?.commander ?? [])]) {
       const c = index.getCard(l.name);

@@ -20,7 +20,7 @@ An AI that brews Magic decks as well as the best human brewers. The owner judges
 4. Then 5 fresh prompts (the owner picks from a proposed list) to check it generalizes.
 5. (2026-10-22) v17 on the future test: no gain over v13 (Tuning 47.1 avg vs 48.3, Brewing 51.0 vs 53.9). v13 stays the base. Gem test: the AI rates real gems above look-alikes 81% / 77%.
 6. DONE (2026-10-24): owner judged v18 on the 8 repeat prompts: 5 yes, 2 closer, 1 further (Wildfire); about the same as v17. Five prompts now got yes from two fresh builds. Page: https://claude.ai/artifact/2vQczfXUVe2jGXQPdzuruW (ArtifactData list, collection `decks`; key `evals/results/round4/play-rejudge-v18-key.json`).
-7. (2026-10-24) **New main yardstick: the blind panel.** Frozen 17 prompts (expert2 + expert3), every version builds all 17 fresh, shuffled with other versions, decks only, owner says yes/no. Round 1 (v2 vs v18) is waiting on the owner: https://claude.ai/artifact/MH9Hx8Xynp9LVX548RuGi5 (ArtifactData list, collection `decks`; key `evals/results/round4/play-panel-1-key.json`). Score = % yes per version.
+7. (2026-10-24) **New main yardstick: the blind panel.** Frozen 17 prompts (expert2 + expert3), every version builds all 17 fresh, shuffled with other versions, decks only, owner says yes/no. Round 1 judged (2026-10-24): v2 9 of 17, v18 11 of 17, within noise (the same version's two builds agree on only 5 of 8). Next: two builds per version per prompt, or try 'build several, keep the best'. Page: https://claude.ai/artifact/MH9Hx8Xynp9LVX548RuGi5 (ArtifactData list, collection `decks`; key `evals/results/round4/play-panel-1-key.json`). Score = % yes per version.
 
 ## Rules the owner set (keep to them)
 

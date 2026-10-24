@@ -77,6 +77,30 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-10-24 · Blind panel round 1: v2 9 of 17, v18 11 of 17, and the rolls are noisier than the gap
+
+The owner judged all 34 decks blind (two hidden versions, shuffled, decks only). Answers: `evals/results/round4/play-panel-1-answers.json`.
+
+| | v2 (first real harness) | v18 (now) |
+| --- | --- | --- |
+| Would play | **9 of 17 (53%)** | **11 of 17 (65%)** |
+| Premodern (11) | 4 | 8 |
+| Legacy (6) | 5 | 3 |
+
+Where they differ: v18 alone got yes on 6 prompts (Mind Over Matter, Phyrexian Processor, Rising Waters, Rofellos, Squandered Balance, Wildfire), v2 alone on 4 (Bomberman, Seismic Assault, Shapeshifter Phage, Mill). Both no on Scapeshift and Nether Spirit.
+
+**The catch: one fresh build is a noisy roll.** The same version on the same prompt doesn't get the same verdict. v18's earlier builds of 8 of these prompts and this round's builds agree on only 5 of 8: Mill and Nether Spirit went yes → no, and Wildfire went no → yes. With about a third of verdicts flipping between rolls, 11 vs 9 (6 prompts to 4) is within noise; this round can't say v18 is better than v2. (The earlier rebuild was judged as "better than last time" and this one blind, which may also move a verdict.)
+
+**What this changes:**
+- The "five prompts now reliably yes" claim from the v18 rejudge doesn't hold: two of the five went to no on the next roll. Corrected here, the earlier entry left as written.
+- Part of the progress the owner saw since v11 likely came from rebuilding failed decks (best of several rolls), not from a better harness. v2 blind at 9 of 17 equals v11/v12's first-pass score (9 of 17).
+- For the panel to separate two versions, each needs **two builds per prompt** (34 decks per version), or the difference has to be large.
+- It also points at a product fix: if rolls vary this much, **build several decks and keep the best** would raise what a user gets. The gem test showed the AI judges cards well when it compares them; it may judge whole decks well too.
+
+Owner's notes this round: Kiki-Jiki (v18, yes) "I don't think you really need Sneak Attack here, but it is servicable"; Mind Over Matter (v18, yes) "just barely uses mind over matter, more of a dream halls deck though"; Seismic Assault (v2, yes) "Gamble probably has no business being here". Recorded in `evals/owner-notes/` as a record only.
+
+---
+
 ## 2026-10-24 · A yardstick that can show progress: the blind panel
 
 Owner: **"We need to find the right yard stick though, to be able to show that we are making progress."** The automatic tests don't show what improved since v13: decks the owner would play every time, including good brews that differ from what players built (v18 Scapeshift: "a really cool brew"), which the Tuning and Brewing tests count as misses. And "better than last time" can't give one number per version: it isn't blind, and only failed decks were rebuilt.

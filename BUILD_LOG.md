@@ -27,7 +27,7 @@ Three things, and the third is turning out to be the most interesting.
 
 | Item | Total |
 | --- | --- |
-| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80; v12 on six $2.61; round 3 $1.90; v13 post-cutoff $2.85; v14 and future test $41.28; v15 round $25.87; v16 round $17.46; reviewer checks $0.78; v17 on eight $4.80. v17 future test $19.00; gem test $1.82; v18 on eight $4.92; blind panel round 1 $18.13; picker test $0.69. Total about $396.75. Plus one 17-token test call. |
+| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80; v12 on six $2.61; round 3 $1.90; v13 post-cutoff $2.85; v14 and future test $41.28; v15 round $25.87; v16 round $17.46; reviewer checks $0.78; v17 on eight $4.80. v17 future test $19.00; gem test $1.82; v18 on eight $4.92; blind panel round 1 $18.13; picker test $0.69; taste tests $3.06. Total about $399.81. Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats); full history 145,131 (since 2025-07-01, merged weekly) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
 | Automated tests | 57 passing |
@@ -74,6 +74,29 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - Lesson to apply: any prompt or claim that names a card gets checked against the card index before it is used.
 - ~~Switch to pairwise~~: done; 36 pairs judged (v1 8 wins, v2 6, 22 ties; v2 100% faithful vs. 92%).
 - ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
+
+---
+
+## 2026-10-24 · Taste test: the AI judge can't tell real decks from its own brews
+
+Owner, after the picker test, on "three takes" and Forge playtesting: **"No i dont like either of those options."** Claude offered three other directions; the owner took the taste test: an automatic %, like the future test, but for judgment.
+
+**The test** (`scripts/taste-test.ts`): for each future-test deck, a real list against v13's brew for the same request. An Opus judge sees both main decks with card text, unlabeled, in both orders, and picks the one a strong player would rather take to a tournament. A judge with good taste should usually pick the real deck, especially the tuned list players converged on. Three variants, about $1 each:
+
+| Real deck | Judge sees the request? | Picked the real deck |
+| --- | --- | --- |
+| Inventor's first list | yes | 10 of 36 (28%) |
+| Tuned list (most typical list a week+ later) | yes | **3 of 34 (9%)** |
+| Tuned list | no | 18 of 34 (53%) |
+
+No position lean in any run (picked "A" 18-20 of 34-36).
+
+**Reading:**
+- With the request shown, the judge strongly prefers the AI's brews: they play every requested card as a 4-of with "tight" plans and clean mana, which reads as "does what was asked." Its reasons mark down the real decks' odd one-ofs (Mabel in Boros Dwarves "dilutes the plan"), and those are exactly the inventor's gems.
+- Without the request, it's a coin flip: the AI judge can't tell a list that dozens of players adopted from its own brew.
+- This matches the picker test (54% on the owner's picks) and explains why AI reviewers (v17, v18) didn't help: the judge in the loop has no reliable sense of what makes a real deck better.
+
+**The new yardstick for judgment:** "picks the tuned real deck over the AI brew, no request shown," now **53%**. A strong player should be well above that. It's automatic, about $1 a run, and doesn't use the owner's notes. If a change raises it, that judge becomes worth putting back in the loop (reviewer, picker), and the owner's blind panel confirms. Caveat: 17 decks, one run each; the 9% and 28% are far from chance, the 53% needs a second run before small changes mean anything.
 
 ---
 

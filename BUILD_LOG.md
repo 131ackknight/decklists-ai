@@ -27,7 +27,7 @@ Three things, and the third is turning out to be the most interesting.
 
 | Item | Total |
 | --- | --- |
-| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80; v12 on six $2.61; round 3 $1.90; v13 post-cutoff $2.85; v14 and future test $41.28; v15 round $25.87; v16 round $17.46; reviewer checks $0.78; v17 on eight $4.80. v17 future test $19.00; gem test $1.82; v18 on eight $4.92; blind panel round 1 $18.13; picker test $0.69; taste tests $3.06; judge with evidence and goldfish $2.18; Fable and Sonnet judges $4.30. Total about $406.29. Plus one 17-token test call. |
+| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80; v12 on six $2.61; round 3 $1.90; v13 post-cutoff $2.85; v14 and future test $41.28; v15 round $25.87; v16 round $17.46; reviewer checks $0.78; v17 on eight $4.80. v17 future test $19.00; gem test $1.82; v18 on eight $4.92; blind panel round 1 $18.13; picker test $0.69; taste tests $3.06; judge with evidence and goldfish $2.18; Fable and Sonnet judges $4.30; text playtest $4.07. Total about $410.36. Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats); full history 145,131 (since 2025-07-01, merged weekly) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
 | Automated tests | 57 passing |
@@ -74,6 +74,27 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - Lesson to apply: any prompt or claim that names a card gets checked against the card index before it is used.
 - ~~Switch to pairwise~~: done; 36 pairs judged (v1 8 wins, v2 6, 22 ties; v2 100% faithful vs. 92%).
 - ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
+
+---
+
+## 2026-10-24 · Text playtest: playing the deck finds most of the owner's complaints
+
+Owner: "Yes, try the text playtest on the decks I flagged and see if it finds my complaints." `scripts/playtest.ts`: for 14 decks the owner had written a specific complaint about, the AI pilots the deck through 2 games against the format's most-played deck, then lists the problems it hit. Code shuffles and deals the hands and draws (no picking easy hands); the pilot never sees the note. A separate grader call compares each report with the note. About $4.07 (quoted $1.50: each game report ran longer than estimated; one run also stopped on deck 6 when a reply hit the length limit and was resumed, with nothing spent on the failed tries).
+
+| Deck | Owner's complaint | Found? (grader) |
+| --- | --- | --- |
+| Wildfire (v12) | kills its own creatures; light on removal | **yes**: "the ramp dies to its own payoff: Birds and Wall of Roots are killed by Wildfire" |
+| Bomberman (v12) | White Mage + Leonardo packages unnecessary | **yes**: "the lifegain package neither advances the combo nor stops Dimir's flyers" |
+| Scapeshift (v11) | Sakura-Tribe Elder outclassed | **yes**: "too fragile against tempo" |
+| Mind Over Matter (v12) | an all-in combo shouldn't carry counters | yes (Claude's read: partly; it faulted Mana Leak, not the counter suite) |
+| Hypergenesis, Seismic (v11), Mind Over Matter (v11, v18), Rofellos, Mill, Seismic (v2) | various | partly |
+| Kiki-Jiki (v11, v18), Scapeshift (v12) | Sneak Attack unneeded; STE | no (Claude's read: v18's report does say "Sneak Attack plus Pestermite is just a hasty 1/1, no Sneak/Show target", which is close to the owner's point) |
+
+**Score: 4 yes, 7 partly, 3 no.** On the four decks the card-by-card reviewer was tested on earlier (it found 0 of 4), the playtest finds Bomberman and Wildfire outright and Mill partly.
+
+**Also:** it found problems no note mentioned that look real. Chalice of the Void counters Bomberman's own looped artifacts; Cunning Wish with no sideboard; Mox Diamond with too few spare lands. One caution: in Premodern the most-played deck is Enchantress, so every Premodern report leans on "no enchantment answers," and acting on all of it could fill decks with hate cards.
+
+**Reading:** this is the first tool that finds the owner's kind of problem: how the cards interact when the deck is played. It gives the brewer information a list can't. Next: v19 = v13 + playtest, then the brewer fixes or answers each problem, measured on the blind panel and the Tuning and Brewing tests.
 
 ---
 

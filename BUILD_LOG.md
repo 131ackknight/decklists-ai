@@ -77,6 +77,33 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-10-24 · "I think you are giving up too easy. What are the problems the AI is having?"
+
+Claude had called judgment "the wall" and proposed writing up. The owner pushed back. A concrete list instead, from the owner's 19 notes across all rounds and a free comparison of v13's brews with the real lists for the 17 future-test decks:
+
+| Problem | Owner's notes | Examples |
+| --- | --- | --- |
+| **Misreads what a card is for** | 6 | Vision Charm (a Dreadnought enabler), Traumatize in draw-go, Tribal Flames (read Draco's domain cost as a domain theme), Mind Over Matter without the mana to use it, Rector without knowing what to fetch, 4 Craterhoof in Hypergenesis |
+| **Adds things the plan doesn't need** | 6 | Sneak Attack in Kiki-Jiki (twice), Gamble in Seismic Assault, White Mage + Leonardo packages, 4 Enlightened Tutor, too many sacrifice outlets |
+| **Misses what the plan needs** | 6 | Seismic with no extra-land enablers, Living End not inferred, Rector with no way to win, Wildfire light on removal, Scapeshift's curve (Grazer) |
+| **Its own cards fight each other** | 1 | Wildfire kills its own creatures |
+| **Dated picks** | 2 | Sakura-Tribe Elder (twice) |
+
+**Deck shape, AI vs real** (average per deck; v13 two runs vs real lists a week+ after each deck appeared):
+
+| | AI | Real |
+| --- | --- | --- |
+| One-of spells | **0.7** | **2.3** |
+| Requested cards played as 4-ofs | 79% | 69% |
+| Average mana value of spells | 2.3 | 2.6 |
+| Lands | 20.0 | 20.1, but far off on some decks: Sneak Attack 16 vs 22, Metalcraft 18 vs 14, Riddlesmith 13 vs 10, Boros Aggro 17 vs 20 |
+
+Plus two found today: each build is a roll (a third of the owner's verdicts flip between builds of the same version), and the AI can't judge its own work (54% on the owner's picks, 53% on real decks).
+
+**What the first four have in common:** each shows up only when you think through how the deck plays, turn by turn: Wildfire resolving on your own board, Seismic Assault with no lands to throw, Mind Over Matter with nothing to untap for value, Sneak Attack when Kiki-Jiki is one mana away. The Haliya episode was the same: the second combo only showed when traced loop by loop. The brewer and the reviewer both look at cards one at a time, as a list. Nothing in the harness ever plays the deck. Forge would; a cheaper first step is to have the AI play out sample hands in text and report what went wrong, which gives it information a static list doesn't.
+
+---
+
 ## 2026-10-24 · Raising the judge's taste: card evidence and goldfish stats both make it worse
 
 Owner: "Yes, try both: card evidence and goldfish stats for the judge." Same setup as the taste-test yardstick (tuned real list vs v13 brew, no request, both orders, 17 decks). $2.18.

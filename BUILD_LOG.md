@@ -77,6 +77,25 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-10-24 · Owner judged v18: 5 yes, 2 closer, 1 further. "its honestly getting better i think?"
+
+| Deck | v17 | v18 | Owner's note on v18 |
+| --- | --- | --- | --- |
+| Rising Waters | yes | yes | |
+| Mind Over Matter | yes | yes | |
+| Mill | yes | yes | |
+| Nether Spirit | yes | yes | |
+| Zur's Weirding | yes | yes | |
+| Scapeshift | closer | closer | "interesting the direction it went, its not strong but it is a really cool brew" |
+| Bomberman | closer | closer | |
+| Wildfire | yes | **further** | |
+
+**Reading:** v18 judged about the same as v17 (5 yes vs 6), one step back on Wildfire, so the missing-card check doesn't show a gain here. The bigger news is consistency: five prompts got a "yes" from two independent fresh builds (v17 and v18). Those decks are now reliably good, not a lucky roll, which answers the caveat on the v17 entry for those five.
+
+**Is it getting better?** On the owner's judgment, yes, compared with the start: "neither" on the hardest combos went from 50% to 0%, and most prompts now get a playable deck every time. On the Brewing Test, v13 beats v2 by 3.6 points; nothing since has moved it further. So: real progress up to v13, and reliability since, but no new gain in brewing skill after v13.
+
+---
+
 ## 2026-10-22 · v18 on the eight repeat prompts: ready for the owner to judge
 
 Same eight prompts as v17, fresh builds, $4.92. Judging page (yes / no but closer / no, further away, compared with the deck judged last time): https://claude.ai/artifact/2vQczfXUVe2jGXQPdzuruW (answers in its `decks` collection; key `evals/results/round4/play-rejudge-v18-key.json`).

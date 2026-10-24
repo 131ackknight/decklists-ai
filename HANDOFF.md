@@ -19,7 +19,7 @@ An AI that brews Magic decks as well as the best human brewers. The owner judges
 3. If v17 helps: run it twice on the future test (`--track future --harness v17`, about $22), then score with `scripts/score-tests.ts`. Two yardsticks now (owner, 2026-10-22): **Tuning Test** (match with the tuned lists) and **Brewing Test** (match with the inventor's first-week lists, plus gems). v13: Tuning 47.4 / 49.2 (17 decks), Brewing 54.2 / 53.5 (13 decks with 2+ first-week lists), gems 19 / 17 of 52; v2 45.9, 50.3, 16.
 4. Then 5 fresh prompts (the owner picks from a proposed list) to check it generalizes.
 5. (2026-10-22) v17 on the future test: no gain over v13 (Tuning 47.1 avg vs 48.3, Brewing 51.0 vs 53.9). v13 stays the base. Gem test: the AI rates real gems above look-alikes 81% / 77%.
-6. v18 (v17 + role evidence, so the reviewer can flag missing cards) ran on the 8 repeat prompts. Owner to judge: https://claude.ai/artifact/2vQczfXUVe2jGXQPdzuruW (ArtifactData list, collection `decks`; key `evals/results/round4/play-rejudge-v18-key.json`).
+6. DONE (2026-10-24): owner judged v18 on the 8 repeat prompts: 5 yes, 2 closer, 1 further (Wildfire); about the same as v17. Five prompts now got yes from two fresh builds. Page: https://claude.ai/artifact/2vQczfXUVe2jGXQPdzuruW (ArtifactData list, collection `decks`; key `evals/results/round4/play-rejudge-v18-key.json`).
 
 ## Rules the owner set (keep to them)
 

@@ -1,0 +1,400 @@
+{
+ "ranAt": "2026-10-25T15:09:29.748Z",
+ "harness": "v13",
+ "model": "claude-opus-5-5",
+ "tracks": [
+  "found"
+ ],
+ "results": [
+  {
+   "id": "found-premodern-squee-bouncer-a",
+   "track": "found",
+   "format": "Premodern",
+   "before": null,
+   "prompt": "Brew me a Premodern deck built around Waterfront Bouncer and Squee, Goblin Nabob.",
+   "text": "I built a mono-blue Merfolk Winter Orb deck (a **brew**) where **Waterfront Bouncer and Squee, Goblin Nabob are a bounce lock that costs no cards.** The deck never casts Squee. It's only there to be discarded. Bouncer costs {U}, tap and a discarded card to return a creature to its owner's hand. Squee goes back to your hand from the graveyard every upkeep, so you can bounce something every turn without losing a card.\n\n**The plan:** Play cheap Merfolk on turns 1 and 2, then Winter Orb on turn 3. Winter Orb lets each player untap only one land per turn, so whatever Bouncer returns stays in the opponent's hand. Lord of Atlantis gives your Merfolk +1/+1 and lets them walk past blockers if the opponent controls an Island. The free counterspells (Daze, Gush, Foil) protect the lock while you're also short on mana. Merfolk Looter and Foil also use Squee as free discard, so a returning Squee is pure card advantage.\n\n**The three directions I considered:**\n1. **Mono-blue Merfolk with Winter Orb (chosen).** Recent tournament results show 4 of the 5 decks that run both your cards are this shell, and those lists also never cast Squee. I added the free-counterspell package from the format's popular Stiflenought deck.\n2. **Blue-red tempo** with castable Squee and the red burn package from Sligh (Lightning Bolt, Grim Lavamancer). It makes Squee a real creature, but bouncing loses most of its value without Winter Orb to stop the opponent recasting things.\n3. **Blue-green Madness**, with Bouncer as a way to discard madness cards. It barely needs Squee.\n\nI picked the first because Winter Orb is what turns repeated bouncing into an actual lock.\n\n**Things to know:**\n- **Squee can't be cast.** The deck has no red mana. The deck checker flagged this, and it's on purpose.\n- **Four Squees despite it being legendary.** You only need one in the graveyard, and extra copies are still free discard for Bouncer, Looter and Foil.\n- **18 lands.** That's lower than the checker's suggested 22, but it matches real Merfolk lists, and Gush and Daze work best with fewer lands.\n- **Odds:** On the play, you'll see Bouncer or Looter by turn 4 in 79% of games, and Squee in about 53%. You'll have one of each together 40.5% of the time, before counting Looter digging for Squee. You'll often bounce once or twice by discarding a spare land before Squee shows up. The checker's 1.4% figure is the chance of drawing all six cards in the win line by turn 6, not the chance of the lock coming together.\n- **Sideboard:** It's aimed at the most-played decks: Annul and Boomerang against Enchantress, Hydroblast and Blue Elemental Blast against Sligh, Submerge against the green decks, and Tormod's Crypt against graveyard combo.",
+   "deck": {
+    "main": [
+     {
+      "qty": 4,
+      "name": "Waterfront Bouncer"
+     },
+     {
+      "qty": 4,
+      "name": "Squee, Goblin Nabob"
+     },
+     {
+      "qty": 4,
+      "name": "Merfolk Looter"
+     },
+     {
+      "qty": 4,
+      "name": "Lord of Atlantis"
+     },
+     {
+      "qty": 4,
+      "name": "Tidal Warrior"
+     },
+     {
+      "qty": 3,
+      "name": "Winter Orb"
+     },
+     {
+      "qty": 4,
+      "name": "Counterspell"
+     },
+     {
+      "qty": 4,
+      "name": "Daze"
+     },
+     {
+      "qty": 4,
+      "name": "Gush"
+     },
+     {
+      "qty": 2,
+      "name": "Foil"
+     },
+     {
+      "qty": 2,
+      "name": "Stifle"
+     },
+     {
+      "qty": 2,
+      "name": "Portent"
+     },
+     {
+      "qty": 1,
+      "name": "Chain of Vapor"
+     },
+     {
+      "qty": 13,
+      "name": "Island"
+     },
+     {
+      "qty": 2,
+      "name": "Flooded Strand"
+     },
+     {
+      "qty": 3,
+      "name": "Wasteland"
+     }
+    ],
+    "side": [
+     {
+      "qty": 3,
+      "name": "Annul"
+     },
+     {
+      "qty": 3,
+      "name": "Hydroblast"
+     },
+     {
+      "qty": 2,
+      "name": "Blue Elemental Blast"
+     },
+     {
+      "qty": 2,
+      "name": "Tormod's Crypt"
+     },
+     {
+      "qty": 2,
+      "name": "Essence Flare"
+     },
+     {
+      "qty": 2,
+      "name": "Submerge"
+     },
+     {
+      "qty": 1,
+      "name": "Boomerang"
+     }
+    ],
+    "commander": [],
+    "label": "brew",
+    "warnings": [
+     "0 R sources; Squee, Goblin Nabob wants about 12 to cast on curve."
+    ],
+    "winLine": [
+     {
+      "card": "Tidal Warrior",
+      "does": "Turn-1 Merfolk body that later becomes a 2/2 islandwalker under Lord"
+     },
+     {
+      "card": "Waterfront Bouncer",
+      "does": "Turn 2: the repeatable bounce engine; {U}, tap, discard a card returns a creature"
+     },
+     {
+      "card": "Squee, Goblin Nabob",
+      "does": "Never cast: discarded to Bouncer (or Looter/Foil) and returns to hand every upkeep, so the bounce costs no cards"
+     },
+     {
+      "card": "Winter Orb",
+      "does": "Turn 3: with one land untapping per turn, opponents can't recast what Bouncer returns while our 1-2 drops keep working"
+     },
+     {
+      "card": "Lord of Atlantis",
+      "does": "Pumps the Merfolk and gives them islandwalk to close the game"
+     },
+     {
+      "card": "Daze",
+      "does": "Free counters (with Counterspell/Foil/Gush) protect the lock under Winter Orb"
+     }
+    ],
+    "winTurn": 6,
+    "winLineDrawnPct": 1.4
+   },
+   "toolCalls": [
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "played_with",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "reference_list",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "submit_deck",
+     "ok": false,
+     "isError": false,
+     "rejected": [
+      "Waterfront Bouncer needs \"Free discard fodder so each bounce doesn't cost a real card\", and the deck has 4 copies of the cards that provide it (Squee, Goblin Nabob). A build-around's enablers are usually 6+ copies: add some, or resubmit with needsReason saying why 4 is enough here."
+     ]
+    },
+    {
+     "name": "submit_deck",
+     "ok": true,
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 18,
+    "output": 8603,
+    "cacheRead": 135257,
+    "cacheWrite": 21730
+   },
+   "costUsd": 0.3078,
+   "steps": 7,
+   "ms": 78848,
+   "errors": []
+  },
+  {
+   "id": "found-premodern-squee-bouncer-b",
+   "track": "found",
+   "format": "Premodern",
+   "before": null,
+   "prompt": "Brew me a mono-blue Premodern deck built around Waterfront Bouncer and Gilded Drake.",
+   "text": "I submitted a mono-blue brew (accepted, no warnings) that uses Waterfront Bouncer to replay Gilded Drake over and over. The mana and counterspell package come from Stiflenought, which is 10% of the field.\n\n**The plan:** Gilded Drake swaps itself for the opponent's best creature. Then Waterfront Bouncer pays {U}, taps and discards a card to return a creature to its *owner's* hand. Since you own the Drake, it comes back to you, you keep the stolen creature, and the opponent is left with nothing. Every turn after that, 1U plus U takes their next threat. A typical game goes Bouncer on turn 2, first steal on turn 3, and the loop from turn 4. Counterspell, Daze, Foil and Stifle protect the board while the stolen creatures, Man-o'-War, Morphling and Mishra's Factory attack, aiming to win around turn 6–7.\n\n**Three directions I considered:**\n1. **Merfolk tribal** (Lord of Atlantis, Tidal Warrior, Winter Orb). Bouncer is already in that deck, but Winter Orb chokes the {U} activations the loop depends on, and the Drake isn't a Merfolk.\n2. **Cloud of Faeries / ETB value pile.** It does fun things with Bouncer, but it doesn't have enough real threats.\n3. **The Stiflenought counter and cantrip package with the Drake loop at the center (chosen).** It's the proven mono-blue shell: 16 Islands to fuel Gush, Daze and Foil, plus cheap card draw to feed Bouncer's discard cost. It also beats the field's creatures by stealing them, including Dreadnought and Terravore.\n\n**What fills each role:**\n- **Ways to get the Drake back (10 cards):** 4 Waterfront Bouncer, 4 Man-o'-War (its ETB returns target creature to its owner's hand, so it can rescue the Drake too) and 2 Chain of Vapor.\n- **Cards to discard:** 4 Gush, 4 Portent and 4 Opt keep cards coming. The 2 Deep Analysis are the ideal discard because you can still flash them back from the graveyard.\n- **Stifle (3):** against decks with few creatures (Enchantress, Replenish), Stifle counters the Drake's \"sacrifice it\" trigger, so you keep a 3/3 flier for 2 mana. That's a backup use; Stifle also hits fetchlands, Wasteland and Dreadnought triggers.\n\n**Honest odds:** you'll see a Drake plus at least one way to get it back by turn 4 about 45% of the time, before counting what the cantrips dig up. The checker puts drawing every card named in the win line by turn 7 at only 12%. That's expected, because the deck has several ways to fill each step of the line.\n\n**Sideboard (15)**, aimed at the field:\n- 3 Annul for Enchantress and Replenish\n- 3 Hydroblast and 2 Blue Elemental Blast for Sligh and Goblins\n- 2 Back to Basics for decks running lots of nonbasic lands\n- 2 Tormod's Crypt for Hermit Druid and Replenish\n- 2 Submerge for Terrageddon and other green decks\n- 1 Powder Keg",
+   "deck": {
+    "main": [
+     {
+      "qty": 4,
+      "name": "Waterfront Bouncer"
+     },
+     {
+      "qty": 4,
+      "name": "Gilded Drake"
+     },
+     {
+      "qty": 4,
+      "name": "Man-o'-War"
+     },
+     {
+      "qty": 2,
+      "name": "Morphling"
+     },
+     {
+      "qty": 4,
+      "name": "Counterspell"
+     },
+     {
+      "qty": 4,
+      "name": "Daze"
+     },
+     {
+      "qty": 3,
+      "name": "Stifle"
+     },
+     {
+      "qty": 1,
+      "name": "Foil"
+     },
+     {
+      "qty": 4,
+      "name": "Gush"
+     },
+     {
+      "qty": 4,
+      "name": "Portent"
+     },
+     {
+      "qty": 4,
+      "name": "Opt"
+     },
+     {
+      "qty": 2,
+      "name": "Chain of Vapor"
+     },
+     {
+      "qty": 2,
+      "name": "Deep Analysis"
+     },
+     {
+      "qty": 16,
+      "name": "Island"
+     },
+     {
+      "qty": 2,
+      "name": "Mishra's Factory"
+     }
+    ],
+    "side": [
+     {
+      "qty": 3,
+      "name": "Annul"
+     },
+     {
+      "qty": 3,
+      "name": "Hydroblast"
+     },
+     {
+      "qty": 2,
+      "name": "Blue Elemental Blast"
+     },
+     {
+      "qty": 2,
+      "name": "Back to Basics"
+     },
+     {
+      "qty": 2,
+      "name": "Tormod's Crypt"
+     },
+     {
+      "qty": 2,
+      "name": "Submerge"
+     },
+     {
+      "qty": 1,
+      "name": "Powder Keg"
+     }
+    ],
+    "commander": [],
+    "label": "brew",
+    "warnings": [],
+    "winLine": [
+     {
+      "card": "Waterfront Bouncer",
+      "does": "Turn 2: lands as the repeatable rebuy engine ({U}, tap, discard a card: return any creature to its OWNER's hand)."
+     },
+     {
+      "card": "Gilded Drake",
+      "does": "Turn 3: swaps itself for the opponent's best creature."
+     },
+     {
+      "card": "Waterfront Bouncer",
+      "does": "Same turn or next: for {U}, pitch a spare card (ideally Deep Analysis) to bounce the Drake off the opponent's side back into your hand, since you own it. You keep the stolen creature and they get nothing."
+     },
+     {
+      "card": "Gilded Drake",
+      "does": "Turn 4 onward: recast it and steal another creature, then bounce it again. Each turn it takes their next threat for 1U + U."
+     },
+     {
+      "card": "Man-o'-War",
+      "does": "Second way to rebuy the Drake (ETB returns target creature to its owner's hand), or bounces a blocker."
+     },
+     {
+      "card": "Counterspell",
+      "does": "Guards the board while the stolen creatures, Man-o'-War and Mishra's Factory attack for the win, around turn 6-7."
+     }
+    ],
+    "winTurn": 7,
+    "winLineDrawnPct": 12.3
+   },
+   "toolCalls": [
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "played_with",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "archetype",
+     "isError": false
+    },
+    {
+     "name": "search_cards",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "card_info",
+     "isError": false
+    },
+    {
+     "name": "check_deck",
+     "isError": false
+    },
+    {
+     "name": "draw_odds",
+     "isError": false
+    },
+    {
+     "name": "submit_deck",
+     "ok": false,
+     "isError": false,
+     "rejected": [
+      "Gilded Drake needs \"Keep the Drake as a 3/3 flier when the opponent has no creature (its ETB has no target, so it would sacrifice itself)\", and the deck has 3 copies of the cards that provide it (Stifle). A build-around's enablers are usually 6+ copies: add some, or resubmit with needsReason saying why 3 is enough here."
+     ]
+    },
+    {
+     "name": "submit_deck",
+     "ok": true,
+     "isError": false
+    }
+   ],
+   "usage": {
+    "input": 20,
+    "output": 11935,
+    "cacheRead": 184413,
+    "cacheWrite": 27232
+   },
+   "costUsd": 0.4118,
+   "steps": 8,
+   "ms": 118557,
+   "errors": []
+  }
+ ]
+}

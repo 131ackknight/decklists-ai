@@ -27,7 +27,7 @@ Three things, and the third is turning out to be the most interesting.
 
 | Item | Total |
 | --- | --- |
-| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80; v12 on six $2.61; round 3 $1.90; v13 post-cutoff $2.85; v14 and future test $41.28; v15 round $25.87; v16 round $17.46; reviewer checks $0.78; v17 on eight $4.80. v17 future test $19.00; gem test $1.82; v18 on eight $4.92; blind panel round 1 $18.13; picker test $0.69; taste tests $3.06; judge with evidence and goldfish $2.18; Fable and Sonnet judges $4.30; text playtest $4.07; v19 smoke test $0.77. Total about $411.13. Plus one 17-token test call. |
+| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80; v12 on six $2.61; round 3 $1.90; v13 post-cutoff $2.85; v14 and future test $41.28; v15 round $25.87; v16 round $17.46; reviewer checks $0.78; v17 on eight $4.80. v17 future test $19.00; gem test $1.82; v18 on eight $4.92; blind panel round 1 $18.13; picker test $0.69; taste tests $3.06; judge with evidence and goldfish $2.18; Fable and Sonnet judges $4.30; text playtest $4.07; v19 smoke test $0.77; found-deck test $3.79. Total about $414.92. Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats); full history 145,131 (since 2025-07-01, merged weekly) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
 | Automated tests | 57 passing |
@@ -74,6 +74,33 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - Lesson to apply: any prompt or claim that names a card gets checked against the card index before it is used.
 - ~~Switch to pairwise~~: done; 36 pairs judged (v1 8 wins, v2 6, 22 ties; v2 100% faithful vs. 92%).
 - ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
+
+---
+
+## 2026-10-25 · A deck from outside MTGO: how close does the AI get from two cards?
+
+Owner: "this deck showed up in a random (non MTGO) tournament. I wonder how close the AI could get giving just a couple of the cards?" Mono-blue Premodern: 18 Island, 4 Mishra's Factory, Waterfront Bouncer, Squee, Gilded Drake, Man-o'-War, Gush, Accumulated Knowledge, Seal of Removal, Masticore, War Tax, Flood, Merfolk Looter, Compulsion. The trick: Squee is never cast. He's free discard for Bouncer, Looter, Compulsion and Masticore's upkeep, and comes back every turn. Saved as `evals/round4/lists/found/premodern-mono-blue-squee-bouncer.json` (event and date not recorded).
+
+**A clean test:** the closest of the 9,317 Premodern lists in Decklist Data matches 29 of 60 (Mono-Blue Control). Bouncer and Squee appear together in 50 lists, but only in green Survival decks; no mono-blue version exists in the data.
+
+**Two prompts** (new `found` track; `scripts/score-found.ts`), v13 and v19, two builds each, $3.79:
+- A: "built around Waterfront Bouncer and Squee, Goblin Nabob" (engine given)
+- B: "a mono-blue deck built around Waterfront Bouncer and Gilded Drake" (Squee hidden)
+
+| Prompt | v13 | v19 | Copy the closest MTGO list |
+| --- | --- | --- | --- |
+| A (Bouncer + Squee) | 27, 27 of 60 (45%) | 27, 23 (42%) | 29 (48%) |
+| B (mono-blue, Bouncer + Drake) | 30, 34 (53%) | 33, 35 (57%) | 29 (48%) |
+
+**What it got:** given Squee, it understood the trick on its own ("Squee is never cast"; "discard Squee every turn to pay for Bouncer"). Gush and Bouncer in all 8 brews, Looter in 6.
+
+**What it missed:**
+- **Squee when hidden: 0 of 4.** The gem pattern again: it uses the gem when told, never finds it.
+- Never in any brew: Accumulated Knowledge, Seal of Removal, War Tax, Flood, Compulsion. Masticore and Mishra's Factory in 2 of 8.
+- **Every brew played Counterspell and Daze (8 of 8); the real deck plays neither.** The brews default to a familiar Merfolk tempo shell (Lord of Atlantis 5 of 8, Tidal Warrior 5, Foil 7, Portent 6), while the real deck is a creature-bounce and card-advantage deck with no counterspells. "Blue deck means counterspells" is the template the AI can't get out of.
+- One v19 build of A went blue-red to cast Squee and Bolts; its playtest flagged the off-color lands, and the revision didn't fix it.
+
+**Reading:** about half the deck from two cards, roughly what copying the nearest MTGO list would give. v19 vs v13 is within noise. The misses are the same two problems in one deck: no hidden gem without being told, and a strong pull toward the established shell.
 
 ---
 

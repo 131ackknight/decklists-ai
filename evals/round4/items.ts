@@ -27,7 +27,7 @@ export interface SavedList {
 
 export interface Round4Item {
   id: string;
-  track: "fill" | "brew" | "fresh" | "holdout" | "expert" | "post" | "expert2" | "expert3" | "future";
+  track: "fill" | "brew" | "fresh" | "holdout" | "expert" | "post" | "expert2" | "expert3" | "future" | "found";
   format: string;
   prompt: string;
   /** Data and cards are cut to before this date (YYYY-MM-DD); null = today's data. */
@@ -252,6 +252,17 @@ const EXPERT3_FRESH: { id: string; format: string; prompt: string }[] = [
   { id: "expert3-premodern-nether-spirit", format: "Premodern", prompt: "Brew me a Premodern control deck built around Nether Spirit." },
 ];
 
+/**
+ * Found decks (2026-10-25): lists the owner came across outside MTGO, so not in
+ * Decklist Data. The brewer gets a couple of the deck's cards; the score is how
+ * close it gets (scripts/score-found.ts). Mono-blue Squee Bouncer: A gives the
+ * engine, B hides Squee to see whether the brewer finds it.
+ */
+const FOUND: { id: string; format: string; prompt: string }[] = [
+  { id: "found-premodern-squee-bouncer-a", format: "Premodern", prompt: "Brew me a Premodern deck built around Waterfront Bouncer and Squee, Goblin Nabob." },
+  { id: "found-premodern-squee-bouncer-b", format: "Premodern", prompt: "Brew me a mono-blue Premodern deck built around Waterfront Bouncer and Gilded Drake." },
+];
+
 export function round4Items(index: CardIndex): Round4Item[] {
   return [
     ...fillItems(index),
@@ -267,5 +278,6 @@ export function round4Items(index: CardIndex): Round4Item[] {
     // Future test (2026-10-21, owner: "cutoff can be earlier too like April"): every constructed archetype
     // first seen since 2026-04-01 with 3+ lists. Scored against every list from a week after it appeared.
     ...holdoutItems("evals/brew-holdout/candidates-future.json", "future", 0),
+    ...FOUND.map((f) => ({ ...f, track: "found" as const, before: null })),
   ];
 }

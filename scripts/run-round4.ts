@@ -1,7 +1,7 @@
 /**
  * Run round 4 (owner-written evals) on one harness and model.
  *
- *   pnpm exec tsx scripts/run-round4.ts --harness v2|...|v18 [--tag r2] --model claude-sonnet-5-5 [--track fill,brew,fresh|holdout] [--items id,id] [--concurrency 3] [--list]
+ *   pnpm exec tsx scripts/run-round4.ts --harness v2|...|v19 [--tag r2] --model claude-sonnet-5-5 [--track fill,brew,fresh|holdout] [--items id,id] [--concurrency 3] [--list]
  *
  * Fill in the blanks, brew to archetype and the brew holdout rebuild a past moment: lists from
  * the item's date on are cut from the data, and cards first printed after it
@@ -15,7 +15,7 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { loadCardIndex } from "../src/cards/load";
 import { FileDataSource } from "../src/data/source";
 import { MODELS } from "../src/harness/models";
-import { brew, brewV4, brewV5, brewV6, brewV7, brewV8, brewV9, brewV10, brewV11, brewV12, brewV13, brewV14, brewV15, brewV16, brewV17, brewV18, type BrewResult } from "../src/harness/run";
+import { brew, brewV4, brewV5, brewV6, brewV7, brewV8, brewV9, brewV10, brewV11, brewV12, brewV13, brewV14, brewV15, brewV16, brewV17, brewV18, brewV19, type BrewResult } from "../src/harness/run";
 import { runPipeline, type PipelineResult } from "../src/pipeline/run";
 import { isNearCopy, round4Items } from "../evals/round4/items";
 
@@ -95,7 +95,9 @@ async function main() {
                                       ? await brewV17(client, model, req, deps)
                                       : harness === "v18"
                                         ? await brewV18(client, model, req, deps)
-                                        : await brew(client, model, req, deps);
+                                        : harness === "v19"
+                                          ? await brewV19(client, model, req, deps)
+                                          : await brew(client, model, req, deps);
       const pipe = "path" in r ? (r as PipelineResult) : null;
       spent += r.costUsd;
       const sum = (xs: { qty: number }[]) => xs.reduce((n, c) => n + c.qty, 0);
@@ -121,6 +123,7 @@ async function main() {
           ...(r.deck.partnerHints?.length ? { partnerHints: r.deck.partnerHints } : {}),
         },
         ...(r.review ? { review: { flags: r.review.flags, firstMain: r.review.firstDeck?.main, ...(r.review.roles ? { roles: r.review.roles } : {}) } } : {}),
+        ...(r.playtest ? { playtest: { opponent: r.playtest.opponent, seed: r.playtest.seed, game: r.playtest.game, problems: r.playtest.problems, firstMain: r.playtest.firstDeck?.main } } : {}),
         toolCalls: r.toolCalls.map((c) => ({ name: c.name, ok: c.accepted, isError: c.isError, stage: c.stage, rejected: c.rejected })),
         usage: r.usage,
         costUsd: r.costUsd,

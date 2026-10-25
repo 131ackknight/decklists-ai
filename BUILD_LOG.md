@@ -27,7 +27,7 @@ Three things, and the third is turning out to be the most interesting.
 
 | Item | Total |
 | --- | --- |
-| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80; v12 on six $2.61; round 3 $1.90; v13 post-cutoff $2.85; v14 and future test $41.28; v15 round $25.87; v16 round $17.46; reviewer checks $0.78; v17 on eight $4.80. v17 future test $19.00; gem test $1.82; v18 on eight $4.92; blind panel round 1 $18.13; picker test $0.69; taste tests $3.06; judge with evidence and goldfish $2.18; Fable and Sonnet judges $4.30; text playtest $4.07. Total about $410.36. Plus one 17-token test call. |
+| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80; v12 on six $2.61; round 3 $1.90; v13 post-cutoff $2.85; v14 and future test $41.28; v15 round $25.87; v16 round $17.46; reviewer checks $0.78; v17 on eight $4.80. v17 future test $19.00; gem test $1.82; v18 on eight $4.92; blind panel round 1 $18.13; picker test $0.69; taste tests $3.06; judge with evidence and goldfish $2.18; Fable and Sonnet judges $4.30; text playtest $4.07; v19 smoke test $0.77. Total about $411.13. Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats); full history 145,131 (since 2025-07-01, merged weekly) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
 | Automated tests | 57 passing |
@@ -74,6 +74,23 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - Lesson to apply: any prompt or claim that names a card gets checked against the card index before it is used.
 - ~~Switch to pairwise~~: done; 36 pairs judged (v1 8 wins, v2 6, 22 ties; v2 100% faithful vs. 92%).
 - ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
+
+---
+
+## 2026-10-25 · v19 built: brew, play one game, fix the top three problems
+
+Owner: "Yes, build the lean v19 on v13 (playtest instead of the reviewer, 1 game, top 3 problems) and set up a blind panel round against a fresh v13 build."
+
+**v19 = v13, then a playtest, then a revision** (`brewV19` in `src/harness/run.ts`, `src/harness/playtest.ts`):
+1. v13 builds the deck as before.
+2. The AI pilots it through **one game** against the format's most-played deck. Code shuffles and deals the hand and eight draws, plus a second hand in case of a mulligan, so the pilot can't pick an easy hand (`dealGame`, with a unit test). It reports **at most three problems**, ranked by how much they hurt the deck in general, not only in that matchup, each with a suggested fix.
+3. The brewer fixes each problem or says why not, with the same tools and checks as the brew, told to fix the deck's own plan first and not to fill it with cards for the one matchup.
+
+The v17/v18 reviewer is not in it. Its revision step now lives in a shared helper (`reviseBrew`) that v17 and v19 both use, and v17's text is unchanged. The playtest and the deck before revision are saved with each result. 60 tests pass.
+
+**Smoke test, Premodern Wildfire, $0.77** (estimate was $0.65): the game showed the deck can't rebuild after its own Wildfire, because Mox Diamond and Fire Diamond don't survive it. The brewer swapped in 4 Thran Dynamo and 2 Worn Powerstone (its checks caught that Grim Monolith, the suggested card, is banned in Premodern), cut 2 of 4 Sylvan Library, and added 3 Tranquility for the Enchantress matchup. That last change is the hate-card risk flagged earlier; the owner's blind verdicts will show whether it hurts.
+
+**Blind panel round 2 started:** fresh v13 and v19 builds of all 17 panel prompts, about $21.
 
 ---
 

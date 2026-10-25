@@ -18,6 +18,7 @@ import { z } from "zod";
 import { loadCardIndex } from "../src/cards/load";
 import { FileDataSource } from "../src/data/source";
 import { costUsd, MODELS, type Usage } from "../src/harness/models";
+import { dealGame as deal } from "../src/harness/playtest";
 
 try {
   process.loadEnvFile(".env.local");
@@ -55,25 +56,6 @@ const Report = z.object({
   problems: z.array(z.object({ problem: z.string(), cards: z.array(z.string()) })).describe("Problems the games showed, most important first."),
 });
 const Grade = z.object({ found: z.enum(["yes", "partly", "no"]), which: z.string().describe("The report's line that matches, or 'none'.") });
-
-function mulberry32(seed: number) {
-  return () => {
-    seed |= 0;
-    seed = (seed + 0x6d2b79f5) | 0;
-    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
-const deal = (main: { qty: number; name: string }[], seed: number) => {
-  const cards = main.flatMap((l) => Array<string>(l.qty).fill(l.name));
-  const rand = mulberry32(seed);
-  for (let i = cards.length - 1; i > 0; i--) {
-    const j = Math.floor(rand() * (i + 1));
-    [cards[i], cards[j]] = [cards[j], cards[i]];
-  }
-  return { hand: cards.slice(0, 7), draws: cards.slice(7, 15), backupHand: cards.slice(15, 22) };
-};
 
 async function main() {
   const games = Number(process.argv.includes("--games") ? process.argv[process.argv.indexOf("--games") + 1] : 2);

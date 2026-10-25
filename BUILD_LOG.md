@@ -77,6 +77,24 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-10-25 · "Is this adding token creep?" Cost per deck by version
+
+Owner, on the proposed v19 (brew, playtest, fix): "is this adding token creep?" Measured from the saved runs (Opus 5.5, cost per deck):
+
+| Version | $/deck | Output tokens/deck | What it added |
+| --- | --- | --- | --- |
+| v2 | $0.42-0.44 | 9.8k-12.0k | tools and checks |
+| v13 | $0.41-0.45 | 9.9k-10.5k | 11 versions of checks, all in code |
+| v17 | $0.53 | 13.4k-13.9k | a reviewer call and a revision (+25%) |
+| v18 | $0.63 | 17.8k | role evidence for the reviewer (+45% over v2) |
+| v19 as proposed, on v18 | about $0.90 | | playtest about $0.27 plus a fix stage |
+
+**Reading:** no creep up to v13. Every gain from v2 to v13 came from checks written in code, which cost almost nothing per deck. The creep started with v17 and v18: extra model calls that cost 25-45% more per deck and didn't move any yardstick. Stacking the playtest on top of them would double the cost of a deck.
+
+**Proposed rule:** a stage that costs tokens stays only if it moves a yardstick; otherwise it comes out. So v19 should be v13 + playtest + fix, with the v17/v18 reviewer removed (the playtest replaces it), and kept lean: one game instead of two, and only the top three problems passed back (which also limits the Enchantress-hate noise). The playtest runs as a separate call and hands back a short list, so the brewer's own context doesn't grow.
+
+---
+
 ## 2026-10-24 · Text playtest: playing the deck finds most of the owner's complaints
 
 Owner: "Yes, try the text playtest on the decks I flagged and see if it finds my complaints." `scripts/playtest.ts`: for 14 decks the owner had written a specific complaint about, the AI pilots the deck through 2 games against the format's most-played deck, then lists the problems it hit. Code shuffles and deals the hands and draws (no picking easy hands); the pilot never sees the note. A separate grader call compares each report with the note. About $4.07 (quoted $1.50: each game report ran longer than estimated; one run also stopped on deck 6 when a reply hit the length limit and was resumed, with nothing spent on the failed tries).

@@ -77,6 +77,23 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-10-25 · Blind panel round 2 judged: v19 13 of 17, the best blind score so far
+
+The owner judged all 34 decks blind. Answers: `evals/results/round4/play-panel-2-answers.json`. No written notes this round.
+
+| | Round 1 | | Round 2 | |
+| --- | --- | --- | --- | --- |
+| Version | v2 | v18 | v13 | **v19** |
+| Would play (of 17) | 9 (53%) | 11 (65%) | 10 (59%) | **13 (76%)** |
+
+**v19 vs v13, same round:** v19 alone got yes on 4 prompts (Kiki-Jiki, Seismic Assault, Mill, Squandered Balance); v13 alone on 1 (Scapeshift, its first yes on any build). Both yes on 9, both no on 3 (Bomberman, Phyrexian Processor, Shapeshifter Phage).
+
+**How sure:** 4 to 1 on the split prompts is the biggest gap yet, in the right direction, but with about a third of verdicts flipping between builds it could still be chance (a 4-1 split or wider happens about 38% of the time with no real difference). Promising, not proven: one more round of fresh builds would settle it.
+
+**Also:** across the four blind builds so far (v2, v18, v13, v19), every one of the 17 prompts has at least one deck the owner would play.
+
+---
+
 ## 2026-10-25 · Blind panel round 2: v13 vs v19, ready for the owner
 
 Fresh builds of all 17 frozen prompts by v13 (the base) and v19 (v13 + one played game + fixing the top three problems), shuffled together, decks only, yes/no. Page: https://claude.ai/artifact/D8vgp8z23N22z4ZrzxQKt2 (answers in its `decks` collection; key `evals/results/round4/play-panel-2-key.json`). $21.00 (v13 $8.11, $0.48 a deck; v19 $12.89, $0.76 a deck). All 34 decks are exactly 60 cards, with no errors.

@@ -99,6 +99,8 @@ Owner: **"Yes, run v20 on Opus."**
 - Opus picks from the list a little better than Haiku: 9 of the 49 listed spells it played (18%) were borrowed spells (Haiku 12%). Listed borrowed spells were played by 64.6% of v20 decks vs 43.7% of v13's (+20.8, -8.2 to +49.9); other listed spells 14.7% vs 10.3%.
 - Caution: v14's one-run lead was +2.7 and ended at +1.2 after three runs. To pass protocol-v2, v20 needs about +1.8 after three runs.
 
+Owner: **"Yes, run twice."** Runs 2 and 3 (about $17) give protocol-v2's dev verdict. If v20 wins on dev, protocol-v2's test is next: 2 future-v1 runs of v20 (about $16), and the owner is asked first.
+
 ---
 
 ## 2026-11-08 · v20 (the shopping list) on Haiku: the best lead so far, not proven; v21 (top 5) dropped

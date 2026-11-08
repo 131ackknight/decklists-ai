@@ -27,7 +27,7 @@ Three things, and the third is turning out to be the most interesting.
 
 | Item | Total |
 | --- | --- |
-| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80; v12 on six $2.61; round 3 $1.90; v13 post-cutoff $2.85; v14 and future test $41.28; v15 round $25.87; v16 round $17.46; reviewer checks $0.78; v17 on eight $4.80. v17 future test $19.00; gem test $1.82; v18 on eight $4.92; blind panel round 1 $18.13; picker test $0.69; taste tests $3.06; judge with evidence and goldfish $2.18; Fable and Sonnet judges $4.30; text playtest $4.07; v19 smoke test $0.77; found-deck test $3.79; blind panel round 2 $21.00. Total about $435.92. Plus one 17-token test call. |
+| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80; v12 on six $2.61; round 3 $1.90; v13 post-cutoff $2.85; v14 and future test $41.28; v15 round $25.87; v16 round $17.46; reviewer checks $0.78; v17 on eight $4.80. v17 future test $19.00; gem test $1.82; v18 on eight $4.92; blind panel round 1 $18.13; picker test $0.69; taste tests $3.06; judge with evidence and goldfish $2.18; Fable and Sonnet judges $4.30; text playtest $4.07; v19 smoke test $0.77; found-deck test $3.79; blind panel round 2 $21.00; protocol-v1 baseline (v13 dev runs 2 and 3) $17.35. Total about $453.27. Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats); full history 145,131 (since 2025-07-01, merged weekly) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
 | Automated tests | 114 passing |
@@ -74,6 +74,30 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - Lesson to apply: any prompt or claim that names a card gets checked against the card index before it is used.
 - ~~Switch to pairwise~~: done; 36 pairs judged (v1 8 wins, v2 6, 22 ties; v2 100% faithful vs. 92%).
 - ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
+
+---
+
+## 2026-11-07 · Improving the harness automatically: protocol-v1, and v13's baseline
+
+Owner: **"I want to improve this via automated testing, not hand picked. For now. ... and i want data, quant data to show the improvements."** Owner, on running v13 rather than v19: "why using v13 not the latest??" Because v13 is still the base; v19 is the leading candidate but unproven (13 vs 10 on the panel could be chance, and it has never run on an automatic test). Every candidate is measured against the base, so the base had to be measured properly first.
+
+**The constraint, measured first (free):** repeat runs of one version differ by about 1.2-1.6 points on these tests, so a gain is only trustworthy if it's larger than about 3-4 points with one run per version, 2.4-3.1 with two, 2.0-2.5 with three. v2 → v13, the biggest real gain so far, was +2.4 Tuning and +3.6 Brewing: one run per version (how v14-v17 were judged) can't show improvements of that size.
+
+**protocol-v1** (`evals/protocol.ts`, frozen and fingerprinted like the tests): base v13; changes are tried on **dev** (holdout-v1, 21 decks) and confirmed on **test** (tuning-v1, brewing-v1) only after a dev win, so decisions aren't tuned to the test; 3 dev runs per version, 2 test runs. **Kept only if** the dev gain's 95% range, paired by deck, is above zero, and neither test is clearly worse. Written down before any candidate ran. PROGRESS.md section 2b applies it to every version.
+
+**Data snapshot:** compared runs must use the same data files (sha 98511a8b770ce43d and 8a4ba5f40938aae8); runs now record theirs. 7 old holdout runs (v2, v4, v5 run 1, v6) finished before the history file last changed, so they don't count toward verdicts.
+
+**New data (free check):** a 30-day export (9,003 lists, Oct 10 - Nov 8) adds 5,395 lists but **no new deck** by the strict rule (one new label, Standard Gruul Delirium, 3 lists). **286 of the added lists are dated Oct 20 or earlier** (scraped late): merged into the main file, they would have moved the frozen scores. They went into a copy (`forward-week.ts --history`) instead; the main file is unchanged.
+
+**Baseline, $17.35:** v13 runs 2 and 3 on dev, the first live use of the register and of saving after every deck (both worked: `complete: false` files grew deck by deck; started and finished lines recorded). All 42 decks exactly 60 cards.
+
+| v13 on dev (holdout-v1) | Run 1 | Run 2 | Run 3 | Mean | SD of a run |
+| --- | --- | --- | --- | --- | --- |
+| Match % | 43.0 | 45.3 | 42.0 | 43.4 | 1.7 |
+
+With an SD of 1.7, two versions with 3 runs each can show a gain of about 2.7 points (2.3 with 4).
+
+**What section 2b already shows,** on the data the protocol counts: v14, v15 and v16 are measurably worse than v13 on Brewing (95% ranges entirely below zero: -3.0, -4.4, -3.0); v14's one dev run is +1.4 (-1.2 to +4.1), not yet a verdict. **Next:** v19, 3 dev runs, about $48.
 
 ---
 

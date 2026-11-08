@@ -5,7 +5,7 @@ import type { CardIndex } from "@/cards/card-index";
 import { FORMATS } from "@/cards/formats";
 import { normalizeName } from "@/cards/names";
 import type { DataSource, QtyName } from "@/data/source";
-import { costUsd, type ModelConfig, type Usage } from "./models";
+import { costUsd, usageOf, type ModelConfig, type Usage } from "./models";
 import type { SubmittedDeck } from "./tools";
 
 /**
@@ -216,11 +216,6 @@ export async function reviewDeck(
     messages: [{ role: "user", content: body }],
     ...(model.effort ? { output_config: { effort: "high" as const, format: zodOutputFormat(ReviewOutput) } } : { output_config: { format: zodOutputFormat(ReviewOutput) } }),
   });
-  const usage: Usage = {
-    input: msg.usage.input_tokens,
-    output: msg.usage.output_tokens,
-    cacheRead: msg.usage.cache_read_input_tokens ?? 0,
-    cacheWrite: msg.usage.cache_creation_input_tokens ?? 0,
-  };
+  const usage: Usage = usageOf(model, msg.usage);
   return { review: msg.parsed_output ?? { flags: [] }, usage, costUsd: costUsd(model, usage), evidence, ...(roles ? { roles: roleRows } : {}) };
 }

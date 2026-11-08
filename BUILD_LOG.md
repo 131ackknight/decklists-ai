@@ -77,6 +77,22 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-11-08 · Can Haiku stand in for Opus? (in progress)
+
+Owner, on testing ideas on a cheaper model first: **"Ugh, that sounds like giving up"** (about stopping or only fixing saved decks), then **"Yes, check Haiku."** Testing one idea properly on Opus costs $26-48 (3 dev runs). Haiku 5.5 costs about 1/40 of Opus per token ($0.10 / $0.50 per million in / out vs $4 / $20), so if its scores move the way Opus's do, ideas can be screened for about $1 each and only winners tried on Opus.
+
+**The check:** v2 and v13 on Haiku 5.5, 3 runs each on the dev decks (holdout-v1, the protocol's data). On Opus, v13 scored above v2 on every test both ran. About $2-3 in all.
+
+**Rule, set before any Haiku run:**
+- **Pass:** every run builds a deck for at least 20 of the 21 dev decks, and v13's gain over v2 (paired by deck) has its 95% range above zero.
+- **Unclear:** decks fine and v13 ahead, but the range includes zero: 2 more runs of each (about $1), then pass if the range is above zero, fail if not.
+- **Fail:** a run builds fewer than 20 decks, or v2 ties or beats v13. Then Haiku can't screen ideas for Opus.
+- Decks lost to API errors (not the model's doing) are rerun, not counted.
+
+**Cost code fix, free:** Haiku 5.5 charges 5 times its list price for any request whose prompt is over 100K tokens; the cost code didn't know, so it would have under-reported. Now it prices those requests at the higher rate (cache prices assumed to scale the same way, which errs high). New test; 121 passing.
+
+---
+
 ## 2026-11-08 · v19 on dev: stopped after run 1; playing a game doesn't move the match
 
 Owner: **"Yes, run v19"**, then: **"this is about the last money I want to spend on this though, its getting expensive."**

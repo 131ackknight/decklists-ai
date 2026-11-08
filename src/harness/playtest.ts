@@ -3,7 +3,7 @@ import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
 import { z } from "zod";
 import type { CardIndex } from "@/cards/card-index";
 import type { DataSource, QtyName } from "@/data/source";
-import { costUsd, type ModelConfig, type Usage } from "./models";
+import { costUsd, usageOf, type ModelConfig, type Usage } from "./models";
 import type { SubmittedDeck } from "./tools";
 
 /**
@@ -88,11 +88,6 @@ export async function playtestDeck(
     ],
     ...(model.effort ? { output_config: { effort: "high" as const, format: zodOutputFormat(PlaytestReport) } } : { output_config: { format: zodOutputFormat(PlaytestReport) } }),
   });
-  const usage: Usage = {
-    input: msg.usage.input_tokens,
-    output: msg.usage.output_tokens,
-    cacheRead: msg.usage.cache_read_input_tokens ?? 0,
-    cacheWrite: msg.usage.cache_creation_input_tokens ?? 0,
-  };
+  const usage: Usage = usageOf(model, msg.usage);
   return { report: msg.parsed_output ?? { game: "", problems: [] }, opponent, seed, usage, costUsd: costUsd(model, usage) };
 }

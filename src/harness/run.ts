@@ -3,7 +3,7 @@ import type { CardIndex } from "@/cards/card-index";
 import { normalizeName } from "@/cards/names";
 import { getFormat } from "@/cards/formats";
 import type { DataSource } from "@/data/source";
-import { costUsd, type ModelConfig, type Usage } from "./models";
+import { costUsd, usageOf, type ModelConfig, type Usage } from "./models";
 import { formatMenu } from "./menu";
 import { playtestDeck, type PlaytestReport } from "./playtest";
 import { reviewDeck, type Review, type RoleEvidence } from "./review";
@@ -61,6 +61,11 @@ export function addUsage(into: Usage, more: Usage) {
   into.output += more.output;
   into.cacheRead += more.cacheRead;
   into.cacheWrite += more.cacheWrite;
+  // A new object, not an update: usage objects are shallow-copied elsewhere ({ ...first.usage }).
+  if (more.long) {
+    const l = into.long ?? emptyUsage();
+    into.long = { input: l.input + more.long.input, output: l.output + more.long.output, cacheRead: l.cacheRead + more.long.cacheRead, cacheWrite: l.cacheWrite + more.long.cacheWrite };
+  }
 }
 
 /**
@@ -103,12 +108,7 @@ export async function runStage(opts: {
         ...(model.effort ? { output_config: { effort: "high" as const } } : {}),
       });
       const message = await stream.finalMessage();
-      addUsage(usage, {
-        input: message.usage.input_tokens,
-        output: message.usage.output_tokens,
-        cacheRead: message.usage.cache_read_input_tokens ?? 0,
-        cacheWrite: message.usage.cache_creation_input_tokens ?? 0,
-      });
+      addUsage(usage, usageOf(model, message.usage));
       stopReason = message.stop_reason;
       const said = message.content
         .filter((b): b is Anthropic.TextBlock => b.type === "text")

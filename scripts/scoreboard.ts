@@ -17,8 +17,8 @@ import { FileDataSource } from "../src/data/source";
 import { pages, pairVerdicts, playVerdicts, ratingRows } from "../evals/answers";
 import { latestRuns, readRegister, type RunRecord } from "../evals/register";
 import { isLand, round4Items, toCounts, type Line } from "../evals/round4/items";
-import { PROTOCOL, pairedGain } from "../evals/protocol";
-import { futureLists, inventorGems, loadLists, overlap, settledLists, settledScore, shareScore, type Counts } from "../evals/score";
+import { PROTOCOL, PROTOCOL_V1, pairedGain } from "../evals/protocol";
+import { addedScore, earlierLists, futureLists, inventorGems, loadLists, overlap, settledLists, settledScore, shareScore, type Counts } from "../evals/score";
 import { TESTS, testById } from "../evals/tests";
 
 const index = loadCardIndex();
@@ -159,37 +159,67 @@ async function main() {
   const runsOf = (harness: string, testId: string) => allRunsOf(harness, testId).filter(onProtocolData);
   const earlierData = (harness: string, testId: string) => allRunsOf(harness, testId).length - runsOf(harness, testId).length;
   const signed = (x: number) => `${x >= 0 ? "+" : ""}${one(x)}`;
-  const gainOf = (cand: RunRecord[], base: RunRecord[], testId: string, harness: string) => {
+  /** Added per deck (evals/score.ts addedScore): the match % minus the match % of the deck's closest earlier list. */
+  const earlierCache = new Map<string, Counts[]>();
+  const earlierOf = (id: string) => {
+    const it = items.get(id)!;
+    return earlierCache.get(id) ?? earlierCache.set(id, earlierLists(lists, it.target!.format, it.before ?? it.target!.firstSeen, countsOf)).get(id)!;
+  };
+  const deckAddedOf = (decks: Map<string, { main: Line[] } | null>, testId: string): Map<string, number> => {
+    const settled = testId === "holdout-v1" ? holdout : testId === "future-v1" ? future : null;
+    if (!settled) throw new Error(`Added is scored on holdout-v1 and future-v1, not ${testId}`);
+    const m = new Map<string, number>();
+    for (const id of testById(testId).items) {
+      const d = decks.get(id);
+      if (d) m.set(id, addedScore(toCounts(index, d.main), settled.get(id)!, earlierOf(id)).added);
+    }
+    return m;
+  };
+  const deckAdded = (r: RunRecord, testId: string) => deckAddedOf(decksOf(r), testId);
+  type Scorer = (r: RunRecord, testId: string) => Map<string, number>;
+  const gainOf = (cand: RunRecord[], base: RunRecord[], testId: string, harness: string, score: Scorer = deckScores) => {
     const older = earlierData(harness, testId);
     const note = older ? ` (${older} more on an earlier data copy, not counted)` : "";
     if (!cand.length || !base.length) return { text: `${older ? "none on the protocol's data" : "not run"}${note}`, g: null as ReturnType<typeof pairedGain> | null };
-    const g = pairedGain(cand.map((r) => deckScores(r, testId)), base.map((r) => deckScores(r, testId)));
+    const g = pairedGain(cand.map((r) => score(r, testId)), base.map((r) => score(r, testId)));
     return { text: `${signed(g.gain)} (${signed(g.lo)} to ${signed(g.hi)}), ${cand.length} run${cand.length > 1 ? "s" : ""}${note}`, g };
   };
   const baseDev = runsOf(PROTOCOL.base, PROTOCOL.dev);
-  const baseTest = PROTOCOL.test.map((t) => runsOf(PROTOCOL.base, t));
-  const candidates = [
-    ...new Set(scored.filter((r) => r.model === PROTOCOL.model && r.harness !== PROTOCOL.base && r.tests.some((t) => t === PROTOCOL.dev || PROTOCOL.test.includes(t))).map((r) => r.harness!)),
-  ].sort((a, b) => versionNo(a) - versionNo(b));
-  const verdictRows = candidates.map((h) => {
-    const devRuns = runsOf(h, PROTOCOL.dev);
-    const dev = gainOf(devRuns, baseDev, PROTOCOL.dev, h);
-    const tests = PROTOCOL.test.map((t, i) => gainOf(runsOf(h, t), baseTest[i], t, h));
-    const short = [PROTOCOL.devRuns - devRuns.length, PROTOCOL.devRuns - baseDev.length];
-    let verdict: string;
-    if (!dev.g) verdict = "no dev runs";
-    else if (short[0] > 0 || short[1] > 0) verdict = `no verdict yet: needs ${[short[0] > 0 ? `${short[0]} more dev run(s)` : "", short[1] > 0 ? `${short[1]} more base run(s)` : ""].filter(Boolean).join(" and ")}`;
-    else if (dev.g.lo <= 0) verdict = "dropped: no clear dev gain";
-    else if (PROTOCOL.test.some((t, i) => runsOf(h, t).length < PROTOCOL.testRuns || baseTest[i].length < PROTOCOL.testRuns)) verdict = "dev win: confirm on test";
-    else verdict = tests.every((t) => t.g!.hi > 0) ? "**kept**" : "dropped: worse on test";
-    return [h, dev.text, ...tests.map((t) => t.text), verdict];
-  });
-  out.push(`### 2b. Candidates vs the base (${PROTOCOL.id}, \`evals/protocol.ts\`)`, "");
+  /** Each candidate's gains and verdict under a protocol: `score` decides, `guard` (on dev) only has to be not clearly worse. */
+  const verdictsUnder = (p: { base: string; dev: string; test: string[]; devRuns: number; testRuns: number }, score: Scorer, guard?: Scorer) => {
+    const pBaseDev = runsOf(p.base, p.dev);
+    const pBaseTest = p.test.map((t) => runsOf(p.base, t));
+    const candidates = [...new Set(scored.filter((r) => r.model === PROTOCOL.model && r.harness !== p.base && r.tests.some((t) => t === p.dev || p.test.includes(t))).map((r) => r.harness!))].sort(
+      (a, b) => versionNo(a) - versionNo(b),
+    );
+    const rows = candidates.map((h) => {
+      const devRuns = runsOf(h, p.dev);
+      const dev = gainOf(devRuns, pBaseDev, p.dev, h, score);
+      const guarded = guard ? gainOf(devRuns, pBaseDev, p.dev, h, guard) : null;
+      const tests = p.test.map((t, i) => gainOf(runsOf(h, t), pBaseTest[i], t, h, score));
+      const short = [p.devRuns - devRuns.length, p.devRuns - pBaseDev.length];
+      let verdict: string;
+      if (!dev.g) verdict = "no dev runs";
+      else if (short[0] > 0 || short[1] > 0) verdict = `no verdict yet: needs ${[short[0] > 0 ? `${short[0]} more dev run(s)` : "", short[1] > 0 ? `${short[1]} more base run(s)` : ""].filter(Boolean).join(" and ")}`;
+      else if (dev.g.lo <= 0) verdict = "dropped: no clear dev gain";
+      else if (guarded?.g && guarded.g.hi <= 0) verdict = "dropped: match clearly worse on dev";
+      else if (p.test.some((t, i) => runsOf(h, t).length < p.testRuns || pBaseTest[i].length < p.testRuns)) verdict = "dev win: confirm on test";
+      else verdict = tests.every((t) => t.g!.hi > 0) ? "**kept**" : "dropped: worse on test";
+      return [h, dev.text, ...(guarded ? [guarded.text] : []), ...tests.map((t) => t.text), verdict];
+    });
+    return { rows, baseRuns: `${pBaseDev.length} run(s) on dev (${p.dev}) and ${pBaseTest.map((r, i) => `${r.length} on ${p.test[i]}`).join(", ")}` };
+  };
+  const dataNote = `Only runs on the protocol's data count (\`${PROTOCOL.data.history.file}\` ${PROTOCOL.data.history.sha256}, \`${PROTOCOL.data.recent.file}\` ${PROTOCOL.data.recent.sha256}).`;
+  const current = verdictsUnder(PROTOCOL, deckAdded, deckScores);
+  out.push(`### 2b. Candidates vs the base (${PROTOCOL.id}: Added, \`evals/protocol.ts\`)`, "");
   out.push(
-    `Base: ${PROTOCOL.base}, with ${baseDev.length} run(s) on dev (${PROTOCOL.dev}) and ${baseTest.map((r, i) => `${r.length} on ${PROTOCOL.test[i]}`).join(", ")}. Gain = points over the base, paired by deck, with its 95% range. Only runs on the protocol's data count (\`${PROTOCOL.data.history.file}\` ${PROTOCOL.data.history.sha256}, \`${PROTOCOL.data.recent.file}\` ${PROTOCOL.data.recent.sha256}). Rule: ${PROTOCOL.rule}`,
+    `Base: ${PROTOCOL.base}, with ${current.baseRuns}. Gain = points over the base, paired by deck, with its 95% range. Added: the match % minus the match % of the deck's single closest earlier list (section 2f). ${dataNote} Rule: ${PROTOCOL.rule}`,
     "",
   );
-  out.push(table(["Candidate", `Dev: ${PROTOCOL.dev}`, ...PROTOCOL.test.map((t) => `Test: ${t}`), "Verdict"], verdictRows), "");
+  out.push(table(["Candidate", `Dev: Added on ${PROTOCOL.dev}`, `Dev: match % (guard)`, ...PROTOCOL.test.map((t) => `Test: Added on ${t}`), "Verdict"], current.rows), "");
+  const retired = verdictsUnder(PROTOCOL_V1, deckScores);
+  out.push(`**Retired 2026-11-08: ${PROTOCOL_V1.id} (match %).** Its verdicts stand as they were. Base: ${PROTOCOL_V1.base}, with ${retired.baseRuns}. Rule: ${PROTOCOL_V1.rule}`, "");
+  out.push(table(["Candidate", `Dev: ${PROTOCOL_V1.dev}`, ...PROTOCOL_V1.test.map((t) => `Test: ${t}`), "Verdict"], retired.rows), "");
 
   // 2c. What a revision step did, measured on the same decks before and after it.
   /** The decks a run had before its revision step (v17/v18 reviewer, v19 playtest), where its file saved them. */
@@ -245,7 +275,7 @@ async function main() {
   const standIns = [...new Set(scored.filter((r) => r.model !== PROTOCOL.model).map((r) => r.model!))].filter((m) => devOn(m, PROTOCOL.base).length);
   out.push(`### 2d. The same comparison on cheaper models (dev: ${PROTOCOL.dev})`, "");
   out.push(
-    `Each version's gain over ${PROTOCOL.base} on the same model, paired by deck, with its 95% range, next to the gain ${modelName(PROTOCOL.model)} showed (section 2b). Only runs on the protocol's data. Decks built: decks submitted / dev decks, per run.`,
+    `Each version's gain over ${PROTOCOL.base} on the same model, paired by deck, with its 95% range, next to the same gain on ${modelName(PROTOCOL.model)}. Match %, not Added. Only runs on the protocol's data. Decks built: decks submitted / dev decks, per run.`,
     "",
   );
   if (!standIns.length) out.push("No cheaper model has run the base on dev yet.", "");
@@ -340,24 +370,16 @@ async function main() {
       const it = items.get(id)!;
       const t = it.target!;
       const cut = Date.parse(it.before ?? t.firstSeen);
-      const earlier = lists.filter((l) => l.format === t.format && Date.parse(l.date) < cut);
-      const recent = new Set(earlier.filter((l) => Date.parse(l.date) >= cut - 90 * DAY).flatMap((l) => [...countsOf(l).keys()]));
+      const recent = new Set(lists.filter((l) => l.format === t.format && Date.parse(l.date) < cut && Date.parse(l.date) >= cut - 90 * DAY).flatMap((l) => [...countsOf(l).keys()]));
       const first = Date.parse(t.firstSeen);
       const firstWeek = lists.filter((l) => l.format === t.format && l.strategy === t.strategy && Date.parse(l.date) >= first && Date.parse(l.date) < first + 7 * DAY).map(countsOf);
-      return [id, { earlier: earlier.map(countsOf), recent, firstWeek }] as const;
+      return [id, { recent, firstWeek }] as const;
     }),
   );
-  const copyOf = (id: string, d: Counts) => {
-    const c = copyCtx.get(id)!;
-    let best = 0;
-    let closest: Counts | null = null;
-    for (const l of c.earlier) {
-      const o = overlap(d, l);
-      if (o > best) [best, closest] = [o, l];
-    }
-    const s = holdout.get(id)!;
-    return { match: settledScore(d, s), copy: best / 60, fresh: [...d.keys()].filter((k) => !land(k) && !c.recent.has(k)).length, base: closest ? settledScore(closest, s) : 0 };
-  };
+  const copyOf = (id: string, d: Counts) => ({
+    ...addedScore(d, holdout.get(id)!, earlierOf(id)),
+    fresh: [...d.keys()].filter((k) => !land(k) && !copyCtx.get(id)!.recent.has(k)).length,
+  });
   const copyRow = (label: string, runs: string, rows: ReturnType<typeof copyOf>[]) => {
     const m = (f: (r: ReturnType<typeof copyOf>) => number) => avgOf(rows.map(f));
     return [label, runs, one(m((r) => r.match)), `${Math.round(m((r) => r.copy) * 100)}%`, `${Math.round(m((r) => (r.copy > 0.65 ? 1 : 0)) * 100)}%`, one(m((r) => r.fresh)), one(m((r) => r.base)), signed(m((r) => r.match - r.base))];

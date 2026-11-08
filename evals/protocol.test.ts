@@ -1,18 +1,22 @@
 import { describe, expect, it } from "vitest";
-import { PROTOCOL, pairedGain, protocolFingerprint } from "./protocol";
+import { PROTOCOL, PROTOCOLS, pairedGain, protocolFingerprint } from "./protocol";
 import { testById } from "./tests";
 
-describe("protocol", () => {
-  // If this fails, the keep-or-drop rule changed. Don't update the fingerprint in place:
+describe.each(PROTOCOLS.map((p) => [p.id, p] as const))("%s", (_, p) => {
+  // If this fails, a keep-or-drop rule changed. Don't update the fingerprint in place:
   // write a new protocol id, so verdicts made under the old rule stay as they were.
   it("has not changed", () => {
-    expect(protocolFingerprint()).toBe(PROTOCOL.frozen);
+    expect(protocolFingerprint(p)).toBe(p.frozen);
   });
 
   it("names real tests, and keeps dev and test apart", () => {
-    for (const id of [PROTOCOL.dev, ...PROTOCOL.test]) expect(testById(id).kind).toBe("automatic");
-    expect(PROTOCOL.test).not.toContain(PROTOCOL.dev);
+    for (const id of [p.dev, ...p.test]) expect(testById(id).kind).toBe("automatic");
+    expect(p.test).not.toContain(p.dev);
   });
+});
+
+it("the protocol in force is the newest", () => {
+  expect(PROTOCOL).toBe(PROTOCOLS[PROTOCOLS.length - 1]);
 });
 
 describe("pairedGain", () => {

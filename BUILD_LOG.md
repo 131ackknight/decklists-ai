@@ -30,7 +30,7 @@ Three things, and the third is turning out to be the most interesting.
 | Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80; v12 on six $2.61; round 3 $1.90; v13 post-cutoff $2.85; v14 and future test $41.28; v15 round $25.87; v16 round $17.46; reviewer checks $0.78; v17 on eight $4.80. v17 future test $19.00; gem test $1.82; v18 on eight $4.92; blind panel round 1 $18.13; picker test $0.69; taste tests $3.06; judge with evidence and goldfish $2.18; Fable and Sonnet judges $4.30; text playtest $4.07; v19 smoke test $0.77; found-deck test $3.79; blind panel round 2 $21.00; protocol-v1 baseline (v13 dev runs 2 and 3) $17.35; v19 dev run 1 $15.89; Haiku stand-in check (6 dev runs) $2.98. Total about $472.14. Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats); full history 145,131 (since 2025-07-01, merged weekly) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
-| Automated tests | 121 passing |
+| Automated tests | 127 passing |
 | Decklist Data PRs merged | 5 (#181 export, #182 baseline eval, #183 baseline on `main`, #184 model comparison, #188 sideboard junk cleanup: 34,432 lists cleaned) |
 | Plan steps done | 1, 4, 5, 6, 8; harness at v13 (15 versions tried); evals: owner's "would you play it?" plus the 18-deck future test |
 | Current harness | **v13**: future test 48.3% / 47.9% (two runs), v2 44.9%; dev (holdout-v1) 43.0 / 45.3 / 42.0; blind panel v13 10 of 17, v19 13 of 17; v19 dropped on dev 2026-11-08 (-2.1, its game step -0.4) |
@@ -74,6 +74,32 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - Lesson to apply: any prompt or claim that names a card gets checked against the card index before it is used.
 - ~~Switch to pairwise~~: done; 36 pairs judged (v1 8 wins, v2 6, 22 ties; v2 100% faithful vs. 92%).
 - ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
+
+---
+
+## 2026-11-08 · protocol-v2: versions are judged on Added
+
+Owner: **"Yes, use Added."**
+
+**protocol-v2** (`evals/protocol.ts`, frozen, fingerprint 71e17fdd554464fc). protocol-v1 is kept unchanged and its verdicts stand.
+- **Score: Added**, per deck: the deck's match % minus the match % of its single closest earlier list (most cards shared, among the format's lists from before the deck's date). Shared code: `addedScore` in `evals/score.ts`, with tests.
+- **Kept if:** on dev, the 95% range of the Added gain is above zero; on dev, the match % isn't clearly worse (a guard, so a deck can't gain Added just by being far from every old list); on test (future-v1), Added isn't clearly worse.
+- Same base (v13), model, data and run counts (3 dev, 2 test) as protocol-v1.
+
+**Noise, checked before judging any candidate (v13's own runs only):** per deck, Added moves about as much between runs as the match (SD 4.7 vs 4.9), so 3 runs per version can show a gain of about 1.8 points. Correction: I told the owner Added's run averages were far steadier (SD 0.3 vs 1.7); that came from 3 runs and was probably luck.
+
+**Standings under protocol-v2** (PROGRESS.md section 2b, generated; paired by deck against v13's runs):
+
+| Candidate | Dev: Added gain | Dev: match gain (guard) | Test: Added gain on future-v1 |
+| --- | --- | --- | --- |
+| v14 (mana tool) | **+2.7 (+0.1 to +5.4), 1 run** | +1.4 (-1.2 to +4.1) | +1.0 (-1.9 to +3.9), 1 run |
+| v19 (playtest) | -0.2 (-2.3 to +1.9), 1 run | -2.1 (-5.0 to +0.9) | not run |
+| v7 | +0.5 (-1.6 to +2.6), 2 runs | -1.5 (-3.4 to +0.4) | not run |
+| v5 | +0.5 (-2.8 to +3.8), 1 run | -1.9 (-5.4 to +1.7) | not run |
+| v15 / v16 / v17 | not run on dev | | -2.3 / +0.1 / -2.8, 2 runs each |
+
+- v14 is the only candidate whose dev range is already above zero, from one run. A verdict needs 2 more dev runs (about $18; its dev run cost $8.99).
+- **Against it:** under protocol-v1, v14 was clearly worse on brewing-v1 (-3.0, range -5.3 to -0.8): its decks match the inventors' first-week lists less. protocol-v2 doesn't use brewing-v1. I had seen the per-version averages in section 2f (v14 +13.5) before writing the rule; the paired gains above were computed after it was frozen. The rule stays as written, and this disagreement is part of the result.
 
 ---
 

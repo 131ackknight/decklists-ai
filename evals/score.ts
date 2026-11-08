@@ -51,6 +51,30 @@ export function settledScore(deck: Counts, settled: Counts[]): number {
   return Math.round((settled.reduce((a, l) => a + overlap(deck, l), 0) / settled.length / 60) * 100);
 }
 
+/**
+ * Brewing beyond copying (owner, 2026-11-08: "Yes, use Added"). The match % rewards copying the right
+ * old deck, so this also finds the deck's single closest earlier list (most cards shared, among the lists
+ * it could have seen) and scores that list the same way. `added` is the deck's match % minus that list's:
+ * the part of the score that isn't copying. `copy` is the share of the deck found in that list.
+ */
+export function addedScore(deck: Counts, settled: Counts[], earlier: Counts[]) {
+  let shared = 0;
+  let closest: Counts | null = null;
+  for (const l of earlier) {
+    const o = overlap(deck, l);
+    if (o > shared) [shared, closest] = [o, l];
+  }
+  const match = settledScore(deck, settled);
+  const base = closest ? settledScore(closest, settled) : 0;
+  return { match, copy: shared / 60, base, added: match - base };
+}
+
+/** The format's lists from before a date: what a brew made then could have seen (holdout and future items are cut at the deck's first appearance). */
+export function earlierLists(lists: RefList[], format: string, before: string, countsOf: (l: RefList) => Counts): Counts[] {
+  const cut = Date.parse(before);
+  return lists.filter((l) => l.format === format && Date.parse(l.date) < cut).map(countsOf);
+}
+
 /** The deck's first-week lists (the inventor's version) and every list from a week after it appeared. */
 export function futureLists(index: CardIndex, lists: RefList[], target: NonNullable<Round4Item["target"]>) {
   const first = Date.parse(target.firstSeen);

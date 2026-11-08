@@ -7,7 +7,8 @@
  */
 import { createHash } from "node:crypto";
 
-export const PROTOCOL = {
+/** protocol-v1, retired 2026-11-08 for protocol-v2 (below). Its content is frozen; verdicts made under it stand. */
+export const PROTOCOL_V1 = {
   id: "protocol-v1",
   /** The harness every candidate is compared with. A kept candidate becomes the next protocol's base. */
   base: "v13",
@@ -32,7 +33,37 @@ export const PROTOCOL = {
   frozen: "5ffaca503a226323",
 };
 
-export function protocolFingerprint(p: typeof PROTOCOL = PROTOCOL): string {
+/**
+ * protocol-v2 (2026-11-08). Owner: "Yes, use Added". The match % rewards copying the right old deck:
+ * from v2 to v13 the match rose 2.2 points on dev while what the decks add beyond their closest earlier
+ * list rose 0.3 (PROGRESS.md section 2f). Same base, model, data and run counts as protocol-v1 (Added is
+ * about as noisy per deck as the match: 4.7 vs 4.9 between v13's runs). The score is Added; the match %
+ * is a guard, so a deck can't gain Added just by being far from every old list.
+ */
+export const PROTOCOL_V2 = {
+  id: "protocol-v2",
+  base: "v13",
+  model: "claude-opus-5-5",
+  /** Per deck: the match % minus the match % of the deck's single closest earlier list (evals/score.ts addedScore). */
+  score: "added",
+  dev: "holdout-v1",
+  test: ["future-v1"],
+  devRuns: 3,
+  testRuns: 2,
+  data: {
+    history: { file: "data/reference-lists-all.jsonl", sha256: "98511a8b770ce43d", since: "2026-10-20T14:19:47Z" },
+    recent: { file: "data/reference-lists.jsonl", sha256: "8a4ba5f40938aae8", since: "2026-10-14T13:18:53Z" },
+  },
+  rule:
+    "A candidate is kept if, on dev, the 95% range of its gain in Added over the base is above zero and the top of the 95% range of its gain in match % is above zero (match not clearly worse), and on test the top of the 95% range of its gain in Added is above zero (not clearly worse). Added, per deck: the deck's match % minus the match % of its single closest earlier list (most cards shared, among the format's lists from before the deck's date). Gains are paired by deck, each deck's score averaged over a version's runs. Both versions need the full number of runs before a verdict.",
+  frozen: "71e17fdd554464fc",
+};
+
+/** The protocol in force. */
+export const PROTOCOL = PROTOCOL_V2;
+export const PROTOCOLS = [PROTOCOL_V1, PROTOCOL_V2];
+
+export function protocolFingerprint(p: { frozen: string } = PROTOCOL): string {
   const { frozen: _, ...rest } = p;
   return createHash("sha256").update(JSON.stringify(rest)).digest("hex").slice(0, 16);
 }

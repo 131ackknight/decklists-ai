@@ -27,10 +27,10 @@ Three things, and the third is turning out to be the most interesting.
 
 | Item | Total |
 | --- | --- |
-| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80; v12 on six $2.61; round 3 $1.90; v13 post-cutoff $2.85; v14 and future test $41.28; v15 round $25.87; v16 round $17.46; reviewer checks $0.78; v17 on eight $4.80. v17 future test $19.00; gem test $1.82; v18 on eight $4.92; blind panel round 1 $18.13; picker test $0.69; taste tests $3.06; judge with evidence and goldfish $2.18; Fable and Sonnet judges $4.30; text playtest $4.07; v19 smoke test $0.77; found-deck test $3.79; blind panel round 2 $21.00; protocol-v1 baseline (v13 dev runs 2 and 3) $17.35; v19 dev run 1 $15.89; Haiku stand-in check (6 dev runs) $2.98; v14 dev runs 2 and 3 $18.66. Total about $490.80. Plus one 17-token test call. |
+| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80; v12 on six $2.61; round 3 $1.90; v13 post-cutoff $2.85; v14 and future test $41.28; v15 round $25.87; v16 round $17.46; reviewer checks $0.78; v17 on eight $4.80. v17 future test $19.00; gem test $1.82; v18 on eight $4.92; blind panel round 1 $18.13; picker test $0.69; taste tests $3.06; judge with evidence and goldfish $2.18; Fable and Sonnet judges $4.30; text playtest $4.07; v19 smoke test $0.77; found-deck test $3.79; blind panel round 2 $21.00; protocol-v1 baseline (v13 dev runs 2 and 3) $17.35; v19 dev run 1 $15.89; Haiku stand-in check (6 dev runs) $2.98; v14 dev runs 2 and 3 $18.66; v20 on Haiku (3 dev runs) $1.47; launch mistake (7 misnamed runs, stopped) $0.32; Haiku v13 and v20 runs 4-5 and v21 runs 1-3 $3.47. Total about $496.06. Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats); full history 145,131 (since 2025-07-01, merged weekly) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
-| Automated tests | 127 passing |
+| Automated tests | 132 passing |
 | Decklist Data PRs merged | 5 (#181 export, #182 baseline eval, #183 baseline on `main`, #184 model comparison, #188 sideboard junk cleanup: 34,432 lists cleaned) |
 | Plan steps done | 1, 4, 5, 6, 8; harness at v13 (15 versions tried); evals: owner's "would you play it?" plus the 18-deck future test |
 | Current harness | **v13**: future test 48.3% / 47.9% (two runs), v2 44.9%; dev (holdout-v1) 43.0 / 45.3 / 42.0; blind panel v13 10 of 17, v19 13 of 17; v19 dropped on dev 2026-11-08 (-2.1, its game step -0.4); since 2026-11-08 judged on Added (protocol-v2), v14 dropped (+1.2, range includes zero) |
@@ -77,7 +77,7 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
-## 2026-11-08 · v20 (the shopping list) on Haiku (in progress)
+## 2026-11-08 · v20 (the shopping list) on Haiku: the best lead so far, not proven; v21 (top 5) dropped
 
 Owner: **"Yes, Haiku first"**, after asking **"Why 9? arent we using haiku?"** ($9 is an Opus run; the Haiku stand-in check was unclear, but for this idea a direct measure works on Haiku too).
 
@@ -112,6 +112,18 @@ Haiku uses the list: it played 2.4 listed cards per deck, and 16 of those 153 (1
 - If both are worth an Opus run, the one with the larger Added gain goes first.
 
 **Launch mistake, $0.32:** my first launch of these 7 runs used a shell loop that zsh didn't split ("v13 r4" became one harness name), so the runs used the old v2 harness and wrote to misnamed files. Caught after 15 decks; stopped; the files moved out of the results folder (the register still lists them as unfinished runs). Relaunched with each run named explicitly; checked that all 7 had the right arguments.
+
+**Result, 7 Haiku runs, $3.47:** 147 decks, all 60 cards, no errors.
+
+| Dev decks, Haiku, gain over v13 (5 runs) paired by deck | Borrowed spells in the deck | Added | Match % |
+| --- | --- | --- | --- |
+| v13 (base), 5 runs | 12.8% | 7.9 | 33.3 |
+| **v20** (20-card list), 5 runs | 15.9%: +3.0 (-2.0 to +8.0) | 9.8: **+1.9 (-0.1 to +3.9)** | 34.3: +0.9 (-0.3 to +2.1) |
+| v21 (top-5 list), 3 runs | 12.3%: -0.6 (-5.0 to +3.9) | 8.3: +0.4 (-1.4 to +2.1) | 32.6: -0.7 (-2.3 to +0.8) |
+
+- **v21: dropped** (borrowed-spell gain below zero). It played 1.4 of its 4.4 listed cards per deck; 11% of them borrowed spells. A shorter list didn't make Haiku pick better.
+- **v20: unclear** (ahead on all three, but every range includes zero; Added's only just). By the rule, no more Haiku money goes to it. It played 2.4 of 16 listed cards per deck; 30 of those 255 (12%) were borrowed spells.
+- **v20 is the best lead since v13 on Haiku**, but not proven. Whether it's worth one Opus run (about $9, with a stop rule) is the owner's call.
 
 **Mana base up front, checked free and dropped:** the lands are the next-biggest gap (about 4.5 points). A mana base from real decks in the requested cards' colors (`manaBase`, time-cut data) shares 8.3 lands per deck with the settled lists: more than Haiku's own 6.9, but less than Opus's 10.0. It could help Haiku and hurt Opus, so it isn't worth a Haiku run as a stand-in for Opus.
 

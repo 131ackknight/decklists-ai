@@ -125,6 +125,19 @@ Haiku uses the list: it played 2.4 listed cards per deck, and 16 of those 153 (1
 - **v20: unclear** (ahead on all three, but every range includes zero; Added's only just). By the rule, no more Haiku money goes to it. It played 2.4 of 16 listed cards per deck; 30 of those 255 (12%) were borrowed spells.
 - **v20 is the best lead since v13 on Haiku**, but not proven. Whether it's worth one Opus run (about $9, with a stop rule) is the owner's call.
 
+**Why it isn't more (free, `scripts/borrow-listed.ts`): the list makes Haiku play more of whatever is on it, good and bad alike.**
+
+| Spells on the list | Played by v13 decks (never saw it) | Played by the list's decks | Gain |
+| --- | --- | --- | --- |
+| v20: borrowed spells (14 spells, 8 decks) | 30.0% | 41.7% | +11.7 (-1.2 to +24.6) |
+| v20: the rest (321 spells, 19 decks) | 9.4% | 13.6% | +4.2 (+1.5 to +7.0) |
+| v21: borrowed spells (9 spells, 7 decks) | 21.4% | 40.5% | +19.0 (-15.4 to +53.5) |
+| v21: the rest (83 spells, 19 decks) | 15.4% | 30.5% | +15.2 (+7.6 to +22.7) |
+
+Both rise by about the same proportion (v20: 1.4 times; v21: about 2 times), so Haiku isn't telling the right listed spells from the wrong ones; it plays more listed spells. Seeing the spells isn't the bottleneck; judging which ones fit is. That's where Opus may differ: shown pairs one at a time, it picked the real gem over a look-alike 81% of the time (gem test, 10-22).
+
+**Where the time away ended:** $5.26 of the $6 spent (v20 $1.47, the launch mistake $0.32, the last round $3.47). Checked and dropped without spending: better list rankings (none beat v20's), a mana base up front (would hurt Opus). Paid runs stopped here; the next step is an Opus run, which waits for the owner. Ready to go: one Opus dev run of v20 (about $9-10), with the stop rule "if its Added gain over v13 is zero or below, stop".
+
 **Mana base up front, checked free and dropped:** the lands are the next-biggest gap (about 4.5 points). A mana base from real decks in the requested cards' colors (`manaBase`, time-cut data) shares 8.3 lands per deck with the settled lists: more than Haiku's own 6.9, but less than Opus's 10.0. It could help Haiku and hurt Opus, so it isn't worth a Haiku run as a stand-in for Opus.
 
 **Owner, while away:** "Ok when it comes back, continue to try to optimize best you can while I am away. Get better each time, if it doesnt then figure out if you should remove the thing and try again. Ill be back in a bit but dont want to the progress to stop." **Plan for that time:** Haiku only, up to about $6 in all (about 12 runs). Any Opus run waits for the owner (the rule above says ask first, and the owner said this is about the last money). Every change gets its rule in this log before its runs. Free offline checks (`scripts/candidate-check.ts`) come first wherever they can answer a question.

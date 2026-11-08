@@ -63,6 +63,7 @@ An AI that brews Magic decks as well as the best human brewers. The owner judges
 - Lands are flat at 47% match in every version; wrong colors on about half the decks.
 - Most of the match gain since v2 was copying a better old deck; what the AI adds beyond its closest old list is flat at about +11 (inventors +25).
 - That gap is mostly spells borrowed from other decks: inventors add 10 copies and 58% stay; the AI 4, and 17% stay. Mostly little-played spells (under 2% of lists), not staples. PROGRESS.md section 2g.
+- A list of the little-played spells real decks play alongside the requested cards (in the deck's colors) holds a third of the spells inventors borrowed at 20 cards and half at 50 (`scripts/candidate-check.ts`); synergy and per-job lists do no better than most-played-first. Opus decks already hold 15%.
 - The biggest spell gap is the "hidden gem": the under-played card the human brewer found (16-17 of 51 missing points). The AI skips them even when shown.
 
 ## Open ideas, not started

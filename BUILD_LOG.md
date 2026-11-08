@@ -77,6 +77,28 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-11-08 · Would a candidate list contain the spells inventors borrowed? About half, at 50 cards
+
+Owner: **"Yes, check it."** Free: `scripts/candidate-check.ts`, no model calls.
+
+**Target:** for each dev deck, the little-played spells (under 10% of the format's lists in the 90 days before) that inventors took from other decks and that stayed in the settled deck: 48 spells over 17 of the 21 dev decks. **Candidates:** the format's little-played spells from those 90 days in the deck's colors, about 313 per deck (147-741), ranked four ways using only what a brewer knows at the cut:
+
+| Ranking | Top 20 | Top 50 | Top 100 |
+| --- | --- | --- | --- |
+| Most-played first | 13% | 38% | 52% |
+| v16's synergy score | 15% | 31% | 52% |
+| Played alongside the requested cards in real decks | **33%** | **52%** | 65% |
+| Top few per job (removal, card advantage, ...) | 17% | 29% | 52% |
+
+An Opus v13 deck already contains 15% of its target spells (v14: 20%).
+
+- The per-job list I proposed is no better than most-played-first, and neither is v16's synergy score: dropped before building.
+- The one signal that works: what real decks play alongside the requested cards (the `played_with` data), kept to little-played spells in the deck's colors. 20 cards hold a third of the targets, 50 hold half.
+- This assumes the deck's colors are right; Opus gets them right 59% of the time.
+- **What a test would take:** v20 = v13 plus that list (20-30 cards) up front; one Opus dev run with a stop rule, about $9. At best a few points of Added: the list shows about twice the right spells the AI finds now, and it still has to pick them out from the roughly 90% that are wrong.
+
+---
+
 ## 2026-11-08 · What inventors add that the AI misses: the right little-played spells from other decks
 
 Owner: **"Yes, dig in"** (free: it reads saved decks, no model calls). Owner, during it: "Was that running opus or haiku?" The v14 runs were Opus; this dig-in runs no model.

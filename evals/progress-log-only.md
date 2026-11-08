@@ -43,6 +43,7 @@ This section is the one hand-kept part of PROGRESS.md (`evals/progress-log-only.
 | 10-21 | Reviewer on 4 criticized decks | evidence only 0 of 4; with owner's notes as examples 2 of 4 |
 | 10-24 | Deck shape, v13 brews vs real lists, per deck | one-of spells 0.7 vs 2.3; requested cards as 4-ofs 79% vs 69%; spell mana value 2.3 vs 2.6; lands 20.0 vs 20.1 |
 | 10-24 | Text playtest, first 5 of 14 decks (grades only, in `evals/results/round4/logs/playtest.log`) | Hypergenesis partly, Seismic Assault (v11) partly, Mind Over Matter (v11) partly, Rofellos partly, Scapeshift (v11) yes. All 14: yes 4, partly 7, no 3 |
+| 11-08 | Candidate check, `scripts/candidate-check.ts` (no result file; rerunning it prints these) | 48 target spells over 17 dev decks. Found in the top 20 / 50 / 100: most-played first 13 / 38 / 52%; v16 synergy 15 / 31 / 52%; played with the requested cards 33 / 52 / 65%; per job 17 / 29 / 52%. Opus v13 decks already contain 15%, v14 20% |
 
 ### 7c. Spend
 

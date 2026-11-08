@@ -1,4 +1,4 @@
-# Handoff (2026-10-21)
+# Handoff (2026-10-21, updated 2026-11-08)
 
 Where decklists.ai stands, for the next session. Full history is in BUILD_LOG.md (summary at the top of the dated entries).
 
@@ -24,6 +24,7 @@ An AI that brews Magic decks as well as the best human brewers. The owner judges
 8. (2026-10-24) Owner rejected "three takes" and Forge for now. **Taste test** (`scripts/taste-test.ts --vs settled --no-request`): the AI judge picks the tuned real deck over v13's brew only 53% of the time (with the request shown, 9%: it favors brews that play every requested card as a 4-of). This is the yardstick for judgment. Tried raising it: card evidence (as of that day) 12%, goldfish mana stats 29%, both worse: they describe what the brewer already optimizes. A better judge needs information the builder doesn't have.
 9. (2026-10-24) **Text playtest works** (`scripts/playtest.ts`): the AI plays each flagged deck through 2 dealt games and finds the owner's complaint in 4 of 14 decks, partly in 7 (the card-by-card reviewer: 0 of 4). Different-model judges were no better (Fable 44%, Sonnet 0%). Proposed next: v19 = v13 + playtest + revise, on the blind panel.
 10. (2026-10-25) **v19** = v13 + one played game + fix the top three problems (`brewV19`; the v17/v18 reviewer is out). Found-deck test (owner's mono-blue Squee list from outside MTGO): 42-57% from two cards, Squee never found when hidden. **Blind panel round 2 judged (2026-10-25): v13 10 of 17, v19 13 of 17** (v19 alone yes on 4 prompts, v13 alone on 1; promising, not proven). Page: https://claude.ai/artifact/D8vgp8z23N22z4ZrzxQKt2 (ArtifactData list, collection `decks`; key `evals/results/round4/play-panel-2-key.json`). Unblind like round 1 (`play-panel-1-answers.json`).
+11. (2026-11-07/08) Automatic improvement set up (protocol-v1, below). v19 dropped on dev after one run (-2.1; the game step itself -0.4). The owner's budget is nearly spent: ask before any paid run.
 
 ## How the data is kept (2026-11-07, after the owner: "We arent very careful with our data are we?")
 
@@ -38,7 +39,10 @@ An AI that brews Magic decks as well as the best human brewers. The owner judges
 - **`evals/protocol.ts` (protocol-v1), frozen:** base v13; try changes on **dev** (holdout-v1, 21 decks), confirm on **test** (tuning-v1, brewing-v1) only after a dev win. 3 dev runs per version (base included), 2 test runs. Kept only if the dev gain's 95% range (paired by deck) is above zero and neither test is clearly worse. PROGRESS.md section 2b applies the rule to every candidate.
 - **Data snapshot:** compared runs must use `data/reference-lists-all.jsonl` sha 98511a8b770ce43d and `data/reference-lists.jsonl` 8a4ba5f40938aae8 (recorded per run in the register). **Don't replace them.** New exports go into a copy: `forward-week.ts --history data/reference-lists-all-2026-11-07.jsonl --merge <export>`. The 2026-11-07 export added 5,395 lists, 286 of them dated Oct 20 or earlier (late-scraped), so merging into the main file would have moved frozen scores.
 - **Measured noise:** repeat runs differ by about 1.2-1.6 points on these tests, so one run per version can't show a gain; with 3 runs, gains of about 2-2.5 points are detectable.
-- **Candidate order:** v19 (playtest), v14 (mana tool; one dev run looked +1.8), then new generic ideas aimed at measurable gaps: colors and lands (47% land match, flat), deck shape (0.7 one-ofs vs real 2.3), the gem rater.
+- **v13 baseline on dev:** 43.0 / 45.3 / 42.0 (SD of a run 1.7; with 3 runs per version a gain of about 2.7 points is detectable).
+- **v19, 2026-11-08: dropped after 1 dev run** by a stop rule set before the run (gain 0 or below after run 1 = stop): -2.1 (-5.0 to +0.9). The played game itself, same decks before and after: -0.4 (-1.6 to +0.9), changing 5.9 cards a deck. v17's reviewer measured the same way: -0.5 / -0.7 on Tuning. Revision steps don't move the match. PROGRESS.md section 2c shows this for every run that saved its pre-revision decks.
+- **Budget (owner, 2026-11-08): "this is about the last money I want to spend on this though, its getting expensive."** Ask before any paid run; prefer free analyses of the existing result files. Total spend $469.16.
+- **Candidate order, if spending resumes:** v14 (mana tool; one dev run +1.4, needs 2 more), then new generic ideas aimed at measurable gaps: colors and lands (47% land match, flat), deck shape (0.7 one-ofs vs real 2.3), the gem rater. Use a stop rule like v19's to save money.
 
 ## Rules the owner set (keep to them)
 
@@ -64,4 +68,4 @@ An AI that brews Magic decks as well as the best human brewers. The owner judges
 
 ## Spend
 
-About $347 total (see Running totals in BUILD_LOG.md).
+About $469 total as of 2026-11-08 (see Running totals in BUILD_LOG.md). The owner said this is about the last money to spend.

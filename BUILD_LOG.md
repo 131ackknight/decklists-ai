@@ -23,17 +23,17 @@ Three things, and the third is turning out to be the most interesting.
 
 **A side effect worth a paragraph:** building this keeps improving Decklist Data itself. On the day of this answer, 34k lists got their junk sideboard lines removed.
 
-## Running totals (as of 2026-10-21)
+## Running totals (as of 2026-11-08)
 
 | Item | Total |
 | --- | --- |
-| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80; v12 on six $2.61; round 3 $1.90; v13 post-cutoff $2.85; v14 and future test $41.28; v15 round $25.87; v16 round $17.46; reviewer checks $0.78; v17 on eight $4.80. v17 future test $19.00; gem test $1.82; v18 on eight $4.92; blind panel round 1 $18.13; picker test $0.69; taste tests $3.06; judge with evidence and goldfish $2.18; Fable and Sonnet judges $4.30; text playtest $4.07; v19 smoke test $0.77; found-deck test $3.79; blind panel round 2 $21.00; protocol-v1 baseline (v13 dev runs 2 and 3) $17.35. Total about $453.27. Plus one 17-token test call. |
+| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80; v12 on six $2.61; round 3 $1.90; v13 post-cutoff $2.85; v14 and future test $41.28; v15 round $25.87; v16 round $17.46; reviewer checks $0.78; v17 on eight $4.80. v17 future test $19.00; gem test $1.82; v18 on eight $4.92; blind panel round 1 $18.13; picker test $0.69; taste tests $3.06; judge with evidence and goldfish $2.18; Fable and Sonnet judges $4.30; text playtest $4.07; v19 smoke test $0.77; found-deck test $3.79; blind panel round 2 $21.00; protocol-v1 baseline (v13 dev runs 2 and 3) $17.35; v19 dev run 1 $15.89. Total about $469.16. Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats); full history 145,131 (since 2025-07-01, merged weekly) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
-| Automated tests | 114 passing |
+| Automated tests | 118 passing |
 | Decklist Data PRs merged | 5 (#181 export, #182 baseline eval, #183 baseline on `main`, #184 model comparison, #188 sideboard junk cleanup: 34,432 lists cleaned) |
 | Plan steps done | 1, 4, 5, 6, 8; harness at v13 (15 versions tried); evals: owner's "would you play it?" plus the 18-deck future test |
-| Current harness | **v13**: future test 48.3% / 47.9% (two runs), v2 44.9%; blind panel v13 10 of 17, v19 13 of 17 (v19 not yet confirmed or made the base) |
+| Current harness | **v13**: future test 48.3% / 47.9% (two runs), v2 44.9%; dev (holdout-v1) 43.0 / 45.3 / 42.0; blind panel v13 10 of 17, v19 13 of 17; v19 dropped on dev 2026-11-08 (-2.1, its game step -0.4) |
 
 ## The story so far (for the post)
 
@@ -77,13 +77,35 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
-## 2026-11-08 · v19 on dev (protocol-v1): in progress
+## 2026-11-08 · v19 on dev: stopped after run 1; playing a game doesn't move the match
 
 Owner: **"Yes, run v19"**, then: **"this is about the last money I want to spend on this though, its getting expensive."**
 
-**Cost:** v19 costs about $0.67 a deck on these decks (1.6 times v13's $0.42: one played game plus a revision), so about $14 a run and $42 for three.
+**Stop rule, set before any v19 result** (committed in f9d698a before the run started): run 1 first. If its gain over v13 on dev (paired by deck, against v13's three runs) is zero or below, stop: v19 is dropped and runs 2 and 3 are saved. Stopping early can only drop a candidate, never keep one, so it can't make v19 look better than it is.
 
-**Stop rule, set before any v19 result:** run 1 first. If its gain over v13 on dev (paired by deck, against v13's three runs) is zero or below, stop there: v19 is dropped and the other two runs (about $28) are saved. Otherwise, runs 2 and 3. Stopping early can only drop a candidate, never keep one, so it can't make v19 look better than it is. Keeping v19 still needs the full protocol-v1 rule (3 runs, dev range above zero).
+**Run 1, $15.89:** 21 decks, all 60 cards, no errors, every deck revised after its game. $0.76 a deck, above the $0.67 estimate.
+
+| holdout-v1 (dev) | Match % |
+| --- | --- |
+| v13, runs 1-3 | 43.0 / 45.3 / 42.0 (mean 43.4) |
+| v19, run 1 | 41.4 |
+| v19's gain over v13, paired by deck | -2.1 (-5.0 to +0.9) |
+
+**Gain below zero: stopped.** v19 is dropped, and about $32 was saved.
+
+**Why, measured for free:** every v19 deck saves v13's deck from before the played game, and v17's files save the deck from before its reviewer. Same decks, before vs after (new section 2c in PROGRESS.md, generated):
+
+| Step | Test | Before | After | After minus before | Worse / same / better | Cards changed per deck |
+| --- | --- | --- | --- | --- | --- | --- |
+| v19 played game, run 1 | holdout-v1 | 41.8 | 41.4 | -0.4 (-1.6 to +0.9) | 7 / 8 / 6 | 5.9 |
+| v17 reviewer, run 1 | tuning-v1 | 48.9 | 48.3 | -0.5 (-1.7 to +0.7) | 3 / 11 / 3 | 1.3 |
+| v17 reviewer, run 2 | tuning-v1 | 46.5 | 45.9 | -0.7 (-1.5 to +0.2) | 4 / 12 / 1 | 1.4 |
+
+The game changes about 6 cards a deck, but those changes move away from what players settled on about as often as towards it. Most of v19's -2.1 was its v13 starting decks (41.8, the lowest of four v13 rolls); the game itself moved -0.4. With that range topping out at +0.9, two more runs were very unlikely to show the 2.7-point gain the protocol needs. Both revision steps tried so far (v17's reviewer, v19's game) are flat to slightly negative on the match.
+
+**What this doesn't say:** the owner's blind panel preferred v19 (13 of 17 vs v13's 10). The match % measures closeness to the decks players settled on, not whether a deck plays well; here the two yardsticks disagree, and the panel gap may be chance (two builds of one version agree on only 5 of 8 prompts).
+
+**Correction:** PROGRESS.md's hand-kept spend line (section 7c) still said $435.92 after the baseline run; now $469.16, which matches the 50 items in Running totals.
 
 ---
 

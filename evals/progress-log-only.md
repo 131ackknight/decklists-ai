@@ -24,7 +24,7 @@ This section is the one hand-kept part of PROGRESS.md (`evals/progress-log-only.
 | v16 | 10-21 | `synergy_candidates` shortlist (150 cards) | Not kept |
 | v17 | 10-21 | Reviewer call with per-card evidence, one revision | Not kept |
 | v18 | 10-22 | v17 + role evidence (missing cards) | Not kept |
-| v19 | 10-25 | v13 + one dealt game vs the format's most-played deck + fix the top 3 problems | Not decided |
+| v19 | 10-25 | v13 + one dealt game vs the format's most-played deck + fix the top 3 problems | Not kept: stopped after 1 dev run by a rule set before it ran (11-08; gain 0 or below after run 1 = stop) |
 
 ### 7b. Results with no file, or not yet in the scoreboard
 
@@ -48,7 +48,7 @@ This section is the one hand-kept part of PROGRESS.md (`evals/progress-log-only.
 
 | Item | Value |
 | --- | --- |
-| BUILD_LOG.md running total (48 cost items listed there, summing to exactly this) | $435.92, plus one 17-token test call |
+| BUILD_LOG.md running total (50 cost items listed there, summing to exactly this) | $469.16, plus one 17-token test call |
 | Recorded in the run register | see section 6 |
 
 The scripts' reported costs are all that's visible to Claude Code; the billed amount isn't.

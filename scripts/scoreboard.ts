@@ -136,9 +136,8 @@ async function main() {
   out.push(`"a / b / c" = run 1 / run 2 / run 3 (by the file's run tag). Cost per deck: the range over this version's runs above (recorded cost / items), panel runs included. Versions with runs in the register but none on these tests: ${unlisted.join(", ") || "none"}.`, "");
 
   // 2b. Candidates against the base, by the frozen protocol.
-  /** One run's score on each deck of a test. */
-  const deckScores = (r: RunRecord, testId: string): Map<string, number> => {
-    const decks = decksOf(r);
+  /** A set of decks' scores on each deck of a test. */
+  const deckScoresOf = (decks: Map<string, { main: Line[] } | null>, testId: string): Map<string, number> => {
     const m = new Map<string, number>();
     const settled = testId === "holdout-v1" ? holdout : testId === "post-v1" ? post : testId === "future-v1" ? future : null;
     for (const id of testById(testId).items) {
@@ -151,6 +150,8 @@ async function main() {
     }
     return m;
   };
+  /** One run's score on each deck of a test. */
+  const deckScores = (r: RunRecord, testId: string) => deckScoresOf(decksOf(r), testId);
   // Only runs made on the protocol's data count: recorded fingerprints, or for older runs, finishing after the file last changed.
   const onProtocolData = (r: RunRecord) =>
     r.data ? r.data.history === PROTOCOL.data.history.sha256 && r.data.recent === PROTOCOL.data.recent.sha256 : r.at >= PROTOCOL.data.history.since;
@@ -189,6 +190,54 @@ async function main() {
     "",
   );
   out.push(table(["Candidate", `Dev: ${PROTOCOL.dev}`, ...PROTOCOL.test.map((t) => `Test: ${t}`), "Verdict"], verdictRows), "");
+
+  // 2c. What a revision step did, measured on the same decks before and after it.
+  /** The decks a run had before its revision step (v17/v18 reviewer, v19 playtest), where its file saved them. */
+  const firstDecksOf = (r: RunRecord) =>
+    new Map(
+      resultsOf(r).results.flatMap((x) => {
+        const first = x && ((x.playtest ?? x.review) as { firstMain?: Line[] } | undefined)?.firstMain;
+        return first ? [[x.id as string, { main: first }] as const] : [];
+      }),
+    );
+  const revisionRows: (string | number)[][] = [];
+  for (const r of [...scored].sort((a, b) => versionNo(a.harness) - versionNo(b.harness) || runNo(a.file) - runNo(b.file))) {
+    const before = firstDecksOf(r);
+    if (!before.size) continue;
+    const after = decksOf(r);
+    const step = resultsOf(r).results.some((x) => x?.playtest) ? "played game (v19)" : "card reviewer (v17/v18)";
+    const changed = [...before].flatMap(([id, d]) => {
+      const a = after.get(id);
+      if (!a) return [];
+      const [x, y] = [toCounts(index, d.main), toCounts(index, a.main)];
+      return [[...new Set([...x.keys(), ...y.keys()])].reduce((n, c) => n + Math.abs((x.get(c) ?? 0) - (y.get(c) ?? 0)), 0) / 2];
+    });
+    for (const t of ["holdout-v1", "post-v1", "future-v1", "tuning-v1", "brewing-v1"].filter((t) => r.tests.includes(t))) {
+      const b = deckScoresOf(before, t);
+      const a = new Map([...deckScoresOf(after, t)].filter(([id]) => b.has(id)));
+      if (a.size < 2) continue;
+      const g = pairedGain([a], [b]);
+      const mean = (m: Map<string, number>) => [...m.values()].reduce((s, v) => s + v, 0) / m.size;
+      const sign = [...a].map(([id, s]) => Math.sign(s - b.get(id)!));
+      revisionRows.push([
+        `${r.harness}${r.model === PROTOCOL.model ? "" : `, ${modelName(r.model)}`} run ${runNo(r.file)}`,
+        step,
+        t,
+        a.size,
+        one(mean(b)),
+        one(mean(a)),
+        `${signed(g.gain)} (${signed(g.lo)} to ${signed(g.hi)})`,
+        `${sign.filter((s) => s < 0).length} / ${sign.filter((s) => s === 0).length} / ${sign.filter((s) => s > 0).length}`,
+        one(changed.reduce((s, v) => s + v, 0) / changed.length),
+      ]);
+    }
+  }
+  out.push("### 2c. What the revision step did: the same decks before and after it", "");
+  out.push(
+    "v17, v18 and v19 first brew a v13 deck, then revise it (v17/v18: a card-by-card reviewer; v19: one played game, top three problems fixed), and their files save the deck from before the revision. Scoring both on the same test measures the step itself, without the variation between brews. Range: 95%, paired by deck. Cards changed: cards added (= cards cut) per deck.",
+    "",
+  );
+  out.push(revisionRows.length ? table(["Run", "Step", "Test", "Decks", "Before", "After", "After minus before", "Worse / same / better", "Cards changed per deck"], revisionRows) : "No scored run saved its decks from before a revision.", "");
 
   // 3. The owner's judging rounds.
   out.push("## 3. The owner's judging rounds (`evals/answers/`)", "");

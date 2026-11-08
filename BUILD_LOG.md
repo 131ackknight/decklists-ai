@@ -77,6 +77,41 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-11-08 · What inventors add that the AI misses: the right little-played spells from other decks
+
+Owner: **"Yes, dig in"** (free: it reads saved decks, no model calls). Owner, during it: "Was that running opus or haiku?" The v14 runs were Opus; this dig-in runs no model.
+
+Each deck against its closest earlier list, card by card (PROGRESS.md section 2g, generated). Each cell: copies changed per deck, the share the settled deck agrees with, and the effect on Added in points.
+
+| Per deck | Inventors (first-week lists) | Opus v13 (3 runs) |
+| --- | --- | --- |
+| Added | +24.9 | +10.7 |
+| Requested cards | 7.0, 79% stay (+9.1) | 8.9, 78% stay (+11.6) |
+| Spells from other decks | 10.3, **58%** stay (+9.9) | 4.3, **17%** stay (+1.2) |
+| New spells (in no list of the format in the 90 days before) | 1.5, 45% stay (+1.1) | 5.6, 12% stay (+1.1) |
+| More copies of the old list's spells | 1.6, 81% stay (+2.2) | 0.5, 28% stay (+0.2) |
+| Lands added | 6.7, 63% stay (+7.0) | 6.1, 32% stay (+3.2) |
+| Spells cut (still in the settled deck) | 20.1, 7% (-2.3) | 19.1, 12% (-3.8) |
+| Lands cut (still in the settled deck) | 7.1, 18% (-2.1) | 6.4, 26% (-2.8) |
+
+- **The requested cards aren't the gap:** the AI plays them slightly more than inventors, and they stay as often.
+- **Most of the 14-point gap (8.7 points) is spells borrowed from other decks:** inventors add 10.3 copies and 58% stay; the AI adds 4.3 and 17% stay.
+- Next: lands (4.5 points), raising counts of the old list's good spells (2.0), and cutting cards the deck should keep (1.5).
+- The AI fills about 5.6 slots with spells nobody played, and 12% of those stay; inventors about 1.5.
+
+**Not staples.** The spells borrowed from other decks, by how widely the format played them:
+
+| Per deck | Played in 10%+ of lists | 2-10% | Under 2% |
+| --- | --- | --- | --- |
+| Inventors | 1.1, 49% stay | 3.7, 56% stay | 5.5, 61% stay |
+| Opus v13 | 1.0, 19% stay | 0.9, 17% stay | 2.4, 15% stay |
+
+Inventors mostly borrow little-played spells (under 2% of lists), and most of them stay; the AI's picks rarely do. This fits v15 (format staples) failing: staples aren't what inventors use. It is the hidden-gem problem again, now measured: the cards already exist in other decks, are little played, and are right for this deck.
+
+**What it points to (not built, not run):** a step that, for each job the deck needs done, shows the little-played spells other decks use for that job, and has the AI judge them one at a time; judged on Added. Earlier evidence: the AI picks a real gem over a look-alike 81% of the time when shown pairs one at a time (gem test, 10-22), but skips gems when building. A free check comes first: would those candidate lists have contained the spells inventors actually borrowed?
+
+---
+
 ## 2026-11-08 · v14 on dev: dropped under protocol-v2 (Added +1.2, range includes zero)
 
 Owner: **"Yes, run v14."**

@@ -62,6 +62,7 @@ An AI that brews Magic decks as well as the best human brewers. The owner judges
 - Generic additions never helped: extra stages (v3), a coach (v4), copy limits (v6), example brews (v7), a mana-base tool (v14), format staples (v15), a synergy shortlist (v16).
 - Lands are flat at 47% match in every version; wrong colors on about half the decks.
 - Most of the match gain since v2 was copying a better old deck; what the AI adds beyond its closest old list is flat at about +11 (inventors +25).
+- That gap is mostly spells borrowed from other decks: inventors add 10 copies and 58% stay; the AI 4, and 17% stay. Mostly little-played spells (under 2% of lists), not staples. PROGRESS.md section 2g.
 - The biggest spell gap is the "hidden gem": the under-played card the human brewer found (16-17 of 51 missing points). The AI skips them even when shown.
 
 ## Open ideas, not started

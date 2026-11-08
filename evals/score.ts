@@ -66,7 +66,7 @@ export function addedScore(deck: Counts, settled: Counts[], earlier: Counts[]) {
   }
   const match = settledScore(deck, settled);
   const base = closest ? settledScore(closest, settled) : 0;
-  return { match, copy: shared / 60, base, added: match - base };
+  return { match, copy: shared / 60, base, added: match - base, closest };
 }
 
 /** The format's lists from before a date: what a brew made then could have seen (holdout and future items are cut at the deck's first appearance). */

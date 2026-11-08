@@ -404,6 +404,91 @@ async function main() {
   );
   out.push(table(["Version", "Runs", "Match %", "From one earlier list", "Near-copies", "New spells", "Closest earlier list scores", "Added"], copyRows), "");
 
+  // 2g. What Added is made of: each deck against its closest earlier list, card by card.
+  const PARTS = ["requested cards", "spells from other decks", "new spells", "more copies of its spells", "lands added", "spells cut", "lands cut"] as const;
+  type PartName = (typeof PARTS)[number];
+  const askedOf = new Map(
+    [...holdout.keys()].map((id) => [id, new Set((items.get(id)!.keyCards ?? []).map((n) => [...toCounts(index, [{ qty: 1, name: n }]).keys()][0]))] as const),
+  );
+  /** Share of the format's lists in the 90 days before the item's cut that run each card. */
+  const playRateOf = new Map(
+    [...holdout.keys()].map((id) => {
+      const it = items.get(id)!;
+      const cut = Date.parse(it.before ?? it.target!.firstSeen);
+      const recentLists = lists.filter((l) => l.format === it.target!.format && Date.parse(l.date) < cut && Date.parse(l.date) >= cut - 90 * DAY);
+      const n = new Map<string, number>();
+      for (const l of recentLists) for (const k of countsOf(l).keys()) n.set(k, (n.get(k) ?? 0) + 1 / recentLists.length);
+      return [id, n] as const;
+    }),
+  );
+  const BANDS = ["in 10%+ of lists", "in 2-10%", "in under 2%"] as const;
+  const partsOf = (decks: [string, Counts][]) => {
+    const parts = Object.fromEntries(PARTS.map((p) => [p, { copies: 0, effect: 0 }])) as Record<PartName, { copies: number; effect: number }>;
+    const bands = Object.fromEntries(BANDS.map((b) => [b, { copies: 0, stay: 0 }])) as Record<(typeof BANDS)[number], { copies: number; stay: number }>;
+    for (const [id, d] of decks) {
+      const s = holdout.get(id)!;
+      const base = addedScore(d, s, earlierOf(id)).closest ?? new Map<string, number>();
+      for (const k of new Set([...d.keys(), ...base.keys()])) {
+        const [x, y] = [d.get(k) ?? 0, base.get(k) ?? 0];
+        if (x === y) continue;
+        const effect = avgOf(s.map((l) => Math.min(x, l.get(k) ?? 0) - Math.min(y, l.get(k) ?? 0)));
+        const p: PartName =
+          x > y
+            ? land(k)
+              ? "lands added"
+              : askedOf.get(id)!.has(k)
+                ? "requested cards"
+                : y > 0
+                  ? "more copies of its spells"
+                  : copyCtx.get(id)!.recent.has(k)
+                    ? "spells from other decks"
+                    : "new spells"
+            : land(k)
+              ? "lands cut"
+              : "spells cut";
+        parts[p].copies += Math.abs(x - y);
+        parts[p].effect += effect;
+        if (p === "spells from other decks") {
+          const r = playRateOf.get(id)!.get(k) ?? 0;
+          const band = bands[r >= 0.1 ? BANDS[0] : r >= 0.02 ? BANDS[1] : BANDS[2]];
+          band.copies += x - y;
+          band.stay += effect;
+        }
+      }
+    }
+    return { parts, bands, n: decks.length };
+  };
+  const pts = (cards: number, n: number) => (cards / n / 60) * 100;
+  const partRows: (string | number)[][] = [];
+  const bandRows: (string | number)[][] = [];
+  const addParts = (label: string, runs: string, decks: [string, Counts][]) => {
+    const { parts, bands, n } = partsOf(decks);
+    const total = PARTS.reduce((a, p) => a + parts[p].effect, 0);
+    partRows.push([
+      label,
+      runs,
+      signed(pts(total, n)),
+      ...PARTS.map((p) => `${one(parts[p].copies / n)}, ${parts[p].copies ? Math.round((Math.abs(parts[p].effect) / parts[p].copies) * 100) : 0}% (${signed(pts(parts[p].effect, n))})`),
+    ]);
+    bandRows.push([label, runs, ...BANDS.map((b) => `${one(bands[b].copies / n)}, ${bands[b].copies ? Math.round((bands[b].stay / bands[b].copies) * 100) : 0}% stay`)]);
+  };
+  addParts("Inventors (the deck's first-week real lists)", "", [...copyCtx].flatMap(([id, c]) => c.firstWeek.map((l) => [id, l] as [string, Counts])));
+  for (const [key, rs] of [...copyGroups].sort((a, b) => versionNo(a[1][0].harness) - versionNo(b[1][0].harness) || a[0].localeCompare(b[0]))) {
+    const [h, m, earlier] = key.split("|");
+    const decks = rs.flatMap((r) =>
+      resultsOf(r).results.flatMap((x) => (x?.deck && holdout.has(x.id as string) ? [[x.id as string, toCounts(index, (x.deck as { main: Line[] }).main)] as [string, Counts]] : [])),
+    );
+    addParts(`${h}${m === PROTOCOL.model ? "" : `, ${modelName(m)}`}${earlier ? " (earlier data copy)" : ""}`, String(rs.length), decks);
+  }
+  out.push(`### 2g. What Added is made of, on dev (${PROTOCOL.dev})`, "");
+  out.push(
+    "Per deck, against its closest earlier list (section 2f), every card whose count differs. Each cell: copies changed per deck; the share of them the settled lists agree with (an added copy is in the settled deck, a cut copy is still in it); and the effect on Added, in points. Requested cards: the cards the prompt names. Spells from other decks: in some list of the format in the 90 days before, but not in the closest list. New spells: in no list of the format in those 90 days. The parts add up to Added before the per-deck rounding of section 2f.",
+    "",
+  );
+  out.push(table(["Version", "Runs", "Added", ...PARTS.map((p) => (p.includes("cut") ? `${p[0].toUpperCase()}${p.slice(1)} (still in settled deck)` : `${p[0].toUpperCase()}${p.slice(1)}`))], partRows), "");
+  out.push("Spells from other decks, by how widely the format played them in the 90 days before (copies per deck, and the share in the settled deck):", "");
+  out.push(table(["Version", "Runs", ...BANDS.map((b) => `Played ${b}`)], bandRows), "");
+
   // 3. The owner's judging rounds.
   out.push("## 3. The owner's judging rounds (`evals/answers/`)", "");
   const roundRows: (string | number)[][] = [];

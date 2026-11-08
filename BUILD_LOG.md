@@ -27,13 +27,13 @@ Three things, and the third is turning out to be the most interesting.
 
 | Item | Total |
 | --- | --- |
-| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80; v12 on six $2.61; round 3 $1.90; v13 post-cutoff $2.85; v14 and future test $41.28; v15 round $25.87; v16 round $17.46; reviewer checks $0.78; v17 on eight $4.80. v17 future test $19.00; gem test $1.82; v18 on eight $4.92; blind panel round 1 $18.13; picker test $0.69; taste tests $3.06; judge with evidence and goldfish $2.18; Fable and Sonnet judges $4.30; text playtest $4.07; v19 smoke test $0.77; found-deck test $3.79; blind panel round 2 $21.00; protocol-v1 baseline (v13 dev runs 2 and 3) $17.35; v19 dev run 1 $15.89; Haiku stand-in check (6 dev runs) $2.98; v14 dev runs 2 and 3 $18.66; v20 on Haiku (3 dev runs) $1.47; launch mistake (7 misnamed runs, stopped) $0.32; Haiku v13 and v20 runs 4-5 and v21 runs 1-3 $3.47; v20 Opus dev run 1 $8.70. Total about $504.76. Plus one 17-token test call. |
+| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80; v12 on six $2.61; round 3 $1.90; v13 post-cutoff $2.85; v14 and future test $41.28; v15 round $25.87; v16 round $17.46; reviewer checks $0.78; v17 on eight $4.80. v17 future test $19.00; gem test $1.82; v18 on eight $4.92; blind panel round 1 $18.13; picker test $0.69; taste tests $3.06; judge with evidence and goldfish $2.18; Fable and Sonnet judges $4.30; text playtest $4.07; v19 smoke test $0.77; found-deck test $3.79; blind panel round 2 $21.00; protocol-v1 baseline (v13 dev runs 2 and 3) $17.35; v19 dev run 1 $15.89; Haiku stand-in check (6 dev runs) $2.98; v14 dev runs 2 and 3 $18.66; v20 on Haiku (3 dev runs) $1.47; launch mistake (7 misnamed runs, stopped) $0.32; Haiku v13 and v20 runs 4-5 and v21 runs 1-3 $3.47; v20 Opus dev run 1 $8.70; v20 Opus dev runs 2 and 3 $17.18. Total about $521.94. Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats); full history 145,131 (since 2025-07-01, merged weekly) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
 | Automated tests | 132 passing |
 | Decklist Data PRs merged | 5 (#181 export, #182 baseline eval, #183 baseline on `main`, #184 model comparison, #188 sideboard junk cleanup: 34,432 lists cleaned) |
 | Plan steps done | 1, 4, 5, 6, 8; harness at v13 (15 versions tried); evals: owner's "would you play it?" plus the 18-deck future test |
-| Current harness | **v13**: future test 48.3% / 47.9% (two runs), v2 44.9%; dev (holdout-v1) 43.0 / 45.3 / 42.0; blind panel v13 10 of 17, v19 13 of 17; v19 dropped on dev 2026-11-08 (-2.1, its game step -0.4); since 2026-11-08 judged on Added (protocol-v2), v14 dropped (+1.2, range includes zero) |
+| Current harness | **v13**: future test 48.3% / 47.9% (two runs), v2 44.9%; dev (holdout-v1) 43.0 / 45.3 / 42.0; blind panel v13 10 of 17, v19 13 of 17; v19 dropped on dev 2026-11-08 (-2.1, its game step -0.4); since 2026-11-08 judged on Added (protocol-v2), v14 dropped (+1.2, range includes zero), v20 dropped (+0.3) |
 
 ## The story so far (for the post)
 
@@ -77,7 +77,7 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
-## 2026-11-08 · v20 on Opus, run 1: Added +1.2, above zero; runs 2 and 3 wait for the owner
+## 2026-11-08 · v20 on Opus: dropped after 3 runs (Added +0.3, range includes zero)
 
 Owner: **"Yes, run v20 on Opus."**
 
@@ -100,6 +100,19 @@ Owner: **"Yes, run v20 on Opus."**
 - Caution: v14's one-run lead was +2.7 and ended at +1.2 after three runs. To pass protocol-v2, v20 needs about +1.8 after three runs.
 
 Owner: **"Yes, run twice."** Runs 2 and 3 (about $17) give protocol-v2's dev verdict. If v20 wins on dev, protocol-v2's test is next: 2 future-v1 runs of v20 (about $16), and the owner is asked first.
+
+**Runs 2 and 3, $17.18:** 42 decks, all 60 cards, no errors.
+
+| Opus, dev decks | v13 (3 runs) | v20 (3 runs: 42.7 / 42.6 / 43.8) | Gain, paired by deck (95% range) |
+| --- | --- | --- | --- |
+| **Added** | 10.7 | 11.0 | **+0.3 (-1.5 to +2.1)** |
+| Match % (guard) | 43.4 | 43.0 | -0.4 (-2.4 to +1.6) |
+| Borrowed spells in the deck | 15.3% | 21.5% | +6.2 (-3.1 to +15.5) |
+| Near-copies | 35% | 33% | |
+| Spells from other decks (copies, share that stay, effect on Added) | 4.3, 17%, +1.2 | 6.2, 21%, +2.2 | |
+| Lands added (copies, share that stay, effect) | 6.1, 32%, +3.2 | 5.8, 29%, +2.8 | |
+
+**Verdict: dropped** (protocol-v2: dev Added range includes zero). The one-run lead (+1.2) shrank to +0.3 with three runs, as v14's did. The list works as far as it goes: Opus borrows more spells from other decks, and more of them stay (that part of Added +1.0). But it also plays more of the wrong listed spells (other listed spells in 16.2% of v20 decks vs 10.3%, +5.9, range +1.9 to +9.9), and the gain is used up elsewhere (lands, cuts). As with Haiku, the limit is judging which listed spells fit, not seeing them.
 
 ---
 

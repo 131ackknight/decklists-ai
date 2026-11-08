@@ -77,6 +77,16 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-11-08 · Can Opus pick the right spells from the list when asked directly? (in progress)
+
+Owner: **"Yes, test it"** (about $2; sending only the scorable decks makes it about $1). `scripts/judge-test.ts`: for each dev deck, v20's list (as shown in its first Opus run), in a stable shuffled order, with the requested cards and every card's text; one Opus call rates each card 1-5 (the gem test's wording). Right answers, never shown: a listed spell that is in half or more of the settled lists (29 such spells, on the lists of 10 decks; 188 listed spells on those lists). Also reported: the stricter borrowed spells (14 spells, 8 decks). The 9 decks whose list holds no right spell can't be scored and aren't sent.
+
+**Rule, set before the run:**
+- **Worth building a judging step** if, per deck, the chance Opus rates a right spell above a wrong one has its 95% range above 50%, and it beats v20's own list order (Opus minus list order above zero).
+- **Otherwise this direction is done:** showing the AI more candidates doesn't help if it can't pick them out.
+
+---
+
 ## 2026-11-08 · v20 on Opus: dropped after 3 runs (Added +0.3, range includes zero)
 
 Owner: **"Yes, run v20 on Opus."**

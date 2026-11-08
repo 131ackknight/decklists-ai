@@ -25,7 +25,7 @@ This section is the one hand-kept part of PROGRESS.md (`evals/progress-log-only.
 | v17 | 10-21 | Reviewer call with per-card evidence, one revision | Not kept |
 | v18 | 10-22 | v17 + role evidence (missing cards) | Not kept |
 | v19 | 10-25 | v13 + one dealt game vs the format's most-played deck + fix the top 3 problems | Not kept: stopped after 1 dev run by a rule set before it ran (11-08; gain 0 or below after run 1 = stop) |
-| v20 | 11-08 | v13 + up to 20 little-played spells real decks run beside the requested cards, listed up front (`borrow.ts`) | Haiku only: unclear after 5 runs (Added +1.9, -0.1 to +3.9; borrowed spells +3.0, -2.0 to +8.0). Not run on Opus |
+| v20 | 11-08 | v13 + up to 20 little-played spells real decks run beside the requested cards, listed up front (`borrow.ts`) | Haiku: unclear after 5 runs (Added +1.9, -0.1 to +3.9). Opus: 1 dev run, Added +1.2 (-1.1 to +3.5); needs 2 more for a verdict |
 | v21 | 11-08 | v20 with only the list's top 5 | Dropped on Haiku after 3 runs (borrowed spells -0.6) |
 
 ### 7b. Results with no file, or not yet in the scoreboard
@@ -52,7 +52,7 @@ This section is the one hand-kept part of PROGRESS.md (`evals/progress-log-only.
 
 | Item | Value |
 | --- | --- |
-| BUILD_LOG.md running total (55 cost items listed there, summing to exactly this) | $496.06, plus one 17-token test call |
+| BUILD_LOG.md running total (56 cost items listed there, summing to exactly this) | $504.76, plus one 17-token test call |
 | Recorded in the run register | see section 6 |
 
 The scripts' reported costs are all that's visible to Claude Code; the billed amount isn't.

@@ -2,7 +2,7 @@
  * Would a candidate list contain the spells inventors borrowed? (2026-11-08, owner: "Yes, check it".)
  * Free: no model calls.
  *
- *   pnpm exec tsx scripts/candidate-check.ts [--colors settled|requested|coplay|none]
+ *   pnpm exec tsx scripts/candidate-check.ts [--colors settled|requested|coplay|none] [--test holdout-v1|future-v1]
  *
  * For each dev deck (holdout-v1), the target is the little-played spells (under 10% of the format's lists
  * in the 90 days before the cut) that the inventors' first-week lists took from other decks (not in that
@@ -25,12 +25,17 @@ import { testById } from "../evals/tests";
 
 const DAY = 86_400_000;
 const NS = [5, 10, 20, 50, 100];
-const RANKINGS = ["most-played first", "v16 synergy score", "played with the requested cards", "top per job (synergy)", "played with, same format only", "played with, lift", "played with + synergy (blend)"] as const;
+const RANKINGS = ["most-played first", "v16 synergy score", "played with the requested cards", "top per job (synergy)", "played with, same format only", "played with, lift", "played with + synergy (blend)", "type link first, then played with", "mix: 10 played with + 10 type link"] as const;
 type Ranking = (typeof RANKINGS)[number];
-const AI_RUNS: Record<string, string[]> = {
-  "v13, Opus": ["holdout-v13-claude-opus-5-5.json", "holdout-v13-claude-opus-5-5-r2.json", "holdout-v13-claude-opus-5-5-r3.json"],
-  "v14, Opus": ["holdout-v14-claude-opus-5-5.json", "holdout-v14-claude-opus-5-5-r2.json", "holdout-v14-claude-opus-5-5-r3.json"],
-};
+/** Which decks: the dev decks (default) or the future test's (a confirmation, used once per design). */
+const TEST_ID = process.argv.includes("--test") ? process.argv[process.argv.indexOf("--test") + 1] : "holdout-v1";
+const AI_RUNS: Record<string, string[]> =
+  TEST_ID === "holdout-v1"
+    ? {
+        "v13, Opus": ["holdout-v13-claude-opus-5-5.json", "holdout-v13-claude-opus-5-5-r2.json", "holdout-v13-claude-opus-5-5-r3.json"],
+        "v14, Opus": ["holdout-v14-claude-opus-5-5.json", "holdout-v14-claude-opus-5-5-r2.json", "holdout-v14-claude-opus-5-5-r3.json"],
+      }
+    : { "v13, Opus": ["future-v13-claude-opus-5-5.json", "future-v13-claude-opus-5-5-r2.json"] };
 
 const colorRule = process.argv.includes("--colors") ? process.argv[process.argv.indexOf("--colors") + 1] : "settled";
 
@@ -70,7 +75,7 @@ async function main() {
   let wrongColors = 0;
   const perDeck: string[] = [];
 
-  for (const id of testById("holdout-v1").items) {
+  for (const id of testById(TEST_ID).items) {
     const it = items.get(id)!;
     const t = it.target!;
     const before = it.before ?? t.firstSeen;
@@ -111,6 +116,14 @@ async function main() {
       if (l.format === t.format) for (const k of m.keys()) coplayFormat.set(k, (coplayFormat.get(k) ?? 0) + 1);
     }
     const lift = (k: string) => (coplay.get(k) ?? 0) / ((total.get(k) ?? 0) + 20);
+    // Type link: shares a subtype with a requested card, or one card's rules text names the other's subtype.
+    const subtypes = (c: { typeLine: string }) => c.typeLine.split(" // ").flatMap((f) => (f.split(" — ")[1] ?? "").split(/\s+/)).filter(Boolean);
+    const names = (text: string, subs: string[]) => subs.some((x) => new RegExp(`\\b${x}s?\\b`, "i").test(text));
+    const linked = (k: string) => {
+      const c = index.getCard(k)!;
+      return requested.some((r) => subtypes(c).some((x) => subtypes(r!).includes(x)) || names(c.text, subtypes(r!)) || names(r!.text, subtypes(c))) ? 1 : 0;
+    };
+    const link = new Map(pool.map((k) => [k, linked(k)]));
     const byCoplay = [...pool].sort((a, b) => (coplay.get(b) ?? 0) - (coplay.get(a) ?? 0));
     const bySyn = [...pool].sort((a, b) => syn.get(b)! - syn.get(a)!);
     const rankOf = (xs: string[]) => new Map(xs.map((k, i) => [k, i]));
@@ -127,6 +140,12 @@ async function main() {
       "played with, same format only": [...pool].sort((a, b) => (coplayFormat.get(b) ?? 0) - (coplayFormat.get(a) ?? 0)),
       "played with, lift": [...pool].sort((a, b) => lift(b) - lift(a)),
       "played with + synergy (blend)": [...pool].sort((a, b) => rc.get(a)! + rs.get(a)! - (rc.get(b)! + rs.get(b)!)),
+      "type link first, then played with": [...pool].sort((a, b) => link.get(b)! - link.get(a)! || (coplay.get(b) ?? 0) - (coplay.get(a) ?? 0)),
+      "mix: 10 played with + 10 type link": (() => {
+        const linkFirst = [...pool].filter((k) => link.get(k)).sort((a, b) => (coplay.get(b) ?? 0) - (coplay.get(a) ?? 0));
+        const mixed = [...new Set([...byCoplay.slice(0, 10), ...linkFirst.slice(0, 10)])];
+        return [...mixed, ...byCoplay.filter((k) => !mixed.includes(k))];
+      })(),
     };
 
     targets += target.size;
@@ -141,8 +160,9 @@ async function main() {
   }
 
   pools.sort((a, b) => a - b);
+  console.log(`decks: ${TEST_ID}`);
   console.log(`colors: ${colorRule}; differ from the settled deck's on ${wrongColors} of ${pools.length} decks`);
-  console.log(`target spells: ${targets} over ${pools.length} dev decks; candidates per deck: median ${pools[Math.floor(pools.length / 2)]} (${pools[0]}-${pools[pools.length - 1]})`);
+  console.log(`target spells: ${targets} over ${pools.length} decks; candidates per deck: median ${pools[Math.floor(pools.length / 2)]} (${pools[0]}-${pools[pools.length - 1]})`);
   for (const r of RANKINGS) console.log(`${r.padEnd(34)} ${NS.map((n, i) => `top ${n}: ${Math.round((found[r][i] / targets) * 100)}%`).join(" | ")}`);
   for (const [label, xs] of Object.entries(aiFound)) console.log(`${label}: a deck already contains ${Math.round((xs.reduce((a, b) => a + b, 0) / xs.length) * 100)}% of its target spells`);
   console.log(`\nper deck: target spells [play rate; ranks by ${RANKINGS.join(" / ")}]`);

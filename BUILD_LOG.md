@@ -77,6 +77,26 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-11-08 · Looking for a better list, free: the one that looked better was fitted to the dev decks
+
+Owner: **"Yes, keep looking"** (free: saved data only). The lists hold no right spell on 9 of 19 dev decks, so the question was whether another design holds the right spells more often.
+
+**What the list misses** (dev decks, `borrowedSpells`): in the decks with a theme, the missed spells share a card type with a requested card, or one's rules text names the other's type (three Lessons beside requested Lessons, an Elemental beside Elementals, a Human beside Humans). Most other misses (mana creatures, rituals, cheap removal) have no link to the requested cards at all.
+
+**Two new designs**, added to `scripts/candidate-check.ts` (now nine), checked on the dev decks and then, once, on the future test's decks (`--test future-v1`), which the designs were not built from:
+
+| Right spells in the list | Dev decks: top 20 / top 50 | Future-test decks: top 20 / top 50 |
+| --- | --- | --- |
+| **Played with the requested cards (v20's list)** | 33% / 50% | **50% / 62%** |
+| Type link first, then played with | 35% / 56% | 31% / 50% |
+| Mix: 10 played with + 10 type link | 38% / 58% | 38% / 58% |
+
+**Dropped:** the type-link designs fitted the dev decks' misses and don't carry over; on new decks they are worse. **v20's list stays the best of the nine designs tried, on both sets of decks.** No paid run follows: v20 itself didn't help Opus (Added +0.3), and no list found holds the right spells clearly more often. This direction is done.
+
+On the future-test decks, v13's Opus decks already contain 39% of their right spells (dev decks: 15%), so a list would add less there.
+
+---
+
 ## 2026-11-08 · Can Opus pick the right spells from the list when asked directly? Yes, but no better than it already does
 
 Owner: **"Yes, test it"** (about $2; sending only the scorable decks makes it about $1). `scripts/judge-test.ts`: for each dev deck, v20's list (as shown in its first Opus run), in a stable shuffled order, with the requested cards and every card's text; one Opus call rates each card 1-5 (the gem test's wording). Right answers, never shown: a listed spell that is in half or more of the settled lists (29 such spells, on the lists of 10 decks; 188 listed spells on those lists). Also reported: the stricter borrowed spells (14 spells, 8 decks). The 9 decks whose list holds no right spell can't be scored and aren't sent.

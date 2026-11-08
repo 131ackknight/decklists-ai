@@ -77,6 +77,16 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-11-08 · v14 on dev for a protocol-v2 verdict (in progress)
+
+Owner: **"Yes, run v14."**
+
+**Code check (free):** nothing v13 or v14 runs on has changed since v14's first run on 10-21. The tools, prompts, data and card code are untouched; `run.ts` only gained v17-v19 and the Haiku price fix (no effect on Opus). The new runs are comparable with the first.
+
+**Stop rule, set before any new v14 result:** run 2 first (about $9). If v14's Added gain over v13 on dev (its 2 runs against v13's 3, paired by deck) is zero or below, stop: v14 is dropped and run 3 is saved. Otherwise run 3, then apply protocol-v2. If v14 wins on dev, protocol-v2's test needs 1 more future-v1 run of v14 (about $8), which the owner is asked about first.
+
+---
+
 ## 2026-11-08 · protocol-v2: versions are judged on Added
 
 Owner: **"Yes, use Added."**

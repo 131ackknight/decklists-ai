@@ -42,6 +42,7 @@ An AI that brews Magic decks as well as the best human brewers. The owner judges
 - **v13 baseline on dev:** 43.0 / 45.3 / 42.0 (SD of a run 1.7; with 3 runs per version a gain of about 2.7 points is detectable).
 - **v19, 2026-11-08: dropped after 1 dev run** by a stop rule set before the run (gain 0 or below after run 1 = stop): -2.1 (-5.0 to +0.9). The played game itself, same decks before and after: -0.4 (-1.6 to +0.9), changing 5.9 cards a deck. v17's reviewer measured the same way: -0.5 / -0.7 on Tuning. Revision steps don't move the match. PROGRESS.md section 2c shows this for every run that saved its pre-revision decks.
 - **Haiku 5.5 as a cheap stand-in (2026-11-08), unclear:** $0.49 a dev run. v13's gain over v2 on Haiku +0.6 (-2.3 to +3.5) vs about +2.2 on Opus; the check was too weak (3 runs can't confirm +2.2 either). Haiku v13 33.6 vs Opus 43.4: Haiku builds piles (16 different spells vs real 13, fewer 4-ofs and lands), wrong colors more often, and makes half the real-deck lookups. PROGRESS.md section 2e. Next idea: v20, the code makes the lookups and gives the facts up front.
+- **Brewing or copying (2026-11-08, PROGRESS.md section 2f):** the match % rewards copying the right old deck. "Added" (match minus the deck's closest earlier list's own match) separates the two: inventors +24.8, every Opus version about +10.5 (v14's one run +13.5). v2 to v13's gain was almost all a better starting deck. Read the match % next to Added and near-copies (v13: 35% of decks over 65% from one old list; inventors 3%).
 - **Budget (owner, 2026-11-08): "this is about the last money I want to spend on this though, its getting expensive."** Ask before any paid run; prefer free analyses of the existing result files. Total spend $469.16.
 - **Candidate order, if spending resumes:** v14 (mana tool; one dev run +1.4, needs 2 more), then new generic ideas aimed at measurable gaps: colors and lands (47% land match, flat), deck shape (0.7 one-ofs vs real 2.3), the gem rater. Use a stop rule like v19's to save money.
 
@@ -59,6 +60,7 @@ An AI that brews Magic decks as well as the best human brewers. The owner judges
 - Knowledge about these specific cards or this plan helps (v5 format menu, v8 how real decks run the cards, v10 win line, v11 dominant shell, v12 enabler counts).
 - Generic additions never helped: extra stages (v3), a coach (v4), copy limits (v6), example brews (v7), a mana-base tool (v14), format staples (v15), a synergy shortlist (v16).
 - Lands are flat at 47% match in every version; wrong colors on about half the decks.
+- Most of the match gain since v2 was copying a better old deck; what the AI adds beyond its closest old list is flat at about +11 (inventors +25).
 - The biggest spell gap is the "hidden gem": the under-played card the human brewer found (16-17 of 51 missing points). The AI skips them even when shown.
 
 ## Open ideas, not started

@@ -333,6 +333,55 @@ async function main() {
   );
   out.push(table(["Version", "Runs", "Match %", "Spell cards matched", "Land cards matched", "Right colors", "Lookups: played_with / search_cards", "Lands", "Different spells", "Spells as 4-ofs", "Spells as 1-ofs"], shapeRows), "");
 
+  // 2f. Brewing or copying: how much of each deck is one earlier list, and what the deck adds beyond that list.
+  const DAY = 86_400_000;
+  const copyCtx = new Map(
+    [...holdout.keys()].map((id) => {
+      const it = items.get(id)!;
+      const t = it.target!;
+      const cut = Date.parse(it.before ?? t.firstSeen);
+      const earlier = lists.filter((l) => l.format === t.format && Date.parse(l.date) < cut);
+      const recent = new Set(earlier.filter((l) => Date.parse(l.date) >= cut - 90 * DAY).flatMap((l) => [...countsOf(l).keys()]));
+      const first = Date.parse(t.firstSeen);
+      const firstWeek = lists.filter((l) => l.format === t.format && l.strategy === t.strategy && Date.parse(l.date) >= first && Date.parse(l.date) < first + 7 * DAY).map(countsOf);
+      return [id, { earlier: earlier.map(countsOf), recent, firstWeek }] as const;
+    }),
+  );
+  const copyOf = (id: string, d: Counts) => {
+    const c = copyCtx.get(id)!;
+    let best = 0;
+    let closest: Counts | null = null;
+    for (const l of c.earlier) {
+      const o = overlap(d, l);
+      if (o > best) [best, closest] = [o, l];
+    }
+    const s = holdout.get(id)!;
+    return { match: settledScore(d, s), copy: best / 60, fresh: [...d.keys()].filter((k) => !land(k) && !c.recent.has(k)).length, base: closest ? settledScore(closest, s) : 0 };
+  };
+  const copyRow = (label: string, runs: string, rows: ReturnType<typeof copyOf>[]) => {
+    const m = (f: (r: ReturnType<typeof copyOf>) => number) => avgOf(rows.map(f));
+    return [label, runs, one(m((r) => r.match)), `${Math.round(m((r) => r.copy) * 100)}%`, `${Math.round(m((r) => (r.copy > 0.65 ? 1 : 0)) * 100)}%`, one(m((r) => r.fresh)), one(m((r) => r.base)), signed(m((r) => r.match - r.base))];
+  };
+  const copyRows: (string | number)[][] = [copyRow("Inventors (the deck's first-week real lists)", "", [...copyCtx].flatMap(([id, c]) => c.firstWeek.map((l) => copyOf(id, l))))];
+  const copyGroups = new Map<string, RunRecord[]>();
+  for (const r of scored.filter((r) => r.tests.includes(PROTOCOL.dev))) {
+    const key = `${r.harness}|${r.model}|${onProtocolData(r) ? "" : "earlier"}`;
+    copyGroups.set(key, [...(copyGroups.get(key) ?? []), r]);
+  }
+  for (const [key, rs] of [...copyGroups].sort((a, b) => versionNo(a[1][0].harness) - versionNo(b[1][0].harness) || a[0].localeCompare(b[0]))) {
+    const [h, m, earlier] = key.split("|");
+    const rows = rs.flatMap((r) =>
+      resultsOf(r).results.flatMap((x) => (x?.deck && holdout.has(x.id as string) ? [copyOf(x.id as string, toCounts(index, (x.deck as { main: Line[] }).main))] : [])),
+    );
+    copyRows.push(copyRow(`${h}${m === PROTOCOL.model ? "" : `, ${modelName(m)}`}${earlier ? " (earlier data copy)" : ""}`, String(rs.length), rows));
+  }
+  out.push(`### 2f. Brewing or copying, on dev (${PROTOCOL.dev})`, "");
+  out.push(
+    "Per deck, averaged over runs. From one earlier list: the share of the deck found in its single closest list of the format from before the deck's date (data the AI could see). Near-copies: decks over 65% from one earlier list. New spells: nonland cards in no list of the format in the 90 days before. Closest earlier list scores: that list's own match %. Added: the deck's match % minus that, the part of the score that isn't copying.",
+    "",
+  );
+  out.push(table(["Version", "Runs", "Match %", "From one earlier list", "Near-copies", "New spells", "Closest earlier list scores", "Added"], copyRows), "");
+
   // 3. The owner's judging rounds.
   out.push("## 3. The owner's judging rounds (`evals/answers/`)", "");
   const roundRows: (string | number)[][] = [];

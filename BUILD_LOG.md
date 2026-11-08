@@ -77,6 +77,26 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-11-08 · Brewing or copying? Most of the gain since v2 was copying a better old deck
+
+Owner, on the v20 idea (the code makes the real-deck lookups up front): **"the lookups is helpful for brew? Or just making it look like the old one"**. Measured for free on the dev decks (PROGRESS.md section 2f, generated): for each deck, the share found in its single closest earlier list of the format (data the AI could see), and how that old list alone would score. "Added" = the deck's match minus that: the part of the score that isn't copying.
+
+| Dev (holdout-v1), per deck | Match % | From one earlier list | Near-copies (over 65% from one list) | Closest earlier list alone scores | Added |
+| --- | --- | --- | --- | --- | --- |
+| Inventors (first-week real lists) | 72.2 | 55% | 3% | 47.5 | **+24.8** |
+| v2, Opus (2 runs, earlier data copy) | 41.2 | 52% | 17% | 30.8 | +10.4 |
+| v13, Opus (3 runs) | 43.4 | 58% | 35% | 32.7 | +10.7 |
+| v14, Opus (1 run) | 44.9 | 57% | 14% | 31.4 | +13.5 |
+| v2, Haiku (3 runs) | 33.0 | 46% | 14% | 27.1 | +5.9 |
+| v13, Haiku (3 runs) | 33.6 | 52% | 27% | 25.1 | +8.5 |
+
+- **On Opus, v2 to v13 gained +2.2, almost all from starting closer to a better old deck** (30.8 to 32.7); what the decks add beyond that stayed flat (+10.4 to +10.7). A third of v13's decks are near-copies of one old list; inventors: 3%.
+- **The real brewing gap:** inventors also take about half their first list from one old list, but add +24.8 on top. The AI adds about +11, the same in every Opus version since v2 (+10.0 to +11.7), except v14's one run (+13.5, with the fewest near-copies).
+- The AI plays more never-played spells than inventors (Opus 3.4 per deck, Haiku 5-8, inventors 1.3) and still adds less: its new cards are mostly not the right ones.
+- **v20 (lookups up front) dropped before building:** it would most likely raise the score by copying more, not by brewing better.
+
+---
+
 ## 2026-11-08 · Can Haiku stand in for Opus? Unclear. And what Haiku isn't doing
 
 Owner, on testing ideas on a cheaper model first: **"Ugh, that sounds like giving up"** (about stopping or only fixing saved decks), then **"Yes, check Haiku."** Testing one idea properly on Opus costs $26-48 (3 dev runs). Haiku 5.5 costs about 1/40 of Opus per token ($0.10 / $0.50 per million in / out vs $4 / $20), so if its scores move the way Opus's do, ideas can be screened for about $1 each and only winners tried on Opus.

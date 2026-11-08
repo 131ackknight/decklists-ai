@@ -27,7 +27,7 @@ Three things, and the third is turning out to be the most interesting.
 
 | Item | Total |
 | --- | --- |
-| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80; v12 on six $2.61; round 3 $1.90; v13 post-cutoff $2.85; v14 and future test $41.28; v15 round $25.87; v16 round $17.46; reviewer checks $0.78; v17 on eight $4.80. v17 future test $19.00; gem test $1.82; v18 on eight $4.92; blind panel round 1 $18.13; picker test $0.69; taste tests $3.06; judge with evidence and goldfish $2.18; Fable and Sonnet judges $4.30; text playtest $4.07; v19 smoke test $0.77; found-deck test $3.79; blind panel round 2 $21.00; protocol-v1 baseline (v13 dev runs 2 and 3) $17.35; v19 dev run 1 $15.89; Haiku stand-in check (6 dev runs) $2.98; v14 dev runs 2 and 3 $18.66; v20 on Haiku (3 dev runs) $1.47; launch mistake (7 misnamed runs, stopped) $0.32; Haiku v13 and v20 runs 4-5 and v21 runs 1-3 $3.47; v20 Opus dev run 1 $8.70; v20 Opus dev runs 2 and 3 $17.18. Total about $521.94. Plus one 17-token test call. |
+| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80; v12 on six $2.61; round 3 $1.90; v13 post-cutoff $2.85; v14 and future test $41.28; v15 round $25.87; v16 round $17.46; reviewer checks $0.78; v17 on eight $4.80. v17 future test $19.00; gem test $1.82; v18 on eight $4.92; blind panel round 1 $18.13; picker test $0.69; taste tests $3.06; judge with evidence and goldfish $2.18; Fable and Sonnet judges $4.30; text playtest $4.07; v19 smoke test $0.77; found-deck test $3.79; blind panel round 2 $21.00; protocol-v1 baseline (v13 dev runs 2 and 3) $17.35; v19 dev run 1 $15.89; Haiku stand-in check (6 dev runs) $2.98; v14 dev runs 2 and 3 $18.66; v20 on Haiku (3 dev runs) $1.47; launch mistake (7 misnamed runs, stopped) $0.32; Haiku v13 and v20 runs 4-5 and v21 runs 1-3 $3.47; v20 Opus dev run 1 $8.70; v20 Opus dev runs 2 and 3 $17.18; judge test $0.42. Total about $522.36. Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats); full history 145,131 (since 2025-07-01, merged weekly) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
 | Automated tests | 132 passing |
@@ -77,13 +77,26 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
-## 2026-11-08 · Can Opus pick the right spells from the list when asked directly? (in progress)
+## 2026-11-08 · Can Opus pick the right spells from the list when asked directly? Yes, but no better than it already does
 
 Owner: **"Yes, test it"** (about $2; sending only the scorable decks makes it about $1). `scripts/judge-test.ts`: for each dev deck, v20's list (as shown in its first Opus run), in a stable shuffled order, with the requested cards and every card's text; one Opus call rates each card 1-5 (the gem test's wording). Right answers, never shown: a listed spell that is in half or more of the settled lists (29 such spells, on the lists of 10 decks; 188 listed spells on those lists). Also reported: the stricter borrowed spells (14 spells, 8 decks). The 9 decks whose list holds no right spell can't be scored and aren't sent.
 
 **Rule, set before the run:**
 - **Worth building a judging step** if, per deck, the chance Opus rates a right spell above a wrong one has its 95% range above 50%, and it beats v20's own list order (Opus minus list order above zero).
 - **Otherwise this direction is done:** showing the AI more candidates doesn't help if it can't pick them out.
+
+**Result, $0.42** (10 calls, every card rated):
+
+| Per deck | Right = in half or more of the settled lists (10 decks) | Right = borrowed spells (8 decks) |
+| --- | --- | --- |
+| Opus rates a right spell above a wrong one | **78%** (66-89%) | 77% (59-96%) |
+| v20's list order puts it higher | 75% (56-94%) | 74% (50-97%) |
+| Opus minus list order | +2.3 (-13.6 to +18.1) | +3.6 (-15.3 to +22.5) |
+| Right spells in the top 3 per deck: Opus's ratings / list order | 13 / 13 of 30 | 7 / 7 of 24 |
+
+**By the rule: passes** (range above 50%, and above the list order by +2.3). **But a judging step wouldn't help,** for a reason the rule didn't foresee. In v20's own Opus decks, the listed spells Opus chose while building were already 41% right on these 10 decks (53 of 128): the same as its top 3 when asked directly (43%) and the list's top 3 (43%). A separate judging call can't make its picks more precise.
+
+**What actually limits v20:** on 9 of the 19 dev decks the list holds no right spell at all; Opus plays listed spells there too, and those losses offset the gains on the other 10. A list helps only when it holds the right cards, and none of the seven rankings tried (`scripts/candidate-check.ts`) does that much better than v20's. No v22 built; no more money on this direction.
 
 ---
 

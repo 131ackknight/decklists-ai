@@ -46,13 +46,14 @@ This section is the one hand-kept part of PROGRESS.md (`evals/progress-log-only.
 | 10-24 | Deck shape, v13 brews vs real lists, per deck | one-of spells 0.7 vs 2.3; requested cards as 4-ofs 79% vs 69%; spell mana value 2.3 vs 2.6; lands 20.0 vs 20.1 |
 | 10-24 | Text playtest, first 5 of 14 decks (grades only, in `evals/results/round4/logs/playtest.log`) | Hypergenesis partly, Seismic Assault (v11) partly, Mind Over Matter (v11) partly, Rofellos partly, Scapeshift (v11) yes. All 14: yes 4, partly 7, no 3 |
 | 11-08 | Candidate check, `scripts/candidate-check.ts` (no result file; rerunning it prints these) | 48 target spells over 17 dev decks. Found in the top 20 / 50 / 100: most-played first 13 / 38 / 52%; v16 synergy 15 / 31 / 52%; played with the requested cards 33 / 52 / 65%; per job 17 / 29 / 52%. Opus v13 decks already contain 15%, v14 20% |
+| 11-08 | Judge test, `scripts/judge-test.ts` (result file `evals/results/round4/judge-test-v20-lists.json`; not yet in the scoreboard) | Opus rates a right listed spell above a wrong one 78% (66-89%), list order 75% (56-94%), 10 decks; top 3 per deck 13 / 13 right of 30. v20's in-brew picks from the list on those decks: 53 of 128 right (41%) |
 | 11-08 | Shown vs played, `scripts/borrow-listed.ts` (reads the Haiku result files; rerunning prints these) | Listed borrowed spells played by Haiku v13 / v20 decks: 30.0 / 41.7% (+11.7, -1.2 to +24.6); other listed spells 9.4 / 13.6% (+4.2, +1.5 to +7.0). v21: 21.4 / 40.5% and 15.4 / 30.5% |
 
 ### 7c. Spend
 
 | Item | Value |
 | --- | --- |
-| BUILD_LOG.md running total (57 cost items listed there, summing to exactly this) | $521.94, plus one 17-token test call |
+| BUILD_LOG.md running total (58 cost items listed there, summing to exactly this) | $522.36, plus one 17-token test call |
 | Recorded in the run register | see section 6 |
 
 The scripts' reported costs are all that's visible to Claude Code; the billed amount isn't.

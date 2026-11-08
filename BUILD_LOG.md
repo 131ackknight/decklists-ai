@@ -77,6 +77,14 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-11-08 · v20 on Opus, run 1 (in progress)
+
+Owner: **"Yes, run v20 on Opus."**
+
+**Stop rule, set before the run:** one Opus dev run of v20 (about $9-10), scored against Opus v13's three dev runs by protocol-v2 (Added, paired by deck). If v20's Added gain is zero or below, stop: v20 is dropped. If above zero, runs 2 and 3 (about $19) for a protocol-v2 verdict, and the owner is asked first. Also reported, as with Haiku: borrowed spells in the deck, and how many listed spells the decks play (`scripts/borrow-eval.ts`, `scripts/borrow-listed.ts`).
+
+---
+
 ## 2026-11-08 · v20 (the shopping list) on Haiku: the best lead so far, not proven; v21 (top 5) dropped
 
 Owner: **"Yes, Haiku first"**, after asking **"Why 9? arent we using haiku?"** ($9 is an Opus run; the Haiku stand-in check was unclear, but for this idea a direct measure works on Haiku too).

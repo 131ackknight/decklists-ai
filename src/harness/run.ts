@@ -391,15 +391,41 @@ export function brewV13(
  * requested cards, in the first message (borrow.ts). Aimed at Added: inventors borrow such spells from
  * other decks and most stay; the AI borrows fewer and most don't. Owner: "Yes, Haiku first".
  */
-export async function brewV20(
+export function brewV20(
   client: Anthropic,
   model: ModelConfig,
   req: BrewRequest,
   deps: { index: CardIndex; data: DataSource },
   onStep?: (step: number, note: string) => void,
 ): Promise<BrewResult> {
+  return brewWithBorrowList(client, model, req, deps, onStep, 20);
+}
+
+/**
+ * Harness v21 (2026-11-08): v20 with only the list's top 5. On the dev decks the top 5 hold 21% of the
+ * spells inventors borrowed against 33% for the top 20, at four times the density; Haiku played 2.4
+ * listed cards per deck under v20 and 10% of them were borrowed spells.
+ */
+export function brewV21(
+  client: Anthropic,
+  model: ModelConfig,
+  req: BrewRequest,
+  deps: { index: CardIndex; data: DataSource },
+  onStep?: (step: number, note: string) => void,
+): Promise<BrewResult> {
+  return brewWithBorrowList(client, model, req, deps, onStep, 5);
+}
+
+async function brewWithBorrowList(
+  client: Anthropic,
+  model: ModelConfig,
+  req: BrewRequest,
+  deps: { index: CardIndex; data: DataSource },
+  onStep: ((step: number, note: string) => void) | undefined,
+  size: number,
+): Promise<BrewResult> {
   const key = req.format ? getFormat(req.format)?.key : undefined;
-  const borrow = key ? borrowList(deps.index, deps.data, key, namedCards(deps.index, req.prompt)) : [];
+  const borrow = key ? borrowList(deps.index, deps.data, key, namedCards(deps.index, req.prompt), size) : [];
   const r = await brewV5(client, model, req, deps, onStep, {
     system: V12_SYSTEM_PROMPT,
     extraTools: ["played_with"],

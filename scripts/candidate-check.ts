@@ -24,8 +24,8 @@ import { borrowedSpells, loadLists, settledLists, type Counts, type RefList } fr
 import { testById } from "../evals/tests";
 
 const DAY = 86_400_000;
-const NS = [20, 50, 100];
-const RANKINGS = ["most-played first", "v16 synergy score", "played with the requested cards", "top per job (synergy)"] as const;
+const NS = [5, 10, 20, 50, 100];
+const RANKINGS = ["most-played first", "v16 synergy score", "played with the requested cards", "top per job (synergy)", "played with, same format only", "played with, lift", "played with + synergy (blend)"] as const;
 type Ranking = (typeof RANKINGS)[number];
 const AI_RUNS: Record<string, string[]> = {
   "v13, Opus": ["holdout-v13-claude-opus-5-5.json", "holdout-v13-claude-opus-5-5-r2.json", "holdout-v13-claude-opus-5-5-r3.json"],
@@ -100,12 +100,21 @@ async function main() {
     const model = synergyModelFor(index, history.cut(before));
     const syn = new Map(pool.map((k) => [k, requested.length ? synergyScore(model, requested, index.getCard(k)!) : 0]));
     const coplay = new Map<string, number>();
+    const coplayFormat = new Map<string, number>();
+    const total = new Map<string, number>();
     for (const l of lists) {
       if (Date.parse(l.date) >= cut) continue;
       const m = countsOf(l);
+      for (const k of m.keys()) total.set(k, (total.get(k) ?? 0) + 1);
       if (![...asked].some((a) => m.has(a))) continue;
       for (const k of m.keys()) coplay.set(k, (coplay.get(k) ?? 0) + 1);
+      if (l.format === t.format) for (const k of m.keys()) coplayFormat.set(k, (coplayFormat.get(k) ?? 0) + 1);
     }
+    const lift = (k: string) => (coplay.get(k) ?? 0) / ((total.get(k) ?? 0) + 20);
+    const byCoplay = [...pool].sort((a, b) => (coplay.get(b) ?? 0) - (coplay.get(a) ?? 0));
+    const bySyn = [...pool].sort((a, b) => syn.get(b)! - syn.get(a)!);
+    const rankOf = (xs: string[]) => new Map(xs.map((k, i) => [k, i]));
+    const [rc, rs] = [rankOf(byCoplay), rankOf(bySyn)];
     const byJob = new Map<string, string[]>();
     for (const k of [...pool].sort((a, b) => syn.get(b)! - syn.get(a)!)) byJob.set(jobOf(k), [...(byJob.get(jobOf(k)) ?? []), k]);
     const interleaved: string[] = [];
@@ -115,6 +124,9 @@ async function main() {
       "v16 synergy score": [...pool].sort((a, b) => syn.get(b)! - syn.get(a)!),
       "played with the requested cards": [...pool].sort((a, b) => (coplay.get(b) ?? 0) - (coplay.get(a) ?? 0)),
       "top per job (synergy)": interleaved,
+      "played with, same format only": [...pool].sort((a, b) => (coplayFormat.get(b) ?? 0) - (coplayFormat.get(a) ?? 0)),
+      "played with, lift": [...pool].sort((a, b) => lift(b) - lift(a)),
+      "played with + synergy (blend)": [...pool].sort((a, b) => rc.get(a)! + rs.get(a)! - (rc.get(b)! + rs.get(b)!)),
     };
 
     targets += target.size;

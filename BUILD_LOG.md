@@ -95,6 +95,22 @@ Owner: **"Yes, Haiku first"**, after asking **"Why 9? arent we using haiku?"** (
 - **Drop:** v20 not ahead on borrowed spells, or its Added clearly worse.
 - Noise, from Opus v13 vs v14: with 3 runs each, this share needs a gain of about 9 points before its range clears zero.
 
+**Result, 3 Haiku runs, $1.47:** 63 decks, all 60 cards, no errors; 19 of 21 decks got a list (16 cards on average).
+
+| Dev decks, Haiku (3 runs each) | v13 | v20 | Gain, paired by deck (95% range) |
+| --- | --- | --- | --- |
+| Borrowed spells in the deck | 13.1% | 14.4% | +1.3 (-3.2 to +5.8), 17 decks |
+| Added | 8.5 | 10.2 | +1.7 (-0.5 to +4.0) |
+| Match % | 33.6 | 34.7 | +1.0 (-0.4 to +2.5) |
+
+Haiku uses the list: it played 2.4 listed cards per deck, and 16 of those 153 (10%) were borrowed spells. **By the rule: unclear** (ahead on borrowed spells, range includes zero).
+
+**Next, with the owner away (decided under the owner's "continue to try to optimize", within the $6):** the rule's next step, 2 more runs each of v20 and Haiku v13 (5 each), and at the same time **v21 = v20 with only the list's top 5** (3 runs). In the free checks the top 5 hold 21% of the borrowed spells (the top 20: 33%), and list cards in positions 1-5 are in 19% of the settled lists on average against 5-6% for positions 6-20. List length is the only change. About $3.50 for the 7 runs.
+
+**Rules, set before these runs** (each against Haiku v13's 5 runs; `scripts/borrow-eval.ts`):
+- v20 (5 runs) and v21 (3 runs), each: **worth an Opus run** (the owner asked first) if its borrowed-spell gain has its 95% range above zero and its Added isn't clearly worse; **dropped** if its borrowed-spell gain is zero or below or its Added is clearly worse; otherwise **unclear**, and no more Haiku money goes to it.
+- If both are worth an Opus run, the one with the larger Added gain goes first.
+
 **Owner, while away:** "Ok when it comes back, continue to try to optimize best you can while I am away. Get better each time, if it doesnt then figure out if you should remove the thing and try again. Ill be back in a bit but dont want to the progress to stop." **Plan for that time:** Haiku only, up to about $6 in all (about 12 runs). Any Opus run waits for the owner (the rule above says ask first, and the owner said this is about the last money). Every change gets its rule in this log before its runs. Free offline checks (`scripts/candidate-check.ts`) come first wherever they can answer a question.
 
 ---

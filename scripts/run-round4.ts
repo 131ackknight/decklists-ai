@@ -1,7 +1,7 @@
 /**
  * Run round 4 (owner-written evals) on one harness and model.
  *
- *   pnpm exec tsx scripts/run-round4.ts --harness v2|...|v20 [--tag r2] --model claude-sonnet-5-5 [--track fill,brew,fresh|holdout] [--items id,id] [--concurrency 3] [--list] [--resume]
+ *   pnpm exec tsx scripts/run-round4.ts --harness v2|...|v21 [--tag r2] --model claude-sonnet-5-5 [--track fill,brew,fresh|holdout] [--items id,id] [--concurrency 3] [--list] [--resume]
  *
  * Fill in the blanks, brew to archetype and the brew holdout rebuild a past moment: lists from
  * the item's date on are cut from the data, and cards first printed after it
@@ -19,7 +19,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { loadCardIndex } from "../src/cards/load";
 import { FileDataSource } from "../src/data/source";
 import { MODELS } from "../src/harness/models";
-import { brew, brewV4, brewV5, brewV6, brewV7, brewV8, brewV9, brewV10, brewV11, brewV12, brewV13, brewV14, brewV15, brewV16, brewV17, brewV18, brewV19, brewV20, type BrewResult } from "../src/harness/run";
+import { brew, brewV4, brewV5, brewV6, brewV7, brewV8, brewV9, brewV10, brewV11, brewV12, brewV13, brewV14, brewV15, brewV16, brewV17, brewV18, brewV19, brewV20, brewV21, type BrewResult } from "../src/harness/run";
 import { runPipeline, type PipelineResult } from "../src/pipeline/run";
 import { dataFingerprint, recordRun } from "../evals/register";
 import { isNearCopy, round4Items } from "../evals/round4/items";
@@ -126,7 +126,9 @@ async function main() {
                                           ? await brewV19(client, model, req, deps)
                                           : harness === "v20"
                                             ? await brewV20(client, model, req, deps)
-                                            : await brew(client, model, req, deps);
+                                            : harness === "v21"
+                                              ? await brewV21(client, model, req, deps)
+                                              : await brew(client, model, req, deps);
       const pipe = "path" in r ? (r as PipelineResult) : null;
       spent += r.costUsd;
       const sum = (xs: { qty: number }[]) => xs.reduce((n, c) => n + c.qty, 0);

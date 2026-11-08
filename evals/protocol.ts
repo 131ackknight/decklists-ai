@@ -1,0 +1,63 @@
+/**
+ * How a harness change is judged, automatically (owner, 2026-11-07: "I want to
+ * improve this via automated testing, not hand picked ... and i want data, quant
+ * data to show the improvements"). Written down before any candidate is run, and
+ * frozen like the tests: evals/protocol.test.ts fails if it changes, so the rule
+ * can't be bent to fit a result. A new rule is a new id.
+ */
+import { createHash } from "node:crypto";
+
+export const PROTOCOL = {
+  id: "protocol-v1",
+  /** The harness every candidate is compared with. A kept candidate becomes the next protocol's base. */
+  base: "v13",
+  model: "claude-opus-5-5",
+  /** Changes are tried here, as often as needed. */
+  dev: "holdout-v1",
+  /** Looked at only to confirm a change that already won on dev, so the decision isn't tuned to it. */
+  test: ["tuning-v1", "brewing-v1"],
+  devRuns: 3,
+  testRuns: 2,
+  /**
+   * The data every compared run must have used (sha256, first 16 hex). Runs record theirs in the
+   * register; older runs without a record count if they finished after the file was last changed.
+   * New data goes in a copy (forward-week.ts --history) until a new protocol adopts it.
+   */
+  data: {
+    history: { file: "data/reference-lists-all.jsonl", sha256: "98511a8b770ce43d", since: "2026-10-20T14:19:47Z" },
+    recent: { file: "data/reference-lists.jsonl", sha256: "8a4ba5f40938aae8", since: "2026-10-14T13:18:53Z" },
+  },
+  rule:
+    "A candidate is kept if, on dev, the 95% range of its gain over the base is above zero, and on each test the top of the 95% range is above zero (not clearly worse). Gain: for each deck, the version's score averaged over its runs, minus the base's; the gain is the mean over decks, with a paired t interval. Both versions need the full number of runs before a verdict.",
+  frozen: "5ffaca503a226323",
+};
+
+export function protocolFingerprint(p: typeof PROTOCOL = PROTOCOL): string {
+  const { frozen: _, ...rest } = p;
+  return createHash("sha256").update(JSON.stringify(rest)).digest("hex").slice(0, 16);
+}
+
+/** Two-sided 95% t critical values by degrees of freedom; 1.96 beyond 30. */
+const T95: Record<number, number> = { 1: 12.706, 2: 4.303, 3: 3.182, 4: 2.776, 5: 2.571, 6: 2.447, 7: 2.365, 8: 2.306, 9: 2.262, 10: 2.228, 11: 2.201, 12: 2.179, 13: 2.16, 14: 2.145, 15: 2.131, 16: 2.12, 17: 2.11, 18: 2.101, 19: 2.093, 20: 2.086, 21: 2.08, 22: 2.074, 23: 2.069, 24: 2.064, 25: 2.06, 26: 2.056, 27: 2.052, 28: 2.048, 29: 2.045, 30: 2.042 };
+
+/**
+ * The gain of a candidate over the base, paired by deck: each deck's score averaged
+ * over a version's runs, candidate minus base, then the mean and a 95% t interval
+ * over decks. Decks missing from either side are left out (n says how many count).
+ */
+export function pairedGain(candidate: Map<string, number>[], base: Map<string, number>[]) {
+  const avg = (runs: Map<string, number>[], id: string) => {
+    const xs = runs.map((r) => r.get(id)).filter((x): x is number => x !== undefined);
+    return xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : undefined;
+  };
+  const ids = [...new Set(candidate.flatMap((r) => [...r.keys()]))];
+  const diffs = ids.flatMap((id) => {
+    const [c, b] = [avg(candidate, id), avg(base, id)];
+    return c !== undefined && b !== undefined ? [c - b] : [];
+  });
+  const n = diffs.length;
+  const gain = diffs.reduce((a, b) => a + b, 0) / n;
+  const sd = Math.sqrt(diffs.reduce((a, d) => a + (d - gain) ** 2, 0) / (n - 1));
+  const half = (T95[n - 1] ?? 1.96) * (sd / Math.sqrt(n));
+  return { n, gain, lo: gain - half, hi: gain + half };
+}

@@ -6,6 +6,7 @@
  * that crashed or was stopped. Lines are only ever appended.
  */
 import { execSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import { appendFileSync, existsSync, readFileSync } from "node:fs";
 
 export const REGISTER = "evals/runs.jsonl";
@@ -36,6 +37,8 @@ export interface RunRecord {
   backfilled?: boolean;
   /** For backfilled runs: the commit that first added the result file. */
   commitAdded?: string;
+  /** The data files the run read (sha256, first 16 hex), see dataFingerprint(). */
+  data?: { history: string; recent: string };
   note?: string;
 }
 
@@ -50,6 +53,12 @@ export function gitState(): { commit: string; dirty: boolean | "unknown" } {
   } catch {
     return { commit: "unknown", dirty: "unknown" };
   }
+}
+
+/** Fingerprints of the two data files brews read: the full history and the 90-day export. */
+export function dataFingerprint(history = "data/reference-lists-all.jsonl", recent = "data/reference-lists.jsonl") {
+  const sha = (f: string) => (existsSync(f) ? createHash("sha256").update(readFileSync(f)).digest("hex").slice(0, 16) : "missing");
+  return { history: sha(history), recent: sha(recent) };
 }
 
 /** Appends one line to the register. Started and finished lines share the git state taken at the start. */

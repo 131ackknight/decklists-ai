@@ -4,6 +4,7 @@
  *
  *   pnpm exec tsx scripts/forward-week.ts --merge data/export-latest/reference-lists/reference-lists.jsonl
  *   pnpm exec tsx scripts/forward-week.ts --since 2026-10-13 [--brew] [--harness v5,v2] [--model claude-opus-5-5]
+ *   [--history data/<copy>.jsonl] reads and merges into a copy instead of data/reference-lists-all.jsonl
  *
  * --merge adds a fresh Decklist Data export to data/reference-lists-all.jsonl
  * (deduplicated), so detection always runs on everything published so far.
@@ -40,7 +41,9 @@ const arg = (n: string, d?: string) => {
   const i = process.argv.indexOf(`--${n}`);
   return i > 0 ? process.argv[i + 1] : d;
 };
-const HISTORY = "data/reference-lists-all.jsonl";
+// --history points at a copy, so new data can be checked without touching the file the
+// frozen tests and the protocol's runs read (evals/protocol.ts records its hash).
+const HISTORY = arg("history", "data/reference-lists-all.jsonl")!;
 const LEDGER = "evals/forward/ledger.jsonl";
 const DAY = 86_400_000;
 const LEAD_DAYS = 45;

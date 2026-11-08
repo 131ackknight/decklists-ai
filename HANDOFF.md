@@ -33,6 +33,13 @@ An AI that brews Magic decks as well as the best human brewers. The owner judges
 - **Tests are frozen** in `evals/tests.ts` (items, parameters, data cutoff 2026-10-20, fingerprint). `pnpm test` fails if one changes; a change means a new version (tuning-v2), not an edit.
 - **Export every judging round right after the owner finishes:** ArtifactData `list` on the page URL and its collection (`decks`, `pairs` or `ratings`) with `out_dir` `evals/answers/<NN-slug>`, then add the page to `evals/answers/pages.json`. `pnpm test` fails if a key file has no export. Scripts read verdicts through `evals/answers.ts`, never hand-copied.
 
+## Improving the harness automatically (owner, 2026-11-07: "via automated testing, not hand picked. For now.")
+
+- **`evals/protocol.ts` (protocol-v1), frozen:** base v13; try changes on **dev** (holdout-v1, 21 decks), confirm on **test** (tuning-v1, brewing-v1) only after a dev win. 3 dev runs per version (base included), 2 test runs. Kept only if the dev gain's 95% range (paired by deck) is above zero and neither test is clearly worse. PROGRESS.md section 2b applies the rule to every candidate.
+- **Data snapshot:** compared runs must use `data/reference-lists-all.jsonl` sha 98511a8b770ce43d and `data/reference-lists.jsonl` 8a4ba5f40938aae8 (recorded per run in the register). **Don't replace them.** New exports go into a copy: `forward-week.ts --history data/reference-lists-all-2026-11-07.jsonl --merge <export>`. The 2026-11-07 export added 5,395 lists, 286 of them dated Oct 20 or earlier (late-scraped), so merging into the main file would have moved frozen scores.
+- **Measured noise:** repeat runs differ by about 1.2-1.6 points on these tests, so one run per version can't show a gain; with 3 runs, gains of about 2-2.5 points are detectable.
+- **Candidate order:** v19 (playtest), v14 (mana tool; one dev run looked +1.8), then new generic ideas aimed at measurable gaps: colors and lands (47% land match, flat), deck shape (0.7 one-ofs vs real 2.3), the gem rater.
+
 ## Rules the owner set (keep to them)
 
 - **Generic tools that give specific knowledge. Never fixes bespoke to one card or engine.**

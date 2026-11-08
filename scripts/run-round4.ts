@@ -21,7 +21,7 @@ import { FileDataSource } from "../src/data/source";
 import { MODELS } from "../src/harness/models";
 import { brew, brewV4, brewV5, brewV6, brewV7, brewV8, brewV9, brewV10, brewV11, brewV12, brewV13, brewV14, brewV15, brewV16, brewV17, brewV18, brewV19, type BrewResult } from "../src/harness/run";
 import { runPipeline, type PipelineResult } from "../src/pipeline/run";
-import { recordRun } from "../evals/register";
+import { dataFingerprint, recordRun } from "../evals/register";
 import { isNearCopy, round4Items } from "../evals/round4/items";
 import { testsCoveredBy } from "../evals/tests";
 
@@ -78,7 +78,7 @@ async function main() {
   }
   const save = (complete: boolean) =>
     writeFileSync(out, JSON.stringify({ ranAt: new Date().toISOString(), harness, model: modelId, tracks, complete, results: complete ? results : results.filter(Boolean) }, null, 1));
-  const run = { script: "run-round4", file: out, tests: testsCoveredBy(items.map((it) => it.id)), harness, model: modelId, tracks, tag };
+  const run = { script: "run-round4", file: out, tests: testsCoveredBy(items.map((it) => it.id)), harness, model: modelId, tracks, tag, data: dataFingerprint() };
   const started = recordRun({ event: "started", ...run, items: items.length });
 
   async function worker() {

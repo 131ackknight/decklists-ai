@@ -17,6 +17,7 @@ import { FileDataSource } from "../src/data/source";
 import { pages, pairVerdicts, playVerdicts, ratingRows } from "../evals/answers";
 import { latestRuns, readRegister, type RunRecord } from "../evals/register";
 import { round4Items, toCounts, type Line } from "../evals/round4/items";
+import { PROTOCOL, pairedGain } from "../evals/protocol";
 import { futureLists, inventorGems, loadLists, overlap, settledLists, settledScore, shareScore, type Counts } from "../evals/score";
 import { TESTS, testById } from "../evals/tests";
 
@@ -132,7 +133,62 @@ async function main() {
   const unlisted = [...new Set(runs.map((r) => r.harness).filter((h): h is string => !!h && !listed.has(h)))].sort((a, b) => versionNo(a) - versionNo(b));
   out.push("## 2. Automatic scores (match % with real decks, Opus 5.5 unless named)", "");
   out.push(table(["Version", "holdout-v1", "post-v1", "future-v1", "tuning-v1", "brewing-v1", "Gems found", "Cost per deck"], rows), "");
-  out.push(`"a / b" = runs in date order. Cost per deck: the range over this version's runs above (recorded cost / items), panel runs included. Versions with runs in the register but none on these tests: ${unlisted.join(", ") || "none"}.`, "");
+  out.push(`"a / b / c" = run 1 / run 2 / run 3 (by the file's run tag). Cost per deck: the range over this version's runs above (recorded cost / items), panel runs included. Versions with runs in the register but none on these tests: ${unlisted.join(", ") || "none"}.`, "");
+
+  // 2b. Candidates against the base, by the frozen protocol.
+  /** One run's score on each deck of a test. */
+  const deckScores = (r: RunRecord, testId: string): Map<string, number> => {
+    const decks = decksOf(r);
+    const m = new Map<string, number>();
+    const settled = testId === "holdout-v1" ? holdout : testId === "post-v1" ? post : testId === "future-v1" ? future : null;
+    for (const id of testById(testId).items) {
+      const d = decks.get(id);
+      if (!d) continue;
+      const deck = toCounts(index, d.main);
+      if (settled) m.set(id, settledScore(deck, settled.get(id)!));
+      else if (testId === "tuning-v1") m.set(id, shareScore(index, deck, tuning.get(id)!.settled).all * 100);
+      else if (testId === "brewing-v1" && gems.has(id)) m.set(id, shareScore(index, deck, tuning.get(id)!.firstWeek).all * 100);
+    }
+    return m;
+  };
+  // Only runs made on the protocol's data count: recorded fingerprints, or for older runs, finishing after the file last changed.
+  const onProtocolData = (r: RunRecord) =>
+    r.data ? r.data.history === PROTOCOL.data.history.sha256 && r.data.recent === PROTOCOL.data.recent.sha256 : r.at >= PROTOCOL.data.history.since;
+  const allRunsOf = (harness: string, testId: string) => scored.filter((r) => r.harness === harness && r.model === PROTOCOL.model && r.tests.includes(testId));
+  const runsOf = (harness: string, testId: string) => allRunsOf(harness, testId).filter(onProtocolData);
+  const earlierData = (harness: string, testId: string) => allRunsOf(harness, testId).length - runsOf(harness, testId).length;
+  const signed = (x: number) => `${x >= 0 ? "+" : ""}${one(x)}`;
+  const gainOf = (cand: RunRecord[], base: RunRecord[], testId: string, harness: string) => {
+    const older = earlierData(harness, testId);
+    const note = older ? ` (${older} more on an earlier data copy, not counted)` : "";
+    if (!cand.length || !base.length) return { text: `${older ? "none on the protocol's data" : "not run"}${note}`, g: null as ReturnType<typeof pairedGain> | null };
+    const g = pairedGain(cand.map((r) => deckScores(r, testId)), base.map((r) => deckScores(r, testId)));
+    return { text: `${signed(g.gain)} (${signed(g.lo)} to ${signed(g.hi)}), ${cand.length} run${cand.length > 1 ? "s" : ""}${note}`, g };
+  };
+  const baseDev = runsOf(PROTOCOL.base, PROTOCOL.dev);
+  const baseTest = PROTOCOL.test.map((t) => runsOf(PROTOCOL.base, t));
+  const candidates = [
+    ...new Set(scored.filter((r) => r.model === PROTOCOL.model && r.harness !== PROTOCOL.base && r.tests.some((t) => t === PROTOCOL.dev || PROTOCOL.test.includes(t))).map((r) => r.harness!)),
+  ].sort((a, b) => versionNo(a) - versionNo(b));
+  const verdictRows = candidates.map((h) => {
+    const devRuns = runsOf(h, PROTOCOL.dev);
+    const dev = gainOf(devRuns, baseDev, PROTOCOL.dev, h);
+    const tests = PROTOCOL.test.map((t, i) => gainOf(runsOf(h, t), baseTest[i], t, h));
+    const short = [PROTOCOL.devRuns - devRuns.length, PROTOCOL.devRuns - baseDev.length];
+    let verdict: string;
+    if (!dev.g) verdict = "no dev runs";
+    else if (short[0] > 0 || short[1] > 0) verdict = `no verdict yet: needs ${[short[0] > 0 ? `${short[0]} more dev run(s)` : "", short[1] > 0 ? `${short[1]} more base run(s)` : ""].filter(Boolean).join(" and ")}`;
+    else if (dev.g.lo <= 0) verdict = "dropped: no clear dev gain";
+    else if (PROTOCOL.test.some((t, i) => runsOf(h, t).length < PROTOCOL.testRuns || baseTest[i].length < PROTOCOL.testRuns)) verdict = "dev win: confirm on test";
+    else verdict = tests.every((t) => t.g!.hi > 0) ? "**kept**" : "dropped: worse on test";
+    return [h, dev.text, ...tests.map((t) => t.text), verdict];
+  });
+  out.push(`### 2b. Candidates vs the base (${PROTOCOL.id}, \`evals/protocol.ts\`)`, "");
+  out.push(
+    `Base: ${PROTOCOL.base}, with ${baseDev.length} run(s) on dev (${PROTOCOL.dev}) and ${baseTest.map((r, i) => `${r.length} on ${PROTOCOL.test[i]}`).join(", ")}. Gain = points over the base, paired by deck, with its 95% range. Only runs on the protocol's data count (\`${PROTOCOL.data.history.file}\` ${PROTOCOL.data.history.sha256}, \`${PROTOCOL.data.recent.file}\` ${PROTOCOL.data.recent.sha256}). Rule: ${PROTOCOL.rule}`,
+    "",
+  );
+  out.push(table(["Candidate", `Dev: ${PROTOCOL.dev}`, ...PROTOCOL.test.map((t) => `Test: ${t}`), "Verdict"], verdictRows), "");
 
   // 3. The owner's judging rounds.
   out.push("## 3. The owner's judging rounds (`evals/answers/`)", "");

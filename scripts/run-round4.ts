@@ -1,7 +1,7 @@
 /**
  * Run round 4 (owner-written evals) on one harness and model.
  *
- *   pnpm exec tsx scripts/run-round4.ts --harness v2|...|v19 [--tag r2] --model claude-sonnet-5-5 [--track fill,brew,fresh|holdout] [--items id,id] [--concurrency 3] [--list]
+ *   pnpm exec tsx scripts/run-round4.ts --harness v2|...|v19 [--tag r2] --model claude-sonnet-5-5 [--track fill,brew,fresh|holdout] [--items id,id] [--concurrency 3] [--list] [--resume]
  *
  * Fill in the blanks, brew to archetype and the brew holdout rebuild a past moment: lists from
  * the item's date on are cut from the data, and cards first printed after it
@@ -9,15 +9,21 @@
  * owner's list (see NEAR_COPY). Fresh brews use today's 90-day data, like
  * rounds 1-3. Writes evals/results/round4/<harness>-<model>.json; score with
  * scripts/score-round4.ts. --list prints the items and spends nothing.
+ *
+ * The results file is rewritten after every item ("complete": false until the
+ * last one), so a crash keeps everything finished so far; --resume skips the
+ * items already in it. Each run is recorded in evals/runs.jsonl (evals/register.ts).
  */
 import Anthropic from "@anthropic-ai/sdk";
-import { mkdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { loadCardIndex } from "../src/cards/load";
 import { FileDataSource } from "../src/data/source";
 import { MODELS } from "../src/harness/models";
 import { brew, brewV4, brewV5, brewV6, brewV7, brewV8, brewV9, brewV10, brewV11, brewV12, brewV13, brewV14, brewV15, brewV16, brewV17, brewV18, brewV19, type BrewResult } from "../src/harness/run";
 import { runPipeline, type PipelineResult } from "../src/pipeline/run";
+import { recordRun } from "../evals/register";
 import { isNearCopy, round4Items } from "../evals/round4/items";
+import { testsCoveredBy } from "../evals/tests";
 
 try {
   process.loadEnvFile(".env.local");
@@ -51,12 +57,33 @@ async function main() {
   const history = await FileDataSource.load("data/reference-lists-all.jsonl", index);
   const today = await FileDataSource.load("data/reference-lists.jsonl", index);
   const client = new Anthropic();
-  const results: unknown[] = new Array(items.length);
+  const results: ({ id: string; costUsd: number; deck: unknown; [field: string]: unknown } | undefined)[] = new Array(items.length);
   let spent = 0;
   let next = 0;
 
+  mkdirSync("evals/results/round4", { recursive: true });
+  const out = `evals/results/round4/${tracks.join("+")}-${harness}-${modelId}${tag ? `-${tag}` : ""}${only ? "-partial" : ""}.json`.replace("fill+brew+fresh-", "");
+  const resume = process.argv.includes("--resume");
+  if (existsSync(out) && !resume) throw new Error(`${out} exists. Pass --resume to finish it, or a new --tag.`);
+  if (resume && existsSync(out)) {
+    const done = new Map((JSON.parse(readFileSync(out, "utf8")).results as { id: string; costUsd: number; deck: unknown }[]).filter(Boolean).map((r) => [r.id, r]));
+    items.forEach((it, i) => {
+      const r = done.get(it.id);
+      if (r) {
+        results[i] = r;
+        spent += r.costUsd;
+      }
+    });
+    console.log(`resuming ${out}: ${done.size} of ${items.length} done, $${spent.toFixed(2)} spent`);
+  }
+  const save = (complete: boolean) =>
+    writeFileSync(out, JSON.stringify({ ranAt: new Date().toISOString(), harness, model: modelId, tracks, complete, results: complete ? results : results.filter(Boolean) }, null, 1));
+  const run = { script: "run-round4", file: out, tests: testsCoveredBy(items.map((it) => it.id)), harness, model: modelId, tracks, tag };
+  const started = recordRun({ event: "started", ...run, items: items.length });
+
   async function worker() {
     for (let i = next++; i < items.length; i = next++) {
+      if (results[i]) continue;
       const it = items[i];
       const pool = it.before ? index.asOf(it.before, history.cardsPlayedThrough(it.before)) : index;
       const data = it.before ? history.cut(it.before, pool, (l) => isNearCopy(index, it, l.main)) : today;
@@ -131,13 +158,23 @@ async function main() {
         ms: r.ms,
         errors: r.error ? [r.error] : [],
       };
+      save(false);
     }
   }
 
   await Promise.all(Array.from({ length: Math.max(1, concurrency) }, worker));
-  mkdirSync("evals/results/round4", { recursive: true });
-  const out = `evals/results/round4/${tracks.join("+")}-${harness}-${modelId}${tag ? `-${tag}` : ""}${only ? "-partial" : ""}.json`.replace("fill+brew+fresh-", "");
-  writeFileSync(out, JSON.stringify({ ranAt: new Date().toISOString(), harness, model: modelId, tracks, results }, null, 1));
+  save(true);
+  const written = results.filter(Boolean);
+  recordRun({
+    event: "finished",
+    ...run,
+    items: written.length,
+    decks: written.filter((r) => r!.deck).length,
+    costUsd: Math.round(spent * 10000) / 10000,
+    complete: written.length === items.length,
+    commit: started.commit,
+    dirty: started.dirty,
+  });
   console.log(`wrote ${out}, total $${spent.toFixed(2)}`);
 }
 

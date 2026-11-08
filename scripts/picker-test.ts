@@ -16,6 +16,9 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { z } from "zod";
 import { loadCardIndex } from "../src/cards/load";
 import { costUsd, MODELS } from "../src/harness/models";
+import { playVerdicts } from "../evals/answers";
+import { recordRun } from "../evals/register";
+import { testById } from "../evals/tests";
 
 try {
   process.loadEnvFile(".env.local");
@@ -38,11 +41,11 @@ const load = (f: string) => new Map((JSON.parse(readFileSync(`${R}/${f}`, "utf8"
 const panelV2 = load("expert2+expert3-v2-claude-opus-5-5-panel.json");
 const panelV18 = load("expert2+expert3-v18-claude-opus-5-5-panel.json");
 const firstV18 = load("expert2+expert3-v18-claude-opus-5-5-partial.json");
-const answers = JSON.parse(readFileSync(`${R}/play-panel-1-answers.json`, "utf8")) as { item: string; harness: string; play: string }[];
-const verdict = (item: string, harness: string) => answers.find((a) => a.item === item && a.harness === harness)?.play === "yes";
-
-// The owner's verdicts on v18's first builds (2026-10-24, "better than last time" page): closer and further count as no.
-const FIRST_V18_YES = new Set(["expert2-premodern-rising-waters", "expert2-premodern-mind-over-matter", "expert3-premodern-mill", "expert3-premodern-nether-spirit", "expert3-premodern-zurs-weirding"]);
+// The owner's verdicts, from the exported judging pages: blind panel round 1, and v18's first builds
+// ("better than last time"; closer and further count as no).
+const panel1 = playVerdicts("18-blind-panel-1-v2-v18");
+const verdict = (item: string, harness: string) => panel1.find((a) => a.item === item && a.harness === harness)?.play === "yes";
+const FIRST_V18_YES = new Set(playVerdicts("17-rebuild-v18").filter((a) => a.play === "yes").map((a) => a.item));
 
 const pairs: { item: string; yes: Result; no: Result; source: string }[] = [];
 for (const [item, b] of panelV18) {
@@ -67,6 +70,10 @@ async function main() {
   let total = 0;
   let pickedA = 0;
   let spent = 0;
+  const TEST = testById("picker-v1");
+  const outFile = `${R}/picker-test.json`;
+  const save = (complete: boolean) => writeFileSync(outFile, JSON.stringify({ ranAt: new Date().toISOString(), model: model.id, complete, right, total, pickedA, results: out }, null, 1));
+  const started = recordRun({ event: "started", script: "picker-test", file: outFile, tests: [TEST.id], model: model.id, items: pairs.length });
   for (const p of pairs) {
     const names = [...new Set([...p.yes.deck!.main, ...p.no.deck!.main].map((l) => l.name))];
     const text = names
@@ -98,9 +105,11 @@ async function main() {
       out.push({ item: p.item, source: p.source, yesFirst: A === p.yes, pick, correct, why: msg.parsed_output?.why, costUsd: cost });
     }
     console.log(`${p.item.padEnd(40)} ${p.source.padEnd(15)} ${verdicts.join(" / ")}`);
+    save(false);
   }
   console.log(`\nPicked your yes ${right} of ${total} (${Math.round((right / total) * 100)}%; 50% = can't tell). Picked "A" ${pickedA} of ${total}. Total $${spent.toFixed(2)}`);
-  writeFileSync(`${R}/picker-test.json`, JSON.stringify({ ranAt: new Date().toISOString(), model: model.id, right, total, pickedA, results: out }, null, 1));
+  save(true);
+  recordRun({ event: "finished", script: "picker-test", file: outFile, tests: [TEST.id], model: model.id, items: pairs.length, costUsd: Math.round(spent * 10000) / 10000, complete: true, commit: started.commit, dirty: started.dirty });
 }
 
 main().catch((e) => {

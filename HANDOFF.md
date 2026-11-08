@@ -25,6 +25,14 @@ An AI that brews Magic decks as well as the best human brewers. The owner judges
 9. (2026-10-24) **Text playtest works** (`scripts/playtest.ts`): the AI plays each flagged deck through 2 dealt games and finds the owner's complaint in 4 of 14 decks, partly in 7 (the card-by-card reviewer: 0 of 4). Different-model judges were no better (Fable 44%, Sonnet 0%). Proposed next: v19 = v13 + playtest + revise, on the blind panel.
 10. (2026-10-25) **v19** = v13 + one played game + fix the top three problems (`brewV19`; the v17/v18 reviewer is out). Found-deck test (owner's mono-blue Squee list from outside MTGO): 42-57% from two cards, Squee never found when hidden. **Blind panel round 2 judged (2026-10-25): v13 10 of 17, v19 13 of 17** (v19 alone yes on 4 prompts, v13 alone on 1; promising, not proven). Page: https://claude.ai/artifact/D8vgp8z23N22z4ZrzxQKt2 (ArtifactData list, collection `decks`; key `evals/results/round4/play-panel-2-key.json`). Unblind like round 1 (`play-panel-1-answers.json`).
 
+## How the data is kept (2026-11-07, after the owner: "We arent very careful with our data are we?")
+
+- **PROGRESS.md is generated, never edited:** `pnpm exec tsx scripts/scoreboard.ts` after every run or judging round. Its only hand-kept part is `evals/progress-log-only.md` (numbers with no result file).
+- **Every paid run records itself** in `evals/runs.jsonl` (started and finished, with commit, cost and result file). A started line with no finished line is a crashed run. Past runs were backfilled from their files (`scripts/backfill-runs.ts`).
+- **Results save after every item.** A crashed `run-round4.ts` run is finished with `--resume`; it refuses to overwrite an existing results file.
+- **Tests are frozen** in `evals/tests.ts` (items, parameters, data cutoff 2026-10-20, fingerprint). `pnpm test` fails if one changes; a change means a new version (tuning-v2), not an edit.
+- **Export every judging round right after the owner finishes:** ArtifactData `list` on the page URL and its collection (`decks`, `pairs` or `ratings`) with `out_dir` `evals/answers/<NN-slug>`, then add the page to `evals/answers/pages.json`. `pnpm test` fails if a key file has no export. Scripts read verdicts through `evals/answers.ts`, never hand-copied.
+
 ## Rules the owner set (keep to them)
 
 - **Generic tools that give specific knowledge. Never fixes bespoke to one card or engine.**

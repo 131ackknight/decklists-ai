@@ -11,16 +11,21 @@
  * One call per deck rates every card 1-5 for "a strong brewer would main-deck
  * it here". Score: the chance a random gem is rated above a random look-alike
  * (50% = can't tell them apart). --dry prints the card sets and spends nothing.
+ * Decks and data cutoff are the frozen gem-v1 test (evals/tests.ts); results are
+ * saved after every deck and the run is recorded in evals/runs.jsonl.
  */
 import Anthropic from "@anthropic-ai/sdk";
 import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
-import { readFileSync, writeFileSync } from "node:fs";
+import { writeFileSync } from "node:fs";
 import { z } from "zod";
 import { loadCardIndex } from "../src/cards/load";
 import { normalizeName } from "../src/cards/names";
 import { FileDataSource } from "../src/data/source";
 import { costUsd, MODELS } from "../src/harness/models";
-import { isLand, round4Items, toCounts, type Line } from "../evals/round4/items";
+import { recordRun } from "../evals/register";
+import { isLand, round4Items, toCounts } from "../evals/round4/items";
+import { loadLists } from "../evals/score";
+import { testById } from "../evals/tests";
 import { synergyScore, trainSynergy } from "../src/synergy/feature-synergy";
 
 try {
@@ -29,8 +34,8 @@ try {
   // No .env.local: rely on the environment.
 }
 
-const W = /^Cards?\s*\(\d+%?\)\s*$/i;
 const DAY = 86_400_000;
+const TEST = testById("gem-v1");
 const SIZE = 30;
 const arg = (name: string) => {
   const i = process.argv.indexOf(`--${name}`);
@@ -47,11 +52,7 @@ const hash = (s: string) => [...s].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >
 async function main() {
   const index = loadCardIndex();
   const history = await FileDataSource.load("data/reference-lists-all.jsonl", index);
-  const raw = readFileSync("data/reference-lists-all.jsonl", "utf8")
-    .split("\n")
-    .filter(Boolean)
-    .map((l) => JSON.parse(l) as { format: string; date: string; strategy: string; main: Line[] })
-    .map((l) => ({ ...l, main: l.main.filter((c) => !W.test(c.name)) }));
+  const raw = loadLists(String(TEST.params.dataThrough));
   const synergy = trainSynergy(index, raw.filter((l) => l.format !== "duel" && l.date < "2026-04-01").map((l) => l.main.map((c) => c.name)));
   const land = (k: string) => isLand(index, k);
   const canon = (k: string) => normalizeName(index.getCard(k)?.name ?? k);
@@ -59,8 +60,15 @@ async function main() {
   const out: unknown[] = [];
   const pairs: number[] = [];
   let spent = 0;
+  const tag = arg("tag");
+  const outFile = `evals/results/round4/gem-test${tag ? `-${tag}` : ""}.json`;
+  const save = (complete: boolean) => {
+    const mean = pairs.reduce((a, b) => a + b, 0) / Math.max(1, pairs.length);
+    writeFileSync(outFile, JSON.stringify({ ranAt: new Date().toISOString(), model: model.id, complete, mean, results: out }, null, 1));
+  };
+  const started = dry ? null : recordRun({ event: "started", script: "gem-test", file: outFile, tests: [TEST.id], model: model.id, tag, items: TEST.items.length });
 
-  for (const it of round4Items(index).filter((i) => i.track === "future" && i.target)) {
+  for (const it of round4Items(index).filter((i) => TEST.items.includes(i.id) && i.target)) {
     const t = it.target!;
     const first = Date.parse(t.firstSeen);
     const ofDeck = raw.filter((l) => l.format === t.format && l.strategy === t.strategy).map((l) => ({ date: l.date, c: toCounts(index, l.main) }));
@@ -141,12 +149,13 @@ async function main() {
     );
     console.log(`  rated 5: ${rank.filter((r) => r.score === 5).map((r) => `${r.card}${gems.includes(canon(r.card)) ? "*" : ""}`).join(", ")}`);
     out.push({ id: it.id, gems: gems.map(name), lookAlikes: lookAlikes.map(name), ratings: msg.parsed_output?.ratings, auc, costUsd: cost });
+    save(false);
   }
   if (dry) return;
   const mean = pairs.reduce((a, b) => a + b, 0) / pairs.length;
   console.log(`\n${pairs.length} decks: a gem is rated above a look-alike ${Math.round(mean * 100)}% of the time (50% = can't tell). Total $${spent.toFixed(2)}`);
-  const tag = arg("tag");
-  writeFileSync(`evals/results/round4/gem-test${tag ? `-${tag}` : ""}.json`, JSON.stringify({ ranAt: new Date().toISOString(), model: model.id, mean, results: out }, null, 1));
+  save(true);
+  recordRun({ event: "finished", script: "gem-test", file: outFile, tests: [TEST.id], model: model.id, tag, items: out.length, costUsd: Math.round(spent * 10000) / 10000, complete: out.length === TEST.items.length, commit: started!.commit, dirty: started!.dirty });
 }
 
 main().catch((e) => {

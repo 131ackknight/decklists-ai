@@ -19,6 +19,7 @@ import { loadCardIndex } from "../src/cards/load";
 import { FileDataSource } from "../src/data/source";
 import { costUsd, MODELS, type Usage } from "../src/harness/models";
 import { dealGame as deal } from "../src/harness/playtest";
+import { recordRun } from "../evals/register";
 
 try {
   process.loadEnvFile(".env.local");
@@ -81,6 +82,7 @@ async function main() {
   const tally = { yes: 0, partly: 0, no: 0 };
   const outFile = `${R}/playtest.json`;
   const out: unknown[] = from > 0 ? (JSON.parse(readFileSync(outFile, "utf8")).results as unknown[]) : [];
+  const started = recordRun({ event: "started", script: "playtest", file: outFile, tests: ["playtest-v1"], model: model.id, items: cases.length - from, note: from > 0 ? `resumed from case ${from}` : undefined });
   for (const [n, c] of cases.entries()) {
     if (n < from) continue;
     const fmt = c.r.format.toLowerCase();
@@ -119,6 +121,7 @@ async function main() {
       console.log(`${c.item.replace(/^expert\d-/, "").padEnd(30)} failed: ${(err as Error).message.slice(0, 100)}`);
       continue;
     }
+    const before = spent;
     spent += cost(msg.usage);
     const report = msg.parsed_output!;
     const graded = await client.messages.parse({
@@ -132,10 +135,11 @@ async function main() {
     const g = graded.parsed_output!;
     tally[g.found]++;
     console.log(`${c.item.replace(/^expert\d-/, "").padEnd(30)} ${(HARNESS[c.file] ?? SOURCE[c.file]).padEnd(17)} ${g.found.padEnd(6)} ${g.which.slice(0, 110)}`);
-    out.push({ item: c.item, file: c.file, note: c.note, opponent, report, grade: g });
+    out.push({ item: c.item, file: c.file, note: c.note, opponent, report, grade: g, costUsd: Math.round((spent - before) * 10000) / 10000 });
     writeFileSync(outFile, JSON.stringify({ ranAt: new Date().toISOString(), games, results: out }, null, 1));
   }
   console.log(`\nFound the owner's complaint: yes ${tally.yes}, partly ${tally.partly}, no ${tally.no} (of ${cases.length}). Total $${spent.toFixed(2)}`);
+  recordRun({ event: "finished", script: "playtest", file: outFile, tests: ["playtest-v1"], model: model.id, items: out.length, costUsd: Math.round(spent * 10000) / 10000, complete: out.length === cases.length, commit: started.commit, dirty: started.dirty });
 }
 
 main().catch((e) => {

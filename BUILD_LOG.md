@@ -30,7 +30,7 @@ Three things, and the third is turning out to be the most interesting.
 | Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80; v12 on six $2.61; round 3 $1.90; v13 post-cutoff $2.85; v14 and future test $41.28; v15 round $25.87; v16 round $17.46; reviewer checks $0.78; v17 on eight $4.80. v17 future test $19.00; gem test $1.82; v18 on eight $4.92; blind panel round 1 $18.13; picker test $0.69; taste tests $3.06; judge with evidence and goldfish $2.18; Fable and Sonnet judges $4.30; text playtest $4.07; v19 smoke test $0.77; found-deck test $3.79; blind panel round 2 $21.00. Total about $435.92. Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats); full history 145,131 (since 2025-07-01, merged weekly) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
-| Automated tests | 60 passing |
+| Automated tests | 114 passing |
 | Decklist Data PRs merged | 5 (#181 export, #182 baseline eval, #183 baseline on `main`, #184 model comparison, #188 sideboard junk cleanup: 34,432 lists cleaned) |
 | Plan steps done | 1, 4, 5, 6, 8; harness at v13 (15 versions tried); evals: owner's "would you play it?" plus the 18-deck future test |
 | Current harness | **v13**: future test 48.3% / 47.9% (two runs), v2 44.9%; blind panel v13 10 of 17, v19 13 of 17 (v19 not yet confirmed or made the base) |
@@ -74,6 +74,29 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - Lesson to apply: any prompt or claim that names a card gets checked against the card index before it is used.
 - ~~Switch to pairwise~~: done; 36 pairs judged (v1 8 wins, v2 6, 22 ties; v2 100% faithful vs. 92%).
 - ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
+
+---
+
+## 2026-11-07 · Five fixes to how the data is kept
+
+Owner, after the progress table: **"We arent very careful with our data are we?"** Not careful enough: the raw results were safe, but numbers were typed by hand and drifted, scored runs went unreported, a crash lost data, tests changed under the same name, and judging answers lived only on claude.ai pages. Owner: "yes" to five fixes, none spending API money.
+
+**1. The scoreboard is generated.** `scripts/scoreboard.ts` writes PROGRESS.md from the run register, the result files, the frozen tests and the exported answers. Its one hand-kept part is `evals/progress-log-only.md`: numbers with no result file. Scoring moved into one shared module (`evals/score.ts`) that `score-round4.ts`, `score-tests.ts` and the scoreboard all use. **Check:** all 28 holdout, post-cutoff and future runs and all 10 Tuning/Brewing runs give exactly the numbers verified by hand this morning, and so do the hindsight baselines (42.7, 41.8, 49.0) and the tallies of all 19 judging rounds.
+
+**2. A run register.** Every paid script (`run-round4`, gem, picker, taste, playtest) appends to `evals/runs.jsonl` when it starts and when it finishes: file, frozen tests it feeds, commit, uncommitted-code flag, cost, items. A start with no finish is a crash. `scripts/backfill-runs.ts` recorded the 99 past runs from their files ($384.03 of recorded cost; 14 runs store no cost: v1, brainstorm, playtest). The code version behind a backfilled run is unknown; the register records the commit that first added its file instead.
+
+**3. Saving after every item.** `run-round4.ts` rewrites its results file after each deck (`"complete": false` until the last), resumes with `--resume`, and refuses to overwrite an existing file. The gem, picker and taste tests now save per item too, and the playtest saves its cost per deck (it never did). `score-round4.ts` no longer rewrites the tracked `summary.json` on every run (only with `--summary <path>`). Not yet exercised by a real crash.
+
+**4. Frozen tests.** `evals/tests.ts`: 12 tests (holdout-v1, post-v1, future-v1, tuning-v1, brewing-v1, panel-v1 and six diagnostics), each with its exact item list, parameters, a data cutoff of 2026-10-20 (the newest list in the data, so merging new MTGO data can't move an old score) and a fingerprint of the definition plus each item's prompt and cards. `pnpm test` fails if anything changes; checked by changing one setting, and by adding one space to one panel prompt. A change means a new version, not an edit.
+
+**5. Every judging round exported.** All 19 judging pages, 397 answers, in `evals/answers/` with a registry (`pages.json`: link, key, collection, what was judged). 15 rounds had older copies in the repo, and all 15 matched exactly. New: the v18 rebuild round and the raw panel answers. Only 5 of the 19 page links had been recorded anywhere in the repo; now all are. `pnpm test` fails if a judging key has no export. The picker script read five of the owner's verdicts from a hand-typed list; it now reads them from the export (same 13 pairs).
+
+**Found along the way:**
+- **The log's round 2 ratings (v2 Opus 3.66, Sonnet 3.50) were right, but pre-date the exclusion of the two Tainted Pact ratings.** Counting them reproduces 3.66 and 3.50 exactly; without them it's 3.83 and 3.66; over all 24 prompts 3.86 and 3.73. All three are shown now.
+- Claude's chat message said 446 answers were exported; the count is 397.
+- Run logs are now committed: `logs/playtest.log` is the only record of 5 playtest grades.
+
+114 tests pass (60 before).
 
 ---
 

@@ -17,6 +17,8 @@
  * --goldfish adds each deck's mana stats from the goldfish simulator.
  * The picker test found the AI prefers "established shells"; a judge with a
  * strong brewer's taste should pick the inventor's deck most of the time.
+ * Decks and data cutoff are the frozen taste-v1 (--vs settled) or taste-first-v1
+ * test; results are saved after every pair and runs recorded in evals/runs.jsonl.
  */
 import Anthropic from "@anthropic-ai/sdk";
 import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
@@ -27,7 +29,10 @@ import { FileDataSource } from "../src/data/source";
 import { costUsd, MODELS } from "../src/harness/models";
 import { cardEvidence } from "../src/harness/review";
 import { goldfish } from "../src/sim/goldfish";
+import { recordRun } from "../evals/register";
 import { round4Items, type Line } from "../evals/round4/items";
+import { loadLists } from "../evals/score";
+import { testById } from "../evals/tests";
 
 try {
   process.loadEnvFile(".env.local");
@@ -35,7 +40,6 @@ try {
   // No .env.local: rely on the environment.
 }
 
-const W = /^Cards?\s*\(\d+%?\)\s*$/i;
 const arg = (name: string, fallback?: string) => {
   const i = process.argv.indexOf(`--${name}`);
   return i > 0 ? process.argv[i + 1] : fallback;
@@ -60,14 +64,12 @@ export const JUDGE_SYSTEM =
 
 async function main() {
   const index = loadCardIndex();
-  const raw = readFileSync("data/reference-lists-all.jsonl", "utf8")
-    .split("\n")
-    .filter(Boolean)
-    .map((l) => JSON.parse(l) as { format: string; date: string; strategy: string; main: Line[] });
+  const TEST = testById(vs === "settled" ? "taste-v1" : "taste-first-v1");
+  const raw = loadLists(String(TEST.params.dataThrough));
   const brews = new Map((JSON.parse(readFileSync(runFile, "utf8")).results as { id: string; deck: { main: Line[] } | null }[]).map((r) => [r.id, r]));
 
   const pairs = round4Items(index)
-    .filter((it) => it.track === "future" && it.target && brews.get(it.id)?.deck)
+    .filter((it) => TEST.items.includes(it.id) && it.target && brews.get(it.id)?.deck)
     .flatMap((it) => {
       const t = it.target!;
       const ofDeck = raw.filter((l) => l.format === t.format && l.strategy === t.strategy).sort((a, b) => a.date.localeCompare(b.date));
@@ -80,7 +82,7 @@ async function main() {
         pick = sample.map((l, i) => ({ l, s: c.reduce((n, o) => n + overlap(c[i], o), 0) })).sort((a, b) => b.s - a.s)[0]?.l;
       }
       // The judge is told the deck's first day either way: the brew was built with what existed then.
-      return pick ? [{ it, inventor: pick.main.filter((c) => !W.test(c.name)), brew: brews.get(it.id)!.deck!.main, date: ofDeck[0].date }] : [];
+      return pick ? [{ it, inventor: pick.main, brew: brews.get(it.id)!.deck!.main, date: ofDeck[0].date }] : [];
     });
   console.log(`${pairs.length} pairs (brews from ${runFile})`);
   if (process.argv.includes("--dry")) {
@@ -111,6 +113,12 @@ async function main() {
   let total = 0;
   let pickedA = 0;
   let spent = 0;
+  const tag = arg("tag");
+  const outFile = `evals/results/round4/taste-test${vs === "settled" ? "-settled" : ""}${noRequest ? "-norequest" : ""}${withEvidence ? "-evidence" : ""}${withGoldfish ? "-goldfish" : ""}${tag ? `-${tag}` : ""}.json`;
+  const save = (complete: boolean) =>
+    writeFileSync(outFile, JSON.stringify({ ranAt: new Date().toISOString(), model: model.id, runFile, vs, noRequest, withEvidence, withGoldfish, complete, inventor, total, pickedA, results: out }, null, 1));
+  const note = `judge ${model.id}; real ${vs}; request ${noRequest ? "hidden" : "shown"}${withEvidence ? "; card evidence" : ""}${withGoldfish ? "; goldfish" : ""}; brews ${runFile}`;
+  const started = recordRun({ event: "started", script: "taste-test", file: outFile, tests: [TEST.id], model: model.id, tag, items: pairs.length, note });
   for (const p of pairs) {
     const text = [...new Set([...p.inventor, ...p.brew].map((l) => index.getCard(l.name)?.name ?? l.name))]
       .map((n) => index.getCard(n))
@@ -139,10 +147,11 @@ async function main() {
       out.push({ item: p.it.id, inventorFirst, pick, choseInventor, why: msg.parsed_output?.why, costUsd: cost });
     }
     console.log(`${p.it.id.replace("future-", "").padEnd(36)} ${marks.join(" / ")}`);
+    save(false);
   }
   console.log(`\nPicked the real deck (${vs === "settled" ? "tuned list" : "inventor's first list"}) ${inventor} of ${total} (${Math.round((inventor / total) * 100)}%). Picked "A" ${pickedA} of ${total}. Total $${spent.toFixed(2)}`);
-  const tag = arg("tag");
-  writeFileSync(`evals/results/round4/taste-test${vs === "settled" ? "-settled" : ""}${noRequest ? "-norequest" : ""}${withEvidence ? "-evidence" : ""}${withGoldfish ? "-goldfish" : ""}${tag ? `-${tag}` : ""}.json`, JSON.stringify({ ranAt: new Date().toISOString(), model: model.id, runFile, vs, noRequest, withEvidence, withGoldfish, inventor, total, pickedA, results: out }, null, 1));
+  save(true);
+  recordRun({ event: "finished", script: "taste-test", file: outFile, tests: [TEST.id], model: model.id, tag, items: pairs.length, costUsd: Math.round(spent * 10000) / 10000, complete: true, note, commit: started.commit, dirty: started.dirty });
 }
 
 main().catch((e) => {

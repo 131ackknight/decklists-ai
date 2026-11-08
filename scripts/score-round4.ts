@@ -19,34 +19,26 @@
  * not exist yet, against the closest list that did (--holdout prints the
  * baseline without results).
  *
- * With no result files, prints only the baselines. Writes summary.json.
+ * With no result files, prints only the baselines. --summary <path> also writes the tables as JSON.
  */
 import { readFileSync, writeFileSync } from "node:fs";
 import { loadCardIndex } from "../src/cards/load";
 import type { CardIndex } from "../src/cards/card-index";
 import { isLand, isNearCopy, round4Items, toCounts, type Line, type Round4Item } from "../evals/round4/items";
+import { loadLists, settledLists, settledScore, type RefList } from "../evals/score";
+import { testById } from "../evals/tests";
 
-interface RefList {
-  format: string;
-  date: string;
-  strategy: string;
-  main: Line[];
-}
 interface Result {
   id: string;
   deck: { main: Line[] } | null;
   costUsd: number;
 }
 
-const WIDGET_ROW = /^Cards?\s*\(\d+%?\)\s*$/i;
 const DAY = 86_400_000;
 const index = loadCardIndex();
 const items = round4Items(index);
-const history = readFileSync("data/reference-lists-all.jsonl", "utf8")
-  .split("\n")
-  .filter(Boolean)
-  .map((l) => JSON.parse(l) as RefList)
-  .map((l) => ({ ...l, main: l.main.filter((c) => !WIDGET_ROW.test(c.name)) }));
+// The real lists stop at the frozen tests' data cutoff, so merging newer data never moves an old score.
+const history: RefList[] = loadLists(String(testById("holdout-v1").params.dataThrough));
 
 /** Tags on more than 2% of cards say little about a card's job ("creature", "removal" stay; "has-flavor-text" goes). */
 const tagCount = new Map<string, number>();
@@ -128,7 +120,7 @@ function nearestList(it: Round4Item): Map<string, number> {
   return added;
 }
 
-const files = process.argv.slice(2).filter((a) => !a.startsWith("--"));
+const files = process.argv.slice(2).filter((a, i, all) => !a.startsWith("--") && all[i - 1] !== "--summary");
 const runs = files.map((f) => ({ file: f, results: new Map((JSON.parse(readFileSync(f, "utf8")).results as Result[]).filter(Boolean).map((r) => [r.id, r])) }));
 const fillRows: Record<string, unknown>[] = [];
 const brewRows: Record<string, unknown>[] = [];
@@ -186,12 +178,8 @@ if (runs.some((r) => holdoutItems.some((i) => r.results.has(i.id))) || process.a
     const first = Date.parse(t.firstSeen);
     // Post-cutoff decks are young: score against every list from a week after they appeared.
     const [from, to] = it.track === "post" || it.track === "future" ? [7, 365] : [30, 90];
-    const window = history.filter(
-      (l) => l.format === t.format && l.strategy === t.strategy && Date.parse(l.date) >= first + from * DAY && Date.parse(l.date) < first + to * DAY,
-    );
-    if (!window.length) continue;
-    const step = Math.max(1, Math.floor(window.length / 50));
-    const settled = window.filter((_, i) => i % step === 0).slice(0, 50).map((l) => toCounts(index, l.main));
+    const settled = settledLists(index, history, t, from, to);
+    if (!settled.length) continue;
     const meanOverlap = (m: Map<string, number>) => settled.reduce((a, l) => a + overlap(m, l), 0) / settled.length;
     const prior = history.filter((l) => l.format === t.format && Date.parse(l.date) < first);
     let floor = 0;
@@ -201,7 +189,7 @@ if (runs.some((r) => holdoutItems.some((i) => r.results.has(i.id))) || process.a
     for (const run of runs) {
       const r = run.results.get(it.id);
       if (!r) continue;
-      row[run.file] = r.deck ? pct(meanOverlap(toCounts(index, r.deck.main))) : "no deck";
+      row[run.file] = r.deck ? `${settledScore(toCounts(index, r.deck.main), settled)}%` : "no deck";
     }
     holdoutRows.push(row);
   }
@@ -215,4 +203,6 @@ if (holdoutRows.length) {
   console.log("Brew holdout: mean overlap with the archetype's settled lists");
   console.table(holdoutRows);
 }
-writeFileSync("evals/results/round4/summary.json", JSON.stringify({ files, fillRows, brewRows, holdoutRows }, null, 1));
+// Only on request: a fixed path rewritten by every run, with whatever files were passed, kept clobbering a tracked file.
+const summaryArg = process.argv.indexOf("--summary");
+if (summaryArg > 0) writeFileSync(process.argv[summaryArg + 1], JSON.stringify({ files, fillRows, brewRows, holdoutRows }, null, 1));

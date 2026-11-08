@@ -95,6 +95,8 @@ Owner: **"Yes, Haiku first"**, after asking **"Why 9? arent we using haiku?"** (
 - **Drop:** v20 not ahead on borrowed spells, or its Added clearly worse.
 - Noise, from Opus v13 vs v14: with 3 runs each, this share needs a gain of about 9 points before its range clears zero.
 
+**Owner, while away:** "Ok when it comes back, continue to try to optimize best you can while I am away. Get better each time, if it doesnt then figure out if you should remove the thing and try again. Ill be back in a bit but dont want to the progress to stop." **Plan for that time:** Haiku only, up to about $6 in all (about 12 runs). Any Opus run waits for the owner (the rule above says ask first, and the owner said this is about the last money). Every change gets its rule in this log before its runs. Free offline checks (`scripts/candidate-check.ts`) come first wherever they can answer a question.
+
 ---
 
 ## 2026-11-08 · Would a candidate list contain the spells inventors borrowed? About half, at 50 cards

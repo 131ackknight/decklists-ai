@@ -75,6 +75,40 @@ export function earlierLists(lists: RefList[], format: string, before: string, c
   return lists.filter((l) => l.format === format && Date.parse(l.date) < cut).map(countsOf);
 }
 
+/**
+ * The little-played spells inventors borrowed (2026-11-08; scripts/candidate-check.ts, v20): nonland spells
+ * in under 10% of the format's lists in the 90 days before the cut that a first-week list of the deck took
+ * from other decks (not in that list's closest earlier list, not requested), and that stayed (in half or
+ * more of the settled lists, days 30-90). Canonical names, as in toCounts.
+ */
+export function borrowedSpells(index: CardIndex, lists: RefList[], it: Round4Item, countsOf: (l: RefList) => Counts): Set<string> {
+  const t = it.target!;
+  const before = it.before ?? t.firstSeen;
+  const cut = Date.parse(before);
+  const rate = new Map<string, number>();
+  const recent = lists.filter((l) => l.format === t.format && Date.parse(l.date) < cut && Date.parse(l.date) >= cut - 90 * DAY);
+  for (const l of recent) for (const k of countsOf(l).keys()) rate.set(k, (rate.get(k) ?? 0) + 1 / recent.length);
+  const asked = new Set((it.keyCards ?? []).map((n) => [...toCounts(index, [{ qty: 1, name: n }]).keys()][0]));
+  const settled = settledLists(index, lists, t, 30, 90);
+  const earlier = earlierLists(lists, t.format, before, countsOf);
+  const first = Date.parse(t.firstSeen);
+  const firstWeek = lists.filter((l) => l.format === t.format && l.strategy === t.strategy && Date.parse(l.date) >= first && Date.parse(l.date) < first + 7 * DAY).map(countsOf);
+  const found = new Set<string>();
+  for (const d of firstWeek) {
+    let best = -1;
+    let base: Counts = new Map();
+    for (const l of earlier) {
+      const o = overlap(d, l);
+      if (o > best) [best, base] = [o, l];
+    }
+    for (const k of d.keys()) {
+      if (isLand(index, k) || asked.has(k) || (base.get(k) ?? 0) > 0 || !rate.has(k) || rate.get(k)! >= 0.1) continue;
+      if (settled.filter((s) => s.has(k)).length >= settled.length / 2) found.add(k);
+    }
+  }
+  return found;
+}
+
 /** The deck's first-week lists (the inventor's version) and every list from a week after it appeared. */
 export function futureLists(index: CardIndex, lists: RefList[], target: NonNullable<Round4Item["target"]>) {
   const first = Date.parse(target.firstSeen);

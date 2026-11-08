@@ -77,6 +77,26 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-11-08 · v20 (the shopping list) on Haiku (in progress)
+
+Owner: **"Yes, Haiku first"**, after asking **"Why 9? arent we using haiku?"** ($9 is an Opus run; the Haiku stand-in check was unclear, but for this idea a direct measure works on Haiku too).
+
+**v20 = v13 + a list in the first message** (`src/harness/borrow.ts`): up to 20 little-played spells (under 10% of the format's lists in the last 90 days), in the requested cards' colors, ranked by how many earlier decks (any format) run them beside a requested card, with one line: "Inventors of new decks usually take a few cards like these from other decks, and most of this list won't fit yours. Look up any you'd use with card_info, and take only the ones that make the plan better." The requested cards are found in the prompt by name. Free checks first:
+- **Name finder:** right on 21 of 21 dev prompts.
+- **Color rule:** a brewer doesn't know the final colors. With the requested cards' colors the check's top 20 still holds 33% of the borrowed spells (the settled deck's colors: 33%; co-play colors: 29%; no filter: 25%).
+- **v20's real lists** on the dev decks, with the time-cut data a brew sees: 16 cards on average (two decks get none: no earlier deck ran their requested cards), holding 14 of the 48 borrowed spells (29%). Opus v13 decks contain 15% of them on their own.
+- **Why `played_with` doesn't already show them:** it needs lists with all the requested cards together and returns the 25 most common partners.
+
+**Measure** (`scripts/borrow-eval.ts`, free), per dev deck, averaged over 3 runs and paired with Haiku v13's 3 runs: the share of the deck's borrowed spells it contains; Added; match %; and how many listed cards the decks play. The definition of a borrowed spell is now shared code (`borrowedSpells` in `evals/score.ts`); the candidate check gives the same numbers with it.
+
+**Rule, set before any v20 result:**
+- **Go to Opus** (one dev run, about $9, the owner is asked first): v20's decks contain more of the borrowed spells than v13's, with the 95% range above zero, and v20's Added isn't clearly worse.
+- **Unclear:** v20 ahead on borrowed spells but the range includes zero. Reported; the owner decides between 2 more Haiku runs each (about $2) and stopping.
+- **Drop:** v20 not ahead on borrowed spells, or its Added clearly worse.
+- Noise, from Opus v13 vs v14: with 3 runs each, this share needs a gain of about 9 points before its range clears zero.
+
+---
+
 ## 2026-11-08 · Would a candidate list contain the spells inventors borrowed? About half, at 50 cards
 
 Owner: **"Yes, check it."** Free: `scripts/candidate-check.ts`, no model calls.

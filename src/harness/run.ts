@@ -4,6 +4,7 @@ import { normalizeName } from "@/cards/names";
 import { getFormat } from "@/cards/formats";
 import type { DataSource } from "@/data/source";
 import { costUsd, usageOf, type ModelConfig, type Usage } from "./models";
+import { borrowList, borrowText, namedCards } from "./borrow";
 import { formatMenu } from "./menu";
 import { playtestDeck, type PlaytestReport } from "./playtest";
 import { reviewDeck, type Review, type RoleEvidence } from "./review";
@@ -45,6 +46,8 @@ export interface BrewResult {
   review?: { flags: Review["flags"]; firstDeck: SubmittedDeck | null; roles?: RoleEvidence[] };
   /** Harness v19: the playtest's game and top problems, and the deck before revision. */
   playtest?: { opponent: string; seed: number; game: string; problems: PlaytestReport["problems"]; firstDeck: SubmittedDeck | null };
+  /** Harness v20: the little-played spells listed up front (borrow.ts). */
+  borrow?: string[];
   toolCalls: ToolCallRecord[];
   usage: Usage;
   costUsd: number;
@@ -233,6 +236,8 @@ export async function brewV5(
     requireNeeds?: boolean;
     cardChecksV2?: boolean;
     spellChecks?: boolean;
+    /** Harness v20: more text for the first message (borrow.ts's list). */
+    extraText?: string;
   } = { system: V5_SYSTEM_PROMPT },
 ): Promise<BrewResult> {
   const started = Date.now();
@@ -256,7 +261,8 @@ export async function brewV5(
   const userText =
     (req.format ? `Format: ${req.format}\n\n${req.prompt}` : req.prompt) +
     (menu ? `\n\nWhat is working in ${req.format} right now (last 30 days of results):\n${menu}` : "") +
-    (examples ? `\n\n${examples}` : "");
+    (examples ? `\n\n${examples}` : "") +
+    (variant.extraText ? `\n\n${variant.extraText}` : "");
   const V5_TOOLS = ["search_cards", "find_tags", "card_info", "meta", "archetype", "reference_list", "draw_odds", "check_deck", "submit_deck", ...(variant.extraTools ?? [])];
   const r = await runStage({ client, model, system: variant.system, userText, tools: V5_TOOLS, ctx, onStep });
   return {
@@ -378,6 +384,32 @@ export function brewV13(
     requireNeeds: true,
     cardChecksV2: true,
   });
+}
+
+/**
+ * Harness v20 (2026-11-08): v13, plus a list of the little-played spells real decks run alongside the
+ * requested cards, in the first message (borrow.ts). Aimed at Added: inventors borrow such spells from
+ * other decks and most stay; the AI borrows fewer and most don't. Owner: "Yes, Haiku first".
+ */
+export async function brewV20(
+  client: Anthropic,
+  model: ModelConfig,
+  req: BrewRequest,
+  deps: { index: CardIndex; data: DataSource },
+  onStep?: (step: number, note: string) => void,
+): Promise<BrewResult> {
+  const key = req.format ? getFormat(req.format)?.key : undefined;
+  const borrow = key ? borrowList(deps.index, deps.data, key, namedCards(deps.index, req.prompt)) : [];
+  const r = await brewV5(client, model, req, deps, onStep, {
+    system: V12_SYSTEM_PROMPT,
+    extraTools: ["played_with"],
+    requireWinLine: true,
+    strictBrew: true,
+    requireNeeds: true,
+    cardChecksV2: true,
+    extraText: borrowText(req.format ?? "", borrow) ?? undefined,
+  });
+  return { ...r, borrow: borrow.map((c) => c.name) };
 }
 
 /** Harness v14: v13 plus mana_base, lands from real decks in the same colors. */

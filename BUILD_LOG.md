@@ -77,6 +77,16 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-11-08 · v19 on dev (protocol-v1): in progress
+
+Owner: **"Yes, run v19"**, then: **"this is about the last money I want to spend on this though, its getting expensive."**
+
+**Cost:** v19 costs about $0.67 a deck on these decks (1.6 times v13's $0.42: one played game plus a revision), so about $14 a run and $42 for three.
+
+**Stop rule, set before any v19 result:** run 1 first. If its gain over v13 on dev (paired by deck, against v13's three runs) is zero or below, stop there: v19 is dropped and the other two runs (about $28) are saved. Otherwise, runs 2 and 3. Stopping early can only drop a candidate, never keep one, so it can't make v19 look better than it is. Keeping v19 still needs the full protocol-v1 rule (3 runs, dev range above zero).
+
+---
+
 ## 2026-11-07 · Improving the harness automatically: protocol-v1, and v13's baseline
 
 Owner: **"I want to improve this via automated testing, not hand picked. For now. ... and i want data, quant data to show the improvements."** Owner, on running v13 rather than v19: "why using v13 not the latest??" Because v13 is still the base; v19 is the leading candidate but unproven (13 vs 10 on the panel could be chance, and it has never run on an automatic test). Every candidate is measured against the base, so the base had to be measured properly first.

@@ -111,6 +111,10 @@ Haiku uses the list: it played 2.4 listed cards per deck, and 16 of those 153 (1
 - v20 (5 runs) and v21 (3 runs), each: **worth an Opus run** (the owner asked first) if its borrowed-spell gain has its 95% range above zero and its Added isn't clearly worse; **dropped** if its borrowed-spell gain is zero or below or its Added is clearly worse; otherwise **unclear**, and no more Haiku money goes to it.
 - If both are worth an Opus run, the one with the larger Added gain goes first.
 
+**Launch mistake, $0.32:** my first launch of these 7 runs used a shell loop that zsh didn't split ("v13 r4" became one harness name), so the runs used the old v2 harness and wrote to misnamed files. Caught after 15 decks; stopped; the files moved out of the results folder (the register still lists them as unfinished runs). Relaunched with each run named explicitly; checked that all 7 had the right arguments.
+
+**Mana base up front, checked free and dropped:** the lands are the next-biggest gap (about 4.5 points). A mana base from real decks in the requested cards' colors (`manaBase`, time-cut data) shares 8.3 lands per deck with the settled lists: more than Haiku's own 6.9, but less than Opus's 10.0. It could help Haiku and hurt Opus, so it isn't worth a Haiku run as a stand-in for Opus.
+
 **Owner, while away:** "Ok when it comes back, continue to try to optimize best you can while I am away. Get better each time, if it doesnt then figure out if you should remove the thing and try again. Ill be back in a bit but dont want to the progress to stop." **Plan for that time:** Haiku only, up to about $6 in all (about 12 runs). Any Opus run waits for the owner (the rule above says ask first, and the owner said this is about the last money). Every change gets its rule in this log before its runs. Free offline checks (`scripts/candidate-check.ts`) come first wherever they can answer a question.
 
 ---

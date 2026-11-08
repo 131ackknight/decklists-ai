@@ -27,10 +27,10 @@ Three things, and the third is turning out to be the most interesting.
 
 | Item | Total |
 | --- | --- |
-| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80; v12 on six $2.61; round 3 $1.90; v13 post-cutoff $2.85; v14 and future test $41.28; v15 round $25.87; v16 round $17.46; reviewer checks $0.78; v17 on eight $4.80. v17 future test $19.00; gem test $1.82; v18 on eight $4.92; blind panel round 1 $18.13; picker test $0.69; taste tests $3.06; judge with evidence and goldfish $2.18; Fable and Sonnet judges $4.30; text playtest $4.07; v19 smoke test $0.77; found-deck test $3.79; blind panel round 2 $21.00; protocol-v1 baseline (v13 dev runs 2 and 3) $17.35; v19 dev run 1 $15.89. Total about $469.16. Plus one 17-token test call. |
+| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80; v12 on six $2.61; round 3 $1.90; v13 post-cutoff $2.85; v14 and future test $41.28; v15 round $25.87; v16 round $17.46; reviewer checks $0.78; v17 on eight $4.80. v17 future test $19.00; gem test $1.82; v18 on eight $4.92; blind panel round 1 $18.13; picker test $0.69; taste tests $3.06; judge with evidence and goldfish $2.18; Fable and Sonnet judges $4.30; text playtest $4.07; v19 smoke test $0.77; found-deck test $3.79; blind panel round 2 $21.00; protocol-v1 baseline (v13 dev runs 2 and 3) $17.35; v19 dev run 1 $15.89; Haiku stand-in check (6 dev runs) $2.98. Total about $472.14. Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats); full history 145,131 (since 2025-07-01, merged weekly) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
-| Automated tests | 118 passing |
+| Automated tests | 121 passing |
 | Decklist Data PRs merged | 5 (#181 export, #182 baseline eval, #183 baseline on `main`, #184 model comparison, #188 sideboard junk cleanup: 34,432 lists cleaned) |
 | Plan steps done | 1, 4, 5, 6, 8; harness at v13 (15 versions tried); evals: owner's "would you play it?" plus the 18-deck future test |
 | Current harness | **v13**: future test 48.3% / 47.9% (two runs), v2 44.9%; dev (holdout-v1) 43.0 / 45.3 / 42.0; blind panel v13 10 of 17, v19 13 of 17; v19 dropped on dev 2026-11-08 (-2.1, its game step -0.4) |
@@ -77,7 +77,7 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
-## 2026-11-08 · Can Haiku stand in for Opus? (in progress)
+## 2026-11-08 · Can Haiku stand in for Opus? Unclear. And what Haiku isn't doing
 
 Owner, on testing ideas on a cheaper model first: **"Ugh, that sounds like giving up"** (about stopping or only fixing saved decks), then **"Yes, check Haiku."** Testing one idea properly on Opus costs $26-48 (3 dev runs). Haiku 5.5 costs about 1/40 of Opus per token ($0.10 / $0.50 per million in / out vs $4 / $20), so if its scores move the way Opus's do, ideas can be screened for about $1 each and only winners tried on Opus.
 
@@ -90,6 +90,40 @@ Owner, on testing ideas on a cheaper model first: **"Ugh, that sounds like givin
 - Decks lost to API errors (not the model's doing) are rerun, not counted.
 
 **Cost code fix, free:** Haiku 5.5 charges 5 times its list price for any request whose prompt is over 100K tokens; the cost code didn't know, so it would have under-reported. Now it prices those requests at the higher rate (cache prices assumed to scale the same way, which errs high). New test; 121 passing.
+
+**Result, $2.98:** 6 runs, 126 decks, every deck built, no errors. 3 v2 decks had requests over 100K tokens (priced at the higher rate). About $0.49 a run, 1/18 to 1/33 of an Opus run.
+
+| Dev (holdout-v1) | Run 1 | Run 2 | Run 3 | Mean |
+| --- | --- | --- | --- | --- |
+| v2 on Haiku | 33.0 | 31.0 | 35.1 | 33.0 |
+| v13 on Haiku | 32.7 | 33.8 | 34.3 | 33.6 |
+| v13 on Opus, for comparison | 43.0 | 45.3 | 42.0 | 43.4 |
+
+v13's gain over v2: **Haiku +0.6 (-2.3 to +3.5)**; Opus about +2.2 (v2's two dev runs, 40.6 and 41.8, were on an earlier data copy).
+
+**By the rule: unclear** (v13 ahead, range includes zero). The rule's next step, 2 more runs of each (about $2 at the real run cost), has not been run; the owner decides. **My mistake in setting the check:** Opus's own v2-to-v13 gain on dev (+2.2) is smaller than 3 runs can confirm (about 2.7), so even a perfect stand-in would probably have come out unclear.
+
+**What Haiku isn't doing.** Owner: "do we know what the gap is at 43/34 what its not doing, and can we just tell it to do that?" From the saved decks and tool calls (PROGRESS.md section 2e, generated):
+
+| Dev, per deck | Real decks | Opus v13 | Haiku v13 |
+| --- | --- | --- | --- |
+| Match % | | 43.4 | 33.6 |
+| Spell cards matched | | 16.1 | 13.2 |
+| Land cards matched | | 10.0 | 6.9 |
+| Right colors | | 59% | 46% |
+| Lands | 22.1 | 21.0 | 19.5 |
+| Different spells | 13.0 | 12.7 | 16.0 |
+| Spells as 4-ofs | 6.3 | 6.6 | 4.5 |
+| Spells as 1-ofs | 2.3 | 1.8 | 3.4 |
+| Real-deck lookups (played_with) | | 2.2 | 1.3 |
+| Card text searches (search_cards) | | 2.0 | 4.1 |
+
+- The gap is about half spells (2.9 cards) and half lands (3.1 cards).
+- Opus builds decks shaped like real ones. Haiku builds piles: more different cards, fewer 4-ofs, fewer lands.
+- Haiku picks the real deck's colors less often (46% vs 59%).
+- Haiku looks up what real decks run with the requested cards about half as often, and searches card text twice as much. The prompt already tells it to look first; it often doesn't. On Haiku, v13's extra knowledge, all delivered through lookups the model has to choose to make, added only +0.6 over v2.
+
+**Next idea (not built):** v20 = v13, plus the code makes the lookups itself and puts the facts in the first message: what real decks run with the named cards (and in which colors), and the usual deck shape in the format (lands, different spells, 4-ofs). Generic (any prompt), specific knowledge (real decks). Test on Haiku: 3 runs, about $1.50.
 
 ---
 

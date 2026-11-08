@@ -48,7 +48,7 @@ This section is the one hand-kept part of PROGRESS.md (`evals/progress-log-only.
 
 | Item | Value |
 | --- | --- |
-| BUILD_LOG.md running total (50 cost items listed there, summing to exactly this) | $469.16, plus one 17-token test call |
+| BUILD_LOG.md running total (51 cost items listed there, summing to exactly this) | $472.14, plus one 17-token test call |
 | Recorded in the run register | see section 6 |
 
 The scripts' reported costs are all that's visible to Claude Code; the billed amount isn't.

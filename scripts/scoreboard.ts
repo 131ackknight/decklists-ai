@@ -16,7 +16,7 @@ import { loadCardIndex } from "../src/cards/load";
 import { FileDataSource } from "../src/data/source";
 import { pages, pairVerdicts, playVerdicts, ratingRows } from "../evals/answers";
 import { latestRuns, readRegister, type RunRecord } from "../evals/register";
-import { round4Items, toCounts, type Line } from "../evals/round4/items";
+import { isLand, round4Items, toCounts, type Line } from "../evals/round4/items";
 import { PROTOCOL, pairedGain } from "../evals/protocol";
 import { futureLists, inventorGems, loadLists, overlap, settledLists, settledScore, shareScore, type Counts } from "../evals/score";
 import { TESTS, testById } from "../evals/tests";
@@ -238,6 +238,100 @@ async function main() {
     "",
   );
   out.push(revisionRows.length ? table(["Run", "Step", "Test", "Decks", "Before", "After", "After minus before", "Worse / same / better", "Cards changed per deck"], revisionRows) : "No scored run saved its decks from before a revision.", "");
+
+  // 2d. The same dev comparison on cheaper models, to see whether one can screen ideas for the protocol's model.
+  const devOn = (model: string, harness?: string) =>
+    scored.filter((r) => r.model === model && (!harness || r.harness === harness) && r.tests.includes(PROTOCOL.dev) && onProtocolData(r));
+  const standIns = [...new Set(scored.filter((r) => r.model !== PROTOCOL.model).map((r) => r.model!))].filter((m) => devOn(m, PROTOCOL.base).length);
+  out.push(`### 2d. The same comparison on cheaper models (dev: ${PROTOCOL.dev})`, "");
+  out.push(
+    `Each version's gain over ${PROTOCOL.base} on the same model, paired by deck, with its 95% range, next to the gain ${modelName(PROTOCOL.model)} showed (section 2b). Only runs on the protocol's data. Decks built: decks submitted / dev decks, per run.`,
+    "",
+  );
+  if (!standIns.length) out.push("No cheaper model has run the base on dev yet.", "");
+  for (const m of standIns) {
+    const base = devOn(m, PROTOCOL.base);
+    const mean = (xs: number[]) => xs.reduce((s, v) => s + v, 0) / xs.length;
+    const rowsFor = [...new Set(devOn(m).map((r) => r.harness!))]
+      .sort((a, b) => versionNo(a) - versionNo(b))
+      .map((h) => {
+        const rs = devOn(m, h);
+        const means = rs.map((r) => mean([...deckScores(r, PROTOCOL.dev).values()]));
+        const sd = means.length > 1 ? Math.sqrt(means.reduce((s, v) => s + (v - mean(means)) ** 2, 0) / (means.length - 1)) : null;
+        const built = rs.map((r) => `${[...decksOf(r).values()].filter(Boolean).length}/${testById(PROTOCOL.dev).items.length}`).join(", ");
+        const gain = h === PROTOCOL.base ? "(base)" : gainOf(rs, base, PROTOCOL.dev, h).text.replace(/\(\d+ more on an earlier data copy, not counted\)/, "").trim();
+        const onMain = h === PROTOCOL.base ? "(base)" : gainOf(runsOf(h, PROTOCOL.dev), baseDev, PROTOCOL.dev, h).text;
+        return [h, rs.length, means.map(one).join(" / "), sd === null ? "" : one(sd), built, gain, onMain];
+      });
+    out.push(`**${modelName(m)}**`, "");
+    out.push(table(["Version", "Runs", "Score per run", "SD of a run", "Decks built", `Gain over ${PROTOCOL.base}`, `Same gain on ${modelName(PROTOCOL.model)}`], rowsFor), "");
+  }
+
+  // 2e. Where the points go on dev: lands vs spells, colors, deck shape, and the lookups each version made.
+  const land = (k: string) => isLand(index, k);
+  const part = (m: Counts, keep: (k: string) => boolean) => new Map([...m].filter(([k]) => keep(k)));
+  const count = (m: Counts) => [...m.values()].reduce((s, v) => s + v, 0);
+  const avgOf = (xs: number[]) => xs.reduce((s, v) => s + v, 0) / Math.max(1, xs.length);
+  /** Colors on at least 4 nonland cards, copies counted. */
+  const colorsOf = (m: Counts) => {
+    const n = new Map<string, number>();
+    for (const [k, q] of m) if (!land(k)) for (const c of index.getCard(k)?.colors ?? []) n.set(c, (n.get(c) ?? 0) + q);
+    return [...n].filter(([, q]) => q >= 4).map(([c]) => c).sort().join("") || "C";
+  };
+  const realColors = new Map(
+    [...holdout].map(([id, s]) => {
+      const n = new Map<string, number>();
+      for (const l of s) n.set(colorsOf(l), (n.get(colorsOf(l)) ?? 0) + 1);
+      return [id, [...n].sort((a, b) => b[1] - a[1])[0]?.[0]] as const;
+    }),
+  );
+  const shape = (m: Counts) => {
+    const spells = [...part(m, (k) => !land(k))];
+    return { lands: count(part(m, land)), distinct: spells.length, fours: spells.filter(([, q]) => q >= 4).length, ones: spells.filter(([, q]) => q === 1).length };
+  };
+  const shapeRow = (label: string, runs: string, decks: Counts[], extra: (string | number)[]) => {
+    const s = decks.map(shape);
+    return [label, runs, ...extra, one(avgOf(s.map((x) => x.lands))), one(avgOf(s.map((x) => x.distinct))), one(avgOf(s.map((x) => x.fours))), one(avgOf(s.map((x) => x.ones)))];
+  };
+  const shapeRows: (string | number)[][] = [shapeRow("Real decks (the settled lists)", "", [...holdout.values()].flat(), ["", "", "", "", ""])];
+  const groups = new Map<string, RunRecord[]>();
+  for (const r of scored.filter((r) => r.tests.includes(PROTOCOL.dev) && onProtocolData(r))) groups.set(`${r.harness}|${r.model}`, [...(groups.get(`${r.harness}|${r.model}`) ?? []), r]);
+  for (const [key, rs] of [...groups].sort((a, b) => versionNo(a[1][0].harness) - versionNo(b[1][0].harness) || (a[1][0].model ?? "").localeCompare(b[1][0].model ?? ""))) {
+    const [h, m] = key.split("|");
+    const decks: Counts[] = [];
+    const per = { match: [] as number[], spells: [] as number[], lands: [] as number[], colors: [] as number[] };
+    const calls = new Map<string, number>();
+    for (const r of rs) {
+      for (const x of resultsOf(r).results) {
+        if (!x?.deck || !holdout.has(x.id as string)) continue;
+        const id = x.id as string;
+        const d = toCounts(index, (x.deck as { main: Line[] }).main);
+        const s = holdout.get(id)!;
+        decks.push(d);
+        per.match.push(settledScore(d, s));
+        per.spells.push(avgOf(s.map((l) => overlap(part(d, (k) => !land(k)), part(l, (k) => !land(k))))));
+        per.lands.push(avgOf(s.map((l) => overlap(part(d, land), part(l, land)))));
+        per.colors.push(colorsOf(d) === realColors.get(id) ? 1 : 0);
+        for (const c of (x.toolCalls as { name: string }[] | undefined) ?? []) calls.set(c.name, (calls.get(c.name) ?? 0) + 1);
+      }
+    }
+    const perDeck = (t: string) => one((calls.get(t) ?? 0) / Math.max(1, decks.length));
+    shapeRows.push(
+      shapeRow(`${h}${m === PROTOCOL.model ? "" : `, ${modelName(m)}`}`, String(rs.length), decks, [
+        one(avgOf(per.match)),
+        one(avgOf(per.spells)),
+        one(avgOf(per.lands)),
+        `${Math.round(avgOf(per.colors) * 100)}%`,
+        `${perDeck("played_with")} / ${perDeck("search_cards")}`,
+      ]),
+    );
+  }
+  out.push(`### 2e. Where the points go on dev (${PROTOCOL.dev})`, "");
+  out.push(
+    "Per deck, averaged over runs. Spell and land cards matched: cards shared with each settled list, averaged over the lists (the match % is both together, out of 60). Right colors: the deck's colors (colors on 4 or more nonland cards) equal the colors most of the settled lists have. Lookups: calls per deck to played_with (what real decks run with a card) and to search_cards (card text search). Only runs on the protocol's data.",
+    "",
+  );
+  out.push(table(["Version", "Runs", "Match %", "Spell cards matched", "Land cards matched", "Right colors", "Lookups: played_with / search_cards", "Lands", "Different spells", "Spells as 4-ofs", "Spells as 1-ofs"], shapeRows), "");
 
   // 3. The owner's judging rounds.
   out.push("## 3. The owner's judging rounds (`evals/answers/`)", "");

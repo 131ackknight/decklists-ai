@@ -19,7 +19,7 @@ This section is the one hand-kept part of PROGRESS.md (`evals/progress-log-only.
 | v11 | 10-20 | Exactly 60 cards; build on the dominant shell | Base 10-20 |
 | v12 | 10-20 | Enablers named and counted; card-quality send-back | Base 10-20 to 10-21 |
 | v13 | 10-21 | Card-quality note fixed for rare decks; partner hints | **Base, current** |
-| v14 | 10-21 | `mana_base` tool | Not kept |
+| v14 | 10-21 | `mana_base` tool | Not kept (10-21); dropped again 11-08 under protocol-v2 after 3 dev runs (Added +1.2, range includes zero) |
 | v15 | 10-21 | `format_staples` tool, staples note, 4-copy rule | Not kept |
 | v16 | 10-21 | `synergy_candidates` shortlist (150 cards) | Not kept |
 | v17 | 10-21 | Reviewer call with per-card evidence, one revision | Not kept |
@@ -48,7 +48,7 @@ This section is the one hand-kept part of PROGRESS.md (`evals/progress-log-only.
 
 | Item | Value |
 | --- | --- |
-| BUILD_LOG.md running total (51 cost items listed there, summing to exactly this) | $472.14, plus one 17-token test call |
+| BUILD_LOG.md running total (52 cost items listed there, summing to exactly this) | $490.80, plus one 17-token test call |
 | Recorded in the run register | see section 6 |
 
 The scripts' reported costs are all that's visible to Claude Code; the billed amount isn't.

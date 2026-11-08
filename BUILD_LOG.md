@@ -27,13 +27,13 @@ Three things, and the third is turning out to be the most interesting.
 
 | Item | Total |
 | --- | --- |
-| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80; v12 on six $2.61; round 3 $1.90; v13 post-cutoff $2.85; v14 and future test $41.28; v15 round $25.87; v16 round $17.46; reviewer checks $0.78; v17 on eight $4.80. v17 future test $19.00; gem test $1.82; v18 on eight $4.92; blind panel round 1 $18.13; picker test $0.69; taste tests $3.06; judge with evidence and goldfish $2.18; Fable and Sonnet judges $4.30; text playtest $4.07; v19 smoke test $0.77; found-deck test $3.79; blind panel round 2 $21.00; protocol-v1 baseline (v13 dev runs 2 and 3) $17.35; v19 dev run 1 $15.89; Haiku stand-in check (6 dev runs) $2.98. Total about $472.14. Plus one 17-token test call. |
+| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80; v12 on six $2.61; round 3 $1.90; v13 post-cutoff $2.85; v14 and future test $41.28; v15 round $25.87; v16 round $17.46; reviewer checks $0.78; v17 on eight $4.80. v17 future test $19.00; gem test $1.82; v18 on eight $4.92; blind panel round 1 $18.13; picker test $0.69; taste tests $3.06; judge with evidence and goldfish $2.18; Fable and Sonnet judges $4.30; text playtest $4.07; v19 smoke test $0.77; found-deck test $3.79; blind panel round 2 $21.00; protocol-v1 baseline (v13 dev runs 2 and 3) $17.35; v19 dev run 1 $15.89; Haiku stand-in check (6 dev runs) $2.98; v14 dev runs 2 and 3 $18.66. Total about $490.80. Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats); full history 145,131 (since 2025-07-01, merged weekly) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
 | Automated tests | 127 passing |
 | Decklist Data PRs merged | 5 (#181 export, #182 baseline eval, #183 baseline on `main`, #184 model comparison, #188 sideboard junk cleanup: 34,432 lists cleaned) |
 | Plan steps done | 1, 4, 5, 6, 8; harness at v13 (15 versions tried); evals: owner's "would you play it?" plus the 18-deck future test |
-| Current harness | **v13**: future test 48.3% / 47.9% (two runs), v2 44.9%; dev (holdout-v1) 43.0 / 45.3 / 42.0; blind panel v13 10 of 17, v19 13 of 17; v19 dropped on dev 2026-11-08 (-2.1, its game step -0.4) |
+| Current harness | **v13**: future test 48.3% / 47.9% (two runs), v2 44.9%; dev (holdout-v1) 43.0 / 45.3 / 42.0; blind panel v13 10 of 17, v19 13 of 17; v19 dropped on dev 2026-11-08 (-2.1, its game step -0.4); since 2026-11-08 judged on Added (protocol-v2), v14 dropped (+1.2, range includes zero) |
 
 ## The story so far (for the post)
 
@@ -77,13 +77,26 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
-## 2026-11-08 · v14 on dev for a protocol-v2 verdict (in progress)
+## 2026-11-08 · v14 on dev: dropped under protocol-v2 (Added +1.2, range includes zero)
 
 Owner: **"Yes, run v14."**
 
 **Code check (free):** nothing v13 or v14 runs on has changed since v14's first run on 10-21. The tools, prompts, data and card code are untouched; `run.ts` only gained v17-v19 and the Haiku price fix (no effect on Opus). The new runs are comparable with the first.
 
 **Stop rule, set before any new v14 result:** run 2 first (about $9). If v14's Added gain over v13 on dev (its 2 runs against v13's 3, paired by deck) is zero or below, stop: v14 is dropped and run 3 is saved. Otherwise run 3, then apply protocol-v2. If v14 wins on dev, protocol-v2's test needs 1 more future-v1 run of v14 (about $8), which the owner is asked about first.
+
+**Run 2, $9.35:** 21 decks, all 60 cards, no errors. Added gain over v13 after 2 runs: +1.9 (-0.4 to +4.2). Above zero, so run 3 went ahead.
+
+**Run 3, $9.31:** 21 decks, all 60 cards, no errors.
+
+| Dev (holdout-v1) | Run 1 | Run 2 | Run 3 | Mean | Gain over v13, paired by deck |
+| --- | --- | --- | --- | --- | --- |
+| v14 match % | 44.9 | 44.6 | 45.2 | 44.9 | +1.4 (-0.9 to +3.8) |
+| v14 Added | | | | +12.0 | **+1.2 (-0.8 to +3.3)** |
+| v13 match % (base) | 43.0 | 45.3 | 42.0 | 43.4 | |
+| v13 Added (base) | | | | +10.7 | |
+
+**Verdict: dropped** under protocol-v2 (dev Added range includes zero) and under protocol-v1 (dev match range includes zero). The one-run lead (+2.7) shrank to +1.2 with three runs. v14 is a little ahead on every dev measure (Added, match, right colors 63% vs 59%, near-copies 17% vs 35%), but by less than the 1.8 points three runs can confirm. The rule stands as written.
 
 ---
 

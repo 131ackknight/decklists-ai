@@ -87,6 +87,7 @@ Owner: **"Test me out a list: A mono blue stompy prison deeck in premodern that 
 - Both build around emptying the hand so the Spirit's upkeep (pay {1} per card in hand) costs 0-1.
 - Results: `evals/results/round4/one-a-mono-blue-stompy-prison-deck-in-premodern-that-also-uses-e-{v13,v20}-claude-opus-5-5.json`.
 - **Owner's pick: "v13's list"** (labels shown, not blind; with no list for v20, the two are the same harness, so this is a preference between two runs, not between versions).
+- **Owner's note:** "They are both kinda good, but i like the ancient tombs and the thought devorerer is a nice touch" (saved in `evals/owner-notes/notes.json`, a record only).
 
 ---
 

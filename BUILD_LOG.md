@@ -77,6 +77,16 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-11-08 · Fixing legality on the deck's date (in progress, not used yet)
+
+Owner: **"Yes, fix it"**, then **"So we got better with the lands stuff? WE should lean into that more maybe?"** (The land step itself was only +0.4 Added, not proven; the legality fix is the bigger land win.)
+
+- Confirmed: the shock lands' only recent Standard printing is a set released 2026-01-23, so they weren't Standard-legal in 2025 decks.
+- **Done:** `scripts/build-standard-windows.ts` works out each Standard set's window from Scryfall's printings and our tournament lists (writes `data/scryfall/standard-windows.json`). It recovers the real history from data alone: DMU, BRO, ONE, MOM, MAT last played in Standard around 2025-07-28 (rotated with Edge of Eternities, 2025-08-01); NEO and SNC rotated before our data starts; Wilds of Eldraine onward is in Standard today. `src/cards/standard.ts` holds the rule (legal on a date if one of the card's expansion or core sets was out by then and not yet rotated).
+- **Left:** an opt-in date-legal mode for the time-cut card pool (`CardIndex.asOf`), used only by a new v22 = v13 + date-correct legality so other versions stay as they were; unit tests; free checks (real decks should come out about 100% legal; Opus's Standard decks should be flagged for the shock lands); then a measuring run (Haiku about $1.50 or Opus about $9 a run), the owner's call. Nothing uses the new code yet.
+
+---
+
 ## 2026-11-08 · A land step? Free checks on the saved Opus decks
 
 Owner: **"So probably the best thing we can do is just add a land step, like reads cards if it needs extra lands, and making sure the manabase makes sense."** Lands are the second-biggest part of the Added gap (lands inventors add stay 63% of the time, Opus's 32%). Checked first for free on Opus v13's saved dev decks (63 decks):

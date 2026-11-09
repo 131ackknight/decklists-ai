@@ -47,6 +47,8 @@ This section is the one hand-kept part of PROGRESS.md (`evals/progress-log-only.
 | 10-24 | Text playtest, first 5 of 14 decks (grades only, in `evals/results/round4/logs/playtest.log`) | Hypergenesis partly, Seismic Assault (v11) partly, Mind Over Matter (v11) partly, Rofellos partly, Scapeshift (v11) yes. All 14: yes 4, partly 7, no 3 |
 | 11-08 | Candidate check, `scripts/candidate-check.ts` (no result file; rerunning it prints these) | 48 target spells over 17 dev decks. Found in the top 20 / 50 / 100: most-played first 13 / 38 / 52%; v16 synergy 15 / 31 / 52%; played with the requested cards 33 / 52 / 65%; per job 17 / 29 / 52%. Opus v13 decks already contain 15%, v14 20% |
 | 11-08 | List designs on dev and future-test decks, `scripts/candidate-check.ts --colors requested [--test future-v1]` | Right spells in the top 20, dev / future: played with the requested cards 33 / 50%; type link first 35 / 31%; mix of 10 + 10 38 / 38%. Type-link designs dropped (fitted to the dev decks) |
+| 11-08 | Land step on saved decks, `scripts/land-step-test.ts` (result file `evals/results/round4/land-step-holdout-v13-claude-opus-5-5.json`; not in the scoreboard) | 21 dev decks, before / after: lands shared 9.9 / 10.1 (+0.2), Added 10.6 / 11.0 (+0.4, -0.3 to +1.1), match 43.0 / 43.5, basics 8.1 / 7.9. Dropped |
+| 11-08 | Legality gap (proxy, scratch check) | 13 of Opus v13's 30 Standard dev decks play a nonbasic land no Standard list ran in the 90 days before; 2.0 such copies per deck (mostly shock lands) |
 | 11-08 | Judge test, `scripts/judge-test.ts` (result file `evals/results/round4/judge-test-v20-lists.json`; not yet in the scoreboard) | Opus rates a right listed spell above a wrong one 78% (66-89%), list order 75% (56-94%), 10 decks; top 3 per deck 13 / 13 right of 30. v20's in-brew picks from the list on those decks: 53 of 128 right (41%) |
 | 11-08 | Shown vs played, `scripts/borrow-listed.ts` (reads the Haiku result files; rerunning prints these) | Listed borrowed spells played by Haiku v13 / v20 decks: 30.0 / 41.7% (+11.7, -1.2 to +24.6); other listed spells 9.4 / 13.6% (+4.2, +1.5 to +7.0). v21: 21.4 / 40.5% and 15.4 / 30.5% |
 
@@ -54,7 +56,7 @@ This section is the one hand-kept part of PROGRESS.md (`evals/progress-log-only.
 
 | Item | Value |
 | --- | --- |
-| BUILD_LOG.md running total (59 cost items listed there, summing to exactly this) | $523.17, plus one 17-token test call |
+| BUILD_LOG.md running total (60 cost items listed there, summing to exactly this) | $524.33, plus one 17-token test call |
 | Recorded in the run register | see section 6 |
 
 The scripts' reported costs are all that's visible to Claude Code; the billed amount isn't.

@@ -92,6 +92,10 @@ Owner: **"So probably the best thing we can do is just add a land step, like rea
 - **Code can't pick the right ones.** The lands of the 30 earlier real decks most like each deck's spells share 7.6 lands with the settled lists (Opus's own: 10.0; better on 14 decks, worse on 35). Swapping just 2, 4 or 6 basics for those decks' top nonbasics: lands shared 9.8 / 9.6 / 9.5 on dev, Added +0.5 / +0.7 / +0.6 (ranges include zero); on the future-test decks 9.4 / 9.1 / 8.8 and Added +0.0 / -0.3 / -0.7. Dropped. Earlier today a mana base from all real decks in the deck's colors also did worse (8.3).
 - The nonbasic lands the settled decks end up with are specific to the new deck; older similar decks don't run them. Opus might pick them (it chose Ancient Tomb for the stompy deck), which is the owner's AI land step.
 
+**The owner's land step, tested on saved decks** (owner: **"Yes, test it"**, about $2; `scripts/land-step-test.ts`): for each of the 21 dev decks in Opus v13's first run, one Opus call sees the request, the whole main deck with every card's text, and the format's usual land split in the 90 days before the deck's date (e.g. Standard 23.5 lands, about 8 basic; Modern 20, about 3 basic), and revises only the mana base, changing as few spell copies as it can if the land count moves. A revision counts only if every card existed and was legal in the format on that date (the time-cut card pool), the deck keeps its size, and at most 6 spell copies change; otherwise the deck stays as built. Scored on the same decks before and after.
+
+**Rule, set before the run:** worth building into the brewer (and then protocol-v2's full Opus test, the owner asked first) if Added goes up with its 95% range above zero and lands shared with the settled lists go up; otherwise dropped. Also reported: match %, basics, and how many revisions passed the checks.
+
 ---
 
 ## 2026-11-08 · A fresh prompt: mono-blue stompy prison with Extravagant Spirit (v13 and v20)

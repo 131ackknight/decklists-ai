@@ -77,6 +77,23 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-11-08 · A land step? Free checks on the saved Opus decks
+
+Owner: **"So probably the best thing we can do is just add a land step, like reads cards if it needs extra lands, and making sure the manabase makes sense."** Lands are the second-biggest part of the Added gap (lands inventors add stay 63% of the time, Opus's 32%). Checked first for free on Opus v13's saved dev decks (63 decks):
+
+| Per deck | Opus v13 | Settled real decks |
+| --- | --- | --- |
+| Land count | off by 1.6 on average (by 3 or more on 16% of decks; 0.7 fewer on average) | |
+| Basic lands | 8.0 | 4.8 (3.3 shared) |
+| Nonbasic lands | 13.0 | 16.9 (6.7 shared) |
+| Lands shared with the settled lists | 10.0 | |
+
+- **The count is mostly right; which lands is the gap.** Opus plays about 3 basics too many and 4 nonbasic lands too few, and shares only half its nonbasics with the settled decks.
+- **Code can't pick the right ones.** The lands of the 30 earlier real decks most like each deck's spells share 7.6 lands with the settled lists (Opus's own: 10.0; better on 14 decks, worse on 35). Swapping just 2, 4 or 6 basics for those decks' top nonbasics: lands shared 9.8 / 9.6 / 9.5 on dev, Added +0.5 / +0.7 / +0.6 (ranges include zero); on the future-test decks 9.4 / 9.1 / 8.8 and Added +0.0 / -0.3 / -0.7. Dropped. Earlier today a mana base from all real decks in the deck's colors also did worse (8.3).
+- The nonbasic lands the settled decks end up with are specific to the new deck; older similar decks don't run them. Opus might pick them (it chose Ancient Tomb for the stompy deck), which is the owner's AI land step.
+
+---
+
 ## 2026-11-08 · A fresh prompt: mono-blue stompy prison with Extravagant Spirit (v13 and v20)
 
 Owner: **"Test me out a list: A mono blue stompy prison deeck in premodern that also uses Extravagent Spirit"**, then **"And then lets compare that against v20 too"**. New script `scripts/brew-one.ts` (one prompt, today's data, recorded in the register). Prompt as run, with the card's name spelled right so the checks recognize it: "A mono blue stompy prison deck in Premodern that also uses Extravagant Spirit". $0.81 for both (v13 $0.44, v20 $0.38).

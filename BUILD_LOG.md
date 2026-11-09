@@ -86,6 +86,7 @@ Owner: **"Test me out a list: A mono blue stompy prison deeck in premodern that 
 - **v20:** Winter Orb tempo: 4 Winter Orb, 2 Tangle Wire, 4 Rishadan Port, 2 Wasteland; threats 4 Extravagant Spirit, 4 Phyrexian Dreadnought (with 4 Stifle), 4 Cloud of Faeries, 4 Waterfront Bouncer, 3 Rishadan Airship; 4 Daze, 4 Force Spike; 17 lands.
 - Both build around emptying the hand so the Spirit's upkeep (pay {1} per card in hand) costs 0-1.
 - Results: `evals/results/round4/one-a-mono-blue-stompy-prison-deck-in-premodern-that-also-uses-e-{v13,v20}-claude-opus-5-5.json`.
+- **Owner's pick: "v13's list"** (labels shown, not blind; with no list for v20, the two are the same harness, so this is a preference between two runs, not between versions).
 
 ---
 

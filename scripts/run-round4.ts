@@ -1,7 +1,7 @@
 /**
  * Run round 4 (owner-written evals) on one harness and model.
  *
- *   pnpm exec tsx scripts/run-round4.ts --harness v0|v2|...|v22 [--tag r2] --model claude-sonnet-5-5 [--track fill,brew,fresh|holdout] [--items id,id] [--concurrency 3] [--list] [--resume]
+ *   pnpm exec tsx scripts/run-round4.ts --harness v0|v2|...|v22 [--tag r2] --model claude-sonnet-5-5 [--track fill,brew,fresh|holdout] [--items id,id] [--concurrency 3] [--list] [--resume] [--max-usd 5]
  *
  * Fill in the blanks, brew to archetype and the brew holdout rebuild a past moment: lists from
  * the item's date on are cut from the data, and cards first printed after it
@@ -13,6 +13,8 @@
  * The results file is rewritten after every item ("complete": false until the
  * last one), so a crash keeps everything finished so far; --resume skips the
  * items already in it. Each run is recorded in evals/runs.jsonl (evals/register.ts).
+ * --max-usd stops starting new items once the file's spend reaches that many dollars (calls
+ * already under way finish); the file is left incomplete, so --resume can finish it later.
  */
 import Anthropic from "@anthropic-ai/sdk";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -44,6 +46,8 @@ const only = arg("items")?.split(",");
 const concurrency = Number(arg("concurrency", "3"));
 // A tag keeps a repeat run from overwriting the first, e.g. --tag r2.
 const tag = arg("tag");
+const maxUsd = Number(arg("max-usd", "Infinity"));
+if (Number.isNaN(maxUsd)) throw new Error("--max-usd must be a number of dollars");
 const model = MODELS[modelId];
 if (!model) throw new Error(`Unknown model ${modelId}. Known: ${Object.keys(MODELS).join(", ")}`);
 
@@ -86,6 +90,7 @@ async function main() {
   async function worker() {
     for (let i = next++; i < items.length; i = next++) {
       if (results[i]) continue;
+      if (spent >= maxUsd) break;
       const it = items[i];
       // Harness v22 (2026-11-08) = v13 with Standard legality on the item's date, not today's (src/cards/standard.ts).
       // v22 is the base from 2026-11-10 (protocol-v4), so every later version gets the same card pool.
@@ -176,19 +181,20 @@ async function main() {
   }
 
   await Promise.all(Array.from({ length: Math.max(1, concurrency) }, worker));
-  save(true);
   const written = results.filter(Boolean);
+  const complete = written.length === items.length;
+  save(complete);
   recordRun({
     event: "finished",
     ...run,
     items: written.length,
     decks: written.filter((r) => r!.deck).length,
     costUsd: Math.round(spent * 10000) / 10000,
-    complete: written.length === items.length,
+    complete,
     commit: started.commit,
     dirty: started.dirty,
   });
-  console.log(`wrote ${out}, total $${spent.toFixed(2)}`);
+  console.log(`wrote ${out}, total $${spent.toFixed(2)}${complete ? "" : `; stopped at the $${maxUsd} cap with ${items.length - written.length} of ${items.length} items left (--resume finishes them)`}`);
 }
 
 main().catch((err) => {

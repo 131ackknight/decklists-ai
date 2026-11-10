@@ -30,7 +30,7 @@ Three things, and the third is turning out to be the most interesting.
 | Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80; v12 on six $2.61; round 3 $1.90; v13 post-cutoff $2.85; v14 and future test $41.28; v15 round $25.87; v16 round $17.46; reviewer checks $0.78; v17 on eight $4.80. v17 future test $19.00; gem test $1.82; v18 on eight $4.92; blind panel round 1 $18.13; picker test $0.69; taste tests $3.06; judge with evidence and goldfish $2.18; Fable and Sonnet judges $4.30; text playtest $4.07; v19 smoke test $0.77; found-deck test $3.79; blind panel round 2 $21.00; protocol-v1 baseline (v13 dev runs 2 and 3) $17.35; v19 dev run 1 $15.89; Haiku stand-in check (6 dev runs) $2.98; v14 dev runs 2 and 3 $18.66; v20 on Haiku (3 dev runs) $1.47; launch mistake (7 misnamed runs, stopped) $0.32; Haiku v13 and v20 runs 4-5 and v21 runs 1-3 $3.47; v20 Opus dev run 1 $8.70; v20 Opus dev runs 2 and 3 $17.18; judge test $0.42; Extravagant Spirit prompt (v13 and v20) $0.81; land-step test $1.16; v22 Opus run 1 on the 10 Standard dev decks $4.61; v22 Opus runs 2 and 3 $8.75; v0 (the model alone) run 1 on 45 decks $2.81 and dev runs 2 and 3 $2.87. Total about $543.37. Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats); full history 145,131 (since 2025-07-01, merged weekly) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
-| Automated tests | 145 passing |
+| Automated tests | 151 passing |
 | Decklist Data PRs merged | 5 (#181 export, #182 baseline eval, #183 baseline on `main`, #184 model comparison, #188 sideboard junk cleanup: 34,432 lists cleaned) |
 | Plan steps done | 1, 4, 5, 6, 8; harness at v22, with v0 (the model alone) as the reference start; evals: owner's "would you play it?", the 18-deck future test and the frozen automatic tests (PROGRESS.md) |
 | Current harness | **v22** (v13 + Standard legality on the deck's date), the base since 2026-11-10 (protocol-v4): dev (holdout-v2) 43.1 / 43.6 / 41.6. Over the model alone (v0, 2026-11-10): match +8.8 on dev (3 runs each), +14.3 on the future test, +23.7 after the training cutoff (v13 on those two). Before: v13 future test 48.3% / 47.9%, v2 44.9%; blind panel v13 10 of 17, v19 13 of 17; v14, v19 and v20 dropped |
@@ -78,6 +78,42 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
 
 ---
+
+## 2026-11-10 · Colors and lands: free checks before building anything
+
+Owner: **"Colors and lands i think"**. Checked first on the saved dev decks (v22, 3 runs, 63 builds), free, no model calls: `scripts/land-fix-check.ts`, `scripts/color-rule-check.ts`, and a new `src/harness/lands.ts` (6 tests; 151 passing). Nothing is built into the brewer yet and nothing was spent.
+
+**What goes wrong with the lands** (six decks with the right colors, real lands beside ours):
+- **Too many basics.** Our two-color Standard decks get about 12 basic lands; the real ones play 3 to 8.
+- **The lands real decks play instead are color fixers we skip:** any-color lands (Starting Town, Multiversal Passage, Cavern of Souls) and a third cycle of two-color lands.
+- **Wrong colors can't share lands:** Cosmogoyf shares 1.2 of 20.9, Jund Sacrifice 1.6 of 21.5.
+
+**A new tool: lands by cycle** (`src/harness/lands.ts`). A brew's exact colors often have few real decks to learn from (5 black-red Standard lists on one dev date), but every two-color deck picks from the same land cycles. So a land is read by what it is: its cycle (type line and rules text with the name, mana colors and basic land types blanked out, so all ten shock lands are one cycle) and its role in the deck (which of the deck's colors it makes, by rank). The format's recent decks with the same number of colors vote, and the result is filled in with the lands of those cycles in the brew's colors. For that black-red deck the vote is over 2,542 lists. Nothing in it names a card.
+
+**Six code-only land fixes, each against the same 63 builds unchanged** (paired by deck, 95% range). "Trim" swaps basics above the usual count for the usual nonbasic lands the deck lacks; "replace" swaps every land.
+
+| Fix | Lands shared (9.7 unchanged) | Match % (42.8) | Added (10.4) |
+| --- | --- | --- | --- |
+| trim, from lists in the same colors | +0.28 (-0.12 to +0.69) | +0.46 (-0.29 to +1.21) | +0.13 (-0.95 to +1.20) |
+| trim50 (a land half those lists play) | +0.23 (-0.16 to +0.61) | +0.38 (-0.32 to +1.08) | +0.08 (-0.98 to +1.14) |
+| replace, same-color lists | -0.43 (-1.41 to +0.56) | -0.75 (-2.43 to +0.93) | -0.11 (-3.19 to +2.97) |
+| cycle-trim (lands by cycle) | +0.26 (-0.09 to +0.61) | +0.40 (-0.22 to +1.01) | +0.48 (-0.20 to +1.15) |
+| cycle-replace | -0.39 (-1.43 to +0.66) | -0.67 (-2.42 to +1.08) | -0.30 (-2.17 to +1.56) |
+| **cycle-trim-fixers** (only lands that fix this deck's colors) | **+0.38 (+0.05 to +0.71)** | +0.59 (-0.00 to +1.17) | +0.57 (-0.01 to +1.15) |
+
+- **The best fix shares clearly more lands, and misses the rule on Added by 0.01.** It is also the best of six tries, so the true effect is probably a little smaller. By protocol-v4 it is not kept as a measured gain.
+- **It helps where the colors are right and the format has clear cycles:** Mardu Discard +2.3 lands, Boros Dwarves +1.8, Elementals +1.4, Standard Lessons +1.3, Pioneer Lessons +0.9. It does nothing for decks in the wrong colors, and little outside Standard and Pioneer.
+- **Replacing every land is worse than the brewer's own lands,** by cycle or by color. The brewer's nonbasic picks are better than the usual ones; its basics are the part to trim.
+
+**The color rule, checked the same way** (a brew stays in the named cards' colors):
+- It would flag 17 of the 63 builds (27%), on 8 decks. The flagged builds have the real deck's colors 24% of the time; the others 67%.
+- **By deck:** it fixes Persist (3 builds), Metalcraft (3) and Creative Technique (1). It breaks Aang (3 builds: the real deck did add blue, and the AI found it every time) and one Inside Out build. Cosmogoyf, Jund Sacrifice and Living Death are wrong either way.
+- **Net:** right colors from 56% to between 60% and 67%. The same deck built with the right and the wrong colors differs by 3.2 points (6 decks), so the rule is worth about +0.2 to +0.5 points of match.
+- **Correction:** the last entry said +0.5 to +1.5. That counted every deck whose named cards have the real deck's colors as fixable, and ignored the builds the rule breaks.
+
+**Why both are small.** Most of the land and color loss sits in decks where the AI built a different deck: the six where the inventor added a color the named cards don't have (the AI finds it on 4 of 18 builds), and the 33-land Creative Technique deck. Polishing the mana of the deck the AI did build is worth about half a point.
+
+**Options, waiting for the owner:** (1) a land note at submit, using the cycle vote, with the AI making the swaps; tested first on the saved decks, one call a deck, about $1.20, as the 11-08 land step was. (2) Stop here on colors and lands.
 
 ## 2026-11-10 · Where the missing points are: no kind of card stands out
 

@@ -27,7 +27,7 @@ Three things, and the third is turning out to be the most interesting.
 
 | Item | Total |
 | --- | --- |
-| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80; v12 on six $2.61; round 3 $1.90; v13 post-cutoff $2.85; v14 and future test $41.28; v15 round $25.87; v16 round $17.46; reviewer checks $0.78; v17 on eight $4.80. v17 future test $19.00; gem test $1.82; v18 on eight $4.92; blind panel round 1 $18.13; picker test $0.69; taste tests $3.06; judge with evidence and goldfish $2.18; Fable and Sonnet judges $4.30; text playtest $4.07; v19 smoke test $0.77; found-deck test $3.79; blind panel round 2 $21.00; protocol-v1 baseline (v13 dev runs 2 and 3) $17.35; v19 dev run 1 $15.89; Haiku stand-in check (6 dev runs) $2.98; v14 dev runs 2 and 3 $18.66; v20 on Haiku (3 dev runs) $1.47; launch mistake (7 misnamed runs, stopped) $0.32; Haiku v13 and v20 runs 4-5 and v21 runs 1-3 $3.47; v20 Opus dev run 1 $8.70; v20 Opus dev runs 2 and 3 $17.18; judge test $0.42; Extravagant Spirit prompt (v13 and v20) $0.81; land-step test $1.16. Total about $524.33. Plus one 17-token test call. |
+| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80; v12 on six $2.61; round 3 $1.90; v13 post-cutoff $2.85; v14 and future test $41.28; v15 round $25.87; v16 round $17.46; reviewer checks $0.78; v17 on eight $4.80. v17 future test $19.00; gem test $1.82; v18 on eight $4.92; blind panel round 1 $18.13; picker test $0.69; taste tests $3.06; judge with evidence and goldfish $2.18; Fable and Sonnet judges $4.30; text playtest $4.07; v19 smoke test $0.77; found-deck test $3.79; blind panel round 2 $21.00; protocol-v1 baseline (v13 dev runs 2 and 3) $17.35; v19 dev run 1 $15.89; Haiku stand-in check (6 dev runs) $2.98; v14 dev runs 2 and 3 $18.66; v20 on Haiku (3 dev runs) $1.47; launch mistake (7 misnamed runs, stopped) $0.32; Haiku v13 and v20 runs 4-5 and v21 runs 1-3 $3.47; v20 Opus dev run 1 $8.70; v20 Opus dev runs 2 and 3 $17.18; judge test $0.42; Extravagant Spirit prompt (v13 and v20) $0.81; land-step test $1.16; v22 Opus run 1 on the 10 Standard dev decks $4.61. Total about $528.94. Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats); full history 145,131 (since 2025-07-01, merged weekly) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
 | Automated tests | 132 passing |
@@ -76,6 +76,21 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
 
 ---
+
+## 2026-11-09 · v22 on Opus, 10 Standard dev decks: the fix works, and the test rewards the bug it fixes
+
+**Run 1, $4.61** (10 decks, all 60 cards, no errors), against v13's three runs on the same 10 decks (`scripts/compare-runs.ts`):
+
+| 10 Standard dev decks | v13 (3 runs) | v22 (1 run) | Gain, paired (95% range) |
+| --- | --- | --- | --- |
+| Copies not legal on the deck's date | 2.0 | **0.0** | -2.0 (-4.0 to -0.1) |
+| Added | 11.9 | 12.1 | +0.2 (-3.3 to +3.8) |
+| Match % | 41.9 | 40.8 | -1.1 (-3.5 to +1.2) |
+| Lands shared with the settled lists | 11.6 | 10.6 | -0.9 (-1.9 to -0.0) |
+
+**Why the lands got worse: the settled lists (days 30-90 after the deck first appeared) come after some of those cards became legal.** Of the 61 not-yet-legal copies in v13's Standard decks, the settled lists run them 43% of the time (copy-weighted): Spell Snare in 80% of the Temur Harmonizer deck's settled lists, Temple Garden in 80% of Aang's, Steam Vents in 56% of Lessons'. Where the settled window came before the reprint, the same picks scored nothing (Overgrown Tomb in Reanimator: 0%; Haunted Ridge in Mardu Discard: 0%). So the match % gives v13 credit for cards a brewer couldn't have played on the date, and takes it from v22.
+
+**By the stop rule: above zero (+0.2), so runs 2 and 3 (about $9) would be next, owner asked first.** Recommended instead: fix the yardstick first, free. A deck made on a date can only be fairly scored on cards legal then: a new test version (holdout-v2, the frozen tests can't change in place) that leaves out of both the deck and the settled lists any card not legal on the deck's date, then re-scores every saved run.
 
 ## 2026-11-09 · Legality on the deck's date: built and checked (v22); not yet measured
 

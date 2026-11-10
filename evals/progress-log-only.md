@@ -6,7 +6,7 @@ This section is the one hand-kept part of PROGRESS.md (`evals/progress-log-only.
 
 | Version | Log date | What it added | Status |
 | --- | --- | --- | --- |
-| v0 | 11-10 | No harness: one call to the same model, no system prompt, tools, data or checks; told only the date (`oneshot.ts`) | Reference start, not a candidate; not run yet |
+| v0 | 11-10 | No harness: one call to the same model, no system prompt, tools, data or checks; told only the date (`oneshot.ts`) | Reference start, not a candidate; run 1 on 11-10 (section 2a) |
 | v1 | before 10-13 | Decklist Data's original builder: one chat loop on Haiku 4.5, Vercel AI SDK v4, 10 tool calls max, 9 tools | Replaced |
 | v2 | 10-14 | Official Anthropic SDK loop; card search (32,870 cards, 4,577 tags); deck checker; data tools; draw odds; `submit_deck` refuses cards no tool returned | Base 10-14 to 10-20 |
 | v3 | 10-14 | Step 8 pipeline: intent routing, engine / shell / critique stages, novelty check, goldfish simulator | Not kept |

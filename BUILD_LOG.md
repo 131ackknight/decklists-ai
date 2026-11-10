@@ -23,17 +23,17 @@ Three things, and the third is turning out to be the most interesting.
 
 **A side effect worth a paragraph:** building this keeps improving Decklist Data itself. On the day of this answer, 34k lists got their junk sideboard lines removed.
 
-## Running totals (as of 2026-11-08)
+## Running totals (as of 2026-11-10)
 
 | Item | Total |
 | --- | --- |
-| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80; v12 on six $2.61; round 3 $1.90; v13 post-cutoff $2.85; v14 and future test $41.28; v15 round $25.87; v16 round $17.46; reviewer checks $0.78; v17 on eight $4.80. v17 future test $19.00; gem test $1.82; v18 on eight $4.92; blind panel round 1 $18.13; picker test $0.69; taste tests $3.06; judge with evidence and goldfish $2.18; Fable and Sonnet judges $4.30; text playtest $4.07; v19 smoke test $0.77; found-deck test $3.79; blind panel round 2 $21.00; protocol-v1 baseline (v13 dev runs 2 and 3) $17.35; v19 dev run 1 $15.89; Haiku stand-in check (6 dev runs) $2.98; v14 dev runs 2 and 3 $18.66; v20 on Haiku (3 dev runs) $1.47; launch mistake (7 misnamed runs, stopped) $0.32; Haiku v13 and v20 runs 4-5 and v21 runs 1-3 $3.47; v20 Opus dev run 1 $8.70; v20 Opus dev runs 2 and 3 $17.18; judge test $0.42; Extravagant Spirit prompt (v13 and v20) $0.81; land-step test $1.16; v22 Opus run 1 on the 10 Standard dev decks $4.61; v22 Opus runs 2 and 3 $8.75. Total about $537.69. Plus one 17-token test call. |
+| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80; v12 on six $2.61; round 3 $1.90; v13 post-cutoff $2.85; v14 and future test $41.28; v15 round $25.87; v16 round $17.46; reviewer checks $0.78; v17 on eight $4.80. v17 future test $19.00; gem test $1.82; v18 on eight $4.92; blind panel round 1 $18.13; picker test $0.69; taste tests $3.06; judge with evidence and goldfish $2.18; Fable and Sonnet judges $4.30; text playtest $4.07; v19 smoke test $0.77; found-deck test $3.79; blind panel round 2 $21.00; protocol-v1 baseline (v13 dev runs 2 and 3) $17.35; v19 dev run 1 $15.89; Haiku stand-in check (6 dev runs) $2.98; v14 dev runs 2 and 3 $18.66; v20 on Haiku (3 dev runs) $1.47; launch mistake (7 misnamed runs, stopped) $0.32; Haiku v13 and v20 runs 4-5 and v21 runs 1-3 $3.47; v20 Opus dev run 1 $8.70; v20 Opus dev runs 2 and 3 $17.18; judge test $0.42; Extravagant Spirit prompt (v13 and v20) $0.81; land-step test $1.16; v22 Opus run 1 on the 10 Standard dev decks $4.61; v22 Opus runs 2 and 3 $8.75; v0 (the model alone) run 1 on 45 decks $2.81. Total about $540.50. Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats); full history 145,131 (since 2025-07-01, merged weekly) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
 | Automated tests | 145 passing |
 | Decklist Data PRs merged | 5 (#181 export, #182 baseline eval, #183 baseline on `main`, #184 model comparison, #188 sideboard junk cleanup: 34,432 lists cleaned) |
-| Plan steps done | 1, 4, 5, 6, 8; harness at v13 (15 versions tried); evals: owner's "would you play it?" plus the 18-deck future test |
-| Current harness | **v13**: future test 48.3% / 47.9% (two runs), v2 44.9%; dev (holdout-v1) 43.0 / 45.3 / 42.0; blind panel v13 10 of 17, v19 13 of 17; v19 dropped on dev 2026-11-08 (-2.1, its game step -0.4); since 2026-11-08 judged on Added (protocol-v2), v14 dropped (+1.2, range includes zero), v20 dropped (+0.3) |
+| Plan steps done | 1, 4, 5, 6, 8; harness at v22, with v0 (the model alone) as the reference start; evals: owner's "would you play it?", the 18-deck future test and the frozen automatic tests (PROGRESS.md) |
+| Current harness | **v22** (v13 + Standard legality on the deck's date), the base since 2026-11-10 (protocol-v4): dev (holdout-v2) 43.1 / 43.6 / 41.6. Over the model alone (v0, 2026-11-10): match +9.0 on dev, +14.3 on the future test, +23.7 after the training cutoff (v13 on those two). Before: v13 future test 48.3% / 47.9%, v2 44.9%; blind panel v13 10 of 17, v19 13 of 17; v14, v19 and v20 dropped |
 
 ## The story so far (for the post)
 
@@ -54,6 +54,7 @@ Three things, and the third is turning out to be the most interesting.
 14. **The owner's sentences became checks.** In Premodern and Legacy the owner explained each deck they wouldn't play in one line ("missing a way to win", "one Thran Dynamo", "Tribal Flames is bad here"). Each became a rule the model can't talk its way around: learn how real decks run the cards, say each card's job, name a win line that must be in the deck, build on the shell the data points to, count the enablers. "Neither" on the hardest combos went from 50% to 0%; 12 of 17 prompts reached a deck the owner would play.
 15. **Specific beats generic, every time.** Over 15 harness versions, everything that helped was knowledge about *these* cards or *this* plan (v5, v8, v10-v12); everything generic hurt or did nothing (stages, an in-code coach, originality limits, example brews, format staples). On 14 decks that appeared after April, the best version matches 48% of what players settled on (v2: 45%); lands never moved (47% in every version) and the biggest remaining gap is the creative pick, the under-played card a human found.
 16. **Generic tools, specific knowledge.** The owner's rule for what to build next: no fixes bespoke to an engine. A first such tool learns which *kinds* of cards real decks pair (by function, not name) and finds 41% of the human brewers' discoveries in a 300-card shortlist from 3,200, for free, before any brew uses it.
+17. **The model alone.** The owner asked for the true start: the same model, one call, no harness. It matches 34% of what players settled on (26% on decks after its training cutoff); the harness 43-50%, at about 7 times the cost per deck. Most of the gain is knowing what's being played: what a deck adds beyond its closest old list grows only 4-7 points, and the model's own mistakes (made-up cards, banned cards) cost about 3 at most.
 
 Recurring theme for the post: the owner's pushback improved the work at nearly every turn (no bracket scraping, no new database, no Neon credentials, use our own data instead of re-scraping MTGO, every list instead of a sample, fix `main` instead of running an old build, compare models, not ready to give up, judge decks I know intimately, an April cutoff for the future test, generic tools not bespoke fixes).
 
@@ -76,6 +77,34 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
 
 ---
+
+## 2026-11-10 · The model alone (v0): the harness adds 9 to 24 points of match
+
+Owner: **"Yes, run it"**. v0 built all 45 decks once for **$2.81**, about 6 cents a deck (the harness: 41-48 cents), with no errors. A new `--max-usd` flag on `run-round4.ts` stops a run from starting decks past a cap. Each track got its share of $10, and none came near it.
+
+| Test | v0 (no harness) | Harness | Gain, paired by deck (95% range) |
+| --- | --- | --- | --- |
+| Dev, match % (holdout-v2, 21 decks) | 33.8 | 42.8 (v22) | **+9.0** (+4.5 to +13.5) |
+| Dev, Added | 6.8 | 10.4 (v22) | +3.6 (-0.7 to +7.9) |
+| Future test, match % (future-v2, 14) | 33.8 | 48.1 (v13) | **+14.3** (+6.0 to +22.6) |
+| Future test, Added | 5.7 | 12.5 (v13) | **+6.8** (+1.0 to +12.5) |
+| Tuning test (17) | 34.1 | 48.3 (v13) | **+14.2** (+6.6 to +21.8) |
+| Brewing test (13) | 36.6 | 53.9 (v13) | **+17.3** (+7.1 to +27.4) |
+| After the training cutoff (post-v1, 6) | 26.3 | 50.0 (v13) | **+23.7** (+7.3 to +40.0) |
+
+v22 has runs only on dev. On the other tests v13 stands in: it is the same brewer apart from Standard legality on the date. The full table, with v2, is PROGRESS.md section 2a.
+
+- **The harness clearly helps, and most where the model can't remember.** The gap grows as the decks get newer: +9 on dev (decks from 2025-09 to 2026-08), +14 on the future test (2026-04 to 2026-10), +24 after the model's June 2026 cutoff.
+- **Most of the gain is knowing what's being played.** The harness's decks share more with one earlier list (on dev, 59% of the deck against v0's 47%). The part beyond that list (Added) gains less: +6.8 on the future test, and +3.6 on dev, where the range includes zero. Hidden gems found: v0 3 of 52, v2 16, v13 17-19.
+- **The first harness did most of the work.** v2 (10-14) was already +7.0 on dev and +11.1 on the future test. Everything since adds about +2 to +3.
+- **v0's mistakes, which the harness's checks stop:**
+  - made-up names: 12 copies in 3 decks ("Dáin's Company, Dwarven Mauler", "Yavimaya Coastline");
+  - cards banned or not legal in the format today: 34 copies in 7 decks (Grief in Modern, Expressive Iteration in Pioneer, Memnite in Pauper);
+  - in Standard, cards not legal on the deck's date: 1.1 copies a deck on the 10 dev decks (v13 2.0, v22 0.1);
+  - one deck had 58 cards, and none played cards printed after the date.
+
+  These score nothing, but together they are under 2 copies a deck, worth about 3 points at most. Most of the gap is card choice.
+- **The rule's verdict:** every range is clearly above zero except dev Added (-0.7 to +7.9). So runs 2 and 3 wait for the owner: dev only would cost about $2.70, every test about $5.60.
 
 ## 2026-11-10 · A true start: v0, the model with no harness (built; not run yet)
 

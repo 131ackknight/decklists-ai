@@ -1,4 +1,4 @@
-# Handoff (2026-10-21, updated 2026-11-08)
+# Handoff (2026-10-21, updated 2026-11-10)
 
 Where decklists.ai stands, for the next session. Full history is in BUILD_LOG.md (summary at the top of the dated entries).
 
@@ -9,6 +9,7 @@ An AI that brews Magic decks as well as the best human brewers. The owner judges
 ## Where we are
 
 - **Base harness since 2026-11-10: v22** = v13 with Standard legality on the deck's date (`--harness v22`; protocol-v4; dev runs composed by `scripts/compose-baseline.ts`). Everything below about v13 is the brewer v22 runs.
+- **The model alone (v0, 2026-11-10):** one call to the same model, with no tools, data or checks (`--harness v0`, `src/harness/oneshot.ts`). Its match is 33.8 on dev, 33.8 on the future test and 26.3 after the training cutoff; the harness is +9.0, +14.3 and +23.7 over it (PROGRESS.md section 2a). On Added the harness gains only +3.6 on dev (unclear) and +6.8 on the future test. v0 is a reference, never a candidate. Its runs 2 and 3 wait for the owner (about $2.70 on dev).
 - **Base harness until 2026-11-10: v13** (`brewV13` in `src/harness/run.ts`). It builds a legal, on-plan deck the owner would play for most prompts: 12 of 17 of the owner's prompts after one rebuild; "I'd play neither" on the hardest combos went from 50% to 0%.
 - **Future test** (14 decks that appeared since April 2026, so no model has seen them): v13 matches 48.3% / 47.9% of what players actually played (two runs); v2 started at 44.9%. Owner's target: 60%.
 - **v17** = v13 plus a reviewer that checks every card against evidence from real decks (play share, home deck, usual partners) and makes the brewer fix or explain each flag. On 8 repeat prompts the owner judged it 6 yes, 2 closer, 0 worse (15 of 17 prompts now playable). Not yet the base: confirm on the future test first.
@@ -48,7 +49,7 @@ An AI that brews Magic decks as well as the best human brewers. The owner judges
 - **Haiku 5.5 as a cheap stand-in (2026-11-08), unclear:** $0.49 a dev run. v13's gain over v2 on Haiku +0.6 (-2.3 to +3.5) vs about +2.2 on Opus; the check was too weak (3 runs can't confirm +2.2 either). Haiku v13 33.6 vs Opus 43.4: Haiku builds piles (16 different spells vs real 13, fewer 4-ofs and lands), wrong colors more often, and makes half the real-deck lookups. PROGRESS.md section 2e. Next idea: v20, the code makes the lookups and gives the facts up front.
 - **Brewing or copying (2026-11-08, PROGRESS.md section 2f):** the match % rewards copying the right old deck. "Added" (match minus the deck's closest earlier list's own match) separates the two: inventors +24.8, every Opus version about +10.5 (v14's one run +13.5). v2 to v13's gain was almost all a better starting deck. Read the match % next to Added and near-copies (v13: 35% of decks over 65% from one old list; inventors 3%).
 - **Known test flaw (2026-11-08), fixed as v22 (2026-11-09), not yet measured:** `CardIndex.asOf(date, seen, loadStandardWindows())` gives Standard legality on the date (`src/cards/standard.ts`, windows from `scripts/build-standard-windows.ts`); v22 = v13 with that pool. Real Standard lists pass 100% (`scripts/standard-legality-check.ts`). Was: legality is checked as of today (`card.legal`), not on the deck's date; the time-cut pool only hides cards printed later. In Standard, 13 of Opus v13's 30 dev decks play nonbasic lands no Standard list ran in the 90 days before (mostly shock lands), about 2 copies per deck. Every version is affected alike.
-- **Budget (owner, 2026-11-08): "this is about the last money I want to spend on this though, its getting expensive."** Ask before any paid run; prefer free analyses of the existing result files. Total spend $537.69 (2026-11-10).
+- **Budget (owner, 2026-11-08): "this is about the last money I want to spend on this though, its getting expensive."** Ask before any paid run; prefer free analyses of the existing result files. Total spend $540.50 (2026-11-10).
 - **v20 (2026-11-08), the best lead since v13, not proven:** v13 plus up to 20 little-played spells that real decks run beside the requested cards, listed up front (`src/harness/borrow.ts`). On Haiku, 5 dev runs against v13's 5: Added +1.9 (-0.1 to +3.9), borrowed spells in the deck +3.0 (-2.0 to +8.0), match +0.9. v21 (top 5 only) dropped. Opus, 3 dev runs (2026-11-08): dropped, Added +0.3 (-1.5 to +2.1). The list makes Opus borrow more of the right spells but also more wrong ones; Asked directly, Opus picks right listed spells no better than it already does while building (judge test: 43% vs 41%); the limit is that half the lists hold no right spell. Measure with `scripts/borrow-eval.ts`.
 - **Candidate order, if spending resumes:** new generic ideas aimed at Added (what a deck adds beyond its closest old list), then aimed at measurable gaps: colors and lands (47% land match, flat), deck shape (0.7 one-ofs vs real 2.3), the gem rater. Use a stop rule like v19's to save money.
 
@@ -70,6 +71,7 @@ An AI that brews Magic decks as well as the best human brewers. The owner judges
 - That gap is mostly spells borrowed from other decks: inventors add 10 copies and 58% stay; the AI 4, and 17% stay. Mostly little-played spells (under 2% of lists), not staples. PROGRESS.md section 2g.
 - A list of the little-played spells real decks play alongside the requested cards (in the deck's colors) holds a third of the spells inventors borrowed at 20 cards and half at 50 (`scripts/candidate-check.ts`); synergy and per-job lists do no better than most-played-first. Opus decks already hold 15%.
 - The biggest spell gap is the "hidden gem": the under-played card the human brewer found (16-17 of 51 missing points). The AI skips them even when shown.
+- Against the model alone (v0), the harness's edge is mostly knowing what's being played: match +9 to +24, most on decks after the training cutoff. What a deck adds beyond its closest old list gains only 4-7 points, and v0's own mistakes (made-up names, banned cards) cost about 3 at most.
 
 ## Open ideas, not started
 
@@ -79,4 +81,4 @@ An AI that brews Magic decks as well as the best human brewers. The owner judges
 
 ## Spend
 
-About $469 total as of 2026-11-08 (see Running totals in BUILD_LOG.md). The owner said this is about the last money to spend.
+About $540.50 total as of 2026-11-10 (see Running totals in BUILD_LOG.md). The owner said this is about the last money to spend.

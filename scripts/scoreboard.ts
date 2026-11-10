@@ -29,6 +29,8 @@ const LEGAL_TESTS = new Set(["holdout-v2", "future-v2"]);
 const RAW_DEV = "holdout-v1";
 /** Section 2d compares cheaper models with v13, the base they were run against. */
 const STAND_IN_BASE = "v13";
+/** v0 (2026-11-10) is the model with no harness: the reference start, never a candidate (section 2a). */
+const REFERENCE = "v0";
 
 const index = loadCardIndex();
 const items = new Map(round4Items(index).map((it) => [it.id, it]));
@@ -209,7 +211,7 @@ async function main() {
   const verdictsUnder = (p: { base: string; dev: string; test: string[]; devRuns: number; testRuns: number }, score: Scorer, guard?: Scorer) => {
     const pBaseDev = runsOf(p.base, p.dev);
     const pBaseTest = p.test.map((t) => runsOf(p.base, t));
-    const candidates = [...new Set(scored.filter((r) => r.model === PROTOCOL.model && r.harness !== p.base && (covers(r, p.dev) || p.test.some((t) => covers(r, t)))).map((r) => r.harness!))].sort(
+    const candidates = [...new Set(scored.filter((r) => r.model === PROTOCOL.model && r.harness !== p.base && r.harness !== REFERENCE && (covers(r, p.dev) || p.test.some((t) => covers(r, t)))).map((r) => r.harness!))].sort(
       (a, b) => versionNo(a) - versionNo(b),
     );
     const rows = candidates.map((h) => {
@@ -230,6 +232,38 @@ async function main() {
     return { rows, baseRuns: `${pBaseDev.length} run(s) on dev (${p.dev}) and ${pBaseTest.map((r, i) => `${r.length} on ${p.test[i]}`).join(", ")}` };
   };
   const dataNote = `Only runs on the protocol's data count (\`${PROTOCOL.data.history.file}\` ${PROTOCOL.data.history.sha256}, \`${PROTOCOL.data.recent.file}\` ${PROTOCOL.data.recent.sha256}).`;
+  // 2a. The harness against the model alone (owner, 2026-11-10: "we should compare against just oneshot normal ai no harness as a start").
+  const allOpusRunsOf = (harness: string, testId: string) => scored.filter((r) => r.harness === harness && r.model === PROTOCOL.model && covers(r, testId));
+  const refVs = [...new Set(["v2", "v13", PROTOCOL.base])];
+  const scorers: [string, string, Scorer][] = [
+    ["holdout-v2", "match %", deckScores],
+    ["holdout-v2", "Added", deckAdded],
+    ["future-v2", "match %", deckScores],
+    ["future-v2", "Added", deckAdded],
+    ["tuning-v1", "match %", deckScores],
+    ["brewing-v1", "match %", deckScores],
+    ["post-v1", "match %", deckScores],
+  ];
+  const refRows = scorers.map(([testId, what, score]) => {
+    const ref = allOpusRunsOf(REFERENCE, testId);
+    const avg = (xs: number[]) => xs.reduce((a, b) => a + b, 0) / xs.length;
+    const meanOf = (rs: RunRecord[]) => avg(rs.map((r) => avg([...score(r, testId).values()])));
+    const runsText = (rs: RunRecord[]) => `${rs.length} run${rs.length > 1 ? "s" : ""}`;
+    const vs = (h: string) => {
+      const rs = allOpusRunsOf(h, testId);
+      if (!rs.length || !ref.length) return "not run";
+      const g = pairedGain(rs.map((r) => score(r, testId)), ref.map((r) => score(r, testId)));
+      return `${one(meanOf(rs))}: ${signed(g.gain)} (${signed(g.lo)} to ${signed(g.hi)}), ${runsText(rs)}`;
+    };
+    return [`${testId} (${what})`, ref.length ? `${one(meanOf(ref))} (${runsText(ref)})` : "not run", ...refVs.map(vs)];
+  });
+  out.push(`### 2a. The harness against the model alone (${REFERENCE})`, "");
+  out.push(
+    `${REFERENCE} is the reference start, not a candidate: one call to the same model with no system prompt, tools, data or checks, told only the date (\`src/harness/oneshot.ts\`). Each harness cell is its score, then its points over ${REFERENCE}, paired by deck, with the 95% range. Every Opus 5.5 run counts here, whatever data copy the harness had (${REFERENCE} reads no data). Added: the match % minus the match % of the deck's closest earlier list. holdout-v2 and future-v2 give Standard cards not legal on the deck's date nothing.`,
+    "",
+  );
+  out.push(table(["Test (score)", `${REFERENCE}: no harness`, ...refVs.map((h) => `${h}: score, gain over ${REFERENCE}`)], refRows), "");
+
   const current = verdictsUnder(PROTOCOL, deckAdded, deckScores);
   out.push(`### 2b. Candidates vs the base (${PROTOCOL.id}: Added, \`evals/protocol.ts\`)`, "");
   out.push(

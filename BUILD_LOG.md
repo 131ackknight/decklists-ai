@@ -77,6 +77,16 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-11-10 · v22 is the base (protocol-v4)
+
+Owner: **"Yes, make it base"**, and meanwhile: **"What test are we using here?"** Answered: dev is holdout-v2 (21 decks that appeared from nothing, rebuilt from the data and cards that existed on their day; scored on Added against the lists players settled on 30-90 days later; in Standard a card not legal on the deck's date earns nothing); the confirmation test is future-v2 (14 decks first seen since April 2026); the rule was protocol-v3, now v4.
+
+- **protocol-v4** (`evals/protocol.ts`, frozen 75bde83d201454b3): protocol-v3 with v22 as the base. 142 tests passing.
+- **v22's dev baseline, composed with no API calls** (`scripts/compose-baseline.ts`): its own decks on the 10 Standard dev decks plus v13's on the other 11, where the two run the same code on the same card pool. Files `holdout-v22-claude-opus-5-5{,-r2,-r3}.json`, recorded in the register at cost 0 with a note naming their sources. holdout-v2: 43.1 / 43.6 / 41.6 (v13: 42.4 / 44.8 / 41.5).
+- **Every version from v22 on gets the date-correct Standard card pool** (`scripts/run-round4.ts`).
+- **PROGRESS.md 2b judges by protocol-v4:** against v22, v14 +1.0 Added (-1.1 to +3.2), v20 +0.1, v13 -0.3; none kept. protocol-v3's, v2's and v1's tables stay below it. Section 2d (Haiku) stays against v13, the base its runs were made against. Composed runs show no cost of their own.
+- **Still to make, when a candidate first wins on dev:** v22's future-v2 runs (its 4 Standard decks, 2 runs, about $3.50; v13's runs cover the other 10).
+
 ## 2026-11-10 · The test fixed: holdout-v2, future-v2, protocol-v3; every run re-scored for free
 
 Owner: **"Yes, fix the test"**, then **"Try again"** (the turn had stopped partway).

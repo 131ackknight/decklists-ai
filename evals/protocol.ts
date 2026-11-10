@@ -76,9 +76,25 @@ export const PROTOCOL_V3 = {
   frozen: "16fe24e836fa7cec",
 };
 
+/**
+ * protocol-v4 (2026-11-10). Owner: "Yes, make it base". protocol-v3 with v22 (v13 plus Standard legality
+ * on the deck's date) as the base. v22 wasn't a measured gain (Added +0.6 on the 10 Standard dev decks,
+ * -2.9 to +4.0) but brews old Standard decks correctly. Its dev runs are composed (scripts/compose-baseline.ts):
+ * its own runs on the Standard decks, v13's on the others, where the two run the same. Its future-v2 runs
+ * are still to make (the 4 Standard decks; v13's on the other 10).
+ */
+export const PROTOCOL_V4 = {
+  ...PROTOCOL_V3,
+  id: "protocol-v4",
+  base: "v22",
+  rule:
+    "As protocol-v3, with v22 as the base. A candidate is kept if, on dev (holdout-v2), the 95% range of its gain in Added over the base is above zero and the top of the 95% range of its gain in match % is above zero (match not clearly worse), and on test (future-v2) the top of the 95% range of its gain in Added is above zero (not clearly worse). In Standard, cards not legal on the deck's date earn nothing. Gains are paired by deck, each deck's score averaged over a version's runs. Both versions need the full number of runs before a verdict.",
+  frozen: "75bde83d201454b3",
+};
+
 /** The protocol in force. */
-export const PROTOCOL = PROTOCOL_V3;
-export const PROTOCOLS = [PROTOCOL_V1, PROTOCOL_V2, PROTOCOL_V3];
+export const PROTOCOL = PROTOCOL_V4;
+export const PROTOCOLS = [PROTOCOL_V1, PROTOCOL_V2, PROTOCOL_V3, PROTOCOL_V4];
 
 export function protocolFingerprint(p: { frozen: string } = PROTOCOL): string {
   const { frozen: _, ...rest } = p;

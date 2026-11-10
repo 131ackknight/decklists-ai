@@ -87,7 +87,9 @@ async function main() {
       if (results[i]) continue;
       const it = items[i];
       // Harness v22 (2026-11-08) = v13 with Standard legality on the item's date, not today's (src/cards/standard.ts).
-      const pool = it.before ? index.asOf(it.before, history.cardsPlayedThrough(it.before), harness === "v22" ? loadStandardWindows() : undefined) : index;
+      // v22 is the base from 2026-11-10 (protocol-v4), so every later version gets the same card pool.
+      const datedLegality = Number(harness.replace(/\D/g, "")) >= 22;
+      const pool = it.before ? index.asOf(it.before, history.cardsPlayedThrough(it.before), datedLegality ? loadStandardWindows() : undefined) : index;
       const data = it.before ? history.cut(it.before, pool, (l) => isNearCopy(index, it, l.main)) : today;
       const req = { prompt: it.prompt, format: it.format };
       const deps = { index: pool, data };

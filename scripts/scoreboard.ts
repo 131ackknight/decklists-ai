@@ -17,7 +17,7 @@ import { FileDataSource } from "../src/data/source";
 import { pages, pairVerdicts, playVerdicts, ratingRows } from "../evals/answers";
 import { latestRuns, readRegister, type RunRecord } from "../evals/register";
 import { isLand, round4Items, toCounts, type Line } from "../evals/round4/items";
-import { PROTOCOL, PROTOCOL_V1, PROTOCOL_V2, pairedGain } from "../evals/protocol";
+import { PROTOCOL, PROTOCOL_V1, PROTOCOL_V2, PROTOCOL_V3, pairedGain } from "../evals/protocol";
 import { addedScore, earlierLists, futureLists, inventorGems, legalOnDateView, loadLists, overlap, settledLists, settledScore, shareScore, type Counts } from "../evals/score";
 import { sameItems, TESTS, testById } from "../evals/tests";
 
@@ -27,6 +27,8 @@ const covers = (r: RunRecord, t: string) => r.tests.includes(t) || r.tests.some(
 const LEGAL_TESTS = new Set(["holdout-v2", "future-v2"]);
 /** Sections 2e-2g describe the decks as built (no legality view), on the dev decks: holdout-v1. */
 const RAW_DEV = "holdout-v1";
+/** Section 2d compares cheaper models with v13, the base they were run against. */
+const STAND_IN_BASE = "v13";
 
 const index = loadCardIndex();
 const items = new Map(round4Items(index).map((it) => [it.id, it]));
@@ -107,7 +109,7 @@ async function main() {
   };
 
   type Cell = Record<string, string[]>;
-  const byVersion = new Map<string, { harness?: string; model?: string; cells: Cell; cost: number[] }>();
+  const byVersion = new Map<string, { harness?: string; model?: string; cells: Cell; cost: number[]; composed?: number }>();
   // Run 1 before run 2 (by the file's -r2 tag), then by date.
   const runNo = (f: string) => Number(f.match(/-r(\d+)(?:-partial)?\.json$/)?.[1] ?? 1);
   const scored = runs
@@ -129,7 +131,9 @@ async function main() {
       add("brewing-v1", s.brew);
       add("gems", s.gems);
     }
-    if (r.costUsd !== undefined) v.cost.push(r.costUsd / r.items);
+    // Composed runs (scripts/compose-baseline.ts) made no calls of their own; their cost is in the runs they came from.
+    if (r.costUsd !== undefined && r.script !== "compose-baseline") v.cost.push(r.costUsd / r.items);
+    if (r.script === "compose-baseline") v.composed = (v.composed ?? 0) + 1;
     byVersion.set(key, v);
   }
   const cols = ["holdout-v1", "holdout-v2", "post-v1", "future-v1", "future-v2", "tuning-v1", "brewing-v1", "gems"];
@@ -142,7 +146,7 @@ async function main() {
     ["Closest earlier list, picked with hindsight", one(hindsight(holdout)), "", one(hindsight(post)), one(hindsight(future)), "", "", "", "", ""],
     ...[...byVersion.values()]
       .sort((a, b) => versionNo(a.harness) - versionNo(b.harness) || (a.model ?? "").localeCompare(b.model ?? ""))
-      .map((v) => [`${v.harness}${v.model === "claude-opus-5-5" ? "" : `, ${modelName(v.model)}`}`, ...cols.map((c) => v.cells[c]?.join(" / ") ?? "not run"), costRange(v.cost)]),
+      .map((v) => [`${v.harness}${v.model === "claude-opus-5-5" ? "" : `, ${modelName(v.model)}`}`, ...cols.map((c) => v.cells[c]?.join(" / ") ?? "not run"), v.composed && !v.cost.length ? `${v.composed} composed runs (cost in their source runs)` : costRange(v.cost)]),
   ];
   const listed = new Set([...byVersion.values()].map((v) => v.harness));
   const unlisted = [...new Set(runs.map((r) => r.harness).filter((h): h is string => !!h && !listed.has(h)))].sort((a, b) => versionNo(a) - versionNo(b));
@@ -233,6 +237,9 @@ async function main() {
     "",
   );
   out.push(table(["Candidate", `Dev: Added on ${PROTOCOL.dev}`, `Dev: match % (guard)`, ...PROTOCOL.test.map((t) => `Test: Added on ${t}`), "Verdict"], current.rows), "");
+  const retiredV3 = verdictsUnder(PROTOCOL_V3, deckAdded, deckScores);
+  out.push(`**Retired 2026-11-10: ${PROTOCOL_V3.id} (the same, with v13 as the base).** Its verdicts stand as they were. Base: ${PROTOCOL_V3.base}, with ${retiredV3.baseRuns}.`, "");
+  out.push(table(["Candidate", `Dev: Added on ${PROTOCOL_V3.dev}`, `Dev: match % (guard)`, ...PROTOCOL_V3.test.map((t) => `Test: Added on ${t}`), "Verdict"], retiredV3.rows), "");
   const retiredV2 = verdictsUnder(PROTOCOL_V2, deckAdded, deckScores);
   out.push(`**Retired 2026-11-09: ${PROTOCOL_V2.id} (Added, on holdout-v1 and future-v1, where early not-yet-legal Standard cards still scored).** Its verdicts stand as they were. Base: ${PROTOCOL_V2.base}, with ${retiredV2.baseRuns}.`, "");
   out.push(table(["Candidate", `Dev: Added on ${PROTOCOL_V2.dev}`, `Dev: match % (guard)`, ...PROTOCOL_V2.test.map((t) => `Test: Added on ${t}`), "Verdict"], retiredV2.rows), "");
@@ -291,15 +298,16 @@ async function main() {
   // 2d. The same dev comparison on cheaper models, to see whether one can screen ideas for the protocol's model.
   const devOn = (model: string, harness?: string) =>
     scored.filter((r) => r.model === model && (!harness || r.harness === harness) && covers(r, PROTOCOL.dev) && onProtocolData(r));
-  const standIns = [...new Set(scored.filter((r) => r.model !== PROTOCOL.model).map((r) => r.model!))].filter((m) => devOn(m, PROTOCOL.base).length);
+  const standIns = [...new Set(scored.filter((r) => r.model !== PROTOCOL.model).map((r) => r.model!))].filter((m) => devOn(m, STAND_IN_BASE).length);
+  const v13Dev = runsOf(STAND_IN_BASE, PROTOCOL.dev);
   out.push(`### 2d. The same comparison on cheaper models (dev: ${PROTOCOL.dev})`, "");
   out.push(
-    `Each version's gain over ${PROTOCOL.base} on the same model, paired by deck, with its 95% range, next to the same gain on ${modelName(PROTOCOL.model)}. Match %, not Added. Only runs on the protocol's data. Decks built: decks submitted / dev decks, per run.`,
+    `Each version's gain over ${STAND_IN_BASE} (the base when these runs were made) on the same model, paired by deck, with its 95% range, next to the same gain on ${modelName(PROTOCOL.model)}. Match %, not Added. Only runs on the protocol's data. Decks built: decks submitted / dev decks, per run.`,
     "",
   );
   if (!standIns.length) out.push("No cheaper model has run the base on dev yet.", "");
   for (const m of standIns) {
-    const base = devOn(m, PROTOCOL.base);
+    const base = devOn(m, STAND_IN_BASE);
     const mean = (xs: number[]) => xs.reduce((s, v) => s + v, 0) / xs.length;
     const rowsFor = [...new Set(devOn(m).map((r) => r.harness!))]
       .sort((a, b) => versionNo(a) - versionNo(b))
@@ -308,12 +316,12 @@ async function main() {
         const means = rs.map((r) => mean([...deckScores(r, PROTOCOL.dev).values()]));
         const sd = means.length > 1 ? Math.sqrt(means.reduce((s, v) => s + (v - mean(means)) ** 2, 0) / (means.length - 1)) : null;
         const built = rs.map((r) => `${[...decksOf(r).values()].filter(Boolean).length}/${testById(PROTOCOL.dev).items.length}`).join(", ");
-        const gain = h === PROTOCOL.base ? "(base)" : gainOf(rs, base, PROTOCOL.dev, h).text.replace(/\(\d+ more on an earlier data copy, not counted\)/, "").trim();
-        const onMain = h === PROTOCOL.base ? "(base)" : gainOf(runsOf(h, PROTOCOL.dev), baseDev, PROTOCOL.dev, h).text;
+        const gain = h === STAND_IN_BASE ? "(base)" : gainOf(rs, base, PROTOCOL.dev, h).text.replace(/\(\d+ more on an earlier data copy, not counted\)/, "").trim();
+        const onMain = h === STAND_IN_BASE ? "(base)" : gainOf(runsOf(h, PROTOCOL.dev), v13Dev, PROTOCOL.dev, h).text;
         return [h, rs.length, means.map(one).join(" / "), sd === null ? "" : one(sd), built, gain, onMain];
       });
     out.push(`**${modelName(m)}**`, "");
-    out.push(table(["Version", "Runs", "Score per run", "SD of a run", "Decks built", `Gain over ${PROTOCOL.base}`, `Same gain on ${modelName(PROTOCOL.model)}`], rowsFor), "");
+    out.push(table(["Version", "Runs", "Score per run", "SD of a run", "Decks built", `Gain over ${STAND_IN_BASE}`, `Same gain on ${modelName(PROTOCOL.model)}`], rowsFor), "");
   }
 
   // 2e. Where the points go on dev: lands vs spells, colors, deck shape, and the lookups each version made.

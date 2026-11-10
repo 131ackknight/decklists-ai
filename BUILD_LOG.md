@@ -55,6 +55,7 @@ Three things, and the third is turning out to be the most interesting.
 15. **Specific beats generic, every time.** Over 15 harness versions, everything that helped was knowledge about *these* cards or *this* plan (v5, v8, v10-v12); everything generic hurt or did nothing (stages, an in-code coach, originality limits, example brews, format staples). On 14 decks that appeared after April, the best version matches 48% of what players settled on (v2: 45%); lands never moved (47% in every version) and the biggest remaining gap is the creative pick, the under-played card a human found.
 16. **Generic tools, specific knowledge.** The owner's rule for what to build next: no fixes bespoke to an engine. A first such tool learns which *kinds* of cards real decks pair (by function, not name) and finds 41% of the human brewers' discoveries in a 300-card shortlist from 3,200, for free, before any brew uses it.
 17. **The model alone.** The owner asked for the true start: the same model, one call, no harness. It matches 34% of what players settled on (26% on decks after its training cutoff); the harness 43-50%, at about 7 times the cost per deck. Most of the gain is knowing what's being played: what a deck adds beyond its closest old list grows only 4-7 points, and the model's own mistakes (made-up cards, banned cards) cost about 3 at most.
+18. **Is it the lands, the creatures, the removal?** None of them. Split by kind of card, the harness matches 40-47% of every group and the human inventors 60-70% of every group; the misses are whole cards, the same ones every run, and a vote over three builds changes nothing. The one error the harness added itself: extra colors, wrong 4 times in 5.
 
 Recurring theme for the post: the owner's pushback improved the work at nearly every turn (no bracket scraping, no new database, no Neon credentials, use our own data instead of re-scraping MTGO, every list instead of a sample, fix `main` instead of running an old build, compare models, not ready to give up, judge decks I know intimately, an April cutoff for the future test, generic tools not bespoke fixes).
 
@@ -77,6 +78,37 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
 
 ---
+
+## 2026-11-10 · Where the missing points are: no kind of card stands out
+
+Owner: **"if we were to deconstruct where the harness can improve, is it lands, spells, creatures, the removal, etc... what can we do to do some targetted improvements"**. Free: `scripts/point-breakdown.ts` and `scripts/consensus-check.ts` read the saved dev decks (v22, 3 runs, 21 decks) and make no model calls.
+
+Every card of a settled real deck is either matched by our deck or missed, and missed copies / 60 = points lost. v22 matches 42.7, so about 58 points are missing. The inventors (each deck's first-week real lists, averaged per deck; section 2f averages over lists and gets 72.2) match 65.7: 23.0 points more than v22.
+
+| Kind of card | In the real deck | v22 plays | v22 matches | Inventors match | Points v22 misses | Points the inventors get that v22 doesn't |
+| --- | --- | --- | --- | --- | --- | --- |
+| Lands | 21.7 | 21.1 | 45% | 68% | 20.0 | 8.3 |
+| Creatures | 16.4 | 19.2 | 42% | 70% | 15.9 | 7.7 |
+| Instants and sorceries | 16.2 | 15.0 | 45% | 63% | 14.8 | 4.9 |
+| Other permanents | 6.1 | 4.6 | 30% | 51% | 7.1 | 2.1 |
+| **All** | 60.3 | 60.0 | 42% | 65% | 57.8 | 23.0 |
+
+By job (Scryfall function tags, each card in one group): removal 47% matched (inventors 59%), card advantage 39% (69%), mana 44% (63%), creatures with none of those jobs 46% (74%), counterspells 16% (50%), nonbasic lands 38% (66%), basic lands 68% (73%).
+
+- **No kind of card is the weak spot.** v22 matches 40-47% of every big group; the inventors 60-70% of every group. Removal is the closest to the inventors (2 points behind); card advantage (6 points) and nonbasic lands (8 points) are the furthest.
+- **The misses are whole cards, not copy counts.** 53.8 of the 57.8 missing points are cards the deck doesn't play at all (lands 17.7, spells 36.1); too few copies of a card it does play costs 4.0.
+- **The named cards are done; the rest is the gap.** v22 matches 97% of the copies of the cards the prompt names (it plays 11.0 where the real deck plays 8.7). Of the other spells it matches 25% (7.5 of 29.9); the inventors 56%. That is 37 of the missing points, and 16 of the 23 to the inventors.
+- **The mix is a little off.** Against the real decks, v22 plays 3.2 more creatures with no tagged job and 2.3 fewer card-advantage cards; 3.2 more basic lands and 3.7 fewer nonbasic lands.
+- **Colors: the harness adds colors, and is usually wrong when it does.** Right colors: v22 56%, the model alone (v0) 55%, inventors 92%. The named cards' colors alone equal the real deck's on 71% of decks, and never include a wrong color. v22 adds a color the named cards don't have in 35% of builds, and then has the real deck's colors 18% of the time; when it stays in the named cards' colors, 82%. v0 almost never adds a color (3%) and misses one instead (35%): the harness swapped one error for the other. The same deck built both ways (6 decks): 45.4 with the right colors, 42.2 with the wrong ones.
+- **Lands can't be read off the data, even with the right colors.** The usual lands of the format's recent decks in the real deck's colors share 9.6 lands with the settled lists; v22's own lands share 10.2 (the usual lands do better on 5 of 19 decks). The 11-08 land checks used the requested cards' colors; this closes the gap they left.
+- **A vote over builds does nothing.** Merging v22's three builds of each deck by vote: 42.8 to 42.9 (+0.1, -0.9 to +1.1); Added +0.0. Two builds of the same deck share 46.4 of 60 cards, but only 25.6 with the real deck: the misses are the same every run, so they aren't noise. (For v0 the vote helps: +1.4, +0.5 to +2.3; its builds share 40.0.)
+- **Out of reach:** 2.6 copies a deck (4.3 points) are cards not printed yet on the deck's date, or not legal by today's list.
+- **Four decks hold the worst losses:** Cosmogoyf 20.2, Jund Sacrifice 21.6, Creative Technique 30.9, Dimir Excruciator 32.7 (their inventors: 87, 21, 83, 84). Each is a different deck from the real one (other colors, or a plan the AI didn't see: the real Creative Technique deck is 33 lands and cascade spells), not a few wrong slots.
+
+**What this means for targeted fixes:**
+- A tool per kind of card (lands, removal, creatures) has no pocket to find: the gap is the same size everywhere, and the same every run. Earlier tries agree: mana-base tool (v14), land step (+0.2 lands), format staples by job (v15), coach by style (v4).
+- **One targeted fix the data supports: a color rule.** Build in the named cards' colors; add a color only if the request asks, or with a stated reason the checks can test. It is generic, and it removes an error the harness itself introduced. Expected: right colors from 56% to about 70%; match about +0.5 to +1.5, too small for three dev runs to prove on match, so right colors would be the measured target. Not built; waiting for the owner.
+- The rest of the gap is judgment about which unnamed cards fit (25% against the inventors' 56%). The inventors' lists are published winners, so real games have already filtered them. That points at playtesting or a stronger model, not at another list of cards.
 
 ## 2026-11-10 · v0 dev runs 2 and 3: the harness's Added gain clears zero, just
 

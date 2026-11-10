@@ -158,6 +158,14 @@ describe("land advice", () => {
     expect(landNote("Standard", 2, usual, a)).toBeNull();
   });
 
+  it("leaves a one-color deck alone: it has no colors to fix", () => {
+    const mono = deck([20, "Shock"], [4, "Rakdos Cackler"], [22, "Mountain"]);
+    const a = landAdvice(index, mono, usual);
+    expect(a.basics).toBe(22);
+    expect(a.missing).toEqual([]);
+    expect(a.swaps).toEqual([]);
+  });
+
   it("writes the note from the numbers", () => {
     const note = landNote("Standard", 2, usual, landAdvice(index, brew, usual))!;
     expect(note).toContain("this deck plays 15 basic lands");

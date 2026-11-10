@@ -165,9 +165,11 @@ export interface LandAdvice {
  * Where a deck's lands differ from the usual ones in the way the dev decks do (scripts/land-fix-check.ts):
  * more basic lands than the format's decks with as many colors, and fewer of the lands they fix their
  * colors with. A copy counts when at least `minShare` of those decks play it. Lands that fix nothing are
- * a deck's own business and are left alone.
+ * a deck's own business and are left alone, and a one-color deck has nothing to fix (2026-11-10: in the
+ * land note test the AI refused Fabled Passage in a mono-black deck, and was right).
  */
 export function landAdvice(index: CardIndex, deck: Qty, usual: UsualLands, minShare = 0.25): LandAdvice {
+  const oneColor = deckColors(index, deck).length < 2;
   const have = new Map<string, number>();
   let basics = 0;
   for (const [name, q] of deck) {
@@ -181,7 +183,7 @@ export function landAdvice(index: CardIndex, deck: Qty, usual: UsualLands, minSh
   const swaps = new Map<string, number>();
   let excess = basics - usualBasics;
   for (const s of usual.slots) {
-    if (s.basic || s.share < minShare || !isFixerRole(s.role) || (have.get(s.name) ?? 0) >= s.copy) continue;
+    if (oneColor || s.basic || s.share < minShare || !isFixerRole(s.role) || (have.get(s.name) ?? 0) >= s.copy) continue;
     missing.set(s.name, { name: s.name, copies: s.copy, have: have.get(s.name) ?? 0, share: s.share });
     if (excess > 0) {
       swaps.set(s.name, (swaps.get(s.name) ?? 0) + 1);

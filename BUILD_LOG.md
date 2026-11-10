@@ -27,10 +27,10 @@ Three things, and the third is turning out to be the most interesting.
 
 | Item | Total |
 | --- | --- |
-| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80; v12 on six $2.61; round 3 $1.90; v13 post-cutoff $2.85; v14 and future test $41.28; v15 round $25.87; v16 round $17.46; reviewer checks $0.78; v17 on eight $4.80. v17 future test $19.00; gem test $1.82; v18 on eight $4.92; blind panel round 1 $18.13; picker test $0.69; taste tests $3.06; judge with evidence and goldfish $2.18; Fable and Sonnet judges $4.30; text playtest $4.07; v19 smoke test $0.77; found-deck test $3.79; blind panel round 2 $21.00; protocol-v1 baseline (v13 dev runs 2 and 3) $17.35; v19 dev run 1 $15.89; Haiku stand-in check (6 dev runs) $2.98; v14 dev runs 2 and 3 $18.66; v20 on Haiku (3 dev runs) $1.47; launch mistake (7 misnamed runs, stopped) $0.32; Haiku v13 and v20 runs 4-5 and v21 runs 1-3 $3.47; v20 Opus dev run 1 $8.70; v20 Opus dev runs 2 and 3 $17.18; judge test $0.42; Extravagant Spirit prompt (v13 and v20) $0.81; land-step test $1.16; v22 Opus run 1 on the 10 Standard dev decks $4.61; v22 Opus runs 2 and 3 $8.75; v0 (the model alone) run 1 on 45 decks $2.81 and dev runs 2 and 3 $2.87. Total about $543.37. Plus one 17-token test call. |
+| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80; v12 on six $2.61; round 3 $1.90; v13 post-cutoff $2.85; v14 and future test $41.28; v15 round $25.87; v16 round $17.46; reviewer checks $0.78; v17 on eight $4.80. v17 future test $19.00; gem test $1.82; v18 on eight $4.92; blind panel round 1 $18.13; picker test $0.69; taste tests $3.06; judge with evidence and goldfish $2.18; Fable and Sonnet judges $4.30; text playtest $4.07; v19 smoke test $0.77; found-deck test $3.79; blind panel round 2 $21.00; protocol-v1 baseline (v13 dev runs 2 and 3) $17.35; v19 dev run 1 $15.89; Haiku stand-in check (6 dev runs) $2.98; v14 dev runs 2 and 3 $18.66; v20 on Haiku (3 dev runs) $1.47; launch mistake (7 misnamed runs, stopped) $0.32; Haiku v13 and v20 runs 4-5 and v21 runs 1-3 $3.47; v20 Opus dev run 1 $8.70; v20 Opus dev runs 2 and 3 $17.18; judge test $0.42; Extravagant Spirit prompt (v13 and v20) $0.81; land-step test $1.16; v22 Opus run 1 on the 10 Standard dev decks $4.61; v22 Opus runs 2 and 3 $8.75; v0 (the model alone) run 1 on 45 decks $2.81 and dev runs 2 and 3 $2.87; land note test $0.41. Total about $543.78. Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats); full history 145,131 (since 2025-07-01, merged weekly) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
-| Automated tests | 155 passing |
+| Automated tests | 156 passing |
 | Decklist Data PRs merged | 5 (#181 export, #182 baseline eval, #183 baseline on `main`, #184 model comparison, #188 sideboard junk cleanup: 34,432 lists cleaned) |
 | Plan steps done | 1, 4, 5, 6, 8; harness at v22, with v0 (the model alone) as the reference start; evals: owner's "would you play it?", the 18-deck future test and the frozen automatic tests (PROGRESS.md) |
 | Current harness | **v22** (v13 + Standard legality on the deck's date), the base since 2026-11-10 (protocol-v4): dev (holdout-v2) 43.1 / 43.6 / 41.6. Over the model alone (v0, 2026-11-10): match +8.8 on dev (3 runs each), +14.3 on the future test, +23.7 after the training cutoff (v13 on those two). Before: v13 future test 48.3% / 47.9%, v2 44.9%; blind panel v13 10 of 17, v19 13 of 17; v14, v19 and v20 dropped |
@@ -78,6 +78,32 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
 
 ---
+
+## 2026-11-10 · The land note test: the AI makes the code's swaps, and rightly refuses three
+
+**$0.41** for 13 calls (the estimate was about $1; the calls were short). All 13 revisions passed the checks. The other 8 decks had no more basics than usual and got no note.
+
+| Same 21 builds (v22 run 1) | Before | The AI's revision | The code-only swap |
+| --- | --- | --- | --- |
+| Lands shared with the settled lists | 9.7 | +0.45 (-0.05 to +0.96) | +0.56 (+0.04 to +1.08) |
+| Match % | 43.1 | +0.71 (-0.17 to +1.60) | +0.90 (+0.01 to +1.80) |
+| Added | 10.3 | +0.62 (-0.25 to +1.49) | +0.81 (-0.09 to +1.70) |
+| Basic lands | 8.0 | 6.8 | 5.9 |
+
+- **Verdict, by the rule set before the run:** the AI's revision shares fewer more lands than the code (+0.45 against +0.56), so on the score the AI adds nothing over the code, and the code-only swap is the version to carry forward. The two are well inside each other's ranges: same lands on 14 of the 21 decks, the code ahead on 5, the AI on 2.
+- **What the AI did:** the code's swaps or nearly on 10 of the 13 decks, and none on 3, each with a reason:
+  - Dimir Excruciator, built mono-black: "Fabled Passage and Escape Tunnel fix colors this deck doesn't have."
+  - Fanatic Eldrazi (one color): the Forests stay for Utopia Sprawl and the fetch lands.
+  - Creative Technique: the deck never hard-casts its green cards, so green lands add nothing.
+- **A fix to the code, from the first two:** a one-color deck has no colors to fix. `landAdvice` now leaves one-color decks alone (1 more test; 156 passing). Re-measured, free:
+
+| The code-only swap, with that fix | Lands shared | Match % | Added |
+| --- | --- | --- | --- |
+| These 21 builds | +0.57 (+0.05 to +1.09) | +0.90 (+0.01 to +1.80) | +0.81 (-0.07 to +1.69) |
+| All 63 builds (v22's three runs) | +0.37 (+0.04 to +0.71) | +0.57 (-0.02 to +1.16) | +0.56 (-0.02 to +1.13) |
+
+- **Where the gain is:** Boros Dwarves +4.3 lands on this build (4 Sunbillow Verge and a Multiversal Passage for 5 basics), Mardu Discard +2.7, Elementals +1.9, Standard Lessons +1.3, Pioneer Lessons +0.9. 29 of the 63 builds change, about 3 land copies each; basics go from 8.0 to 6.5 (real decks 4.8).
+- **Where it stands:** the swap is generic, costs nothing per deck, and clearly shares more lands (+0.37). On Added it is a hair short of protocol-v4's rule (the range starts at -0.02), so it is not kept as a measured gain; making it part of the base would be the owner's call, as with v22. It is not wired into the brewer yet.
 
 ## 2026-11-10 · The land note, with the AI making the swaps: the rule, before the run
 

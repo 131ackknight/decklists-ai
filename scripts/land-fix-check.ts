@@ -27,7 +27,7 @@ import { readFileSync } from "node:fs";
 import { loadCardIndex } from "../src/cards/load";
 import { loadStandardWindows } from "../src/cards/standard";
 import { FileDataSource } from "../src/data/source";
-import { deckColors, usualLands, type UsualLands } from "../src/harness/lands";
+import { applyLandSwaps, deckColors, landAdvice, usualLands, type UsualLands } from "../src/harness/lands";
 import { latestRuns, type RunRecord } from "../evals/register";
 import { isLand, round4Items, toCounts, type Line } from "../evals/round4/items";
 import { PROTOCOL, pairedGain } from "../evals/protocol";
@@ -191,6 +191,14 @@ async function main() {
     ["cycle-trim", cycleTrim(0.25)],
     ["cycle-replace", cycleReplace],
     ["cycle-trim-fixers", cycleTrim(0.25, true)],
+    // The same fix through the function the brewer would use (src/harness/lands.ts landAdvice): must match the line above.
+    [
+      "landAdvice",
+      (id, d) => {
+        const u = cycleUsual(id, d);
+        return u ? (applyLandSwaps(index, d, landAdvice(index, d, u).swaps, keyOf) as Counts) : d;
+      },
+    ],
   ];
 
   const covers = (r: RunRecord, t: string) => r.tests.includes(t) || r.tests.some((x) => sameItems(x, t));

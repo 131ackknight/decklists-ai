@@ -147,3 +147,75 @@ export function usualLands(index: CardIndex, lists: { deck: Qty; colors: string[
   }
   return { lists: lists.length, avgLands: lands / lists.length, avgBasics: basics / lists.length, slots };
 }
+
+/** A land that fixes colors for the deck: it makes any color, or two or more of the deck's own. */
+export const isFixerRole = (role: string) => role === "any" || role.split("+").filter((r) => r !== "x").length >= 2;
+
+export interface LandAdvice {
+  /** Basic lands in the deck, and the usual count (rounded). */
+  basics: number;
+  usualBasics: number;
+  /** Color-fixing lands the usual decks play and this deck has fewer of: `copies` they play, `have` here, `share` of them that play that many. */
+  missing: { name: string; copies: number; have: number; share: number }[];
+  /** What trimming does: for each basic above the usual count, one copy of the most-voted missing fixer. */
+  swaps: { name: string; copies: number }[];
+}
+
+/**
+ * Where a deck's lands differ from the usual ones in the way the dev decks do (scripts/land-fix-check.ts):
+ * more basic lands than the format's decks with as many colors, and fewer of the lands they fix their
+ * colors with. A copy counts when at least `minShare` of those decks play it. Lands that fix nothing are
+ * a deck's own business and are left alone.
+ */
+export function landAdvice(index: CardIndex, deck: Qty, usual: UsualLands, minShare = 0.25): LandAdvice {
+  const have = new Map<string, number>();
+  let basics = 0;
+  for (const [name, q] of deck) {
+    const c = index.getCard(name);
+    if (!c || !isLandCard(c)) continue;
+    have.set(c.name, (have.get(c.name) ?? 0) + q);
+    if (isBasicLand(c)) basics += q;
+  }
+  const usualBasics = Math.round(usual.avgBasics);
+  const missing = new Map<string, LandAdvice["missing"][number]>();
+  const swaps = new Map<string, number>();
+  let excess = basics - usualBasics;
+  for (const s of usual.slots) {
+    if (s.basic || s.share < minShare || !isFixerRole(s.role) || (have.get(s.name) ?? 0) >= s.copy) continue;
+    missing.set(s.name, { name: s.name, copies: s.copy, have: have.get(s.name) ?? 0, share: s.share });
+    if (excess > 0) {
+      swaps.set(s.name, (swaps.get(s.name) ?? 0) + 1);
+      excess--;
+    }
+  }
+  return { basics, usualBasics, missing: [...missing.values()], swaps: [...swaps].map(([name, copies]) => ({ name, copies })) };
+}
+
+/** The deck with the swaps made: each swapped-in copy replaces one copy of the basic the deck has most of. */
+export function applyLandSwaps(index: CardIndex, deck: Qty, swaps: LandAdvice["swaps"], keyOf: (name: string) => string = (n) => n): Qty {
+  const out = new Map(deck);
+  for (const s of swaps) {
+    for (let i = 0; i < s.copies; i++) {
+      const from = [...out].filter(([k]) => isBasicLand(index.getCard(k))).sort((a, b) => b[1] - a[1])[0];
+      if (!from) return out;
+      if (from[1] === 1) out.delete(from[0]);
+      else out.set(from[0], from[1] - 1);
+      const k = [...out.keys()].find((x) => index.getCard(x)?.name === s.name) ?? keyOf(s.name);
+      out.set(k, (out.get(k) ?? 0) + 1);
+    }
+  }
+  return out;
+}
+
+/** The note a brewer gets about its lands, or null when there is nothing to say. */
+export function landNote(format: string, colors: number, usual: UsualLands, advice: LandAdvice): string | null {
+  if (!advice.swaps.length) return null;
+  const kind = colors === 1 ? "one-color" : colors === 2 ? "two-color" : colors === 3 ? "three-color" : `${colors}-color`;
+  const pct = (x: number) => `${Math.round(x * 100)}%`;
+  return [
+    `Lands: this deck plays ${advice.basics} basic lands. ${format} ${kind} decks from the last 90 days (${usual.lists} lists) average ${usual.avgBasics.toFixed(1)} basic lands out of ${usual.avgLands.toFixed(1)} lands.`,
+    "The lands those decks fix their colors with, in this deck's colors, that this deck has fewer of (most played first):",
+    ...advice.missing.map((m) => `- ${m.name}: ${m.copies} ${m.copies === 1 ? "copy" : "copies"} in ${pct(m.share)} of those decks; this deck has ${m.have}`),
+    `Swap basic lands for these, most played first, down to about ${advice.usualBasics} basics, unless a card in the deck needs basic lands. Keep the land count.`,
+  ].join("\n");
+}

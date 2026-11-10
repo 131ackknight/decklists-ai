@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { CardIndex } from "../cards/card-index";
 import type { Card } from "../cards/types";
-import { cycleKey, deckColors, landColors, landRole, usualLands } from "./lands";
+import { applyLandSwaps, cycleKey, deckColors, isFixerRole, landAdvice, landColors, landNote, landRole, usualLands } from "./lands";
 
 const card = (name: string, over: Partial<Card> = {}): Card => ({
   oracleId: name,
@@ -111,5 +111,59 @@ describe("usual lands", () => {
     expect(copies(u.slots)["Blood Crypt"]).toBeUndefined();
     expect(copies(u.slots)["Blazemire Verge"]).toBe(4);
     expect(usualLands(index, lists.slice(0, 9), ["R", "B"], () => true)).toBeNull();
+  });
+});
+
+describe("land advice", () => {
+  const izzet = deck([12, "Opt"], [8, "Shock"], [4, "Steam Vents"], [4, "Riverpyre Verge"], [3, "Starting Town"], [6, "Island"], [4, "Mountain"]);
+  const lists = Array.from({ length: 10 }, () => ({ deck: izzet, colors: deckColors(index, izzet, true) }));
+  const usual = usualLands(index, lists, ["R", "B"], () => true)!;
+  // A red-black brew with 15 basics, half the shock lands and no any-color land.
+  const brew = deck([12, "Shock"], [8, "Duress"], [2, "Blood Crypt"], [4, "Blazemire Verge"], [1, "Mutavault"], [9, "Mountain"], [6, "Swamp"]);
+
+  it("knows which lands fix colors", () => {
+    expect(isFixerRole("any")).toBe(true);
+    expect(isFixerRole("1+2")).toBe(true);
+    expect(isFixerRole("1+x")).toBe(false);
+    expect(isFixerRole("2")).toBe(false);
+    expect(isFixerRole("none")).toBe(false);
+  });
+
+  it("lists the fixers the deck has fewer of, and swaps one in for each basic above the usual count", () => {
+    const a = landAdvice(index, brew, usual);
+    expect(a.basics).toBe(15);
+    expect(a.usualBasics).toBe(10);
+    expect(a.missing).toEqual([
+      { name: "Blood Crypt", copies: 4, have: 2, share: 1 },
+      { name: "Starting Town", copies: 3, have: 0, share: 1 },
+    ]);
+    // Five basics over: two Blood Crypts and three Starting Towns come in.
+    expect(a.swaps.reduce((n, s) => n + s.copies, 0)).toBe(5);
+    const fixed = applyLandSwaps(index, brew, a.swaps);
+    expect(fixed.get("Blood Crypt")).toBe(4);
+    expect(fixed.get("Starting Town")).toBe(3);
+    expect((fixed.get("Mountain") ?? 0) + (fixed.get("Swamp") ?? 0)).toBe(10);
+    expect([...fixed.values()].reduce((x, y) => x + y, 0)).toBe([...brew.values()].reduce((x, y) => x + y, 0));
+    // The basics come out of whichever the deck has more of.
+    expect(fixed.get("Mountain")).toBe(5);
+    expect(fixed.get("Swamp")).toBe(5);
+    expect(fixed.get("Mutavault")).toBe(1);
+  });
+
+  it("swaps nothing when the deck has no more basics than usual, and then gives no note", () => {
+    const lean = deck([12, "Shock"], [8, "Duress"], [2, "Blood Crypt"], [4, "Blazemire Verge"], [5, "Mountain"], [5, "Swamp"]);
+    const a = landAdvice(index, lean, usual);
+    expect(a.swaps).toEqual([]);
+    expect(a.missing.map((m) => m.name)).toEqual(["Blood Crypt", "Starting Town"]);
+    expect(landNote("Standard", 2, usual, a)).toBeNull();
+  });
+
+  it("writes the note from the numbers", () => {
+    const note = landNote("Standard", 2, usual, landAdvice(index, brew, usual))!;
+    expect(note).toContain("this deck plays 15 basic lands");
+    expect(note).toContain("Standard two-color decks from the last 90 days (10 lists) average 10.0 basic lands out of 21.0 lands");
+    expect(note).toContain("- Blood Crypt: 4 copies in 100% of those decks; this deck has 2");
+    expect(note).toContain("- Starting Town: 3 copies in 100% of those decks; this deck has 0");
+    expect(note).toContain("down to about 10 basics");
   });
 });

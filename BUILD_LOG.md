@@ -87,6 +87,8 @@ Owner, back: **"I am back."** Finished the fix (all free):
 - **Opus v13's saved Standard decks, on their item's date:** dev, 14 of 30 decks hold cards v22 wouldn't allow, **2.0 copies per deck** (Spell Snare 12, Temple Garden 12, Hallowed Fountain 12, Overgrown Tomb 8, Haunted Ridge 8, Steam Vents 4, ...); future test, 1 of 8 decks, 0.3 copies per deck.
 - Only Standard is fixed. Pioneer has the same kind of gap for cards reprinted into Pioneer-legal sets; not checked.
 
+**Measuring v22** (owner: **"Yes, run it"**): v22 changes only the 10 Standard dev decks (on the other 11 it runs exactly as v13), so it runs on those 10 only (`--items`), about $4.50 a run, compared on the same 10 decks with v13's three runs (`scripts/compare-runs.ts`; v13 against itself there, one run vs two: Added +0.1, -2.8 to +2.9, so one run decides only whether to go on). **Stop rule, set before the run:** if v22's Added gain on those 10 decks is zero or below, stop and drop v22's claim to a gain (the fix stays available as a correctness option). If above zero, runs 2 and 3 (about $9), and the owner is asked first.
+
 ## 2026-11-08 · Fixing legality on the deck's date (in progress, not used yet)
 
 Owner: **"Yes, fix it"**, then **"So we got better with the lands stuff? WE should lean into that more maybe?"** (The land step itself was only +0.4 Added, not proven; the legality fix is the bigger land win.)

@@ -1,7 +1,7 @@
 /**
  * Run round 4 (owner-written evals) on one harness and model.
  *
- *   pnpm exec tsx scripts/run-round4.ts --harness v2|...|v22 [--tag r2] --model claude-sonnet-5-5 [--track fill,brew,fresh|holdout] [--items id,id] [--concurrency 3] [--list] [--resume]
+ *   pnpm exec tsx scripts/run-round4.ts --harness v0|v2|...|v22 [--tag r2] --model claude-sonnet-5-5 [--track fill,brew,fresh|holdout] [--items id,id] [--concurrency 3] [--list] [--resume]
  *
  * Fill in the blanks, brew to archetype and the brew holdout rebuild a past moment: lists from
  * the item's date on are cut from the data, and cards first printed after it
@@ -20,6 +20,7 @@ import { loadCardIndex } from "../src/cards/load";
 import { loadStandardWindows } from "../src/cards/standard";
 import { FileDataSource } from "../src/data/source";
 import { MODELS } from "../src/harness/models";
+import { brewV0 } from "../src/harness/oneshot";
 import { brew, brewV4, brewV5, brewV6, brewV7, brewV8, brewV9, brewV10, brewV11, brewV12, brewV13, brewV14, brewV15, brewV16, brewV17, brewV18, brewV19, brewV20, brewV21, type BrewResult } from "../src/harness/run";
 import { runPipeline, type PipelineResult } from "../src/pipeline/run";
 import { dataFingerprint, recordRun } from "../evals/register";
@@ -93,8 +94,11 @@ async function main() {
       const data = it.before ? history.cut(it.before, pool, (l) => isNearCopy(index, it, l.main)) : today;
       const req = { prompt: it.prompt, format: it.format };
       const deps = { index: pool, data };
+      // Harness v0 (2026-11-10) = no harness: one call, no tools, no data, told only the date (src/harness/oneshot.ts).
       const r: BrewResult =
-        harness === "v3"
+        harness === "v0"
+          ? await brewV0(client, model, req, it.before)
+          : harness === "v3"
           ? await runPipeline(client, model, req, deps)
           : harness === "v4"
             ? await brewV4(client, model, req, deps)

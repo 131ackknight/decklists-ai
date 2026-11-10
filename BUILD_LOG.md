@@ -30,7 +30,7 @@ Three things, and the third is turning out to be the most interesting.
 | Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80; v12 on six $2.61; round 3 $1.90; v13 post-cutoff $2.85; v14 and future test $41.28; v15 round $25.87; v16 round $17.46; reviewer checks $0.78; v17 on eight $4.80. v17 future test $19.00; gem test $1.82; v18 on eight $4.92; blind panel round 1 $18.13; picker test $0.69; taste tests $3.06; judge with evidence and goldfish $2.18; Fable and Sonnet judges $4.30; text playtest $4.07; v19 smoke test $0.77; found-deck test $3.79; blind panel round 2 $21.00; protocol-v1 baseline (v13 dev runs 2 and 3) $17.35; v19 dev run 1 $15.89; Haiku stand-in check (6 dev runs) $2.98; v14 dev runs 2 and 3 $18.66; v20 on Haiku (3 dev runs) $1.47; launch mistake (7 misnamed runs, stopped) $0.32; Haiku v13 and v20 runs 4-5 and v21 runs 1-3 $3.47; v20 Opus dev run 1 $8.70; v20 Opus dev runs 2 and 3 $17.18; judge test $0.42; Extravagant Spirit prompt (v13 and v20) $0.81; land-step test $1.16; v22 Opus run 1 on the 10 Standard dev decks $4.61; v22 Opus runs 2 and 3 $8.75. Total about $537.69. Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats); full history 145,131 (since 2025-07-01, merged weekly) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
-| Automated tests | 132 passing |
+| Automated tests | 145 passing |
 | Decklist Data PRs merged | 5 (#181 export, #182 baseline eval, #183 baseline on `main`, #184 model comparison, #188 sideboard junk cleanup: 34,432 lists cleaned) |
 | Plan steps done | 1, 4, 5, 6, 8; harness at v13 (15 versions tried); evals: owner's "would you play it?" plus the 18-deck future test |
 | Current harness | **v13**: future test 48.3% / 47.9% (two runs), v2 44.9%; dev (holdout-v1) 43.0 / 45.3 / 42.0; blind panel v13 10 of 17, v19 13 of 17; v19 dropped on dev 2026-11-08 (-2.1, its game step -0.4); since 2026-11-08 judged on Added (protocol-v2), v14 dropped (+1.2, range includes zero), v20 dropped (+0.3) |
@@ -76,6 +76,15 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
 
 ---
+
+## 2026-11-10 · A true start: v0, the model with no harness (built; not run yet)
+
+Owner: **"well we should compare against just oneshot normal ai no harness as a start"**. Until now the start was v2, which is already a harness (card search, format data, deck checks). Nothing measured the model on its own, so no number says what the harness adds over just asking.
+
+- **v0** (`src/harness/oneshot.ts`, `run-round4.ts --harness v0`): one call to Opus 5.5 with the harness's own settings (max_tokens 32000, effort high); no system prompt, no tools, no data, no checks. The message is the request as the harness gets it (format and prompt) plus "It is {date}.": the harness learns the date from its data, which is cut there, and v0 has no data. The answer format (main deck and sideboard as a list) only makes the deck readable; the deck is scored exactly as given. 3 new tests; 145 passing.
+- **Rule, set before any paid run.** v0 is the reference start, not a candidate: it can't be kept or become the base. Run 1 covers every automatic test once: the holdout track (21 decks, scored on holdout-v2), the future track (18 decks: future-v2, tuning-v1, brewing-v1) and the post-cutoff track (6 decks, post-v1). The harness's gain on each test = the base's score minus v0's, paired by deck, with the 95% range. If every range is clearly above or clearly below zero after run 1, stop there; if any is unclear, ask the owner before runs 2 and 3.
+- **Reported, not scored differently:** names that aren't real cards, and cards printed after the deck's date (the harness can't play those; v0 can, from memory). The model's training runs to June 2026, so it may remember decks from before then; the post-cutoff decks are the ones it can't.
+- **Cost estimate:** about $7 for run 1 (45 decks at $0.10-0.20 each; the one-call brainstorm runs cost $0.16 per call); stop if it passes $10. Three runs like the base: about $15. Waiting for the owner's OK.
 
 ## 2026-11-10 · v22 is the base (protocol-v4)
 

@@ -95,6 +95,8 @@ Owner: **"Yes, fix the test"**, then **"Try again"** (the turn had stopped partw
 
 Under the old scoring the same run was Added +0.2, match -1.1. One run, wide range: not proven. Above zero, so by v22's stop rule runs 2 and 3 (about $9) are next, and the owner is asked first.
 
+Owner: **"Yes, run twice."** **Verdict rule, set before runs 2 and 3:** judged on the 10 Standard dev decks (on the other 11, v22 runs exactly as v13), all three v22 runs against v13's three, fair scoring (holdout-v2's): v22 becomes the new base if its Added gain has its 95% range above zero and its match % isn't clearly worse (top of its range above zero); then future-v2's 4 Standard decks confirm it (owner asked first). Otherwise it isn't kept as a measured gain, though the fix stays available as a correctness option.
+
 ## 2026-11-09 · v22 on Opus, 10 Standard dev decks: the fix works, and the test rewards the bug it fixes
 
 **Run 1, $4.61** (10 decks, all 60 cards, no errors), against v13's three runs on the same 10 decks (`scripts/compare-runs.ts`):

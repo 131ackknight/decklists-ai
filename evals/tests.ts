@@ -297,6 +297,34 @@ export const TESTS: TestDef[] = [
   },
 ];
 
+/**
+ * holdout-v2 and future-v2 (2026-11-09; owner: "Yes, fix the test"): the same decks and windows as v1, but
+ * a card that wasn't legal in Standard on the deck's date earns nothing, in the deck and in the earlier list
+ * Added compares it with (evals/score.ts legalOnDateView). In v1 the settled lists, 1-3 months later, could
+ * run cards that became legal in between, so early, illegal picks scored.
+ */
+const LEGAL_ON_DATE: Record<string, { from: string; frozen: string }> = {
+  "holdout-v2": { from: "holdout-v1", frozen: "b5aa178ea64f7a21" },
+  "future-v2": { from: "future-v1", frozen: "bca69e33270f1205" },
+};
+for (const [id, { from, frozen }] of Object.entries(LEGAL_ON_DATE)) {
+  const base = TESTS.find((t) => t.id === from)!;
+  TESTS.push({
+    ...base,
+    id,
+    what: `${base.what} Cards not legal in Standard on the deck's date (src/cards/standard.ts) earn nothing, in the deck and in the earlier list Added compares it with.`,
+    params: { ...base.params, legality: "Standard on the deck's date" },
+    items: [...base.items],
+    frozen,
+  });
+}
+
+/** Tests with exactly the same items: a run that built one built the others (holdout-v1 and holdout-v2). */
+export function sameItems(a: string, b: string): boolean {
+  const [x, y] = [TESTS.find((t) => t.id === a), TESTS.find((t) => t.id === b)];
+  return !!x && !!y && x.items.length === y.items.length && x.items.every((k, i) => k === y.items[i]);
+}
+
 export const testById = (id: string) => {
   const t = TESTS.find((x) => x.id === id);
   if (!t) throw new Error(`Unknown test ${id}`);

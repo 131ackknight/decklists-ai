@@ -8,6 +8,7 @@
 import { readFileSync } from "node:fs";
 import type { CardIndex } from "../src/cards/card-index";
 import { normalizeName } from "../src/cards/names";
+import { loadStandardWindows, standardEnds, standardLegalOn } from "../src/cards/standard";
 import type { FileDataSource } from "../src/data/source";
 import { isLand, toCounts, type Line, type Round4Item } from "./round4/items";
 
@@ -56,17 +57,43 @@ export function settledScore(deck: Counts, settled: Counts[]): number {
  * old deck, so this also finds the deck's single closest earlier list (most cards shared, among the lists
  * it could have seen) and scores that list the same way. `added` is the deck's match % minus that list's:
  * the part of the score that isn't copying. `copy` is the share of the deck found in that list.
+ * `view` (holdout-v2, future-v2: legalOnDateView) is applied to the deck and to that closest list first.
  */
-export function addedScore(deck: Counts, settled: Counts[], earlier: Counts[]) {
+export function addedScore(deck: Counts, settled: Counts[], earlier: Counts[], view?: (d: Counts) => Counts) {
+  const d = view ? view(deck) : deck;
   let shared = 0;
   let closest: Counts | null = null;
   for (const l of earlier) {
-    const o = overlap(deck, l);
+    const o = overlap(d, l);
     if (o > shared) [shared, closest] = [o, l];
   }
-  const match = settledScore(deck, settled);
-  const base = closest ? settledScore(closest, settled) : 0;
+  const match = settledScore(d, settled);
+  const base = closest ? settledScore(view ? view(closest) : closest, settled) : 0;
   return { match, copy: shared / 60, base, added: match - base, closest };
+}
+
+/**
+ * A deck as it could have been played on a date (holdout-v2, future-v2; owner 2026-11-09: "Yes, fix the
+ * test"). The settled lists come 1-3 months after a deck's date and can run cards that only became legal
+ * since (the shock lands, reprinted into Standard in January 2026), so a deck playing them early got credit
+ * a brewer couldn't have. In Standard, cards not legal on the date (src/cards/standard.ts, with
+ * CardIndex.asOf's 30-day MTGO allowance for cards already played) are left out; other formats unchanged.
+ */
+export function legalOnDateView(index: CardIndex, lists: RefList[], countsOf: (l: RefList) => Counts) {
+  const w = loadStandardWindows();
+  const ends = standardEnds(w);
+  const firstPlayed = new Map<string, string>();
+  for (const l of lists) for (const k of countsOf(l).keys()) if (!firstPlayed.has(k) || l.date < firstPlayed.get(k)!) firstPlayed.set(k, l.date);
+  return (deck: Counts, format: string, date: string): Counts => {
+    if (format !== "standard") return deck;
+    const soon = new Date(Date.parse(date) + 30 * DAY).toISOString().slice(0, 10);
+    return new Map(
+      [...deck].filter(([k]) => {
+        const name = index.getCard(k)?.name ?? k;
+        return standardLegalOn(w, ends, name, date) || ((firstPlayed.get(k) ?? "9999") <= date && standardLegalOn(w, ends, name, soon));
+      }),
+    );
+  };
 }
 
 /** The format's lists from before a date: what a brew made then could have seen (holdout and future items are cut at the deck's first appearance). */

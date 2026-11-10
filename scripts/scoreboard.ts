@@ -17,9 +17,16 @@ import { FileDataSource } from "../src/data/source";
 import { pages, pairVerdicts, playVerdicts, ratingRows } from "../evals/answers";
 import { latestRuns, readRegister, type RunRecord } from "../evals/register";
 import { isLand, round4Items, toCounts, type Line } from "../evals/round4/items";
-import { PROTOCOL, PROTOCOL_V1, pairedGain } from "../evals/protocol";
-import { addedScore, earlierLists, futureLists, inventorGems, loadLists, overlap, settledLists, settledScore, shareScore, type Counts } from "../evals/score";
-import { TESTS, testById } from "../evals/tests";
+import { PROTOCOL, PROTOCOL_V1, PROTOCOL_V2, pairedGain } from "../evals/protocol";
+import { addedScore, earlierLists, futureLists, inventorGems, legalOnDateView, loadLists, overlap, settledLists, settledScore, shareScore, type Counts } from "../evals/score";
+import { sameItems, TESTS, testById } from "../evals/tests";
+
+/** A run built a test's decks if it covers the test or one with the same items (holdout-v1 -> holdout-v2). */
+const covers = (r: RunRecord, t: string) => r.tests.includes(t) || r.tests.some((x) => sameItems(x, t));
+/** Tests scored on cards legal on the deck's date (evals/score.ts legalOnDateView). */
+const LEGAL_TESTS = new Set(["holdout-v2", "future-v2"]);
+/** Sections 2e-2g describe the decks as built (no legality view), on the dev decks: holdout-v1. */
+const RAW_DEV = "holdout-v1";
 
 const index = loadCardIndex();
 const items = new Map(round4Items(index).map((it) => [it.id, it]));
@@ -69,8 +76,14 @@ async function main() {
     });
     return per.reduce((a, b) => a + b, 0) / per.length;
   };
-  const settledMean = (decks: Map<string, { main: Line[] } | null>, settled: Map<string, Counts[]>) => {
-    const vals = [...settled].flatMap(([id, s]) => (decks.get(id) ? [settledScore(toCounts(index, decks.get(id)!.main), s)] : []));
+  // holdout-v2, future-v2: in Standard, cards not legal on the deck's date earn nothing.
+  const legalView = legalOnDateView(index, lists, countsOf);
+  const viewOf = (id: string, d: Counts) => {
+    const it = items.get(id)!;
+    return legalView(d, it.target!.format, it.before ?? it.target!.firstSeen);
+  };
+  const settledMean = (decks: Map<string, { main: Line[] } | null>, settled: Map<string, Counts[]>, legal = false) => {
+    const vals = [...settled].flatMap(([id, s]) => (decks.get(id) ? [settledScore(legal ? viewOf(id, toCounts(index, decks.get(id)!.main)) : toCounts(index, decks.get(id)!.main), s)] : []));
     return vals.length === settled.size ? one(vals.reduce((a, b) => a + b, 0) / vals.length) : `${one(vals.reduce((a, b) => a + b, 0) / Math.max(1, vals.length))} (${vals.length} decks)`;
   };
   const tuneBrew = (decks: Map<string, { main: Line[] } | null>) => {
@@ -106,8 +119,10 @@ async function main() {
     const decks = decksOf(r);
     const add = (col: string, val: string) => (v.cells[col] = [...(v.cells[col] ?? []), val]);
     if (r.tests.includes("holdout-v1")) add("holdout-v1", settledMean(decks, holdout));
+    if (covers(r, "holdout-v2")) add("holdout-v2", settledMean(decks, holdout, true));
     if (r.tests.includes("post-v1")) add("post-v1", settledMean(decks, post));
     if (r.tests.includes("future-v1")) add("future-v1", settledMean(decks, future));
+    if (covers(r, "future-v2")) add("future-v2", settledMean(decks, future, true));
     if (r.tests.includes("tuning-v1")) {
       const s = tuneBrew(decks);
       add("tuning-v1", s.tune);
@@ -117,14 +132,14 @@ async function main() {
     if (r.costUsd !== undefined) v.cost.push(r.costUsd / r.items);
     byVersion.set(key, v);
   }
-  const cols = ["holdout-v1", "post-v1", "future-v1", "tuning-v1", "brewing-v1", "gems"];
+  const cols = ["holdout-v1", "holdout-v2", "post-v1", "future-v1", "future-v2", "tuning-v1", "brewing-v1", "gems"];
   const costRange = (c: number[]) => {
     if (!c.length) return "not recorded";
     const [lo, hi] = [Math.min(...c).toFixed(2), Math.max(...c).toFixed(2)];
     return `$${lo}${hi !== lo ? `-${hi}` : ""} (${c.length} run${c.length > 1 ? "s" : ""})`;
   };
   const rows: (string | number)[][] = [
-    ["Closest earlier list, picked with hindsight", one(hindsight(holdout)), one(hindsight(post)), one(hindsight(future)), "", "", "", ""],
+    ["Closest earlier list, picked with hindsight", one(hindsight(holdout)), "", one(hindsight(post)), one(hindsight(future)), "", "", "", "", ""],
     ...[...byVersion.values()]
       .sort((a, b) => versionNo(a.harness) - versionNo(b.harness) || (a.model ?? "").localeCompare(b.model ?? ""))
       .map((v) => [`${v.harness}${v.model === "claude-opus-5-5" ? "" : `, ${modelName(v.model)}`}`, ...cols.map((c) => v.cells[c]?.join(" / ") ?? "not run"), costRange(v.cost)]),
@@ -132,18 +147,19 @@ async function main() {
   const listed = new Set([...byVersion.values()].map((v) => v.harness));
   const unlisted = [...new Set(runs.map((r) => r.harness).filter((h): h is string => !!h && !listed.has(h)))].sort((a, b) => versionNo(a) - versionNo(b));
   out.push("## 2. Automatic scores (match % with real decks, Opus 5.5 unless named)", "");
-  out.push(table(["Version", "holdout-v1", "post-v1", "future-v1", "tuning-v1", "brewing-v1", "Gems found", "Cost per deck"], rows), "");
+  out.push(table(["Version", "holdout-v1", "holdout-v2", "post-v1", "future-v1", "future-v2", "tuning-v1", "brewing-v1", "Gems found", "Cost per deck"], rows), "");
   out.push(`"a / b / c" = run 1 / run 2 / run 3 (by the file's run tag). Cost per deck: the range over this version's runs above (recorded cost / items), panel runs included. Versions with runs in the register but none on these tests: ${unlisted.join(", ") || "none"}.`, "");
 
   // 2b. Candidates against the base, by the frozen protocol.
   /** A set of decks' scores on each deck of a test. */
   const deckScoresOf = (decks: Map<string, { main: Line[] } | null>, testId: string): Map<string, number> => {
     const m = new Map<string, number>();
-    const settled = testId === "holdout-v1" ? holdout : testId === "post-v1" ? post : testId === "future-v1" ? future : null;
+    const settled = testId === "holdout-v1" || testId === "holdout-v2" ? holdout : testId === "post-v1" ? post : testId === "future-v1" || testId === "future-v2" ? future : null;
     for (const id of testById(testId).items) {
       const d = decks.get(id);
       if (!d) continue;
-      const deck = toCounts(index, d.main);
+      const raw = toCounts(index, d.main);
+      const deck = LEGAL_TESTS.has(testId) ? viewOf(id, raw) : raw;
       if (settled) m.set(id, settledScore(deck, settled.get(id)!));
       else if (testId === "tuning-v1") m.set(id, shareScore(index, deck, tuning.get(id)!.settled).all * 100);
       else if (testId === "brewing-v1" && gems.has(id)) m.set(id, shareScore(index, deck, tuning.get(id)!.firstWeek).all * 100);
@@ -155,7 +171,7 @@ async function main() {
   // Only runs made on the protocol's data count: recorded fingerprints, or for older runs, finishing after the file last changed.
   const onProtocolData = (r: RunRecord) =>
     r.data ? r.data.history === PROTOCOL.data.history.sha256 && r.data.recent === PROTOCOL.data.recent.sha256 : r.at >= PROTOCOL.data.history.since;
-  const allRunsOf = (harness: string, testId: string) => scored.filter((r) => r.harness === harness && r.model === PROTOCOL.model && r.tests.includes(testId));
+  const allRunsOf = (harness: string, testId: string) => scored.filter((r) => r.harness === harness && r.model === PROTOCOL.model && covers(r, testId));
   const runsOf = (harness: string, testId: string) => allRunsOf(harness, testId).filter(onProtocolData);
   const earlierData = (harness: string, testId: string) => allRunsOf(harness, testId).length - runsOf(harness, testId).length;
   const signed = (x: number) => `${x >= 0 ? "+" : ""}${one(x)}`;
@@ -166,12 +182,12 @@ async function main() {
     return earlierCache.get(id) ?? earlierCache.set(id, earlierLists(lists, it.target!.format, it.before ?? it.target!.firstSeen, countsOf)).get(id)!;
   };
   const deckAddedOf = (decks: Map<string, { main: Line[] } | null>, testId: string): Map<string, number> => {
-    const settled = testId === "holdout-v1" ? holdout : testId === "future-v1" ? future : null;
-    if (!settled) throw new Error(`Added is scored on holdout-v1 and future-v1, not ${testId}`);
+    const settled = testId === "holdout-v1" || testId === "holdout-v2" ? holdout : testId === "future-v1" || testId === "future-v2" ? future : null;
+    if (!settled) throw new Error(`Added is scored on holdout-v1/v2 and future-v1/v2, not ${testId}`);
     const m = new Map<string, number>();
     for (const id of testById(testId).items) {
       const d = decks.get(id);
-      if (d) m.set(id, addedScore(toCounts(index, d.main), settled.get(id)!, earlierOf(id)).added);
+      if (d) m.set(id, addedScore(toCounts(index, d.main), settled.get(id)!, earlierOf(id), LEGAL_TESTS.has(testId) ? (x) => viewOf(id, x) : undefined).added);
     }
     return m;
   };
@@ -189,7 +205,7 @@ async function main() {
   const verdictsUnder = (p: { base: string; dev: string; test: string[]; devRuns: number; testRuns: number }, score: Scorer, guard?: Scorer) => {
     const pBaseDev = runsOf(p.base, p.dev);
     const pBaseTest = p.test.map((t) => runsOf(p.base, t));
-    const candidates = [...new Set(scored.filter((r) => r.model === PROTOCOL.model && r.harness !== p.base && r.tests.some((t) => t === p.dev || p.test.includes(t))).map((r) => r.harness!))].sort(
+    const candidates = [...new Set(scored.filter((r) => r.model === PROTOCOL.model && r.harness !== p.base && (covers(r, p.dev) || p.test.some((t) => covers(r, t)))).map((r) => r.harness!))].sort(
       (a, b) => versionNo(a) - versionNo(b),
     );
     const rows = candidates.map((h) => {
@@ -217,6 +233,9 @@ async function main() {
     "",
   );
   out.push(table(["Candidate", `Dev: Added on ${PROTOCOL.dev}`, `Dev: match % (guard)`, ...PROTOCOL.test.map((t) => `Test: Added on ${t}`), "Verdict"], current.rows), "");
+  const retiredV2 = verdictsUnder(PROTOCOL_V2, deckAdded, deckScores);
+  out.push(`**Retired 2026-11-09: ${PROTOCOL_V2.id} (Added, on holdout-v1 and future-v1, where early not-yet-legal Standard cards still scored).** Its verdicts stand as they were. Base: ${PROTOCOL_V2.base}, with ${retiredV2.baseRuns}.`, "");
+  out.push(table(["Candidate", `Dev: Added on ${PROTOCOL_V2.dev}`, `Dev: match % (guard)`, ...PROTOCOL_V2.test.map((t) => `Test: Added on ${t}`), "Verdict"], retiredV2.rows), "");
   const retired = verdictsUnder(PROTOCOL_V1, deckScores);
   out.push(`**Retired 2026-11-08: ${PROTOCOL_V1.id} (match %).** Its verdicts stand as they were. Base: ${PROTOCOL_V1.base}, with ${retired.baseRuns}. Rule: ${PROTOCOL_V1.rule}`, "");
   out.push(table(["Candidate", `Dev: ${PROTOCOL_V1.dev}`, ...PROTOCOL_V1.test.map((t) => `Test: ${t}`), "Verdict"], retired.rows), "");
@@ -271,7 +290,7 @@ async function main() {
 
   // 2d. The same dev comparison on cheaper models, to see whether one can screen ideas for the protocol's model.
   const devOn = (model: string, harness?: string) =>
-    scored.filter((r) => r.model === model && (!harness || r.harness === harness) && r.tests.includes(PROTOCOL.dev) && onProtocolData(r));
+    scored.filter((r) => r.model === model && (!harness || r.harness === harness) && covers(r, PROTOCOL.dev) && onProtocolData(r));
   const standIns = [...new Set(scored.filter((r) => r.model !== PROTOCOL.model).map((r) => r.model!))].filter((m) => devOn(m, PROTOCOL.base).length);
   out.push(`### 2d. The same comparison on cheaper models (dev: ${PROTOCOL.dev})`, "");
   out.push(
@@ -325,7 +344,7 @@ async function main() {
   };
   const shapeRows: (string | number)[][] = [shapeRow("Real decks (the settled lists)", "", [...holdout.values()].flat(), ["", "", "", "", ""])];
   const groups = new Map<string, RunRecord[]>();
-  for (const r of scored.filter((r) => r.tests.includes(PROTOCOL.dev) && onProtocolData(r))) groups.set(`${r.harness}|${r.model}`, [...(groups.get(`${r.harness}|${r.model}`) ?? []), r]);
+  for (const r of scored.filter((r) => r.tests.includes(RAW_DEV) && onProtocolData(r))) groups.set(`${r.harness}|${r.model}`, [...(groups.get(`${r.harness}|${r.model}`) ?? []), r]);
   for (const [key, rs] of [...groups].sort((a, b) => versionNo(a[1][0].harness) - versionNo(b[1][0].harness) || (a[1][0].model ?? "").localeCompare(b[1][0].model ?? ""))) {
     const [h, m] = key.split("|");
     const decks: Counts[] = [];
@@ -356,7 +375,7 @@ async function main() {
       ]),
     );
   }
-  out.push(`### 2e. Where the points go on dev (${PROTOCOL.dev})`, "");
+  out.push(`### 2e. Where the points go on dev (${RAW_DEV}, decks as built)`, "");
   out.push(
     "Per deck, averaged over runs. Spell and land cards matched: cards shared with each settled list, averaged over the lists (the match % is both together, out of 60). Right colors: the deck's colors (colors on 4 or more nonland cards) equal the colors most of the settled lists have. Lookups: calls per deck to played_with (what real decks run with a card) and to search_cards (card text search). Only runs on the protocol's data.",
     "",
@@ -386,7 +405,7 @@ async function main() {
   };
   const copyRows: (string | number)[][] = [copyRow("Inventors (the deck's first-week real lists)", "", [...copyCtx].flatMap(([id, c]) => c.firstWeek.map((l) => copyOf(id, l))))];
   const copyGroups = new Map<string, RunRecord[]>();
-  for (const r of scored.filter((r) => r.tests.includes(PROTOCOL.dev))) {
+  for (const r of scored.filter((r) => r.tests.includes(RAW_DEV))) {
     const key = `${r.harness}|${r.model}|${onProtocolData(r) ? "" : "earlier"}`;
     copyGroups.set(key, [...(copyGroups.get(key) ?? []), r]);
   }
@@ -397,7 +416,7 @@ async function main() {
     );
     copyRows.push(copyRow(`${h}${m === PROTOCOL.model ? "" : `, ${modelName(m)}`}${earlier ? " (earlier data copy)" : ""}`, String(rs.length), rows));
   }
-  out.push(`### 2f. Brewing or copying, on dev (${PROTOCOL.dev})`, "");
+  out.push(`### 2f. Brewing or copying, on dev (${RAW_DEV}, decks as built)`, "");
   out.push(
     "Per deck, averaged over runs. From one earlier list: the share of the deck found in its single closest list of the format from before the deck's date (data the AI could see). Near-copies: decks over 65% from one earlier list. New spells: nonland cards in no list of the format in the 90 days before. Closest earlier list scores: that list's own match %. Added: the deck's match % minus that, the part of the score that isn't copying.",
     "",
@@ -480,7 +499,7 @@ async function main() {
     );
     addParts(`${h}${m === PROTOCOL.model ? "" : `, ${modelName(m)}`}${earlier ? " (earlier data copy)" : ""}`, String(rs.length), decks);
   }
-  out.push(`### 2g. What Added is made of, on dev (${PROTOCOL.dev})`, "");
+  out.push(`### 2g. What Added is made of, on dev (${RAW_DEV}, decks as built)`, "");
   out.push(
     "Per deck, against its closest earlier list (section 2f), every card whose count differs. Each cell: copies changed per deck; the share of them the settled lists agree with (an added copy is in the settled deck, a cut copy is still in it); and the effect on Added, in points. Requested cards: the cards the prompt names. Spells from other decks: in some list of the format in the 90 days before, but not in the closest list. New spells: in no list of the format in those 90 days. The parts add up to Added before the per-deck rounding of section 2f.",
     "",

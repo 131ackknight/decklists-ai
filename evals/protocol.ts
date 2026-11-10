@@ -59,9 +59,26 @@ export const PROTOCOL_V2 = {
   frozen: "71e17fdd554464fc",
 };
 
+/**
+ * protocol-v3 (2026-11-09). Owner: "Yes, fix the test". protocol-v2 on holdout-v2 and future-v2: the same
+ * decks, but in Standard a card not legal on the deck's date earns nothing (evals/score.ts legalOnDateView).
+ * Under v2 the settled lists, 1-3 months later, could run cards reprinted into Standard in between, so a
+ * deck that played them early (v13: 2.0 copies per Standard dev deck) scored for them. Runs made for the
+ * v1 tests count for the v2 tests: same items, only the scoring differs.
+ */
+export const PROTOCOL_V3 = {
+  ...PROTOCOL_V2,
+  id: "protocol-v3",
+  dev: "holdout-v2",
+  test: ["future-v2"],
+  rule:
+    "As protocol-v2, on holdout-v2 (dev) and future-v2 (test). A candidate is kept if, on dev, the 95% range of its gain in Added over the base is above zero and the top of the 95% range of its gain in match % is above zero (match not clearly worse), and on test the top of the 95% range of its gain in Added is above zero (not clearly worse). In Standard, cards not legal on the deck's date earn nothing. Gains are paired by deck, each deck's score averaged over a version's runs. Both versions need the full number of runs before a verdict.",
+  frozen: "16fe24e836fa7cec",
+};
+
 /** The protocol in force. */
-export const PROTOCOL = PROTOCOL_V2;
-export const PROTOCOLS = [PROTOCOL_V1, PROTOCOL_V2];
+export const PROTOCOL = PROTOCOL_V3;
+export const PROTOCOLS = [PROTOCOL_V1, PROTOCOL_V2, PROTOCOL_V3];
 
 export function protocolFingerprint(p: { frozen: string } = PROTOCOL): string {
   const { frozen: _, ...rest } = p;

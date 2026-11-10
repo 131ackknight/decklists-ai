@@ -77,6 +77,24 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-11-10 · The test fixed: holdout-v2, future-v2, protocol-v3; every run re-scored for free
+
+Owner: **"Yes, fix the test"**, then **"Try again"** (the turn had stopped partway).
+
+- **holdout-v2 and future-v2** (`evals/tests.ts`, frozen, fingerprints b5aa178ea64f7a21 and bca69e33270f1205): the same decks and windows as v1, but in Standard a card that wasn't legal on the deck's date earns nothing, in the deck and in the earlier list Added compares it with (`legalOnDateView` in `evals/score.ts`). Runs made for a v1 test count for its v2 test (same items; only the scoring differs).
+- **protocol-v3** (`evals/protocol.ts`, frozen, 16fe24e836fa7cec): protocol-v2's rule on holdout-v2 (dev) and future-v2 (test). PROTOCOL.md section 2b now judges by it; protocol-v2's and v1's tables stay below it. 140 tests passing.
+- **Re-scored, free** (PROGRESS.md sections 2 and 2b): v13 on holdout-v2 42.4 / 44.8 / 41.5 (v1: 43.0 / 45.3 / 42.0); future-v2 unchanged (48.3 / 47.9). Verdicts unchanged: v14 +1.3 Added (-0.8 to +3.4) and v20 +0.4 (-1.4 to +2.2), both dropped; v19 -0.1.
+- **v22 re-checked fairly** (`scripts/compare-runs.ts --legal`), 10 Standard dev decks, its one run against v13's three:
+
+| 10 Standard dev decks, fair scoring | v13 | v22 | Gain, paired (95% range) |
+| --- | --- | --- | --- |
+| **Added** | 10.7 | 12.1 | **+1.4 (-2.1 to +5.0)** |
+| Match % | 40.7 | 40.8 | +0.1 (-2.7 to +2.9) |
+| Lands shared with the settled lists | 11.1 | 10.6 | -0.4 (-1.7 to +0.8) |
+| Copies not legal on the date | 2.0 | 0.0 | -2.0 |
+
+Under the old scoring the same run was Added +0.2, match -1.1. One run, wide range: not proven. Above zero, so by v22's stop rule runs 2 and 3 (about $9) are next, and the owner is asked first.
+
 ## 2026-11-09 · v22 on Opus, 10 Standard dev decks: the fix works, and the test rewards the bug it fixes
 
 **Run 1, $4.61** (10 decks, all 60 cards, no errors), against v13's three runs on the same 10 decks (`scripts/compare-runs.ts`):

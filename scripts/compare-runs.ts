@@ -1,7 +1,10 @@
 /**
  * Compare two sets of saved dev runs on the decks they share (2026-11-09). Free: reads result files.
  *
- *   pnpm exec tsx scripts/compare-runs.ts --base f1.json,f2.json --cand g1.json [--items id,id]
+ *   pnpm exec tsx scripts/compare-runs.ts --base f1.json,f2.json --cand g1.json [--items id,id] [--legal]
+ *
+ * --legal scores as holdout-v2 does: in Standard, cards not legal on the deck's date earn nothing
+ * (evals/score.ts legalOnDateView), in the deck and in the earlier list Added compares it with.
  *
  * Files are in evals/results/round4/. Per deck, each side averaged over its runs, paired by deck
  * (evals/protocol.ts pairedGain): Added, match %, lands shared with the settled lists (holdout-v1's
@@ -13,7 +16,7 @@ import { loadCardIndex } from "../src/cards/load";
 import { loadStandardWindows, standardEnds, standardLegalOn } from "../src/cards/standard";
 import { pairedGain } from "../evals/protocol";
 import { isLand, round4Items, toCounts, type Line } from "../evals/round4/items";
-import { addedScore, earlierLists, loadLists, overlap, settledLists, type Counts, type RefList } from "../evals/score";
+import { addedScore, earlierLists, legalOnDateView, loadLists, overlap, settledLists, type Counts, type RefList } from "../evals/score";
 import { testById } from "../evals/tests";
 
 const DAY = 86_400_000;
@@ -55,10 +58,14 @@ for (const rows of [...base, ...cand])
       const date = it.before ?? it.target!.firstSeen;
       ctx.set(r.id, { settled: settledLists(index, lists, it.target!, 30, 90), earlier: earlierLists(lists, it.target!.format, date, countsOf), date, standard: it.format === "Standard" });
     }
+const legal = process.argv.includes("--legal");
+const legalView = legalOnDateView(index, lists, countsOf);
+const viewOf = (id: string) => (d: Counts) => legalView(d, items.get(id)!.target!.format, ctx.get(id)!.date);
+const scored = (id: string, d: Counts) => (legal ? viewOf(id)(d) : d);
 const measures: [string, (id: string, d: Counts) => number | null][] = [
-  ["Added", (id, d) => addedScore(d, ctx.get(id)!.settled, ctx.get(id)!.earlier).added],
-  ["Match %", (id, d) => addedScore(d, ctx.get(id)!.settled, ctx.get(id)!.earlier).match],
-  ["Lands shared with the settled lists", (id, d) => mean(ctx.get(id)!.settled.map((s) => overlap(part(d, land), part(s, land))))],
+  ["Added", (id, d) => addedScore(d, ctx.get(id)!.settled, ctx.get(id)!.earlier, legal ? viewOf(id) : undefined).added],
+  ["Match %", (id, d) => addedScore(d, ctx.get(id)!.settled, ctx.get(id)!.earlier, legal ? viewOf(id) : undefined).match],
+  ["Lands shared with the settled lists", (id, d) => mean(ctx.get(id)!.settled.map((s) => overlap(part(scored(id, d), land), part(s, land))))],
   ["Standard: copies not legal on the date", (id, d) => (ctx.get(id)!.standard ? [...d].filter(([k]) => !isBasic(k) && !legalOn(k, ctx.get(id)!.date)).reduce((n, [, q]) => n + q, 0) : null)],
 ];
 const score = (runs: Row[][], f: (id: string, d: Counts) => number | null) =>
@@ -67,7 +74,7 @@ const score = (runs: Row[][], f: (id: string, d: Counts) => number | null) =>
     return v === null ? [] : [[r.id, v] as [string, number]];
   })));
 const s = (x: number) => `${x >= 0 ? "+" : ""}${x.toFixed(1)}`;
-console.log(`base: ${baseFiles.join(", ")} (${base.length} runs)\ncand: ${candFiles.join(", ")} (${cand.length} runs)`);
+console.log(`base: ${baseFiles.join(", ")} (${base.length} runs)\ncand: ${candFiles.join(", ")} (${cand.length} runs)${legal ? "\nscored as holdout-v2: Standard cards not legal on the date earn nothing" : ""}`);
 for (const [name, f] of measures) {
   const [b, c] = [score(base, f), score(cand, f)];
   const ids = new Set(c.flatMap((m) => [...m.keys()]));

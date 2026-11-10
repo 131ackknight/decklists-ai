@@ -1,7 +1,7 @@
 /**
  * Run round 4 (owner-written evals) on one harness and model.
  *
- *   pnpm exec tsx scripts/run-round4.ts --harness v2|...|v21 [--tag r2] --model claude-sonnet-5-5 [--track fill,brew,fresh|holdout] [--items id,id] [--concurrency 3] [--list] [--resume]
+ *   pnpm exec tsx scripts/run-round4.ts --harness v2|...|v22 [--tag r2] --model claude-sonnet-5-5 [--track fill,brew,fresh|holdout] [--items id,id] [--concurrency 3] [--list] [--resume]
  *
  * Fill in the blanks, brew to archetype and the brew holdout rebuild a past moment: lists from
  * the item's date on are cut from the data, and cards first printed after it
@@ -17,6 +17,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { loadCardIndex } from "../src/cards/load";
+import { loadStandardWindows } from "../src/cards/standard";
 import { FileDataSource } from "../src/data/source";
 import { MODELS } from "../src/harness/models";
 import { brew, brewV4, brewV5, brewV6, brewV7, brewV8, brewV9, brewV10, brewV11, brewV12, brewV13, brewV14, brewV15, brewV16, brewV17, brewV18, brewV19, brewV20, brewV21, type BrewResult } from "../src/harness/run";
@@ -85,7 +86,8 @@ async function main() {
     for (let i = next++; i < items.length; i = next++) {
       if (results[i]) continue;
       const it = items[i];
-      const pool = it.before ? index.asOf(it.before, history.cardsPlayedThrough(it.before)) : index;
+      // Harness v22 (2026-11-08) = v13 with Standard legality on the item's date, not today's (src/cards/standard.ts).
+      const pool = it.before ? index.asOf(it.before, history.cardsPlayedThrough(it.before), harness === "v22" ? loadStandardWindows() : undefined) : index;
       const data = it.before ? history.cut(it.before, pool, (l) => isNearCopy(index, it, l.main)) : today;
       const req = { prompt: it.prompt, format: it.format };
       const deps = { index: pool, data };
@@ -110,7 +112,7 @@ async function main() {
                           ? await brewV11(client, model, req, deps)
                           : harness === "v12"
                             ? await brewV12(client, model, req, deps)
-                            : harness === "v13"
+                            : harness === "v13" || harness === "v22"
                               ? await brewV13(client, model, req, deps)
                               : harness === "v14"
                                 ? await brewV14(client, model, req, deps)

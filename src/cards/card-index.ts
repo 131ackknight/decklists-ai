@@ -1,4 +1,5 @@
 import { normalizeName } from "./names";
+import { standardEnds, standardLegalOn, type StandardWindows } from "./standard";
 import type { Card, CardIndexFile, Tag } from "./types";
 
 /** In-memory card and tag lookup built from the index file. */
@@ -29,9 +30,25 @@ export class CardIndex {
    * `released` is the paper date and MTGO often gets a set days earlier, so cards in `seen`
    * (normalized names already played on MTGO by then) count as existing too.
    */
-  asOf(date: string, seen: Set<string> = new Set()): CardIndex {
+  asOf(date: string, seen: Set<string> = new Set(), standard?: StandardWindows): CardIndex {
     const exists = (c: Card) => !c.released || c.released <= date || seen.has(normalizeName(c.name));
-    return new CardIndex({ cards: this.cards.filter(exists), tags: [...this.tagsBySlug.values()] });
+    let cards = this.cards.filter(exists);
+    // Harness v22 (2026-11-08): Standard legality on `date`, not today's (src/cards/standard.ts). A card
+    // already played by then (`seen`) whose set came out within 30 days counts, as MTGO gets sets early.
+    if (standard) {
+      const ends = standardEnds(standard);
+      const soon = new Date(Date.parse(date) + 30 * 86_400_000).toISOString().slice(0, 10);
+      cards = cards.map((c) => {
+        const ok = standardLegalOn(standard, ends, c.name, date) || (seen.has(normalizeName(c.name)) && standardLegalOn(standard, ends, c.name, soon));
+        const status = ok ? (c.legal.standard === "banned" ? "banned" : "legal") : undefined;
+        if (status === c.legal.standard) return c;
+        const legal = { ...c.legal };
+        if (status) legal.standard = status;
+        else delete legal.standard;
+        return { ...c, legal };
+      });
+    }
+    return new CardIndex({ cards, tags: [...this.tagsBySlug.values()] });
   }
 
   getCard(name: string): Card | undefined {

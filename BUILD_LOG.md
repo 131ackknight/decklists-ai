@@ -77,6 +77,16 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-11-09 · Legality on the deck's date: built and checked (v22); not yet measured
+
+Owner, back: **"I am back."** Finished the fix (all free):
+
+- **`CardIndex.asOf(date, seen, windows)`** now has an opt-in mode: Standard legality on the date from `src/cards/standard.ts` (other formats untouched). A card already played by then whose set came out within 30 days counts too, as MTGO gets sets early. 4 new unit tests (136 passing).
+- **v22 = v13 with that card pool** (`scripts/run-round4.ts --harness v22`); every other version runs exactly as before, so v22 can be measured against v13.
+- **Checked on real decks** (`scripts/standard-legality-check.ts`): the 5,636 Standard lists behind the 14 Standard dev and future-test items (308,000 nonbasic card copies), each on its own date: **100.00% legal** (99.84% by the set windows alone; the MTGO allowance covers the rest). The first run said 95.3% because the check script passed front-face and MTGO names (Bramble Familiar, Kavaero, Mind-Bitten) while the windows use Scryfall's full names; the card pool already uses full names.
+- **Opus v13's saved Standard decks, on their item's date:** dev, 14 of 30 decks hold cards v22 wouldn't allow, **2.0 copies per deck** (Spell Snare 12, Temple Garden 12, Hallowed Fountain 12, Overgrown Tomb 8, Haunted Ridge 8, Steam Vents 4, ...); future test, 1 of 8 decks, 0.3 copies per deck.
+- Only Standard is fixed. Pioneer has the same kind of gap for cards reprinted into Pioneer-legal sets; not checked.
+
 ## 2026-11-08 · Fixing legality on the deck's date (in progress, not used yet)
 
 Owner: **"Yes, fix it"**, then **"So we got better with the lands stuff? WE should lean into that more maybe?"** (The land step itself was only +0.4 Added, not proven; the legality fix is the bigger land win.)

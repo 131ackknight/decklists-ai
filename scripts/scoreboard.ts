@@ -17,8 +17,9 @@ import { FileDataSource } from "../src/data/source";
 import { pages, pairVerdicts, playVerdicts, ratingRows } from "../evals/answers";
 import { latestRuns, readRegister, type RunRecord } from "../evals/register";
 import { isLand, round4Items, toCounts, type Line } from "../evals/round4/items";
-import { PROTOCOL, PROTOCOL_V1, PROTOCOL_V2, PROTOCOL_V3, pairedGain } from "../evals/protocol";
-import { addedScore, earlierLists, futureLists, inventorGems, legalOnDateView, loadLists, overlap, settledLists, settledScore, shareScore, type Counts } from "../evals/score";
+import { PROTOCOL, PROTOCOL_V1, PROTOCOL_V2, PROTOCOL_V3, onProtocolData as madeOnProtocolData, pairedGain } from "../evals/protocol";
+import { brewDeps } from "../evals/round4/deps";
+import { PARTS as VIEWS, addedScore, earlierLists, futureLists, inventorGems, legalOnDateView, loadLists, overlap, partScores, settledLists, settledScore, shareScore, type Counts } from "../evals/score";
 import { sameItems, TESTS, testById } from "../evals/tests";
 
 /** A run built a test's decks if it covers the test or one with the same items (holdout-v1 -> holdout-v2). */
@@ -175,8 +176,7 @@ async function main() {
   /** One run's score on each deck of a test. */
   const deckScores = (r: RunRecord, testId: string) => deckScoresOf(decksOf(r), testId);
   // Only runs made on the protocol's data count: recorded fingerprints, or for older runs, finishing after the file last changed.
-  const onProtocolData = (r: RunRecord) =>
-    r.data ? r.data.history === PROTOCOL.data.history.sha256 && r.data.recent === PROTOCOL.data.recent.sha256 : r.at >= PROTOCOL.data.history.since;
+  const onProtocolData = (r: RunRecord) => madeOnProtocolData(r);
   const allRunsOf = (harness: string, testId: string) => scored.filter((r) => r.harness === harness && r.model === PROTOCOL.model && covers(r, testId));
   const runsOf = (harness: string, testId: string) => allRunsOf(harness, testId).filter(onProtocolData);
   const earlierData = (harness: string, testId: string) => allRunsOf(harness, testId).length - runsOf(harness, testId).length;
@@ -554,6 +554,88 @@ async function main() {
   out.push(table(["Version", "Runs", "Added", ...PARTS.map((p) => (p.includes("cut") ? `${p[0].toUpperCase()}${p.slice(1)} (still in settled deck)` : `${p[0].toUpperCase()}${p.slice(1)}`))], partRows), "");
   out.push("Spells from other decks, by how widely the format played them in the 90 days before (copies per deck, and the share in the settled deck):", "");
   out.push(table(["Version", "Runs", ...BANDS.map((b) => `Played ${b}`)], bandRows), "");
+
+  // 2h. The score with the lands left out, and with the cards the prompt hides left out too (owner, 2026-11-11).
+  const depsOf = brewDeps(index, history, await FileDataSource.load("data/reference-lists.jsonl", index));
+  const partTests = [
+    ["holdout-v2", 30, 90],
+    ["future-v2", 7, 365],
+  ] as const;
+  const partCtx = new Map(
+    partTests.map(([testId, from, to]) => [
+      testId as string,
+      new Map(
+        testById(testId).items.flatMap((id) => {
+          const pool = depsOf(items.get(id)!).index;
+          const p = partScores(index, lists, items.get(id)!, countsOf, (k) => !!pool.getCard(k), from, to);
+          return p.settled.length ? [[id, p] as const] : [];
+        }),
+      ),
+    ]),
+  );
+  /** One run's three scores (VIEWS) on each deck of a test. */
+  const partsOfRun = (r: RunRecord, testId: string) => {
+    const decks = decksOf(r);
+    const m = new Map<string, number[]>();
+    for (const [id, p] of partCtx.get(testId)!) {
+      const d = decks.get(id);
+      if (!d) continue;
+      const built = toCounts(index, d.main);
+      m.set(id, p.of(viewOf(id, built), built));
+    }
+    return m;
+  };
+  const partRuns = new Map(partTests.map(([testId]) => [testId as string, new Map(scored.filter((r) => covers(r, testId)).map((r) => [r, partsOfRun(r, testId)] as const))]));
+  /** Each deck counts once: its score averaged over the runs, then the mean over decks. */
+  const partCells = (testId: string, rs: RunRecord[]) => {
+    const maps = rs.map((r) => partRuns.get(testId)!.get(r)!);
+    const ids = [...partCtx.get(testId)!.keys()].filter((id) => maps.some((m) => m.has(id)));
+    if (!ids.length) return VIEWS.map(() => "not run");
+    return VIEWS.map((_, i) => `${one(avgOf(ids.map((id) => avgOf(maps.flatMap((m) => (m.has(id) ? [m.get(id)![i]] : []))))))}${ids.length < partCtx.get(testId)!.size ? ` (${ids.length} decks)` : ""}`);
+  };
+  const refCells = (testId: string, f: (p: ReturnType<typeof partScores>) => number[] | null) => {
+    const per = [...partCtx.get(testId)!.values()].flatMap((p) => {
+      const x = f(p);
+      return x ? [x] : [];
+    });
+    return VIEWS.map((_, i) => one(avgOf(per.map((x) => x[i]))));
+  };
+  const viewRows: (string | number)[][] = [
+    ["The best possible pile, with hindsight", "", ...partTests.flatMap(([t]) => refCells(t, (p) => p.best()))],
+    ["A settled list against the other settled lists", "", ...partTests.flatMap(([t]) => refCells(t, (p) => (p.settled.length > 2 ? p.peers() : null)))],
+    ["Inventors (the deck's first-week real lists)", "", ...partTests.flatMap(([t]) => refCells(t, (p) => (p.firstWeek.length ? VIEWS.map((_, i) => avgOf(p.firstWeek.map((d) => p.of(d)[i]))) : null)))],
+  ];
+  const partVersions = [...new Set(scored.filter((r) => partTests.some(([t]) => covers(r, t))).map((r) => `${r.harness}|${r.model}`))].sort(
+    (a, b) => versionNo(a.split("|")[0]) - versionNo(b.split("|")[0]) || a.localeCompare(b),
+  );
+  for (const v of partVersions) {
+    const [h, m] = v.split("|");
+    const rs = (t: string) => scored.filter((r) => r.harness === h && r.model === m && covers(r, t));
+    viewRows.push([`${h}${m === PROTOCOL.model ? "" : `, ${modelName(m)}`}`, partTests.map(([t]) => rs(t).length).join(" / "), ...partTests.flatMap(([t]) => partCells(t, rs(t)))]);
+  }
+  out.push("### 2h. The score without lands, and without the cards the prompt hides", "");
+  out.push(
+    `Three views of the same builds (\`evals/score.ts\` PARTS). Whole deck: the match %, before the per-deck rounding of section 2. Without lands: the lands are taken out of the build and out of each settled list; the cards the two piles share, over the average size of the two piles (for two whole 60-card decks that is the match %). Without lands or hidden cards: the same, with the deck's signature cards that the prompt doesn't name taken out too (the prompt names up to 3; the test's own rule finds more). Each deck counts once: its builds are averaged over every run in the register, then the decks. Cards not legal in Standard on the deck's date earn nothing and still count in the build's pile. Runs: on ${partTests.map(([t]) => t).join(" / ")}. Added on these views, per-deck numbers and the ${partTests[1][0]} decks that are not dev archetypes: \`scripts/no-lands-check.ts\`.`,
+    "",
+  );
+  out.push(table(["Version", "Runs", ...partTests.flatMap(([t]) => VIEWS.map((p) => `${t}: ${p}`))], viewRows), "");
+  const partBase = runsOf(PROTOCOL.base, PROTOCOL.dev);
+  const partGainRows = [...new Set(scored.filter((r) => r.model === PROTOCOL.model && r.harness !== PROTOCOL.base && r.harness !== REFERENCE && covers(r, PROTOCOL.dev) && onProtocolData(r)).map((r) => r.harness!))]
+    .sort((a, b) => versionNo(a) - versionNo(b))
+    .map((h) => {
+      const cand = runsOf(h, PROTOCOL.dev);
+      const pick = (rs: RunRecord[], i: number) => rs.map((r) => new Map([...partRuns.get(PROTOCOL.dev)!.get(r)!].map(([id, x]) => [id, x[i]] as const)));
+      return [
+        h,
+        cand.length,
+        ...VIEWS.map((_, i) => {
+          const g = pairedGain(pick(cand, i), pick(partBase, i));
+          return `${signed(g.gain)} (${signed(g.lo)} to ${signed(g.hi)})`;
+        }),
+      ];
+    });
+  out.push(`Each version's gain over the base (${PROTOCOL.base}) on dev (${PROTOCOL.dev}), paired by deck, with its 95% range; only runs on the protocol's data. A second view, not a verdict: section 2b decides what is kept.`, "");
+  out.push(table(["Version", "Runs", ...VIEWS.map((p) => `${p[0].toUpperCase()}${p.slice(1)}`)], partGainRows), "");
 
   // 3. The owner's judging rounds.
   out.push("## 3. The owner's judging rounds (`evals/answers/`)", "");

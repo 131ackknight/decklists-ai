@@ -136,6 +136,121 @@ export function borrowedSpells(index: CardIndex, lists: RefList[], it: Round4Ite
   return found;
 }
 
+/** The deck's lists from its first 7 days: the inventors' versions. */
+export function firstWeekLists(lists: RefList[], target: NonNullable<Round4Item["target"]>, countsOf: (l: RefList) => Counts): Counts[] {
+  const first = Date.parse(target.firstSeen);
+  return lists.filter((l) => l.format === target.format && l.strategy === target.strategy && Date.parse(l.date) >= first && Date.parse(l.date) < first + 7 * DAY).map(countsOf);
+}
+
+/**
+ * The deck's signature cards that its prompt doesn't name (2026-11-11, scripts/ceiling-check.ts). The
+ * test's own rule (scripts/find-new-archetypes.ts): nonland cards in 80%+ of the deck's first 10 lists and
+ * in 5% or less of the format's lists before it appeared. The prompt names up to 3 of them; these are the
+ * rest. `exists`: the card was in the card pool on the deck's date.
+ */
+export function unnamedSignature(index: CardIndex, lists: RefList[], it: Round4Item, countsOf: (l: RefList) => Counts, exists: (k: string) => boolean): Set<string> {
+  const t = it.target!;
+  const first = Date.parse(t.firstSeen);
+  const asked = new Set((it.keyCards ?? []).map((n) => [...toCounts(index, [{ qty: 1, name: n }]).keys()][0]));
+  const firstTen = lists
+    .filter((l) => l.format === t.format && l.strategy === t.strategy)
+    .sort((a, b) => a.date.localeCompare(b.date))
+    .slice(0, 10)
+    .map(countsOf);
+  const before = lists.filter((l) => l.format === t.format && Date.parse(l.date) < first).map(countsOf);
+  const prior = new Map<string, number>();
+  for (const l of before) for (const k of l.keys()) prior.set(k, (prior.get(k) ?? 0) + 1 / before.length);
+  const inFirst = (k: string) => firstTen.filter((l) => l.has(k)).length / firstTen.length;
+  return new Set([...new Set(firstTen.flatMap((l) => [...l.keys()]))].filter((k) => !isLand(index, k) && !asked.has(k) && inFirst(k) >= 0.8 && (prior.get(k) ?? 0) <= 0.05 && exists(k)));
+}
+
+/** Cards two piles share over the average size of the two piles; two empty piles agree. */
+const pileMatch = (a: Counts, na: number, b: Counts, nb: number) => (na + nb ? (2 * overlap(a, b)) / (na + nb) : 1);
+
+/**
+ * The match % on part of the deck (2026-11-11, owner: "the score with lands removed"). The cards `keep`
+ * rejects are taken out of the deck and out of each settled list; the score is the cards the two piles
+ * share over the average size of the two piles, the mean over the lists, as a percent (not rounded). For
+ * whole 60-card decks that is the match %. `built` is the deck as built when `deck` is its legal-on-date
+ * view: a card that earns nothing still takes up room in the pile.
+ */
+export function partScorer(settled: Counts[], keep: (k: string) => boolean) {
+  const real = settled.map((l) => only(l, keep)).map((l) => ({ l, n: sum(l) }));
+  return (deck: Counts, built: Counts = deck): number => {
+    const d = only(deck, keep);
+    const n = sum(only(built, keep));
+    return (real.reduce((a, r) => a + pileMatch(d, n, r.l, r.n), 0) / real.length) * 100;
+  };
+}
+
+/** Each settled list scored by partScorer against the other settled lists; the mean. How far real lists agree on that part of the deck. */
+export function peerPart(settled: Counts[], keep: (k: string) => boolean): number {
+  const real = settled.map((l) => only(l, keep)).map((l) => ({ l, n: sum(l) }));
+  const per = real.map((a, j) => real.reduce((s, b, i) => (i === j ? s : s + pileMatch(a.l, a.n, b.l, b.n)), 0) / (real.length - 1));
+  return (per.reduce((a, b) => a + b, 0) / per.length) * 100;
+}
+
+/**
+ * The best possible pile under partScorer, with hindsight: for each pile size, the copies the most settled
+ * lists play; the best size wins. `size` fixes it (60: a whole deck).
+ */
+export function bestPart(settled: Counts[], keep: (k: string) => boolean, size?: number): number {
+  const real = settled.map((l) => only(l, keep));
+  const sizes = real.map(sum);
+  // One entry per copy ("copy 3 of Shock"): the settled lists that play it.
+  const copies: number[][] = [];
+  for (const k of new Set(real.flatMap((l) => [...l.keys()]))) {
+    const qs = real.map((l) => l.get(k) ?? 0);
+    for (let i = 0; i < Math.max(...qs); i++) copies.push(qs.flatMap((q, j) => (q > i ? [j] : [])));
+  }
+  let best = 0;
+  for (let n = size ?? 1; n <= (size ?? Math.min(copies.length, 100)); n++) {
+    const top = copies.map((ls) => ls.reduce((a, j) => a + 2 / (n + sizes[j]), 0)).sort((a, b) => b - a).slice(0, n);
+    best = Math.max(best, (top.reduce((a, b) => a + b, 0) / real.length) * 100);
+  }
+  return best;
+}
+
+/** The three views of the score (2026-11-11): the whole deck, lands left out, lands and the prompt's hidden cards left out. */
+export const PARTS = ["whole deck", "without lands", "without lands or hidden cards"] as const;
+
+/**
+ * One test deck's scorers for PARTS, in that order. `of(deck, built)` scores a build (`deck` its
+ * legal-on-date view where the test uses one); `peers` is the settled lists against each other and `best`
+ * the best possible pile, both with hindsight. The whole-deck score is the match % before rounding.
+ */
+export function partScores(index: CardIndex, lists: RefList[], it: Round4Item, countsOf: (l: RefList) => Counts, exists: (k: string) => boolean, from: number, to: number) {
+  const settled = settledLists(index, lists, it.target!, from, to);
+  const hidden = unnamedSignature(index, lists, it, countsOf, exists);
+  const lands = new Map<string, boolean>();
+  const land = (k: string) => lands.get(k) ?? lands.set(k, isLand(index, k)).get(k)!;
+  const keeps = [() => true, (k: string) => !land(k), (k: string) => !land(k) && !hidden.has(k)];
+  const whole = (deck: Counts) => (settled.reduce((a, l) => a + overlap(deck, l), 0) / settled.length / 60) * 100;
+  const scorers = [whole, partScorer(settled, keeps[1]), partScorer(settled, keeps[2])];
+  const piles = keeps.map((keep) => settled.map((l) => only(l, keep)));
+  /** The best 60 cards possible, scored as the match %: the 60 copies the most settled lists play. */
+  const bestWhole = () => {
+    const shares: number[] = [];
+    for (const k of new Set(settled.flatMap((l) => [...l.keys()]))) {
+      const qs = settled.map((l) => l.get(k) ?? 0);
+      for (let i = 0; i < Math.max(...qs); i++) shares.push(qs.filter((q) => q > i).length / settled.length);
+    }
+    return (shares.sort((a, b) => b - a).slice(0, 60).reduce((a, b) => a + b, 0) / 60) * 100;
+  };
+  return {
+    settled,
+    hidden,
+    firstWeek: firstWeekLists(lists, it.target!, countsOf),
+    of: (deck: Counts, built: Counts = deck) => scorers.map((s) => s(deck, built)),
+    /** Cards in each pile of a deck: all of it, its nonland cards, its nonland cards that aren't hidden ones. */
+    sizes: (deck: Counts) => keeps.map((keep) => sum(only(deck, keep))),
+    /** Cards a deck shares with a settled list, in each pile; the mean over the lists. */
+    shared: (deck: Counts) => keeps.map((keep, i) => piles[i].reduce((a, l) => a + overlap(only(deck, keep), l), 0) / settled.length),
+    peers: () => [(settled.reduce((a, l, j) => a + settled.reduce((s, m, i) => (i === j ? s : s + overlap(l, m)), 0) / (settled.length - 1), 0) / settled.length / 60) * 100, peerPart(settled, keeps[1]), peerPart(settled, keeps[2])],
+    best: () => [bestWhole(), bestPart(settled, keeps[1]), bestPart(settled, keeps[2])],
+  };
+}
+
 /** The deck's first-week lists (the inventor's version) and every list from a week after it appeared. */
 export function futureLists(index: CardIndex, lists: RefList[], target: NonNullable<Round4Item["target"]>) {
   const first = Date.parse(target.firstSeen);

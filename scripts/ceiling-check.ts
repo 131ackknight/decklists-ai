@@ -36,7 +36,7 @@ import { isBasicLand } from "../src/harness/lands";
 import { latestRuns } from "../evals/register";
 import { brewDeps } from "../evals/round4/deps";
 import { isLand, round4Items, toCounts, type Line } from "../evals/round4/items";
-import { legalOnDateView, loadLists, type Counts, type RefList } from "../evals/score";
+import { legalOnDateView, loadLists, unnamedSignature, type Counts, type RefList } from "../evals/score";
 import { sameItems, testById } from "../evals/tests";
 
 const DAY = 86_400_000;
@@ -167,15 +167,10 @@ async function main() {
       if (firstWeek.length) wastedInv.push(mean(firstWeek.map((d) => [...d].reduce((n, [k, q]) => n + Math.max(0, q - (shares.get(k)?.length ?? 0)), 0))));
 
       // 3. What the prompt hides: signature cards beyond the ones it names (the test's own rule).
-      const firstTen = ofDeck.slice(0, 10).map(countsOf);
-      const inFirst = (k: string) => firstTen.filter((l) => l.has(k)).length / firstTen.length;
-      const before = lists.filter((l) => l.format === t.format && Date.parse(l.date) < first).map(countsOf);
-      const prior = new Map<string, number>();
-      for (const l of before) for (const k of l.keys()) prior.set(k, (prior.get(k) ?? 0) + 1 / before.length);
       const recent = earlier.filter((l) => Date.parse(l.date) >= cut - 90 * DAY).map(countsOf);
       const rate = new Map<string, number>();
       for (const l of recent) for (const k of l.keys()) rate.set(k, (rate.get(k) ?? 0) + 1 / recent.length);
-      const signature = new Set([...new Set(firstTen.flatMap((l) => [...l.keys()]))].filter((k) => !land(k) && !asked.has(k) && inFirst(k) >= 0.8 && (prior.get(k) ?? 0) <= 0.05 && pool.getCard(k)));
+      const signature = unnamedSignature(index, lists, it, countsOf, (k) => !!pool.getCard(k));
       const classOf = (k: string): (typeof CLASSES)[number] =>
         land(k)
           ? isBasicLand(index.getCard(k))

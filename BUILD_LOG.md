@@ -30,7 +30,7 @@ Three things, and the third is turning out to be the most interesting.
 | Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80; v12 on six $2.61; round 3 $1.90; v13 post-cutoff $2.85; v14 and future test $41.28; v15 round $25.87; v16 round $17.46; reviewer checks $0.78; v17 on eight $4.80. v17 future test $19.00; gem test $1.82; v18 on eight $4.92; blind panel round 1 $18.13; picker test $0.69; taste tests $3.06; judge with evidence and goldfish $2.18; Fable and Sonnet judges $4.30; text playtest $4.07; v19 smoke test $0.77; found-deck test $3.79; blind panel round 2 $21.00; protocol-v1 baseline (v13 dev runs 2 and 3) $17.35; v19 dev run 1 $15.89; Haiku stand-in check (6 dev runs) $2.98; v14 dev runs 2 and 3 $18.66; v20 on Haiku (3 dev runs) $1.47; launch mistake (7 misnamed runs, stopped) $0.32; Haiku v13 and v20 runs 4-5 and v21 runs 1-3 $3.47; v20 Opus dev run 1 $8.70; v20 Opus dev runs 2 and 3 $17.18; judge test $0.42; Extravagant Spirit prompt (v13 and v20) $0.81; land-step test $1.16; v22 Opus run 1 on the 10 Standard dev decks $4.61; v22 Opus runs 2 and 3 $8.75; v0 (the model alone) run 1 on 45 decks $2.81 and dev runs 2 and 3 $2.87; land note test $0.41. Total about $543.78. Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats); full history 145,131 (since 2025-07-01, merged weekly) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
-| Automated tests | 161 passing |
+| Automated tests | 167 passing |
 | Decklist Data PRs merged | 5 (#181 export, #182 baseline eval, #183 baseline on `main`, #184 model comparison, #188 sideboard junk cleanup: 34,432 lists cleaned) |
 | Plan steps done | 1, 4, 5, 6, 8; harness at v22, with v0 (the model alone) as the reference start; evals: owner's "would you play it?", the 18-deck future test and the frozen automatic tests (PROGRESS.md) |
 | Current harness | **v22** (v13 + Standard legality on the deck's date), the base since 2026-11-10 (protocol-v4): dev (holdout-v2) 43.1 / 43.6 / 41.6. Over the model alone (v0, 2026-11-10): match +8.8 on dev (3 runs each), +14.3 on the future test, +23.7 after the training cutoff (v13 on those two). Before: v13 future test 48.3% / 47.9%, v2 44.9%; blind panel v13 10 of 17, v19 13 of 17; v14, v19 and v20 dropped. **v23** (v22 + a land swap in code, 2026-11-10) is built but not the base: +0.4 lands on dev, -0.7 on six unseen future-test decks |
@@ -59,6 +59,7 @@ Three things, and the third is turning out to be the most interesting.
 19. **A fix that worked on the decks it was tuned on.** One land fix looked real: swap the extra basic lands for the color-fixing lands real decks play. On the 21 dev decks it shared 0.4 more lands, clearly. Built into the brewer (v23) and checked, for free, on six decks it had never been tried on, it shared 0.7 fewer: it had learned two-color Standard decks, and it stripped the basics out of a Premodern combo deck that needed them. The recommendation: an option, not the base.
 20. **One gap, seen five ways.** After the lands, the owner asked where else to look. Free checks on the saved decks: sideboards (3 of 15 cards right, and a sideboard built from data is no better), the old deck a brew starts from (data picks worse than the AI does), colors, borrowed spells. Each time data could list the candidates and nothing could pick among them. The brewer's mana, played out in a simulator, already works as well as the real decks' mana. The only change the owner had preferred blind was letting the AI play a game with its deck.
 21. **"We are testing incorrectly."** The owner said there was a ceiling we hadn't found. There was. No list can score 100 on the test: the real lists agree with each other at 79, and the best possible list scores 85. And the test named 3 of each deck's defining cards while the decks had about 7. The 4 it hid were worth more points than the 3 it named, and in five decks they included the card the deck is named after. Where the idea wasn't hidden, the brewer was 9 points behind the human inventors, not 23.
+22. **Take the lands out.** The owner asked to see the progress with the lands removed. The level didn't move: the brewer matches lands about as well as it matches spells (41 without lands, 43 with), and so do the human inventors (64 and 66). But the lands had been hiding a step. On the whole deck, the first harness that read real lists (v2) couldn't be told from today's. On spells alone today's is 4 points ahead, on both tests. v2's jump had been real mana bases; the better spell picks came later.
 
 Recurring theme for the post: the owner's pushback improved the work at nearly every turn (no bracket scraping, no new database, no Neon credentials, use our own data instead of re-scraping MTGO, every list instead of a sample, fix `main` instead of running an old build, compare models, not ready to give up, judge decks I know intimately, an April cutoff for the future test, generic tools not bespoke fixes).
 
@@ -81,6 +82,89 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
 
 ---
+
+## 2026-11-11 · The score without lands: the level doesn't move, but the progress since v2 shows up
+
+Free. Built by the rule in the entry below: `partScores` in `evals/score.ts` (6 new tests), `scripts/no-lands-check.ts`, and a standing section in PROGRESS.md (2h) that gives every saved version the three scores. Nothing in the brewer changed.
+
+**1. The level.** Each deck counted once. The whole-deck column is the match % before rounding.
+
+| | Dev: whole deck | Dev: without lands | Dev: without lands or hidden cards | Future test: whole deck | Future: without lands | Future: without lands or hidden cards |
+| --- | --- | --- | --- | --- | --- | --- |
+| The best possible pile (hindsight) | 85.4 | 85.1 | 83.1 | 86.9 | 87.4 | 86.0 |
+| A settled list against the other settled lists | 78.6 | 77.7 | 74.9 | 80.8 | 81.4 | 79.3 |
+| Inventors (first-week real lists) | 65.7 | 63.5 | 60.7 | 72.4 | 72.8 | 71.4 |
+| The brewer: v22 | 42.7 | 40.8 | 43.4 | not run | | |
+| v13 | 42.9 | 40.8 | 43.4 | 48.1 | 48.4 | 48.6 |
+| v5 | 42.1 | 39.2 | 41.6 | not run | | |
+| v2 | 40.8 | 36.7 | 39.0 | 44.8 | 44.3 | 44.0 |
+| The model alone (v0) | 33.9 | 33.5 | 36.6 | 33.7 | 34.0 | 38.0 |
+
+- **The guess held: the level barely moves.** Without lands the brewer is 40.8 on dev (whole deck 42.7) and 48.4 on the future test (48.1); the inventors 63.5 and 72.8. The gap to the inventors is 23 to 24 points either way. Lands were not what held the score down.
+- **The six future-test decks that are not dev archetypes** say the same: v13 48.5 / 50.6 / 49.6, inventors 78.9 / 80.4 / 81.1.
+- In Standard the lands are easy points (the ten Standard dev decks: about 40.5 whole, 36.3 without lands). In the older formats they are a wash (44.7 and 44.9).
+
+**2. The progress.** This is where the lands were in the way.
+
+| Gain, paired by deck (95% range) | Whole deck | Without lands | Without lands or hidden cards |
+| --- | --- | --- | --- |
+| Dev: v22 over the model alone | +8.9 (+4.7 to +13.1) | +7.3 (+2.9 to +11.6) | +6.8 (+3.0 to +10.6) |
+| Future test: v13 over the model alone | +14.3 (+6.0 to +22.7) | +14.5 (+8.7 to +20.3) | +10.5 (+3.8 to +17.3) |
+| Dev: v13 over v2 | +2.1 (-1.2 to +5.4) | **+4.1** (+0.5 to +7.6) | +4.4 (+0.8 to +8.0) |
+| Future test: v13 over v2 | +3.2 (-0.9 to +7.4) | **+4.1** (-0.2 to +8.4) | +4.5 (+0.3 to +8.8) |
+
+- **The harness's gain over the model alone is still there without lands:** +7.3 on dev, +14.5 on the future test, both clear. In points of the whole-deck score, v22's +8.8 on dev is lands +3.8, hidden cards +1.4, the other spells +3.6; v13's +14.3 on the future test is +4.3, +4.0, +6.0.
+- **v2 to v13 shows up.** (This comparison was added after seeing the table above, so it is a lead, not a pre-set test. Both tests agree.) On the whole deck, v13 could not be told from v2 on either test. Without lands v13 is +4.1 on both, clear on dev and a hair short on the future test; with the hidden cards out too it is clear on both. On dev, v2's own jump over the model alone had been mostly lands (+6.9 on the whole deck, +3.3 without lands): it began building on real lists, and real lists come with real mana bases. The spell picks got better after that (v5, then the owner-diagnosis checks of v10 to v13), while the lands slipped a little (about 17 points from lands at v2, 16.2 at v22). The slip and the lands' own noise hid the step.
+- Nothing has moved the spells since v13: v14, v19, v20 and v22 are all within noise of it.
+
+**3. Versions against the base (v22) on dev, runs on the protocol's data.** No verdict changes.
+
+| Version | Runs | Whole deck | Without lands | Without lands or hidden cards |
+| --- | --- | --- | --- | --- |
+| v5 | 1 | -1.9 (-5.7 to +1.9) | -2.6 (-6.4 to +1.2) | -2.7 (-6.2 to +0.7) |
+| v7 | 2 | -1.2 (-3.4 to +0.9) | -2.5 (-4.5 to -0.6) | -2.6 (-4.3 to -0.9) |
+| v13 | 3 | +0.1 (-0.8 to +1.1) | +0.1 (-0.8 to +0.9) | -0.0 (-0.9 to +0.8) |
+| v14 | 3 | +1.6 (-0.7 to +3.9) | +0.4 (-1.9 to +2.7) | -1.0 (-3.3 to +1.3) |
+| v19 | 1 | -1.8 (-4.7 to +1.1) | -2.5 (-5.6 to +0.7) | -2.4 (-5.4 to +0.5) |
+| v20 | 3 | -0.1 (-2.5 to +2.2) | +0.2 (-1.9 to +2.3) | -1.7 (-4.9 to +1.5) |
+| v23 | 3 | +0.6 (+0.1 to +1.2) | 0.0 | 0.0 |
+
+- **No dropped version wins with the lands out.** v14 (the mana_base tool) had the best whole-deck number, +1.6; without lands it is +0.4. Its edge was lands, as it should be.
+- **The base is clearly better than v7 in spells** (v7 -2.5, range below zero), which the whole deck could not show. Same story as v2 to v13.
+- **v23** is exactly zero without lands, as it must be: it only swaps lands. (Before rounding, its whole-deck gain is +0.6 with a range of +0.1 to +1.2; the protocol rounds each deck to a whole percent and gets -0.0 to +1.2. The free check on the future test's saved brews, -1.1 Added, is what decided it, and still does.)
+
+**4. Is it a better yardstick? No clear case.** The rule set before measuring asked whether the ranges get narrower. They don't, much: v13 1.9 points wide on the whole deck and 1.7 without lands, v14 4.7 and 4.6, v20 4.7 and 4.2, v7 4.3 and 3.9, v19 5.9 and 6.3. A deck's score moves more between runs without lands (v22: 4.7 points on the whole deck, 6.5 without lands), because lands change little from run to run and steady the whole-deck number. On Added the ranges get wider without lands (v14 4.2 to 5.0, v20 4.9 to 5.5). So protocol-v4 stays as it is. What the score without lands does better is show a change in spells: one card is worth 2.6 points in it and 1.7 in the whole deck, at about the same noise.
+
+**5. The gap to the inventors, split three ways.** In points of the whole-deck score, so the parts add up.
+
+| Inventors over the brewer | Dev (v22) | Future test (v13) | Future test, the 6 decks that are not dev archetypes |
+| --- | --- | --- | --- |
+| Lands | 8.3 | 7.5 | 10.6 |
+| Cards the prompt hides | 10.2 | 7.9 | 5.5 |
+| The other spells | 4.5 | 9.0 | 14.2 |
+| All | 23.0 | 24.3 | 30.4 |
+
+- **This tempers the entry below.** "About 5 points are the build" is the dev number. On the future test the other spells are the biggest part, 9 of 24, and on the six decks nobody tuned on, 14 of 30. One reason is the test: the future test's settled lists start a week after the deck appears (dev: a month), so its inventors sit closer to them. Even so, the brewer is behind on the ordinary spells, not only on the lands and the hidden idea.
+- **The third score, and its warning.** With lands and hidden cards out, the brewer is 43.4 on dev and the inventors 60.7. The warning applied: the brewer's pile of other spells is 36.8 cards and the real deck's is 28.8, because a build that never found the idea fills those slots with something else. Counted as "how much of the real deck's other spells does the build have", the brewer is at about 50% and the inventors 59%. Counted as "how many of the build's other spells are in the real deck", 39% and 58%. The score sits between the two. Taking the hidden cards out with arithmetic does not take the hidden idea out; only prompts that name it would.
+
+**6. Added without lands: on dev the harness's edge over the model alone is all lands.**
+
+| Added, per deck | The model alone | The brewer | Gain (95% range) |
+| --- | --- | --- | --- |
+| Dev, whole deck | 6.7 | 10.4 | +3.7 (+0.3 to +7.2) |
+| Dev, without lands | 15.1 | 15.7 | +0.6 (-3.1 to +4.4) |
+| Dev, without lands, closest list picked on spells alone | 14.6 | 15.8 | +1.2 (-3.0 to +5.3) |
+| Future test, whole deck | 5.6 | 12.4 | +6.8 (+1.2 to +12.4) |
+| Future test, without lands | 11.7 | 17.7 | +6.0 (-0.8 to +12.9) |
+| Future test, without lands, closest list picked on spells alone | 2.5 | 15.7 | +13.2 (+5.7 to +20.8) |
+
+- On 11-10 the log said the harness's Added gain on dev "clears zero, just". With the lands out it is +0.6. The model alone's lands are worse than the lands of the old list nearest its build (a list in the same colors shares basics and dual lands whatever its spells are), so its whole-deck Added starts about 3 points down, and the harness's real lands fix that.
+- So on dev, in spells, the brewer adds about as much to the deck it starts from as the model alone adds to the list nearest its build: about 15 points. Its gain in spells is a better deck to start from. The inventors add 34.
+- On the future test the harness does add more in spells, by 6 to 13 points depending on how the closest list is picked (one v0 run there).
+
+**What was decided:** nothing kept, nothing dropped, protocol-v4 unchanged. The score without lands stays as a second view on the scoreboard, for reading changes in spells.
+
+**Also:** `scripts/ceiling-check.ts` now reads the hidden cards from the same shared rule (`unnamedSignature` in `evals/score.ts`); rerun, its numbers are unchanged.
 
 ## 2026-11-11 · A score without lands: the rule, before measuring
 
@@ -155,6 +239,7 @@ Owner: **"Think deeply and analyize what we are missing, I think we are either t
 - The theoretical max is 85, a real player's settled list 79, the inventor's first list 66. The brewer is at 43.
 - **The test mixes two jobs: guess the idea from 3 of its 7 cards, and build the deck once the idea is known.** The brewer is poor at the first (it finds 17% of the hidden cards) and decent at the second (9 points behind the inventors where the idea is known). Every harness version since v2 was judged on the mix, and the guessing dominates it.
 - So the 23 points were never all for the harness to win: about 10 are the hidden idea, about 8 are lands that work as well, about 5 are the build.
+- *Note, same day (see "The score without lands" above):* split exactly, dev is 10.2 hidden cards, 8.3 lands and 4.5 other spells. On the future test it is 7.9, 7.5 and 9.0, and on its six decks that are not dev archetypes 5.5, 10.6 and 14.2. There the build is the biggest part, not the smallest.
 
 **Options given to the owner:**
 1. **Measure it:** a version of the test whose prompts name every signature card (the idea as the inventor had it), next to the current "guess the idea" test. The model alone on it is about $1.30, the brewer once about $9.30.

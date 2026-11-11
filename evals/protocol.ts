@@ -96,6 +96,10 @@ export const PROTOCOL_V4 = {
 export const PROTOCOL = PROTOCOL_V4;
 export const PROTOCOLS = [PROTOCOL_V1, PROTOCOL_V2, PROTOCOL_V3, PROTOCOL_V4];
 
+/** Only runs made on a protocol's data count: recorded fingerprints, or for older runs, finishing after the file last changed. */
+export const onProtocolData = (r: { data?: { history: string; recent: string }; at: string }, p: { data: typeof PROTOCOL.data } = PROTOCOL) =>
+  r.data ? r.data.history === p.data.history.sha256 && r.data.recent === p.data.recent.sha256 : r.at >= p.data.history.since;
+
 export function protocolFingerprint(p: { frozen: string } = PROTOCOL): string {
   const { frozen: _, ...rest } = p;
   return createHash("sha256").update(JSON.stringify(rest)).digest("hex").slice(0, 16);

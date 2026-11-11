@@ -338,6 +338,23 @@ for (const [id, { from, frozen }] of Object.entries(LEGAL_ON_DATE)) {
   });
 }
 
+/**
+ * future-idea-v1 (2026-11-11; owner: "Yes, run it"): the same for the future test. future-v2's decks, dates,
+ * windows and scoring, with prompts that name every signature card. 6 of its 12 changed prompts are word for
+ * word holdout-idea-v1's (the same deck, date and data), so a build made for one answers the other.
+ */
+{
+  const base = TESTS.find((t) => t.id === "future-v2")!;
+  TESTS.push({
+    ...base,
+    id: "future-idea-v1",
+    what: `${base.what} The prompt names every signature card of the deck (in 80% of its first 10 lists, in 5% or less of the format's lists before), not only the first 3.`,
+    params: { ...base.params, track: "idea", prompt: "names every signature card" },
+    items: base.items.map((id) => `idea-${id}`),
+    frozen: "8867d89caef2a8da",
+  });
+}
+
 /** Tests with exactly the same items: a run that built one built the others (holdout-v1 and holdout-v2). */
 export function sameItems(a: string, b: string): boolean {
   const [x, y] = [TESTS.find((t) => t.id === a), TESTS.find((t) => t.id === b)];

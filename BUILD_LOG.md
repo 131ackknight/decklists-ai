@@ -85,6 +85,21 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-11-11 · The idea-named test on the future test: the rule, before the run
+
+The owner: **"Yes, run it"** (to "Run the idea-named test on the future test's 12 decks for about $6.50?").
+
+- **It costs half of that.** 6 of the 12 changed requests are word for word dev requests that are already built, with the same cards, date and data: Boros Dwarves, Jund Sacrifice, Persist, Fanatic Eldrazi, Metalcraft, Inside Out. Those builds are reused. Only the 6 requests that are new get built: Gearhulk, Fight Rigging, Pioneer Boros Aggro, Pioneer 4c Control, Riddlesmith Combo, Rector Combo. About $3.30 (the model alone about $0.40, v24 about $2.90), capped at $0.80 and $3.40.
+- **The test:** `future-idea-v1`: future-v2's 14 decks, dates and scoring (the lists from a week after the deck appeared), with every signature card named. 12 requests change.
+- **What is compared,** as on dev: the brewer's idea-named builds against v13's 2 saved runs on the 3-card request, and the model alone against its 1 saved run. Known before the run: v13 built the 3 Standard decks with today's Standard legality and v24 with the date's, so the Standard decks flatter v24 a little.
+
+**The rule.**
+1. **The jump holds** if the brewer's gain on the 12 decks is +5 or more with a range clear of zero.
+2. **The 6 new requests** are the part dev has not seen. I report them separately; 6 decks decide nothing alone.
+3. **The lead over the model alone, with the idea named,** is reported for all 12, and split in a way fixed here: the 4 decks that appeared after the model's training ended (the ones the post-cutoff test uses: Gearhulk, Boros Dwarves, Jund Sacrifice, Pioneer 4c Control) and the other 8. Two of the four are already built (the brewer +28 on each); the two new ones are the test of that lead.
+
+**My guesses.** The brewer gains about +9 on the 12 decks and the model alone about +11. With the idea named, the brewer leads the model alone by about +9 over all 12: about +20 on the 4 decks from after its training and about +4 on the other 8. On each of the two new after-training decks, +15 or more.
+
 ## 2026-11-11 · "Only 4 cards better?" The lead over the model alone depends on whether the model could have seen the deck
 
 The owner, on the idea-named result: "So compared to the model we are only 4 cards better???" and "if we have only achieved +4 then we are failures here". Free: the per-deck numbers of the run above, no new measurement.

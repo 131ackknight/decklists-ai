@@ -30,6 +30,7 @@ This section is the one hand-kept part of PROGRESS.md (`evals/progress-log-only.
 | v21 | 11-08 | v20 with only the list's top 5 | Dropped on Haiku after 3 runs (borrowed spells -0.6) |
 | v22 | 11-09 | v13 with Standard legality on the deck's date, not today's (`standard.ts`) | **Base, current** since 11-10 (protocol-v4), by the owner's call: not a measured gain (Added +0.6, -2.9 to +4.0, on the 10 Standard dev decks) |
 | v23 | 11-10 | v22, then a last step in code: basic lands above the format's usual count are swapped for the color-fixing lands its recent decks play (`lands.ts`); no model call | Not the base. Dev (composed from v22's runs): Added +0.6 (-0.0 to +1.1), no clear gain. On the 6 future-test decks it wasn't picked on: lands shared -0.7 (section 7b) |
+| v24 | 11-11 | v22 with `submit_deck`'s "needs" list widened from 6 entries to 16 (`brewV24`): v12's rule asks for an entry per requested card, so a request naming more than 6 cards could never be submitted | Built for the idea-named test (holdout-idea-v1), where the bug cost 5 of the first 11 decks. Not a candidate against v22: for a request naming 6 cards or fewer it differs by one number in a tool's schema |
 
 ### 7b. Results with no file, or not yet in the scoreboard
 
@@ -72,7 +73,7 @@ This section is the one hand-kept part of PROGRESS.md (`evals/progress-log-only.
 
 | Item | Value |
 | --- | --- |
-| BUILD_LOG.md running total (65 cost items listed there, summing to exactly this) | $543.78, plus one 17-token test call |
+| BUILD_LOG.md running total (68 cost items listed there, summing to exactly this) | $552.59, plus one 17-token test call and two calls cut off on 11-11 (under $1, not recorded) |
 | Recorded in the run register | see section 6 |
 
 The scripts' reported costs are all that's visible to Claude Code; the billed amount isn't.

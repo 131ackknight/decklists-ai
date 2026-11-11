@@ -83,6 +83,34 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-11-11 · One more jump: name the idea. Lands follow it on dev, not on the future test
+
+Free (`scripts/idea-lands-check.ts`; the rule is in the entry below). Nothing spent, nothing in the brewer changed.
+
+**1. The check.** The decks split in two by how many points the prompt hides. The gap to the inventors is in whole-deck points.
+
+| | Decks | Points the prompt hides | The brewer | Inventors | Gap in lands | Gap in hidden cards | Gap in other spells |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Dev, the half that hides less | 10 | 6.6 | 47.0 | 57.2 | 3.7 | 2.7 | 3.8 |
+| Dev, the half that hides more | 11 | 25.2 | 38.9 | 73.4 | 12.4 | 17.1 | 5.1 |
+| Future test, the half that hides less | 7 | 7.9 | 52.2 | 69.3 | 7.4 | 2.7 | 6.9 |
+| Future test, the half that hides more | 7 | 24.9 | 43.9 | 75.6 | 7.5 | 13.1 | 11.1 |
+
+- **Dev: yes.** The land gap is 3.3 times as large where the prompt hides more (12.4 against 3.7), and it rises with the hidden points (correlation +0.52). Where the prompt hides little, the brewer is 10 points behind the inventors, not 23.
+- **Future test: no.** The land gap is the same in both halves (7.4 and 7.5; correlation +0.12). There the gap in the other spells grows instead (6.9 to 11.1).
+- **By the rule, which asked for both tests, "lands follow the idea" is not shown.** My guess had the direction right (dev stronger) and the sizes wrong: dev is 3.3 times, not 2, and the future test shows nothing at all.
+- The 6 future decks that are not dev archetypes: 15.5 against 5.8 in lands, but that is 3 decks against 3.
+- **Inside one deck,** the builds that happened to find more hidden cards did not match more lands (-0.5 land points per hidden point found, on both tests) and matched fewer of the other spells (-0.6 on dev, -1.7 on the future test). A hidden card found by luck takes a slot and brings nothing with it. Being told the idea is not the same thing, but it is a caution on the estimate below.
+
+**2. What I told the owner**, question by question.
+
+- ***Fix the cards the prompt doesn't name?*** The brewer can't find most of them by itself (44% of those copies are nowhere it can look, 30% it is shown and passes over, about 21% are new cards), and showing it lists of candidates failed twice (v16, v20). A tool for new cards could reach about 3.4 of the 16.4 points on dev, and the brewer takes few of the candidates it is shown, so I put it at +1 to +2 at best. The fix with a big number on it is to name them in the request: the estimate is 42.7 to 52.8 on dev and 48.1 to 55.8 on the future test, unmeasured. That is a fuller question, not a smarter brewer. It is also what a real user would type, and what the product should ask for.
+- ***Go back to lands?*** No. Three fixes failed on decks they weren't picked on, and on the future test the land gap doesn't depend on the idea. A run that names the cards will show what the lands do when the idea is given.
+- ***The easiest path?*** One run of today's brewer with every signature card named. 18 of the 21 dev decks change (3 hide nothing), plus the model alone on the same prompts: about $10. If it jumps, the future test's 12 changed decks: about $7.
+- **A stronger model or more thinking** is a long shot: Fable 5.1 lost to Opus 5.5 twice here (the v1 round and the menu test, at 2 to 3 times the price). Fable 5.2 and the two higher effort levels are untried; a probe is $2 to $5.
+
+**Decision:** waiting for the owner. Nothing paid has been started.
+
 ## 2026-11-11 · One more jump: do lands follow the idea? The rule, before measuring
 
 The owner: "We need to find one other big jump, what can we do to fix the cards the prompt doesnt name? Or go back to lands? Whats our easiest path to one more improvement ?"

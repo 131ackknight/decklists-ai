@@ -63,7 +63,7 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 ## Open decisions
 
 - **Next build (proposed 2026-10-21):** v16 = v13 plus a synergy shortlist tool (the feature-synergy model narrows the card pool to the ~150 likeliest partners; the AI picks). Two runs on the future test, about $17.
-- **Lands and colors:** flat at 47% land match in every version; wrong colors on about half the decks. Owner: "we can figure out lands later." Checked 2026-11-10: a color rule is worth about +0.2 to +0.5 match (not built); the land swap (v23) helps two-color Standard decks and hurts elsewhere (built, not the base).
+- **Lands and colors:** flat at 47% land match in every version; wrong colors on about half the decks. Owner: "we can figure out lands later." Checked 2026-11-10: a color rule is worth about +0.2 to +0.5 match (not built); the land swap (v23) helps two-color Standard decks and hurts elsewhere (built, not the base). Owner, 2026-11-10: "Yes, stop on lands". Colors stay open.
 - **Owner's 60% target** on the future test: v13 is at 48%; spells 49%, lands 47%.
 - **Weekly forward test** with the current base harness; every new constructed archetype joins the future test.
 - **Card-level misses the checks can't catch** (Traumatize in draw-go, Vision Charm without Dreadnought): shown to the reader as hints, not enforced.
@@ -79,6 +79,15 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
 
 ---
+
+## 2026-11-10 · Lands closed
+
+Owner: **"Yes, stop on lands"**.
+
+- **No more work on lands directly.** No land lookup, land rule or land note gets proposed again without new evidence.
+- **What stays:** v22 is the base. v23 (the land swap) stays in the code as an option (`--harness v23`), not the base. The check scripts stay, so a new idea can be checked for free on the saved decks, dev and unseen.
+- **What the day cost:** $6.09 (the model alone $5.68, the land note test $0.41). Everything on colors and lands after the note test was free. Total $543.78.
+- **Still open, not started:** the colors the brewer picks. On the future test they are right on 46% of decks, against 64% for the requested cards' own colors. Testing a color rule needs rebuilt decks: about $11 for a small pilot.
 
 ## 2026-11-10 · What can be done about nonbasic lands? The brewer plays other nonbasic lands, not too few; lands follow the deck
 

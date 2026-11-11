@@ -129,6 +129,8 @@ Paid, under the owner's "Yes, run it" (about $10). Spent so far: **$8.34** (the 
 
 **6. The trial worked.** Modern Persist on v24: a 60-card deck in 8 steps for $0.47, one send-back for three missing needs entries, then accepted. A 12-card request costs what a 3-card one does. Spent on this test so far: **$8.81** ($1.09 + $7.25 + $0.47), plus the two cut-off calls. The other 11 decks would be about $5.50, which is past the $10 the owner agreed to, so I asked before going on.
 
+**7. The owner: "Yes, finish it"** (about $5.50 more, capped at $6). The rule set before the run stands. The brewer's 18 decks will be v22's 6 clean builds and v24's 12; the two differ by one number in a tool's schema on requests of 6 names or fewer.
+
 ## 2026-11-11 · The idea-named test: the rule, before the run
 
 The owner: **"Yes, run it"** (to "Run the named-cards test on dev for about $10?").

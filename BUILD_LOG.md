@@ -80,6 +80,61 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-11-10 · What can be done about nonbasic lands? The brewer plays other nonbasic lands, not too few; lands follow the deck
+
+Owner: **"What can we do about non basic lands then?"** Five free checks on saved decks. Nothing spent, nothing built into the brewer.
+
+**1. It's which lands, not how many** (`scripts/nonbasic-land-check.ts`; per deck).
+
+| | Real decks | The brewer | Shared |
+| --- | --- | --- | --- |
+| Dev (v22, 63 builds): basic lands | 4.8 | 8.0 | 3.2 |
+| Dev: nonbasic lands | 16.9 | 13.2 | 6.5 (38%; inventors 75%) |
+| Future test (v13, 28 builds): nonbasic lands | 15.3 | 12.6 | 5.9 (39%; inventors 64%) |
+
+- The brewer plays about 13 nonbasic lands, and half of them are lands the real deck doesn't play (6.7 a deck on both sets), next to 4 or 5 extra basics.
+- 7.6 of the 10.4 missed copies on dev are color-fixing lands.
+- Builds in other colors than the real deck (22 of 63) share 20% of its nonbasic lands; builds in the right colors share 47%.
+
+**2. Where the missed copies are** (dev; each copy counted once, top row first):
+
+| Missed nonbasic copies, per deck | The brewer | Inventors |
+| --- | --- | --- |
+| Not legal yet on the deck's date (nobody could play them) | 0.5 | 0.5 |
+| In the list the brewer built on (it cut them) | 1.7 | 1.1 |
+| The usual lands for the real deck's colors | 2.0 | 0.6 |
+| A format staple (in a tenth of all lists) | 1.1 | 0.8 |
+| Played a little in the format | 1.7 | 0.8 |
+| A new card | 0.4 | 0.1 |
+| An old card nobody in the format was playing | 3.0 | 0.4 |
+| All | 10.4 | 4.4 |
+
+- **The biggest gap to the inventors is the deck's own lands:** the two-mana lands in Creative Technique (about 17 copies), the fast lands in Cosmogoyf (about 14), Phyrexian Tower and Crypt of Agadeem in Persist. In those decks the brewer built a different deck or missed the plan. Its own notes: Rakdos Death's Shadow for Cosmogoyf, Orzhov Aristocrats for Jund Sacrifice, and a mono-black Excruciator deck because "only mono-black allows" 24 black sources (the real deck is blue-black, on dual lands that all make black).
+
+**3. Would a lookup show them?** (`scripts/land-lookup-check.ts`; every list built only from data before the deck's date)
+
+| A list the brewer could be shown | Missed copies it holds (dev / future test) | Lands it shows | Of them right (dev / future test) |
+| --- | --- | --- | --- |
+| Lands beside the requested cards, any format (`played_with` leaves lands out today) | 35% / 63% | 9 / 16 | 27% / 24% |
+| The lands of the list it built on | 19% / 20% | 5 / 6 | 49% / 45% |
+| The usual lands for the build's colors (v14's tool) | 25% / 19% | 8 / 8 | 37% / 26% |
+| Format staples | 37% / 27% | 18 / 19 | 14% / 9% |
+| All four together | 62% / 80% | | |
+
+- **The lists reach most of the missed lands, but most of what each shows is wrong for the deck.** That is v20's problem again: shown a list, the AI plays more of it, right and wrong alike.
+- The one such tool that was run, v14's: land cards matched 10.6 against v13's 10.0 on dev, and its match gain (+1.5, -0.9 to +3.9) never cleared zero.
+
+**4. Two rules that looked possible, checked and dropped:**
+- **Put back the lands it cut from the list it built on** (`scripts/land-cut-check.ts`). Of the cut nonbasic lands that still fit the build's colors, 44% were mistakes on dev (3.0 cut a build), but 23% on the six unseen future decks (6.6 cut a build). The nonbasic lands the brewer adds instead are right 29% and 28% of the time. Good on dev, bad on unseen decks: the land swap's story again.
+- **Take the colors from the lists that run the requested cards** (`scripts/beside-colors-check.ts`). Right on 24% of dev decks and 21% of future decks. The brewer is right on 65% and 46%; the plain mana symbols on the requested cards on 67% and 64%.
+
+**What it adds up to: lands follow the deck.** Where the brewer builds the inventor's deck in the inventor's colors it already has about half the nonbasic lands, and no list or rule tells the other half from wrong ones. Where it builds a different deck, no land fix applies. Every direct try measured so far lands between -0.4 and +0.6 of a land on dev: the two code fixes (replace every land, swap the extra basics) and the three with the AI choosing (the 11-08 land step, v14's tool, the land note). None both clears zero and holds on unseen decks.
+
+**Options given to the owner:**
+1. **Stop working on lands directly** (my pick).
+2. **One cheap test, about $0.50:** the land note with the AI choosing, on the unseen future decks. At best about +0.4 lands.
+3. **Go at the cause, the colors the brewer picks.** On the future test it is right on 46% of decks against 64% for the requested cards' own colors (dev: 65% against 67%). A color send-back can't be tested on saved decks: about $11 to rebuild the decks it would flag, or about $28 for three dev runs.
+
 ## 2026-11-10 · v23 measured, free: it repeats the dev check, and loses lands on the decks it wasn't picked on
 
 No money spent. Three steps, in the order of the rules in the entry below.

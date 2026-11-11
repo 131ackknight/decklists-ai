@@ -96,7 +96,7 @@ export async function runStage(opts: {
   const usage = emptyUsage();
   const toolCalls: ToolCallRecord[] = [];
   const messages: Anthropic.MessageParam[] = [{ role: "user", content: userText }];
-  const tools = toolParams(opts.tools);
+  const tools = toolParams(opts.tools, ctx);
   let text = "";
   let stopReason: string | null = null;
   let error: string | null = null;
@@ -241,6 +241,8 @@ export async function brewV5(
     spellChecks?: boolean;
     /** Harness v20: more text for the first message (borrow.ts's list). */
     extraText?: string;
+    /** Harness v24: submit_deck takes this many "needs" entries (6 otherwise). */
+    needsMax?: number;
   } = { system: V5_SYSTEM_PROMPT },
 ): Promise<BrewResult> {
   const started = Date.now();
@@ -256,6 +258,7 @@ export async function brewV5(
     stapleRounds: 0,
     cardNoteRounds: 0,
     request: req.prompt,
+    needsMax: variant.needsMax,
   };
   if (variant.maxCopyRate != null) ctx.lock = { cards: [], maxCopyRate: variant.maxCopyRate };
   const key = req.format ? getFormat(req.format)?.key : undefined;
@@ -386,6 +389,31 @@ export function brewV13(
     strictBrew: true,
     requireNeeds: true,
     cardChecksV2: true,
+  });
+}
+
+/**
+ * Harness v24 (2026-11-11): v13's brew with submit_deck's "needs" list widened from 6 entries to 16. Run
+ * it on the date-correct card pool, like v22 (the runner's job). v12's rule asks for a needs entry for
+ * every requested card in the deck, so a request naming more than 6 cards could never be submitted:
+ * found on the idea-named test (holdout-idea-v1), where 5 of the first 11 decks were lost that way. For a
+ * request naming 6 cards or fewer, the only difference from v22 is one number in the tool's schema.
+ */
+export function brewV24(
+  client: Anthropic,
+  model: ModelConfig,
+  req: BrewRequest,
+  deps: { index: CardIndex; data: DataSource },
+  onStep?: (step: number, note: string) => void,
+): Promise<BrewResult> {
+  return brewV5(client, model, req, deps, onStep, {
+    system: V12_SYSTEM_PROMPT,
+    extraTools: ["played_with"],
+    requireWinLine: true,
+    strictBrew: true,
+    requireNeeds: true,
+    cardChecksV2: true,
+    needsMax: 16,
   });
 }
 

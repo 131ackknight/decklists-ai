@@ -25,6 +25,8 @@ const perDeck = process.argv.includes("--decks");
 /** --json file: the same numbers for a chart (the decks whose request changed). */
 const jsonOut = process.argv.includes("--json") ? process.argv[process.argv.indexOf("--json") + 1] : null;
 const OLD = "holdout-v2";
+/** The base with submit_deck's cap on "needs" entries raised (src/harness/run.ts brewV24). */
+const FIXED = "v24";
 const [FROM, TO] = [30, 90];
 const METRICS = [
   ["whole", "Whole deck"],
@@ -78,7 +80,13 @@ async function main() {
     }),
   );
 
-  const fin = latestRuns().finished.filter((r) => r.model === PROTOCOL.model);
+  // The new requests' runs count even when stopped before the end (what they saved is read). The brewer's
+  // run on them was stopped on 2026-11-11: submit_deck took at most 6 "needs" entries, so a request naming
+  // more than 6 cards could never be submitted. v24 is the base with that cap raised; its builds count too.
+  const reg = latestRuns();
+  const fin = reg.finished.filter((r) => r.model === PROTOCOL.model);
+  const ideaRuns = [...reg.finished, ...reg.unfinished].filter((r) => r.model === PROTOCOL.model && r.tracks?.includes("idea"));
+  const spent = (file: string) => (JSON.parse(readFileSync(file, "utf8")).results as ({ costUsd?: number } | null)[]).reduce((a, x) => a + (x?.costUsd ?? 0), 0);
   const scoresOf = (recs: RunRecord[]) =>
     recs
       .map(
@@ -99,8 +107,8 @@ async function main() {
     [`The brewer (${PROTOCOL.base})`, PROTOCOL.base],
   ].map(([name, harness]) => {
     const oldRecs = fin.filter((r) => r.harness === harness && (r.tests.includes(OLD) || r.tests.some((x) => sameItems(x, OLD))));
-    const newRecs = fin.filter((r) => r.harness === harness && r.tracks?.includes("idea"));
-    return { name, harness, oldRuns: scoresOf(oldRecs), newRuns: scoresOf(newRecs), cost: newRecs.reduce((a, r) => a + (r.costUsd ?? 0), 0), files: newRecs.map((r) => r.file) };
+    const newRecs = ideaRuns.filter((r) => r.harness === harness || (harness === PROTOCOL.base && r.harness === FIXED));
+    return { name, harness, oldRuns: scoresOf(oldRecs), newRuns: scoresOf(newRecs), cost: newRecs.reduce((a, r) => a + spent(r.file), 0), files: newRecs.map((r) => `${r.file}${r.event === "started" ? " (stopped)" : ""}`) };
   });
 
   const chart: { decks: number; inventors: Record<string, number>; versions: unknown[]; perDeck: unknown[] } = { decks: 0, inventors: {}, versions: [], perDeck: [] };

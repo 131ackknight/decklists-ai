@@ -83,6 +83,50 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-11-11 · The idea-named test, first half: the model alone jumps 15 points; the brewer's run hit a bug and was stopped
+
+Paid, under the owner's "Yes, run it" (about $10). Spent so far: **$8.34** (the model alone $1.09, the brewer $7.25), plus two calls cut off when I stopped the run (under $1, not recorded anywhere).
+
+**1. The model alone (v0), all 18 changed decks, one run** against its 3 saved runs on the 3-card request (`scripts/idea-test-check.ts`):
+
+| 18 decks | 3 cards named | Every signature card named | Gain (95% range) | Inventors |
+| --- | --- | --- | --- | --- |
+| Whole deck | 33.2 | 48.3 | +15.1 (+10.1 to +20.1) | 66.8 |
+| Without lands | 32.5 | 53.2 | +20.7 (+14.0 to +27.4) | 64.6 |
+| Points from lands | 12.3 | 14.0 | +1.7 (-1.3 to +4.7) | 24.8 |
+| Points from the cards the old request hid | 1.5 | 17.3 | +15.8 (+11.5 to +20.1) | 15.1 |
+| Points from the other spells | 19.3 | 16.9 | -2.4 (-4.3 to -0.5) | 26.9 |
+
+- 17 of the 18 decks scored higher. Over all 21 dev decks that is 33.9 to 46.8.
+- **With the idea named, the model alone (46.8) is above today's brewer on the 3-card request (42.7).** Knowing the idea is worth more than everything the harness adds.
+- It plays the named cards (15.0 copies of the 4.3 new names a deck, more than the inventors' points for them) and loses a little elsewhere. The lands barely move.
+- My guess was +6. It is +15.1.
+
+**2. The brewer's run was stopped at 11 of 18 decks.** 5 of the 11 ended with no deck, and each of those cost $0.79 to $1.05 ($4.54 in all, against $2.71 for the 6 that worked).
+
+- **The bug:** v12's rule makes `submit_deck` ask for a "needs" entry for every requested card in the deck, and the tool's schema took at most 6 entries. A request naming more than 6 cards could never be submitted. The brewer said so in each failed answer ("it caps that field at 6 entries and you named 9"). No test or run had ever named more than 4 cards, so it had never shown.
+- **It is a product bug too:** a user who named 7 cards would have got no deck.
+- **I should have caught it for cents:** one long request through the brewer before the full run. The model-alone run couldn't show it, since v0 has no tools.
+- Also seen: the same rule read "Mountain" as a requested card because the request named "Thorin, Mountain-king" (it matches names as plain text). It cost that deck one extra round. Not fixed here.
+
+**3. The 6 clean brewer decks** (the ones with the fewest new names, 2.7 a deck against 4.3 over all 18), one run against v22's 3 saved runs:
+
+| 6 decks | 3 cards named | Every signature card named | Gain (95% range) | Inventors |
+| --- | --- | --- | --- | --- |
+| Whole deck | 46.2 | 52.6 | +6.4 (+1.9 to +11.0) | 59.0 |
+| Without lands | 39.6 | 50.0 | +10.3 (+4.8 to +15.9) | 52.9 |
+| Points from lands | 21.7 | 21.6 | -0.1 (-1.7 to +1.6) | 26.2 |
+| Points from the cards the old request hid | 2.7 | 10.1 | +7.4 (+3.7 to +11.1) | 9.5 |
+| Points from the other spells | 21.8 | 20.9 | -0.9 (-1.9 to +0.2) | 23.4 |
+
+- 5 of the 6 scored higher. The lands did not move at all.
+- On these 6 the brewer is ahead of the model alone by +7.7 on the whole deck with the idea named, and by +0.9 without lands. Six decks can't settle that.
+- **The rule's verdict has to wait:** it is set on the 18 decks, and the 12 with the most hidden cards are the ones missing.
+
+**4. The fix: v24** (free, built). v22 with `submit_deck`'s needs list widened from 6 entries to 16 (`brewV24` in `src/harness/run.ts`, `needsMax` in `src/harness/tools.ts`, 1 new test, 172 passing). For a request naming 6 cards or fewer the only difference from v22 is that one number in the tool's schema, so v22 stays the base and its saved runs stand.
+
+**5. Next, inside the $10:** one deck on v24, Modern Persist, the longest request (12 names), to confirm the fix and learn what a long request costs. **The rule for it:** if it ends with a deck, I ask the owner for the money to build the other 11 (the 4 that failed and the 7 never started). If it fails again, I stop and say why.
+
 ## 2026-11-11 · The idea-named test: the rule, before the run
 
 The owner: **"Yes, run it"** (to "Run the named-cards test on dev for about $10?").

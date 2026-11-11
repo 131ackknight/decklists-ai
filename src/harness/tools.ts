@@ -42,6 +42,8 @@ export interface ToolContext {
   /** Harness v15: one note for skipped format staples in the deck's colors, and 4 copies of the cards the plan rests on. */
   spellChecks?: boolean;
   stapleRounds?: number;
+  /** Harness v24: how many "needs" entries submit_deck takes. It took 6, so a request naming more than 6 cards could never be submitted. */
+  needsMax?: number;
 }
 
 export interface EnginePlan {
@@ -195,6 +197,18 @@ function lockProblems(ctx: ToolContext, format: string, main: QtyName[], side: Q
   }
   return problems;
 }
+
+/**
+ * submit_deck's "needs" list (v12): one entry per requested card. Until v24 it took at most 6 entries, so
+ * a deck for a request naming more than 6 cards was rejected every time; v24 widens it (ToolContext.needsMax).
+ */
+export const NEEDS_MAX = 6;
+const needsField = (max: number) =>
+  z
+    .array(z.object({ for: z.string(), role: z.string().min(3), cards: z.array(z.string()).min(1), copies: z.number().int().min(1) }))
+    .max(max)
+    .optional()
+    .describe("For each card the player asked for: what it needs around it to do its job (the role), the cards in this deck that provide it, and how many copies of them the deck runs.");
 
 export const TOOLS = [
   tool({
@@ -584,11 +598,7 @@ export const TOOLS = [
         .describe("The exact sequence of named cards from this deck that wins the game, in order, with what each one does in the line."),
       winTurn: z.number().int().min(1).max(10).optional().describe("The turn the line is meant to be complete."),
       shellReason: z.string().optional().describe("If real decks mostly run the requested cards in one strategy and you built something else: why, in one or two sentences."),
-      needs: z
-        .array(z.object({ for: z.string(), role: z.string().min(3), cards: z.array(z.string()).min(1), copies: z.number().int().min(1) }))
-        .max(6)
-        .optional()
-        .describe("For each card the player asked for: what it needs around it to do its job (the role), the cards in this deck that provide it, and how many copies of them the deck runs."),
+      needs: needsField(NEEDS_MAX),
       needsReason: z.string().optional().describe("If a requested card's enablers are fewer than the floor: why that is enough here."),
       cardNoteResponses: z.array(z.object({ id: z.string(), response: z.string().min(5) })).optional().describe("Answers to card notes from a previous submission, by id, for cards you kept."),
       copiesReason: z.string().optional().describe("If a requested card or a card in the win line runs fewer than 4 copies (and isn't legendary or restricted): why."),
@@ -770,12 +780,17 @@ function legalSubmission(
 
 export type ToolName = (typeof TOOLS)[number]["name"];
 
+/** A tool's input schema for this session: the same for every harness, except v24's wider "needs" list on submit_deck. */
+function schemaFor(t: (typeof TOOLS)[number], ctx?: Pick<ToolContext, "needsMax">): z.ZodTypeAny {
+  return t.name === "submit_deck" && ctx?.needsMax ? (t.schema as unknown as z.ZodObject).extend({ needs: needsField(ctx.needsMax) }) : t.schema;
+}
+
 /** Tool definitions for the Messages API, optionally limited to some tools. */
-export function toolParams(only?: readonly string[]) {
+export function toolParams(only?: readonly string[], ctx?: Pick<ToolContext, "needsMax">) {
   return TOOLS.filter((t) => !only || only.includes(t.name)).map((t) => ({
     name: t.name,
     description: t.description,
-    input_schema: z.toJSONSchema(t.schema, { io: "input" }) as { type: "object"; [k: string]: unknown },
+    input_schema: z.toJSONSchema(schemaFor(t, ctx), { io: "input" }) as { type: "object"; [k: string]: unknown },
   }));
 }
 
@@ -789,7 +804,7 @@ export function runTool(
   if (only && !only.includes(name)) return { content: `The ${name} tool is not available at this stage.`, isError: true };
   const t = TOOLS.find((x) => x.name === name);
   if (!t) return { content: `Unknown tool ${name}.`, isError: true };
-  const parsed = (t.schema as z.ZodTypeAny).safeParse(rawInput);
+  const parsed = schemaFor(t, ctx).safeParse(rawInput);
   if (!parsed.success) return { content: `Invalid input: ${parsed.error.message}`, isError: true };
   try {
     return { content: JSON.stringify((t.run as (i: unknown, c: ToolContext) => unknown)(parsed.data, ctx)), isError: false };

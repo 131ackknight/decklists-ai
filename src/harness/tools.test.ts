@@ -48,6 +48,23 @@ describe("harness tools", () => {
     for (const t of toolParams()) expect(t.input_schema.type).toBe("object");
   });
 
+  it("takes 6 needs entries on submit_deck, and more only when the harness widens it (v24)", () => {
+    const cap = (params: ReturnType<typeof toolParams>) => (params[0].input_schema.properties as { needs: { maxItems: number } }).needs.maxItems;
+    expect(cap(toolParams(["submit_deck"]))).toBe(6);
+    expect(cap(toolParams(["submit_deck"], { needsMax: 16 }))).toBe(16);
+    // Everything else about the tool is the same.
+    const strip = (params: ReturnType<typeof toolParams>) => JSON.stringify(params).replace(/"maxItems":\d+/g, "");
+    expect(strip(toolParams(undefined, { needsMax: 16 }))).toBe(strip(toolParams()));
+
+    const needs = Array.from({ length: 9 }, (_, i) => ({ for: `Card ${i}`, role: "what it needs", cards: ["Lightning Bolt"], copies: 4 }));
+    const narrow = ctx();
+    runTool("card_info", { format: "Modern", names: ["Lightning Bolt", "Mountain"] }, narrow);
+    expect(runTool("submit_deck", { ...deck, needs }, narrow).isError).toBe(true);
+    const wide = { ...ctx(), needsMax: 16 };
+    runTool("card_info", { format: "Modern", names: ["Lightning Bolt", "Mountain"] }, wide);
+    expect(runTool("submit_deck", { ...deck, needs }, wide).isError).toBe(false);
+  });
+
   it("rejects a deck with cards no tool returned, then accepts it after card_info", () => {
     const c = ctx();
     const first = JSON.parse(runTool("submit_deck", deck, c).content);

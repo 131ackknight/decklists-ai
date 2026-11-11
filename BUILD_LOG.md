@@ -23,7 +23,7 @@ Three things, and the third is turning out to be the most interesting.
 
 **A side effect worth a paragraph:** building this keeps improving Decklist Data itself. On the day of this answer, 34k lists got their junk sideboard lines removed.
 
-## Running totals (as of 2026-11-10)
+## Running totals (as of 2026-11-11)
 
 | Item | Total |
 | --- | --- |
@@ -58,6 +58,7 @@ Three things, and the third is turning out to be the most interesting.
 18. **Is it the lands, the creatures, the removal?** None of them. Split by kind of card, the harness matches 40-47% of every group and the human inventors 60-70% of every group; the misses are whole cards, the same ones every run, and a vote over three builds changes nothing. The one error the harness added itself: extra colors, wrong 4 times in 5.
 19. **A fix that worked on the decks it was tuned on.** One land fix looked real: swap the extra basic lands for the color-fixing lands real decks play. On the 21 dev decks it shared 0.4 more lands, clearly. Built into the brewer (v23) and checked, for free, on six decks it had never been tried on, it shared 0.7 fewer: it had learned two-color Standard decks, and it stripped the basics out of a Premodern combo deck that needed them. The recommendation: an option, not the base.
 20. **One gap, seen five ways.** After the lands, the owner asked where else to look. Free checks on the saved decks: sideboards (3 of 15 cards right, and a sideboard built from data is no better), the old deck a brew starts from (data picks worse than the AI does), colors, borrowed spells. Each time data could list the candidates and nothing could pick among them. The brewer's mana, played out in a simulator, already works as well as the real decks' mana. The only change the owner had preferred blind was letting the AI play a game with its deck.
+21. **"We are testing incorrectly."** The owner said there was a ceiling we hadn't found. There was. No list can score 100 on the test: the real lists agree with each other at 79, and the best possible list scores 85. And the test named 3 of each deck's defining cards while the decks had about 7. The 4 it hid were worth more points than the 3 it named, and in five decks they included the card the deck is named after. Where the idea wasn't hidden, the brewer was 9 points behind the human inventors, not 23.
 
 Recurring theme for the post: the owner's pushback improved the work at nearly every turn (no bracket scraping, no new database, no Neon credentials, use our own data instead of re-scraping MTGO, every list instead of a sample, fix `main` instead of running an old build, compare models, not ready to give up, judge decks I know intimately, an April cutoff for the future test, generic tools not bespoke fixes).
 
@@ -80,6 +81,64 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
 
 ---
+
+## 2026-11-11 · What we were missing: the ceiling is 85, and the test hides half of each deck's idea
+
+Owner: **"Think deeply and analyize what we are missing, I think we are either testing incorrectly or missing something. There is a theoretical max that I dont think we have hit yet"**. Free checks only. Nothing spent, nothing built into the brewer.
+
+**1. The ceiling** (`scripts/ceiling-check.ts`). A deck's score is the sum, over the copies it plays, of the share of settled lists that play that copy. So the best possible list is the 60 copies most settled lists play, and every step below it can be scored the same way.
+
+| Per deck, match % | Dev | Future test |
+| --- | --- | --- |
+| The best 60 cards possible (hindsight) | 85.4 | 86.9 |
+| The same, from cards legal on the deck's date | 83.6 | 85.7 |
+| A real settled list, against the other settled lists | 78.6 | 80.8 |
+| The inventors' first-week lists | 65.7 | 72.4 |
+| The best old list with the 3 requested cards put in (cuts with hindsight) | 55.4 | 62.2 |
+| The brewer, had the prompt named every signature card (estimate, below) | 52.8 | 55.8 |
+| **The brewer (v22 on dev, v13 on the future test)** | **42.7** | **48.1** |
+| The best old list by itself (hindsight) | 42.6 | 48.9 |
+| The model alone (v0) | 33.9 | 33.7 |
+
+- **Nobody can score 100.** The settled lists agree with each other at 79.
+- **The gap is in the core.** 66 of the real deck's 100 points are core copies (in 80% or more of the settled lists). The brewer gets 33 of them, inventors 52. The flex and fringe copies (17 points) nobody gets: the brewer 4.3, inventors 4.4.
+- 21.6 of a brew's 60 cards are in no settled list at all (inventors: 8.1).
+
+**2. What the test hides.** The prompt names up to 3 signature cards (in 80% of the deck's first 10 lists, in 5% or less of the format before). The cut at 3 was mine (`.slice(0, 3)` in `scripts/find-new-archetypes.ts`), and ties are broken by the order of the first lists, so which 3 get named is partly chance. By the same rule the decks have 6.6 signature cards on average.
+
+| Dev, points of the real deck | Real deck | The brewer | Inventors |
+| --- | --- | --- | --- |
+| Cards the prompt names | 14.5 | 14.1 | 13.2 |
+| **Signature cards the prompt doesn't name** | **16.4** | **2.7** | **12.9** |
+| Format staples (10%+ of lists before) | 12.7 | 6.4 | 8.6 |
+| Other spells played before | 15.2 | 3.0 | 6.4 |
+| Spells nobody was playing | 5.6 | 0.3 | 0.3 |
+| Basic lands | 8.0 | 5.4 | 5.8 |
+| Nonbasic lands | 28.2 | 10.8 | 18.7 |
+| All | 100.6 | 42.7 | 65.7 |
+
+- **The unnamed signature cards are worth more than the named ones** (16.4 points against 14.5). 18 of 21 decks have them: 3.7 cards, 9.8 copies a deck. The brewer finds 1.6 of those copies. The inventors have them by definition: the signature is read off their lists.
+- **In 5 decks the hidden ones include the deck's namesake:** Cosmogoyf, Inside Out, Fanatic of Rhonas (Fanatic Eldrazi), the Aang cards, Persist. Cosmogoyf's prompt names three enablers (Thud, Plunge into Darkness, Spoils of the Vault) and hides the payoff.
+- **They are 10.2 of the 23 points between the brewer and the inventors,** the largest single part. Nonbasic lands are 7.9, other played spells 3.4, staples 2.2.
+- **Deck by deck:** on the 6 dev decks where nothing is hidden or the brewer found at least half of it, the brewer scores 49.0 and the inventors 58.0. On the other 15: 40.2 and 68.8. The gap to the inventors follows the hidden points missed (correlation 0.75; future test 0.34).
+- **Could it have found them?** Of the unnamed copies, 16% are new cards from the same set as a named card, 30% are among the 25 cards `played_with` shows beside a named card (41 cards shown a deck), 5% are in its closest earlier list, 5% are other new cards, and 44% were nowhere it could look.
+- **Estimate, had the prompt named them all:** 42.7 to 52.8 on dev, 48.1 to 55.8 on the future test (4 copies of each, pushing out cards worth what the brew's other spells earn). The 6 known-idea decks say 49.0. A caution: within one deck, builds that happened to find more hidden cards didn't score higher (-0.16 a point; there is little such variation to learn from). Only a real run settles it.
+
+**3. Lands are a third of the score, and different isn't worse** (`scripts/mana-play-check.ts`, 11-10). Nonbasic lands are 28 points of the real deck and 7.9 of the gap, yet the brewer's mana casts its spells as often as the real decks' mana in the simulator. On that part the test measures "the same cards", not "works as well".
+
+**4. Also checked:**
+- **Porting the deck from another format** (`scripts/other-format-check.ts`). 6 of 21 dev decks have lists in another format that run all but one requested card; the latest such list never beats the brewer (27.7 against 49.6 on those decks; future test 27.1 against 56.4). Not a lever.
+- **Model settings** (the API reference). The brewer already thinks: Opus 5.5 always does, and the harness runs it at effort "high". Never tried here: the two higher effort levels (xhigh, max), and Fable 5.2, the stronger model, at twice the price.
+
+**What it adds up to.**
+- The theoretical max is 85, a real player's settled list 79, the inventor's first list 66. The brewer is at 43.
+- **The test mixes two jobs: guess the idea from 3 of its 7 cards, and build the deck once the idea is known.** The brewer is poor at the first (it finds 17% of the hidden cards) and decent at the second (9 points behind the inventors where the idea is known). Every harness version since v2 was judged on the mix, and the guessing dominates it.
+- So the 23 points were never all for the harness to win: about 10 are the hidden idea, about 8 are lands that work as well, about 5 are the build.
+
+**Options given to the owner:**
+1. **Measure it:** a version of the test whose prompts name every signature card (the idea as the inventor had it), next to the current "guess the idea" test. The model alone on it is about $1.30, the brewer once about $9.30.
+2. **Try more reasoning on the same brewer:** a higher effort level, or Fable 5.2. A one-call probe is about $2 to $5; a full brewer run about $20.
+3. Stop here.
 
 ## 2026-11-10 · Where are the other gaps? A corrected map, and four more doors closed
 

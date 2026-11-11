@@ -319,6 +319,25 @@ for (const [id, { from, frozen }] of Object.entries(LEGAL_ON_DATE)) {
   });
 }
 
+/**
+ * holdout-idea-v1 (2026-11-11; owner: "Yes, run it"): holdout-v2's decks, dates, windows and scoring, with
+ * prompts that name every signature card of the deck, not only the first 3 (evals/round4/items.ts ideaItems,
+ * evals/brew-holdout/idea-signatures.json). holdout-v2 asks the brewer to guess the idea from 3 cards and
+ * build it; this one gives the idea and asks only for the build. The two are never mixed: a version has a
+ * score on each.
+ */
+{
+  const base = TESTS.find((t) => t.id === "holdout-v2")!;
+  TESTS.push({
+    ...base,
+    id: "holdout-idea-v1",
+    what: `${base.what} The prompt names every signature card of the deck (in 80% of its first 10 lists, in 5% or less of the format's lists before), not only the first 3.`,
+    params: { ...base.params, track: "idea", prompt: "names every signature card" },
+    items: base.items.map((id) => `idea-${id}`),
+    frozen: "d51959d4ac6ecaea",
+  });
+}
+
 /** Tests with exactly the same items: a run that built one built the others (holdout-v1 and holdout-v2). */
 export function sameItems(a: string, b: string): boolean {
   const [x, y] = [TESTS.find((t) => t.id === a), TESTS.find((t) => t.id === b)];

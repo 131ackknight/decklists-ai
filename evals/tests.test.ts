@@ -23,3 +23,31 @@ describe("frozen tests", () => {
     expect(fingerprint(t, items)).toBe(t.frozen);
   });
 });
+
+describe("the idea-named items", () => {
+  const byId = new Map(items.map((it) => [it.id, it]));
+  const idea = items.filter((it) => it.track === "idea");
+
+  it("exist for every holdout-v2 and future-v2 deck", () => {
+    for (const test of ["holdout-v2", "future-v2"]) for (const id of TESTS.find((t) => t.id === test)!.items) expect(byId.has(`idea-${id}`), id).toBe(true);
+  });
+
+  it("keep their deck's date, target and first names, and name every key card once", () => {
+    for (const it of idea) {
+      const from = byId.get(it.id.replace(/^idea-/, ""))!;
+      expect(from, it.id).toBeDefined();
+      expect(it.before).toBe(from.before);
+      expect(it.format).toBe(from.format);
+      expect(it.target).toEqual(from.target);
+      expect(it.keyCards!.slice(0, from.keyCards!.length)).toEqual(from.keyCards);
+      expect(new Set(it.keyCards).size).toBe(it.keyCards!.length);
+      for (const card of it.keyCards!) expect(it.prompt, it.id).toContain(card);
+    }
+  });
+
+  it("change nothing for a deck with no unnamed signature card", () => {
+    const same = idea.filter((it) => it.keyCards!.length === byId.get(it.id.replace(/^idea-/, ""))!.keyCards!.length);
+    expect(same.length).toBeGreaterThan(0);
+    for (const it of same) expect(it.prompt).toBe(byId.get(it.id.replace(/^idea-/, ""))!.prompt);
+  });
+});

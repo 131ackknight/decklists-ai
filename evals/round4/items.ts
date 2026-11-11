@@ -27,7 +27,7 @@ export interface SavedList {
 
 export interface Round4Item {
   id: string;
-  track: "fill" | "brew" | "fresh" | "holdout" | "expert" | "post" | "expert2" | "expert3" | "future" | "found";
+  track: "fill" | "brew" | "fresh" | "holdout" | "expert" | "post" | "expert2" | "expert3" | "future" | "found" | "idea";
   format: string;
   prompt: string;
   /** Data and cards are cut to before this date (YYYY-MM-DD); null = today's data. */
@@ -263,7 +263,31 @@ const FOUND: { id: string; format: string; prompt: string }[] = [
   { id: "found-premodern-squee-bouncer-b", format: "Premodern", prompt: "Brew me a mono-blue Premodern deck built around Waterfront Bouncer and Gilded Drake." },
 ];
 
+/**
+ * The idea named (2026-11-11; owner: "Yes, run it"): the holdout and future decks again, with a prompt
+ * that names every signature card, not only the first 3. The prompts above name up to 3 by a cut made in
+ * scripts/find-new-archetypes.ts; by the same rule the decks have 6.6. The extra names come from
+ * evals/brew-holdout/idea-signatures.json (scripts/build-idea-signatures.ts), the named 3 first. Same
+ * date, data, target and scoring as the item it comes from, so the two answer different questions about
+ * the same deck: "guess the idea from 3 cards" and "build the deck once the idea is known".
+ */
+function ideaItems(base: Round4Item[], file = "evals/brew-holdout/idea-signatures.json"): Round4Item[] {
+  if (!existsSync(file)) return [];
+  const byId = new Map(base.map((it) => [it.id, it]));
+  return (JSON.parse(readFileSync(file, "utf8")) as { id: string; unnamed: { card: string }[] }[]).flatMap((s) => {
+    const it = byId.get(s.id);
+    if (!it?.keyCards || !it.target) return [];
+    const keyCards = [...it.keyCards, ...s.unnamed.map((u) => u.card.split(" // ")[0])];
+    return [{ ...it, id: `idea-${it.id}`, track: "idea" as const, prompt: `Brew me a ${it.format} deck built around ${naturalList(keyCards)}.`, keyCards }];
+  });
+}
+
 export function round4Items(index: CardIndex): Round4Item[] {
+  const base = baseItems(index);
+  return [...base, ...ideaItems(base)];
+}
+
+function baseItems(index: CardIndex): Round4Item[] {
   return [
     ...fillItems(index),
     ...brewItems(),

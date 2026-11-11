@@ -83,6 +83,25 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-11-11 · The idea-named test: the rule, before the run
+
+The owner: **"Yes, run it"** (to "Run the named-cards test on dev for about $10?").
+
+**The test** (`holdout-idea-v1`, frozen in `evals/tests.ts`). The 21 dev decks again, with the same dates, data, card pools, settled lists and scoring as holdout-v2. Only the request changes: it names every signature card of the deck (6.6 a deck), not the first 3. The extra names come from the test's own rule (`scripts/build-idea-signatures.ts`, `evals/brew-holdout/idea-signatures.json`), after the original 3, in the same sentence. 18 of the 21 requests change; 3 decks have nothing unnamed.
+
+**The runs** (paid, about $10, one run each): the model alone (v0) and today's brewer (v22) on the 18 changed requests, capped at $1.50 and $9.00. The 3 unchanged decks keep their saved builds.
+
+**What is compared.** Per deck, the new build against the same version's saved builds on the 3-card request (3 runs each), paired, with a 95% range: the whole-deck score, the score without lands, and the points from lands, from the cards the old request hid, and from the other spells. Also the brewer against the model alone on the new requests, and both against the inventors.
+
+**The rule.**
+- **A big jump** is a gain for the brewer of +5 or more on the whole deck over the 18 decks, with a range clear of zero. Then I'll propose the same on the future test's 12 changed decks (about $7), and the owner decides whether this test stands beside the current one.
+- **If the range reaches zero, or the gain is under +5,** the estimate was wrong and naming the idea is not the lever. I'll say so.
+- One run of 18 decks can't settle differences of a couple of points. I'll say which numbers are inside that.
+- Whatever the result, this is a different question from holdout-v2, never a higher score on the same one. protocol-v4 and every kept or dropped verdict stay as they are.
+- If the brewer's run reaches its cap before finishing, it stops there and I ask before spending more.
+
+**My guesses.** The brewer gains about +8 on the 18 decks. The estimate says about +12 on those; I'm cutting it because builds that found hidden cards by luck did not score higher. By part: the hidden cards about +9, the other spells about -2, lands about +1. The model alone gains about +6, since it will play the named cards too. The brewer's lead over the model alone stays near its +8.9.
+
 ## 2026-11-11 · One more jump: name the idea. Lands follow it on dev, not on the future test
 
 Free (`scripts/idea-lands-check.ts`; the rule is in the entry below). Nothing spent, nothing in the brewer changed.

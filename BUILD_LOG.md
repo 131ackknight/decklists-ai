@@ -83,6 +83,23 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-11-11 · One more jump: do lands follow the idea? The rule, before measuring
+
+The owner: "We need to find one other big jump, what can we do to fix the cards the prompt doesnt name? Or go back to lands? Whats our easiest path to one more improvement ?"
+
+What the log already says, with no new measurement:
+
+- **The cards the prompt doesn't name** are 10.2 of the 23 points to the inventors on dev and 7.9 of 24.3 on the future test. The brewer can't find most of them by itself: 44% of those copies are nowhere it can look, 30% it is already shown by `played_with` and doesn't pick, and about 21% are new cards (the ceiling check, 11-11). Showing it lists of candidates failed twice (v16, v20). The fix with a real chance is to name them in the request. The estimate for that is 42.7 to 52.8 on dev and 48.1 to 55.8 on the future test, unmeasured.
+- **Lands** were closed on 11-10: three fixes failed on decks they weren't picked on, and the losses sat in decks where the brewer had built a different deck.
+
+One free check before recommending anything: **if the brewer had the idea, would the lands come with it?** If yes, a run that names the cards is also the land test.
+
+**What I'll count** (`scripts/idea-lands-check.ts`; saved builds, v22 on dev and v13 on the future test). Per deck, in whole-deck points: how many points the prompt hides (set by the test, not by the brewer), and the brewer's gap to the inventors in lands, in hidden cards and in the other spells. The decks are split in two by hidden points: the half with fewer against the rest. Also the correlation across decks, and, inside one deck, whether the builds that found more hidden cards matched more lands.
+
+**The rule.** I'll say "lands follow the idea" only if, on both tests, the land gap in the half with more hidden is at least 1.5 times the land gap in the other half, and the correlation between hidden points and the land gap is +0.3 or more. Otherwise lands are a separate problem, and a naming run should not be expected to move them. Nothing here reopens land work.
+
+**My guess:** it holds on dev (about twice the gap) and is weaker on the future test.
+
 ## 2026-11-11 · The same result as charts, spelled out
 
 The owner: "I am having a hard to time reading the data and progress over time in your last message, spell it out to me clearly along with [charts] and data." Free. No new measurement, and nothing in the brewer or the tests changed: every number here is from the entry below and PROGRESS.md 2h.

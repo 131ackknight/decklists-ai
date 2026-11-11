@@ -441,11 +441,12 @@ async function main() {
     ...addedScore(d, holdout.get(id)!, earlierOf(id)),
     fresh: [...d.keys()].filter((k) => !land(k) && !copyCtx.get(id)!.recent.has(k)).length,
   });
-  const copyRow = (label: string, runs: string, rows: ReturnType<typeof copyOf>[]) => {
-    const m = (f: (r: ReturnType<typeof copyOf>) => number) => avgOf(rows.map(f));
+  // Each deck counts once: its builds (or its first-week lists, which differ in number from deck to deck) are averaged first.
+  const copyRow = (label: string, runs: string, rows: (ReturnType<typeof copyOf> & { id: string })[]) => {
+    const m = (f: (r: ReturnType<typeof copyOf>) => number) => avgOf([...new Set(rows.map((r) => r.id))].map((id) => avgOf(rows.filter((r) => r.id === id).map(f))));
     return [label, runs, one(m((r) => r.match)), `${Math.round(m((r) => r.copy) * 100)}%`, `${Math.round(m((r) => (r.copy > 0.65 ? 1 : 0)) * 100)}%`, one(m((r) => r.fresh)), one(m((r) => r.base)), signed(m((r) => r.match - r.base))];
   };
-  const copyRows: (string | number)[][] = [copyRow("Inventors (the deck's first-week real lists)", "", [...copyCtx].flatMap(([id, c]) => c.firstWeek.map((l) => copyOf(id, l))))];
+  const copyRows: (string | number)[][] = [copyRow("Inventors (the deck's first-week real lists)", "", [...copyCtx].flatMap(([id, c]) => c.firstWeek.map((l) => ({ ...copyOf(id, l), id }))))];
   const copyGroups = new Map<string, RunRecord[]>();
   for (const r of scored.filter((r) => r.tests.includes(RAW_DEV))) {
     const key = `${r.harness}|${r.model}|${onProtocolData(r) ? "" : "earlier"}`;
@@ -454,7 +455,7 @@ async function main() {
   for (const [key, rs] of [...copyGroups].sort((a, b) => versionNo(a[1][0].harness) - versionNo(b[1][0].harness) || a[0].localeCompare(b[0]))) {
     const [h, m, earlier] = key.split("|");
     const rows = rs.flatMap((r) =>
-      resultsOf(r).results.flatMap((x) => (x?.deck && holdout.has(x.id as string) ? [copyOf(x.id as string, toCounts(index, (x.deck as { main: Line[] }).main))] : [])),
+      resultsOf(r).results.flatMap((x) => (x?.deck && holdout.has(x.id as string) ? [{ ...copyOf(x.id as string, toCounts(index, (x.deck as { main: Line[] }).main)), id: x.id as string }] : [])),
     );
     copyRows.push(copyRow(`${h}${m === PROTOCOL.model ? "" : `, ${modelName(m)}`}${earlier ? " (earlier data copy)" : ""}`, String(rs.length), rows));
   }
@@ -486,7 +487,11 @@ async function main() {
   const partsOf = (decks: [string, Counts][]) => {
     const parts = Object.fromEntries(PARTS.map((p) => [p, { copies: 0, effect: 0 }])) as Record<PartName, { copies: number; effect: number }>;
     const bands = Object.fromEntries(BANDS.map((b) => [b, { copies: 0, stay: 0 }])) as Record<(typeof BANDS)[number], { copies: number; stay: number }>;
+    // Each deck counts once, however many builds or first-week lists it has.
+    const entries = new Map<string, number>();
+    for (const [id] of decks) entries.set(id, (entries.get(id) ?? 0) + 1);
     for (const [id, d] of decks) {
+      const w = 1 / entries.get(id)!;
       const s = holdout.get(id)!;
       const base = addedScore(d, s, earlierOf(id)).closest ?? new Map<string, number>();
       for (const k of new Set([...d.keys(), ...base.keys()])) {
@@ -507,17 +512,17 @@ async function main() {
             : land(k)
               ? "lands cut"
               : "spells cut";
-        parts[p].copies += Math.abs(x - y);
-        parts[p].effect += effect;
+        parts[p].copies += Math.abs(x - y) * w;
+        parts[p].effect += effect * w;
         if (p === "spells from other decks") {
           const r = playRateOf.get(id)!.get(k) ?? 0;
           const band = bands[r >= 0.1 ? BANDS[0] : r >= 0.02 ? BANDS[1] : BANDS[2]];
-          band.copies += x - y;
-          band.stay += effect;
+          band.copies += (x - y) * w;
+          band.stay += effect * w;
         }
       }
     }
-    return { parts, bands, n: decks.length };
+    return { parts, bands, n: entries.size };
   };
   const pts = (cards: number, n: number) => (cards / n / 60) * 100;
   const partRows: (string | number)[][] = [];

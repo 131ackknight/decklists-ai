@@ -57,6 +57,7 @@ Three things, and the third is turning out to be the most interesting.
 17. **The model alone.** The owner asked for the true start: the same model, one call, no harness. It matches 34% of what players settled on (26% on decks after its training cutoff); the harness 43-50%, at about 7 times the cost per deck. Most of the gain is knowing what's being played: what a deck adds beyond its closest old list grows only 4-7 points, and the model's own mistakes (made-up cards, banned cards) cost about 3 at most.
 18. **Is it the lands, the creatures, the removal?** None of them. Split by kind of card, the harness matches 40-47% of every group and the human inventors 60-70% of every group; the misses are whole cards, the same ones every run, and a vote over three builds changes nothing. The one error the harness added itself: extra colors, wrong 4 times in 5.
 19. **A fix that worked on the decks it was tuned on.** One land fix looked real: swap the extra basic lands for the color-fixing lands real decks play. On the 21 dev decks it shared 0.4 more lands, clearly. Built into the brewer (v23) and checked, for free, on six decks it had never been tried on, it shared 0.7 fewer: it had learned two-color Standard decks, and it stripped the basics out of a Premodern combo deck that needed them. The recommendation: an option, not the base.
+20. **One gap, seen five ways.** After the lands, the owner asked where else to look. Free checks on the saved decks: sideboards (3 of 15 cards right, and a sideboard built from data is no better), the old deck a brew starts from (data picks worse than the AI does), colors, borrowed spells. Each time data could list the candidates and nothing could pick among them. The brewer's mana, played out in a simulator, already works as well as the real decks' mana. The only change the owner had preferred blind was letting the AI play a game with its deck.
 
 Recurring theme for the post: the owner's pushback improved the work at nearly every turn (no bracket scraping, no new database, no Neon credentials, use our own data instead of re-scraping MTGO, every list instead of a sample, fix `main` instead of running an old build, compare models, not ready to give up, judge decks I know intimately, an April cutoff for the future test, generic tools not bespoke fixes).
 
@@ -80,6 +81,49 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-11-10 · Where are the other gaps? A corrected map, and four more doors closed
+
+Owner: **"Where are other high potential gaps we can fill?"** Free checks only. Nothing spent, nothing built into the brewer.
+
+**A correction first.** The inventors' rows in PROGRESS.md sections 2f and 2g counted every first-week list equally, so decks with many first-week lists weighed more (the breakdown entry below had noted the two ways of averaging). They now count each deck once, like every other row (`scripts/scoreboard.ts`). On dev:
+
+| Inventors, dev | Was (per list) | Now (per deck) |
+| --- | --- | --- |
+| Match % | 72.2 | 65.7 |
+| Their closest earlier list alone | 47.5 | 36.8 |
+| Added | +24.8 | +28.9 |
+| Spells from other decks | 10.3 copies, 58% stay | 10.0 copies, 53% stay |
+
+- The brewer's rows don't change. The entries of 11-08 keep the numbers they had; this is the correction for all of them.
+- What it changes: the inventors add more than we said (+28.9, not +24.8), and they start from an old list only a little better than the brewer's (36.8 against 32.3, not 47.5).
+
+**The map** (dev, per deck: inventors 65.7, the brewer 42.8, 23 points apart; PROGRESS.md 2f and 2g):
+
+| Where the 23 points are | Points | Can data or a rule fill it? |
+| --- | --- | --- |
+| Spells borrowed from other decks: inventors add 10 copies and half are right; the brewer adds 4 and a fifth are right | 7.3 | Tried (v20): a list holds a third to a half of the right spells, and shown it the AI plays more right ones and more wrong ones |
+| Lands it adds | 5.1 | Closed today |
+| The old deck it starts from (32.3 against 36.8) | 4.5 | No (new check, below) |
+| Cards it cuts that the real deck keeps (spells 1.8, lands 1.0) | 2.8 | No: 12% of its spell cuts are mistakes, and nothing tells which |
+| New cards nobody plays: it adds 5 copies and 12% are right; inventors add 3.6 and 46% are right | 1.7 | A send-back for such cards is already in (v12) |
+| Requested cards and copy counts | 1.4 | Not a gap |
+
+**New checks, all free:**
+- **The starting deck** (`scripts/starting-list-check.ts`). The best old list, picked with hindsight, scores 42.7 by itself: as much as the brewer's whole deck (42.8). On the six unseen future decks it beats the brew, 54.3 to 48.5. But picks made from data are worse than the brewer's own start (32.3): the list with the most requested cards scores 26.9, the top deck in the requested cards' colors 21.7. Even a perfect pick from the latest lists of the 20 most-played decks gets only 30.4. The good starting lists are single lists, not the popular decks. The future test says the same (the brewer's start 35.6; the two picks 32.3 and 22.2; the perfect menu pick 30.5).
+- **Sideboards, never measured before** (`scripts/sideboard-check.ts`: cards shared with the settled lists' sideboards, of 15). The brewer: 21.6% on dev and 19.4% on the future test, about 3 cards of 15. Inventors: 32.3% and 45.8%. A sideboard built by vote from the format's lists in the deck's colors: 20.6% and 16.8%, no better than the brewer's. The sideboard of the list it built on: 20.0% and 21.9%.
+- **Does its mana work in play?** (`scripts/mana-play-check.ts`: the opening-turns simulator, 2,000 games a list.) As well as the real decks' mana. Colors work on turn 3 in 91.7% of games against 90.4% (+1.3, -2.5 to +5.0); stuck on two lands on turn 4 in 21.0% against 19.6% (+1.4, -1.5 to +4.4); mulligans 14.7% against 14.2%. The future test says the same. Its lands differ from the real ones, but they cast its spells as often.
+- **Colors: a correction to the entry below.** It said the brewer's colors are right on 46% of future-test decks against 64% for the requested cards' own colors, a bigger gap than on dev. That gap is Persist and Metalcraft, which are dev decks too, and one 4c Control build. On the six unseen decks a stay-in-the-named-colors rule would fix 1 build of 12. The earlier estimate stands: about +0.2 to +0.5 match.
+
+**What it adds up to.** Nothing left is a gap that a list or a rule can fill. Lands, colors, borrowed spells, the starting deck and the sideboard are one gap seen five ways: choosing which cards fit this deck. Data shows the candidates; it doesn't pick.
+
+**What has pointed the other way: only playing the deck.** v19 (one played game, then fix the top three problems) is the only change since v13 that the owner preferred blind: 13 of 17 against 10. The automatic score dropped it after one run (-2.1, -5.0 to +0.9). The two yardsticks disagree, and neither result is proven.
+
+**Options given to the owner:**
+1. Stop tuning the brewer, and treat v22 as the finished harness.
+2. Free: read what v19's played game changed in the 17 panel decks, to see whether a cheaper check could do the same job.
+3. About $21 and the owner's time: a second blind panel round, v22 against v19.
+4. No API cost, about a week of work: a real rules engine (Forge) as the judge.
+
 ## 2026-11-10 · Lands closed
 
 Owner: **"Yes, stop on lands"**.
@@ -93,30 +137,32 @@ Owner: **"Yes, stop on lands"**.
 
 Owner: **"What can we do about non basic lands then?"** Five free checks on saved decks. Nothing spent, nothing built into the brewer.
 
+*Correction, same day:* the inventors' numbers in the two tables below first counted every first-week list equally (75% and 64% of nonbasic lands matched; 4.4 copies missed) and the right and wrong color shares were per build (47% and 20%). They now count each deck once, like the brewer's: 66% and 65%, 5.7 missed, 44% and 22%. The tables show the corrected numbers; the reading doesn't change.
+
 **1. It's which lands, not how many** (`scripts/nonbasic-land-check.ts`; per deck).
 
 | | Real decks | The brewer | Shared |
 | --- | --- | --- | --- |
 | Dev (v22, 63 builds): basic lands | 4.8 | 8.0 | 3.2 |
-| Dev: nonbasic lands | 16.9 | 13.2 | 6.5 (38%; inventors 75%) |
-| Future test (v13, 28 builds): nonbasic lands | 15.3 | 12.6 | 5.9 (39%; inventors 64%) |
+| Dev: nonbasic lands | 16.9 | 13.2 | 6.5 (38%; inventors 66%) |
+| Future test (v13, 28 builds): nonbasic lands | 15.3 | 12.6 | 5.9 (39%; inventors 65%) |
 
 - The brewer plays about 13 nonbasic lands, and half of them are lands the real deck doesn't play (6.7 a deck on both sets), next to 4 or 5 extra basics.
 - 7.6 of the 10.4 missed copies on dev are color-fixing lands.
-- Builds in other colors than the real deck (22 of 63) share 20% of its nonbasic lands; builds in the right colors share 47%.
+- Builds in other colors than the real deck (22 of 63) share 22% of its nonbasic lands; builds in the right colors share 44%.
 
 **2. Where the missed copies are** (dev; each copy counted once, top row first):
 
 | Missed nonbasic copies, per deck | The brewer | Inventors |
 | --- | --- | --- |
 | Not legal yet on the deck's date (nobody could play them) | 0.5 | 0.5 |
-| In the list the brewer built on (it cut them) | 1.7 | 1.1 |
-| The usual lands for the real deck's colors | 2.0 | 0.6 |
-| A format staple (in a tenth of all lists) | 1.1 | 0.8 |
-| Played a little in the format | 1.7 | 0.8 |
+| In the list the brewer built on (it cut them) | 1.7 | 0.8 |
+| The usual lands for the real deck's colors | 2.0 | 0.8 |
+| A format staple (in a tenth of all lists) | 1.1 | 0.9 |
+| Played a little in the format | 1.7 | 1.4 |
 | A new card | 0.4 | 0.1 |
-| An old card nobody in the format was playing | 3.0 | 0.4 |
-| All | 10.4 | 4.4 |
+| An old card nobody in the format was playing | 3.0 | 1.2 |
+| All | 10.4 | 5.7 |
 
 - **The biggest gap to the inventors is the deck's own lands:** the two-mana lands in Creative Technique (about 17 copies), the fast lands in Cosmogoyf (about 14), Phyrexian Tower and Crypt of Agadeem in Persist. In those decks the brewer built a different deck or missed the plan. Its own notes: Rakdos Death's Shadow for Cosmogoyf, Orzhov Aristocrats for Jund Sacrifice, and a mono-black Excruciator deck because "only mono-black allows" 24 black sources (the real deck is blue-black, on dual lands that all make black).
 

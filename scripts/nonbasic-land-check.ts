@@ -149,8 +149,11 @@ const add = (into: Tally, t: Tally, w = 1) => {
 function report(label: string, builds: (Tally & { right: boolean; id: string })[]) {
   const group = (name: string, xs: typeof builds) => {
     if (!xs.length) return;
+    // Each deck counts once: its builds (or first-week lists, which differ in number from deck to deck) are averaged first.
     const t = empty();
-    for (const b of xs) add(t, b);
+    const entries = new Map<string, number>();
+    for (const b of xs) entries.set(b.id, (entries.get(b.id) ?? 0) + 1);
+    for (const b of xs) add(t, b, 1 / entries.get(b.id)!);
     const per = (x: number) => x / t.n;
     const missing = per(t.realNonbasic - t.sharedNonbasic);
     console.log(`\n${label}, ${name}: ${xs.length} builds on ${new Set(xs.map((b) => b.id)).size} decks`);
@@ -176,7 +179,7 @@ const builds = records.flatMap((rec) =>
     r?.deck && ids.includes(r.id) && facts.get(r.id)!.settled.length ? [{ ...tally(r.id, toCounts(index, r.deck.main)), id: r.id }] : [],
   ),
 );
-console.log(`${harness} on ${testId}: ${records.length} run(s). Per build, averaged over each deck's settled lists.`);
+console.log(`${harness} on ${testId}: ${records.length} run(s). Per deck: each build against each of the deck's settled lists, averaged.`);
 report(harness, builds);
 report("Inventors (first-week real lists)", ids.flatMap((id) => (facts.get(id)!.settled.length ? facts.get(id)!.firstWeek.map((l) => ({ ...tally(id, l), id })) : [])));
 

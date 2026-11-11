@@ -1,7 +1,7 @@
 /**
  * The idea-named test against the 3-card test (2026-11-11; owner: "Yes, run it"). Free: reads saved builds.
  *
- *   pnpm exec tsx scripts/idea-test-check.ts [--decks]
+ *   pnpm exec tsx scripts/idea-test-check.ts [--decks] [--json file]
  *
  * holdout-idea-v1 (evals/tests.ts) is holdout-v2 with requests that name every signature card of the deck
  * instead of the first 3. For the model alone (v0) and the brewer (the protocol's base): each deck's builds
@@ -11,7 +11,7 @@
  * and from the other spells. The hidden cards are read off the old item, so both requests are scored
  * against the same piles. Decks whose request did not change keep their saved builds.
  */
-import { readFileSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
 import { loadCardIndex } from "../src/cards/load";
 import { FileDataSource } from "../src/data/source";
 import { PROTOCOL, pairedGain } from "../evals/protocol";
@@ -22,6 +22,8 @@ import { addedScore, earlierLists, legalOnDateView, loadLists, partScores, type 
 import { sameItems, testById } from "../evals/tests";
 
 const perDeck = process.argv.includes("--decks");
+/** --json file: the same numbers for a chart (the decks whose request changed). */
+const jsonOut = process.argv.includes("--json") ? process.argv[process.argv.indexOf("--json") + 1] : null;
 const OLD = "holdout-v2";
 const [FROM, TO] = [30, 90];
 const METRICS = [
@@ -101,6 +103,7 @@ async function main() {
     return { name, harness, oldRuns: scoresOf(oldRecs), newRuns: scoresOf(newRecs), cost: newRecs.reduce((a, r) => a + (r.costUsd ?? 0), 0), files: newRecs.map((r) => r.file) };
   });
 
+  const chart: { decks: number; inventors: Record<string, number>; versions: unknown[]; perDeck: unknown[] } = { decks: 0, inventors: {}, versions: [], perDeck: [] };
   for (const v of versions) {
     const ids = [...ctx.keys()].filter((id) => ctx.get(id)!.changed && v.newRuns.some((m) => m.has(id)) && v.oldRuns.some((m) => m.has(id)));
     console.log(`\n==================== ${v.name}: ${ids.length} decks whose request changed ====================`);
@@ -117,6 +120,20 @@ async function main() {
     }
     const fresh = mean(ids.map((id) => ctx.get(id)!.fresh));
     console.log(`  Cards named for the first time: ${fresh.toFixed(1)} a deck. A build plays ${mean(ids.map((id) => of(v.oldRuns, id, "named"))).toFixed(1)} of them on the 3-card request (${mean(ids.map((id) => of(v.oldRuns, id, "copies"))).toFixed(1)} copies), ${mean(ids.map((id) => of(v.newRuns, id, "named"))).toFixed(1)} when they are named (${mean(ids.map((id) => of(v.newRuns, id, "copies"))).toFixed(1)} copies).`);
+    const row = (runs: Map<string, Score>[]) => Object.fromEntries(METRICS.map(([f]) => [f, mean(ids.map((id) => of(runs, id, f)))]));
+    chart.versions.push({ key: v.harness, name: v.harness === "v0" ? "The model alone" : "The brewer", old: row(v.oldRuns), new: row(v.newRuns), gain: Object.fromEntries(METRICS.map(([f]) => [f, pairedGain(maps(v.newRuns, ids, f), maps(v.oldRuns, ids, f))])) });
+    if (v.harness === PROTOCOL.base) {
+      chart.decks = ids.length;
+      chart.inventors = Object.fromEntries(METRICS.map(([f]) => [f, mean(ids.map((id) => mean(ctx.get(id)!.inventors.map((s) => s[f]))))]));
+      chart.perDeck = ids.map((id) => ({
+        id,
+        name: id.replace(/^holdout-/, "").split("-").map((w) => (/^\d/.test(w) ? w : w[0].toUpperCase() + w.slice(1))).join(" "),
+        fresh: ctx.get(id)!.fresh,
+        old: of(v.oldRuns, id, "whole"),
+        new: of(v.newRuns, id, "whole"),
+        inv: mean(ctx.get(id)!.inventors.map((s) => s.whole)),
+      }));
+    }
     const better = ids.filter((id) => of(v.newRuns, id, "whole") > of(v.oldRuns, id, "whole")).length;
     console.log(`  Decks that scored higher with the idea named: ${better} of ${ids.length}.`);
 
@@ -142,6 +159,10 @@ async function main() {
       const [o, n] = [pairedGain(maps(brewer.oldRuns, both, f), maps(alone.oldRuns, both, f)), pairedGain(maps(brewer.newRuns, both, f), maps(alone.newRuns, both, f))];
       console.log(`  ${label.padEnd(16)} on the 3-card request ${signed(o.gain)} (${signed(o.lo)} to ${signed(o.hi)}) | with the idea named ${signed(n.gain)} (${signed(n.lo)} to ${signed(n.hi)})`);
     }
+  }
+  if (jsonOut) {
+    writeFileSync(jsonOut, JSON.stringify(chart, null, 1));
+    console.log(`\nwrote ${jsonOut}`);
   }
 }
 

@@ -108,6 +108,7 @@ The plain reading, in the order the charts show it:
 - **From v2 to today the whole-deck score can't show a gain:** +2.0 on dev and +3.2 on the future test, both ranges through zero. **Without lands it can:** +4.0 (0.5 to 7.5) on dev and +4.1 (-0.2 to 8.4) on the future test. Compared after seeing the scores, so a lead.
 - **Nothing since v13 has moved the without-lands score.**
 - **Still missing, in whole-deck points** (lands / hidden cards / other spells): dev 8.3 / 10.2 / 4.5; future test 7.5 / 7.9 / 9.0; the six future decks nothing was tuned on 10.6 / 5.5 / 14.2.
+- **Put another way:** without lands the brewer has covered 7.3 of the 30.0 points between the model alone and the inventors on dev (about a quarter), and 14.4 of the 38.8 on the future test (over a third). With lands the shares are about the same (8.8 of 31.8, and 14.4 of 38.7).
 
 **Decision:** none. I asked the owner whether to add the charts to the scoreboard in the repo, so they stay current.
 

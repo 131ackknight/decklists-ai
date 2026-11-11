@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { CardIndex } from "../cards/card-index";
 import type { Card } from "../cards/types";
-import { applyLandSwaps, cycleKey, deckColors, isFixerRole, landAdvice, landColors, landNote, landRole, usualLands } from "./lands";
+import type { DataSource, RefList } from "../data/source";
+import { applyLandSwaps, cycleKey, deckColors, isFixerRole, landAdvice, landColors, landNote, landRole, swapUsualLands, usualLands } from "./lands";
+import { withUsualLands, type BrewResult } from "./run";
 
 const card = (name: string, over: Partial<Card> = {}): Card => ({
   oracleId: name,
@@ -41,6 +43,12 @@ const cards = [
   spell("Opt", "{U}", ["U"]),
   spell("Rakdos Cackler", "{B/R}{B/R}", ["B", "R"]),
   spell("Fire // Ice", "{1}{R} // {1}{U}", ["R", "U"]),
+  spell("Burst Lightning", "{R}", ["R"]),
+  spell("Play with Fire", "{R}", ["R"]),
+  spell("Lightning Strike", "{1}{R}", ["R"]),
+  spell("Cut Down", "{B}", ["B"]),
+  spell("Go for the Throat", "{1}{B}", ["B"]),
+  spell("Bloodtithe Harvester", "{B}{R}", ["B", "R"]),
 ];
 const index = new CardIndex({ cards, tags: [] });
 const get = (name: string) => index.getCard(name)!;
@@ -173,5 +181,113 @@ describe("land advice", () => {
     expect(note).toContain("- Blood Crypt: 4 copies in 100% of those decks; this deck has 2");
     expect(note).toContain("- Starting Town: 3 copies in 100% of those decks; this deck has 0");
     expect(note).toContain("down to about 10 basics");
+  });
+});
+
+describe("the brewer's land swap (v23)", () => {
+  const izzet = [
+    [12, "Opt"],
+    [8, "Shock"],
+    [4, "Steam Vents"],
+    [4, "Riverpyre Verge"],
+    [3, "Starting Town"],
+    [6, "Island"],
+    [4, "Mountain"],
+  ].map(([qty, name]) => ({ qty: qty as number, name: name as string }));
+  const real = (n: number): RefList[] => Array.from({ length: n }, (_, i) => ({ format: "standard", date: "2026-01-01", event: `League ${i}`, place: null, record: "5-0", strategy: "Izzet Tempo", main: izzet, side: [], commander: [] }));
+  const dataWith = (lists: RefList[]): DataSource => ({
+    hasFormat: () => true,
+    meta: () => [],
+    archetype: () => null,
+    referenceList: () => null,
+    cardPlayRate: () => null,
+    copyRate: () => null,
+    recentLists: (format) => lists.filter((l) => l.format === format),
+    playedWith: () => null,
+    manaBase: () => null,
+    mainDecks: () => [],
+  });
+  const data = dataWith(real(10));
+  const four = ["Shock", "Burst Lightning", "Play with Fire", "Lightning Strike", "Duress", "Cut Down", "Go for the Throat", "Bloodtithe Harvester", "Rakdos Cackler"].map((name) => ({ qty: 4, name }));
+  // A legal red-black brew: 36 spells, 17 basics, half the shock lands and no any-color land.
+  const main = [...four, { qty: 2, name: "Blood Crypt" }, { qty: 4, name: "Blazemire Verge" }, { qty: 1, name: "Mutavault" }, { qty: 2, name: "Mountain" }, { qty: 8, name: "Mountain" }, { qty: 7, name: "Swamp" }];
+  const brew = { format: "standard", main, side: [], commander: [], label: "brew" };
+  const total = (xs: { qty: number }[]) => xs.reduce((n, l) => n + l.qty, 0);
+
+  it("swaps basics above the usual count for the fixers the format's decks play, and keeps the deck's order", () => {
+    const s = swapUsualLands(index, data, brew)!;
+    expect(s.basics).toBe(17);
+    expect(s.usualBasics).toBe(10);
+    expect(s.lists).toBe(10);
+    expect(s.added).toEqual([
+      { name: "Blood Crypt", copies: 2 },
+      { name: "Starting Town", copies: 3 },
+    ]);
+    expect(s.cut).toEqual([
+      { name: "Mountain", copies: 4 },
+      { name: "Swamp", copies: 1 },
+    ]);
+    expect(total(s.main)).toBe(60);
+    // The spells are untouched; a cut bigger than a line carries to the card's next line; a new land goes after the last land.
+    expect(s.main.slice(0, 9)).toEqual(four);
+    expect(s.main.slice(9)).toEqual([
+      { qty: 4, name: "Blood Crypt" },
+      { qty: 4, name: "Blazemire Verge" },
+      { qty: 1, name: "Mutavault" },
+      { qty: 6, name: "Mountain" },
+      { qty: 6, name: "Swamp" },
+      { qty: 3, name: "Starting Town" },
+    ]);
+    expect(s.note).toBe(
+      "Lands changed after the build: 4 Mountain, 1 Swamp out, 2 Blood Crypt, 3 Starting Town in. The deck had 17 basic lands; Standard two-color decks from the last 90 days (10 lists) average 10.0, and the lands that came in are the ones they fix their colors with.",
+    );
+    // The brew itself is not changed.
+    expect(total(brew.main)).toBe(60);
+    expect(brew.main.find((l) => l.name === "Blood Crypt")!.qty).toBe(2);
+  });
+
+  it("swaps nothing a second time: the result has the usual number of basics or no fixer left to add", () => {
+    const once = swapUsualLands(index, data, brew)!;
+    expect(swapUsualLands(index, data, { ...brew, main: once.main })).toBeNull();
+  });
+
+  it("leaves alone a stock list, a one-color deck, a commander format and a format with too few lists", () => {
+    expect(swapUsualLands(index, data, { ...brew, label: "stock" })).toBeNull();
+    const mono = [...four.slice(0, 4), { qty: 4, name: "Rakdos Cackler" }, { qty: 40, name: "Mountain" }];
+    expect(swapUsualLands(index, data, { ...brew, main: mono })).toBeNull();
+    expect(swapUsualLands(index, dataWith(real(10).map((l) => ({ ...l, format: "duel" }))), { ...brew, format: "duel" })).toBeNull();
+    expect(swapUsualLands(index, dataWith(real(9)), brew)).toBeNull();
+    expect(swapUsualLands(index, dataWith([]), brew)).toBeNull();
+  });
+
+  it("never adds a rule error: a swap that would break the copy limit is not made", () => {
+    // Two more Blood Crypts in the sideboard: two more in the main deck would make six.
+    expect(swapUsualLands(index, data, { ...brew, side: [{ qty: 2, name: "Blood Crypt" }] })).toBeNull();
+  });
+
+  it("is the brewer's last step: the deck changed, the swap recorded, one line added to the notes", () => {
+    const result: BrewResult = {
+      text: "The plan.",
+      deck: { format: "standard", main, side: [], commander: [], label: "brew", donor: null, warnings: ["old warning"] },
+      toolCalls: [],
+      usage: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
+      costUsd: 0.5,
+      steps: 9,
+      stopReason: "end_turn",
+      error: null,
+      ms: 1,
+    };
+    const r = withUsualLands(result, { index, data });
+    expect(total(r.deck!.main)).toBe(60);
+    expect(r.deck!.main.find((l) => l.name === "Starting Town")!.qty).toBe(3);
+    expect(r.deck!.warnings).not.toContain("old warning");
+    expect(r.landSwap).toMatchObject({ basics: 17, usualBasics: 10, lists: 10, firstMain: main });
+    expect(r.text.startsWith("The plan.\n\n--- Lands ---\nLands changed after the build: 4 Mountain, 1 Swamp out")).toBe(true);
+    expect(r.costUsd).toBe(0.5);
+    // No deck, or nothing to swap: the result comes back as it was.
+    const none = { ...result, deck: null };
+    expect(withUsualLands(none, { index, data })).toBe(none);
+    const stock = { ...result, deck: { ...result.deck!, label: "stock" as const } };
+    expect(withUsualLands(stock, { index, data })).toBe(stock);
   });
 });

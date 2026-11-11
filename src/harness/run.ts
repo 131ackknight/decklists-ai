@@ -5,6 +5,7 @@ import { getFormat } from "@/cards/formats";
 import type { DataSource } from "@/data/source";
 import { costUsd, usageOf, type ModelConfig, type Usage } from "./models";
 import { borrowList, borrowText, namedCards } from "./borrow";
+import { swapUsualLands, type LandSwap } from "./lands";
 import { formatMenu } from "./menu";
 import { playtestDeck, type PlaytestReport } from "./playtest";
 import { reviewDeck, type Review, type RoleEvidence } from "./review";
@@ -48,6 +49,8 @@ export interface BrewResult {
   playtest?: { opponent: string; seed: number; game: string; problems: PlaytestReport["problems"]; firstDeck: SubmittedDeck | null };
   /** Harness v20: the little-played spells listed up front (borrow.ts). */
   borrow?: string[];
+  /** Harness v23: the lands swapped after the build (lands.ts), and the main deck as the brewer submitted it. */
+  landSwap?: Pick<LandSwap, "added" | "cut" | "basics" | "usualBasics" | "lists"> & { firstMain: SubmittedDeck["main"] };
   toolCalls: ToolCallRecord[];
   usage: Usage;
   costUsd: number;
@@ -384,6 +387,40 @@ export function brewV13(
     requireNeeds: true,
     cardChecksV2: true,
   });
+}
+
+/**
+ * Harness v23 (2026-11-10): v13's brew, then the usual color-fixing lands swapped in for the basic lands
+ * the deck plays above the format's average (lands.ts swapUsualLands). The swap is code: no model call,
+ * no tool, nothing added to the prompt. Run it on the date-correct card pool, like v22 (the runner's job).
+ * Owner: "Yes, build it".
+ */
+export async function brewV23(
+  client: Anthropic,
+  model: ModelConfig,
+  req: BrewRequest,
+  deps: { index: CardIndex; data: DataSource },
+  onStep?: (step: number, note: string) => void,
+): Promise<BrewResult> {
+  return withUsualLands(await brewV13(client, model, req, deps, onStep), deps);
+}
+
+/**
+ * v23's last step on a finished brew: the same result with the lands swapped, the swap recorded, the
+ * checker's warnings redone, and one line about it added to the brewer's notes. A result with no deck,
+ * or a deck the swap leaves alone, comes back unchanged. On its own so a saved brew can be given the
+ * step with no model call (scripts/compose-land-swap.ts).
+ */
+export function withUsualLands(r: BrewResult, deps: { index: CardIndex; data: DataSource }): BrewResult {
+  if (!r.deck) return r;
+  const swap = swapUsualLands(deps.index, deps.data, r.deck);
+  if (!swap) return r;
+  return {
+    ...r,
+    text: `${r.text}\n\n--- Lands ---\n${swap.note}`,
+    deck: { ...r.deck, main: swap.main, warnings: swap.warnings },
+    landSwap: { added: swap.added, cut: swap.cut, basics: swap.basics, usualBasics: swap.usualBasics, lists: swap.lists, firstMain: r.deck.main },
+  };
 }
 
 /**

@@ -79,6 +79,26 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-11-10 · v23: the land swap built into the brewer (built; the rules, before measuring)
+
+Owner: **"Yes, build it"**. Free: no model calls. Nothing below has been measured yet.
+
+- **What v23 is:** v22, then one last step in code. After the brewer's deck is accepted, `swapUsualLands` (`src/harness/lands.ts`) swaps each basic land above the usual count for a color-fixing land that the format's recent decks play and this deck has fewer of. The brewer's notes get one line saying what changed, and the result keeps the deck as the brewer submitted it. No model call, no tool, nothing added to the prompt: a v23 brew costs what a v22 brew costs.
+- **Left as built:** a stock list (it is a real deck), a one-color deck, commander formats (never measured there), a format with fewer than 10 recent decks with as many colors, and any swap that would add a rule error (the copy limit, a restricted land).
+- **Why code and not a note to the AI:** the land note test (next entry). And because the brewer never sees the swap, a v23 deck is exactly a v22 deck plus the swap. So v23's dev runs can be made from v22's three saved runs, free (`scripts/compose-land-swap.ts`), as v22's own were.
+- **Tests:** 5 more (161 passing). `scripts/run-round4.ts` and `scripts/brew-one.ts` take `--harness v23`.
+
+**Rules, set before measuring:**
+
+1. **Dev (holdout-v2), by protocol-v4, as always.** The free check already said Added +0.56 (-0.02 to +1.13), a hair short, so the expected verdict is "no clear dev gain". The composed runs should repeat the check's numbers (lands shared +0.37, match +0.57). If they don't, the brewer's swap differs from the checked one, and that gets found first.
+2. **Decks the swap was never tried on.** It was the best of six tries on the dev decks, so dev can't confirm it. The future test's saved brews can (v13's two runs; `scripts/land-swap-check.ts`, free). 8 of its 14 decks are dev archetypes. The other 6 are the check: Gearhulk (Standard; a v13 build, on the old card pool), Fight Rigging, Boros Aggro and 4c Control (Pioneer), Riddlesmith Combo (Legacy), Rector Combo (Premodern).
+   - Six decks, two builds each, can't prove a gain. They can show the direction.
+   - **If lands shared goes up on those 6 and Added is not clearly worse** (the top of its range is above zero): the swap goes the same way on unseen decks, and I'll recommend making v23 the base.
+   - **If lands shared goes down, or Added is clearly worse:** I'll recommend leaving v22 as the base and v23 as an option.
+   - **If none of the 6 builds changes:** no evidence either way, and I'll say so.
+   - A second view on the same brews, reported but not part of the rule: the tuning test's score (share of each real list's cards and lands) on its 9 decks that are not dev archetypes.
+3. **Either way the base is the owner's call,** as with v22. The future test's protocol runs (v22 has none yet) stay unmade: they cost money.
+
 ## 2026-11-10 · The land note test: the AI makes the code's swaps, and rightly refuses three
 
 **$0.41** for 13 calls (the estimate was about $1; the calls were short). All 13 revisions passed the checks. The other 8 decks had no more basics than usual and got no note.

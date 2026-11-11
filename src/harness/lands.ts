@@ -1,5 +1,8 @@
 import type { CardIndex } from "../cards/card-index";
+import { getFormat } from "../cards/formats";
 import type { Card } from "../cards/types";
+import { checkDeck } from "../checker/check";
+import type { DataSource, QtyName } from "../data/source";
 
 /**
  * The usual mana base, learned by land cycle (2026-11-10). Owner: "Colors and lands i think".
@@ -106,8 +109,16 @@ export interface UsualLands {
  * The usual lands for a deck in `colors` (ranked), voted by `lists`: real decks of the same format and
  * the same number of colors, each with its own ranked colors. `legal` says which lands the deck may play
  * (in the card pool and legal in the format); a cycle with no legal land in these colors is skipped.
+ * `maxCopies` is how many copies of a nonbasic land the format allows (4 unless told otherwise).
  */
-export function usualLands(index: CardIndex, lists: { deck: Qty; colors: string[] }[], colors: string[], legal: (c: Card) => boolean, minLists = 10): UsualLands | null {
+export function usualLands(
+  index: CardIndex,
+  lists: { deck: Qty; colors: string[] }[],
+  colors: string[],
+  legal: (c: Card) => boolean,
+  minLists = 10,
+  maxCopies: (c: Card) => number = () => 4,
+): UsualLands | null {
   if (lists.length < minLists) return null;
   const votes = new Map<string, number[]>();
   const played = new Map<string, number>();
@@ -140,7 +151,7 @@ export function usualLands(index: CardIndex, lists: { deck: Qty; colors: string[
   const given = new Map<string, number>();
   const slots: UsualLands["slots"] = [];
   for (const a of abstract) {
-    const c = (byToken.get(a.token) ?? []).find((x) => isBasicLand(x) || (given.get(x.name) ?? 0) < 4);
+    const c = (byToken.get(a.token) ?? []).find((x) => isBasicLand(x) || (given.get(x.name) ?? 0) < maxCopies(x));
     if (!c) continue;
     given.set(c.name, (given.get(c.name) ?? 0) + 1);
     slots.push({ name: c.name, copy: given.get(c.name)!, share: a.share, basic: isBasicLand(c), role: a.token.slice(a.token.lastIndexOf("@") + 1) });
@@ -209,10 +220,12 @@ export function applyLandSwaps(index: CardIndex, deck: Qty, swaps: LandAdvice["s
   return out;
 }
 
+const kindOf = (colors: number) => (colors === 1 ? "one-color" : colors === 2 ? "two-color" : colors === 3 ? "three-color" : `${colors}-color`);
+
 /** The note a brewer gets about its lands, or null when there is nothing to say. */
 export function landNote(format: string, colors: number, usual: UsualLands, advice: LandAdvice): string | null {
   if (!advice.swaps.length) return null;
-  const kind = colors === 1 ? "one-color" : colors === 2 ? "two-color" : colors === 3 ? "three-color" : `${colors}-color`;
+  const kind = kindOf(colors);
   const pct = (x: number) => `${Math.round(x * 100)}%`;
   return [
     `Lands: this deck plays ${advice.basics} basic lands. ${format} ${kind} decks from the last 90 days (${usual.lists} lists) average ${usual.avgBasics.toFixed(1)} basic lands out of ${usual.avgLands.toFixed(1)} lands.`,
@@ -220,4 +233,94 @@ export function landNote(format: string, colors: number, usual: UsualLands, advi
     ...advice.missing.map((m) => `- ${m.name}: ${m.copies} ${m.copies === 1 ? "copy" : "copies"} in ${pct(m.share)} of those decks; this deck has ${m.have}`),
     `Swap basic lands for these, most played first, down to about ${advice.usualBasics} basics, unless a card in the deck needs basic lands. Keep the land count.`,
   ].join("\n");
+}
+
+export interface LandSwap {
+  /** The main deck with the swaps made, in the deck's own order; a land it didn't have goes after its last land. */
+  main: QtyName[];
+  /** The color-fixing lands put in, and the basic lands they replaced. */
+  added: { name: string; copies: number }[];
+  cut: { name: string; copies: number }[];
+  /** Basic lands the deck had, and what the format's recent decks with as many colors average. */
+  basics: number;
+  usualBasics: number;
+  /** The real lists the vote was over. */
+  lists: number;
+  /** The checker's warnings on the deck as changed. */
+  warnings: string[];
+  /** One line for the reader. */
+  note: string;
+}
+
+/**
+ * Harness v23 (2026-11-10; owner: "Yes, build it"): the swap a finished brew gets, made in code with no
+ * model call. The format's decks from the last 90 days with as many colors vote on the usual lands
+ * (usualLands); each basic land the brew plays above their average is swapped for a color-fixing land
+ * they play and it has fewer of (landAdvice). Left as built: a deck labeled stock (it is a real list), a
+ * one-color deck, commander formats (never measured there), a format with fewer than 10 such lists, and
+ * any swap that would add a rule error (the copy limit, a restricted land).
+ */
+export function swapUsualLands(index: CardIndex, data: DataSource, deck: { format: string; main: QtyName[]; side?: QtyName[]; commander?: QtyName[]; label?: string }): LandSwap | null {
+  const rules = getFormat(deck.format);
+  if (!rules || rules.commander || deck.label === "stock") return null;
+  const nameOf = (n: string) => index.getCard(n)?.name ?? n;
+  const counts = (lines: QtyName[]) => {
+    const m: Qty = new Map();
+    for (const l of lines) m.set(nameOf(l.name), (m.get(nameOf(l.name)) ?? 0) + l.qty);
+    return m;
+  };
+  const mine = counts(deck.main);
+  const colors = deckColors(index, mine);
+  if (colors.length < 2) return null;
+  const same = data
+    .recentLists(rules.key)
+    .map((l) => counts(l.main))
+    .map((l) => ({ deck: l, colors: deckColors(index, l, true) }))
+    .filter((l) => l.colors.length === colors.length);
+  const status = (c: Card) => index.getCard(c.name)?.legal[rules.key];
+  const usual = usualLands(
+    index,
+    same,
+    colors,
+    (c) => status(c) === "legal" || status(c) === "restricted",
+    undefined,
+    (c) => (status(c) === "restricted" ? 1 : rules.maxCopies),
+  );
+  if (!usual) return null;
+  const advice = landAdvice(index, mine, usual);
+  if (!advice.swaps.length) return null;
+  const after = applyLandSwaps(index, mine, advice.swaps);
+
+  const changed = [...new Set([...mine.keys(), ...after.keys()])].map((name) => ({ name, copies: (after.get(name) ?? 0) - (mine.get(name) ?? 0) })).filter((c) => c.copies);
+  const added = changed.filter((c) => c.copies > 0);
+  const cut = changed.filter((c) => c.copies < 0).map((c) => ({ name: c.name, copies: -c.copies }));
+  const left = new Map(changed.map((c) => [c.name, c.copies]));
+  const main: QtyName[] = [];
+  for (const l of deck.main) {
+    const d = left.get(nameOf(l.name)) ?? 0;
+    const qty = Math.max(0, l.qty + d);
+    // A cut bigger than one line carries over to the card's next line.
+    left.set(nameOf(l.name), d - (qty - l.qty));
+    if (qty > 0) main.push({ ...l, qty });
+  }
+  const lastLand = main.reduce((at, l, i) => (isLandCard(index.getCard(l.name)) ? i : at), main.length - 1);
+  main.splice(lastLand + 1, 0, ...[...left].filter(([, d]) => d > 0).map(([name, qty]) => ({ qty, name })));
+
+  // The swap never adds a rule error.
+  const rest = { format: rules.key, side: deck.side ?? [], commander: deck.commander ?? [] };
+  const errorsBefore = new Set(checkDeck(index, { ...rest, main: deck.main }).errors.map((e) => e.message));
+  const checked = checkDeck(index, { ...rest, main });
+  if (checked.errors.some((e) => !errorsBefore.has(e.message))) return null;
+
+  const listed = (xs: { name: string; copies: number }[]) => xs.map((x) => `${x.copies} ${x.name}`).join(", ");
+  return {
+    main,
+    added,
+    cut,
+    basics: advice.basics,
+    usualBasics: Math.round(usual.avgBasics * 10) / 10,
+    lists: usual.lists,
+    warnings: checked.warnings.map((w) => w.message),
+    note: `Lands changed after the build: ${listed(cut)} out, ${listed(added)} in. The deck had ${advice.basics} basic lands; ${rules.name} ${kindOf(colors.length)} decks from the last 90 days (${usual.lists} lists) average ${usual.avgBasics.toFixed(1)}, and the lands that came in are the ones they fix their colors with.`,
+  };
 }

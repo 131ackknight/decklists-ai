@@ -133,9 +133,9 @@ async function main() {
       add("brewing-v1", s.brew);
       add("gems", s.gems);
     }
-    // Composed runs (scripts/compose-baseline.ts) made no calls of their own; their cost is in the runs they came from.
-    if (r.costUsd !== undefined && r.script !== "compose-baseline") v.cost.push(r.costUsd / r.items);
-    if (r.script === "compose-baseline") v.composed = (v.composed ?? 0) + 1;
+    // Composed runs (scripts/compose-baseline.ts, compose-land-swap.ts) made no calls of their own; their cost is in the runs they came from.
+    if (r.costUsd !== undefined && !r.script.startsWith("compose-")) v.cost.push(r.costUsd / r.items);
+    if (r.script.startsWith("compose-")) v.composed = (v.composed ?? 0) + 1;
     byVersion.set(key, v);
   }
   const cols = ["holdout-v1", "holdout-v2", "post-v1", "future-v1", "future-v2", "tuning-v1", "brewing-v1", "gems"];

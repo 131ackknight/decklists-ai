@@ -30,10 +30,10 @@ Three things, and the third is turning out to be the most interesting.
 | Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80; v12 on six $2.61; round 3 $1.90; v13 post-cutoff $2.85; v14 and future test $41.28; v15 round $25.87; v16 round $17.46; reviewer checks $0.78; v17 on eight $4.80. v17 future test $19.00; gem test $1.82; v18 on eight $4.92; blind panel round 1 $18.13; picker test $0.69; taste tests $3.06; judge with evidence and goldfish $2.18; Fable and Sonnet judges $4.30; text playtest $4.07; v19 smoke test $0.77; found-deck test $3.79; blind panel round 2 $21.00; protocol-v1 baseline (v13 dev runs 2 and 3) $17.35; v19 dev run 1 $15.89; Haiku stand-in check (6 dev runs) $2.98; v14 dev runs 2 and 3 $18.66; v20 on Haiku (3 dev runs) $1.47; launch mistake (7 misnamed runs, stopped) $0.32; Haiku v13 and v20 runs 4-5 and v21 runs 1-3 $3.47; v20 Opus dev run 1 $8.70; v20 Opus dev runs 2 and 3 $17.18; judge test $0.42; Extravagant Spirit prompt (v13 and v20) $0.81; land-step test $1.16; v22 Opus run 1 on the 10 Standard dev decks $4.61; v22 Opus runs 2 and 3 $8.75; v0 (the model alone) run 1 on 45 decks $2.81 and dev runs 2 and 3 $2.87; land note test $0.41. Total about $543.78. Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats); full history 145,131 (since 2025-07-01, merged weekly) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
-| Automated tests | 156 passing |
+| Automated tests | 161 passing |
 | Decklist Data PRs merged | 5 (#181 export, #182 baseline eval, #183 baseline on `main`, #184 model comparison, #188 sideboard junk cleanup: 34,432 lists cleaned) |
 | Plan steps done | 1, 4, 5, 6, 8; harness at v22, with v0 (the model alone) as the reference start; evals: owner's "would you play it?", the 18-deck future test and the frozen automatic tests (PROGRESS.md) |
-| Current harness | **v22** (v13 + Standard legality on the deck's date), the base since 2026-11-10 (protocol-v4): dev (holdout-v2) 43.1 / 43.6 / 41.6. Over the model alone (v0, 2026-11-10): match +8.8 on dev (3 runs each), +14.3 on the future test, +23.7 after the training cutoff (v13 on those two). Before: v13 future test 48.3% / 47.9%, v2 44.9%; blind panel v13 10 of 17, v19 13 of 17; v14, v19 and v20 dropped |
+| Current harness | **v22** (v13 + Standard legality on the deck's date), the base since 2026-11-10 (protocol-v4): dev (holdout-v2) 43.1 / 43.6 / 41.6. Over the model alone (v0, 2026-11-10): match +8.8 on dev (3 runs each), +14.3 on the future test, +23.7 after the training cutoff (v13 on those two). Before: v13 future test 48.3% / 47.9%, v2 44.9%; blind panel v13 10 of 17, v19 13 of 17; v14, v19 and v20 dropped. **v23** (v22 + a land swap in code, 2026-11-10) is built but not the base: +0.4 lands on dev, -0.7 on six unseen future-test decks |
 
 ## The story so far (for the post)
 
@@ -56,13 +56,14 @@ Three things, and the third is turning out to be the most interesting.
 16. **Generic tools, specific knowledge.** The owner's rule for what to build next: no fixes bespoke to an engine. A first such tool learns which *kinds* of cards real decks pair (by function, not name) and finds 41% of the human brewers' discoveries in a 300-card shortlist from 3,200, for free, before any brew uses it.
 17. **The model alone.** The owner asked for the true start: the same model, one call, no harness. It matches 34% of what players settled on (26% on decks after its training cutoff); the harness 43-50%, at about 7 times the cost per deck. Most of the gain is knowing what's being played: what a deck adds beyond its closest old list grows only 4-7 points, and the model's own mistakes (made-up cards, banned cards) cost about 3 at most.
 18. **Is it the lands, the creatures, the removal?** None of them. Split by kind of card, the harness matches 40-47% of every group and the human inventors 60-70% of every group; the misses are whole cards, the same ones every run, and a vote over three builds changes nothing. The one error the harness added itself: extra colors, wrong 4 times in 5.
+19. **A fix that worked on the decks it was tuned on.** One land fix looked real: swap the extra basic lands for the color-fixing lands real decks play. On the 21 dev decks it shared 0.4 more lands, clearly. Built into the brewer (v23) and checked, for free, on six decks it had never been tried on, it shared 0.7 fewer: it had learned two-color Standard decks, and it stripped the basics out of a Premodern combo deck that needed them. The recommendation: an option, not the base.
 
 Recurring theme for the post: the owner's pushback improved the work at nearly every turn (no bracket scraping, no new database, no Neon credentials, use our own data instead of re-scraping MTGO, every list instead of a sample, fix `main` instead of running an old build, compare models, not ready to give up, judge decks I know intimately, an April cutoff for the future test, generic tools not bespoke fixes).
 
 ## Open decisions
 
 - **Next build (proposed 2026-10-21):** v16 = v13 plus a synergy shortlist tool (the feature-synergy model narrows the card pool to the ~150 likeliest partners; the AI picks). Two runs on the future test, about $17.
-- **Lands and colors:** flat at 47% land match in every version; wrong colors on about half the decks. Owner: "we can figure out lands later."
+- **Lands and colors:** flat at 47% land match in every version; wrong colors on about half the decks. Owner: "we can figure out lands later." Checked 2026-11-10: a color rule is worth about +0.2 to +0.5 match (not built); the land swap (v23) helps two-color Standard decks and hurts elsewhere (built, not the base).
 - **Owner's 60% target** on the future test: v13 is at 48%; spells 49%, lands 47%.
 - **Weekly forward test** with the current base harness; every new constructed archetype joins the future test.
 - **Card-level misses the checks can't catch** (Traumatize in draw-go, Vision Charm without Dreadnought): shown to the reader as hints, not enforced.
@@ -78,6 +79,51 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
 
 ---
+
+## 2026-11-10 · v23 measured, free: it repeats the dev check, and loses lands on the decks it wasn't picked on
+
+No money spent. Three steps, in the order of the rules in the entry below.
+
+**1. Dev, made from v22's three saved runs.** `scripts/compose-land-swap.ts` ran v23's last step on each saved v22 deck: 29 of 63 change (11, 8 and 10 per run).
+
+| Dev, 21 decks, 3 runs | v22 | v23 | Gain (95% range) |
+| --- | --- | --- | --- |
+| Match % (holdout-v2) | 43.1 / 43.6 / 41.6 | 44.0 / 43.9 / 42.1 | +0.57 (-0.02 to +1.16) |
+| Added | 10.4 | 11.0 | +0.56 (-0.02 to +1.13) |
+| Lands shared with the settled lists | 9.7 | 10.1 | +0.37 (+0.04 to +0.71) |
+| Basic lands | 8.0 | 6.5 | (real decks 4.8) |
+
+- The same numbers as the free check, to the last digit: the brewer's swap is the checked one.
+- Protocol-v4's verdict (PROGRESS.md section 2b): "dropped: no clear dev gain", as expected.
+
+**2. Decks it was never tried on** (`scripts/land-swap-check.ts`, on the future test's saved brews: v13's two runs).
+
+| Future test (future-v2) | Builds changed | Lands shared | Match % | Added |
+| --- | --- | --- | --- | --- |
+| All 14 decks | 8 of 28 | -0.33 (-0.99 to +0.34) | -0.50 (-1.58 to +0.58) | -1.07 (-2.44 to +0.30) |
+| The 6 that are not dev archetypes | 4 of 12 | -0.74 (-2.57 to +1.10) | -1.17 (-4.17 to +1.83) | -2.17 (-5.71 to +1.37) |
+
+- **By the rule: lands shared goes down on the 6, so my recommendation is to leave v22 as the base.** v23 stays an option (`--harness v23`). No range is clearly below zero: six decks can only show a direction, and the direction is the wrong one.
+- **Almost all of it is one deck.** Premodern Rector Combo, built in 3 or 4 colors: the swap takes out 7 or 8 basics for 4 Gemstone Mine and pain lands, and the deck loses 5.5 and 3.1 shared lands. The real Rector decks keep their basics. Pioneer 4c Control loses 0.3 on one build; Gearhulk doesn't move.
+- **The second view agrees** (the tuning test's score on its 9 non-dev decks; 8 of 18 builds change): share of the real lists' cards -1.19 (-3.08 to +0.70), share of their lands -3.43 (-8.66 to +1.81). Sneak Attack (Premodern) and Simic Beanstalk (Pioneer) lose; Boros Planeswalkers (Standard, two colors) gains.
+
+**3. Where it helps and where it hurts.** Lands shared, per changed build, on both sets. A description, not a new rule.
+
+| Changed builds | Dev | Future test |
+| --- | --- | --- |
+| Standard | +1.31 (16 builds; 12 better, 2 worse) | +0.04 (2 builds) |
+| Pioneer | +0.37 (5) | -0.25 (1) |
+| Other formats | +0.08 (8; 3 better, 3 worse) | -1.79 (5; 1 better, 3 worse) |
+| Two-color builds | +0.92 (26; 17 better, 4 worse) | -0.14 (3) |
+| Three or more colors | -0.11 (3; 1 better, 2 worse) | -1.74 (5; 1 better, 3 worse) |
+
+- **The dev gain is two-color Standard decks** built on the date-correct card pool: there the brewer plays about 12 basics and the format has clear land cycles. The future test's Standard decks are v13 builds, made with today's lands, and have little left to swap. So the one case where the swap works has no unseen decks to check it on.
+- **Elsewhere, real decks keep basics for reasons a vote over "decks with as many colors" can't see.** The AI said the same when it refused three swaps in the land note test.
+- **I have not narrowed the swap to two-color decks or to Standard.** That would be a rule picked after looking at the test decks, with no unseen decks left to check it on for free.
+
+**What the check was worth:** on the dev number alone (+0.37 lands, clear), v23 looked like a reasonable base. A free check on six unseen decks says no. From now on a rule picked on the dev decks gets this check before any recommendation.
+
+**Where it stands:** v23 is built, tested (161 passing) and scored. v22 stays the base unless the owner says otherwise. Spend unchanged: $543.78.
 
 ## 2026-11-10 · v23: the land swap built into the brewer (built; the rules, before measuring)
 

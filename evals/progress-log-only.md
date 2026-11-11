@@ -19,7 +19,7 @@ This section is the one hand-kept part of PROGRESS.md (`evals/progress-log-only.
 | v10 | 10-20 | v5 + `played_with` + mechanism step + win line checked in the deck | Base 10-20 |
 | v11 | 10-20 | Exactly 60 cards; build on the dominant shell | Base 10-20 |
 | v12 | 10-20 | Enablers named and counted; card-quality send-back | Base 10-20 to 10-21 |
-| v13 | 10-21 | Card-quality note fixed for rare decks; partner hints | **Base, current** |
+| v13 | 10-21 | Card-quality note fixed for rare decks; partner hints | Base 10-21 to 11-10 |
 | v14 | 10-21 | `mana_base` tool | Not kept (10-21); dropped again 11-08 under protocol-v2 after 3 dev runs (Added +1.2, range includes zero) |
 | v15 | 10-21 | `format_staples` tool, staples note, 4-copy rule | Not kept |
 | v16 | 10-21 | `synergy_candidates` shortlist (150 cards) | Not kept |
@@ -28,6 +28,8 @@ This section is the one hand-kept part of PROGRESS.md (`evals/progress-log-only.
 | v19 | 10-25 | v13 + one dealt game vs the format's most-played deck + fix the top 3 problems | Not kept: stopped after 1 dev run by a rule set before it ran (11-08; gain 0 or below after run 1 = stop) |
 | v20 | 11-08 | v13 + up to 20 little-played spells real decks run beside the requested cards, listed up front (`borrow.ts`) | Haiku: unclear after 5 runs (Added +1.9, -0.1 to +3.9). Opus: dropped after 3 dev runs (Added +0.3, -1.5 to +2.1) |
 | v21 | 11-08 | v20 with only the list's top 5 | Dropped on Haiku after 3 runs (borrowed spells -0.6) |
+| v22 | 11-09 | v13 with Standard legality on the deck's date, not today's (`standard.ts`) | **Base, current** since 11-10 (protocol-v4), by the owner's call: not a measured gain (Added +0.6, -2.9 to +4.0, on the 10 Standard dev decks) |
+| v23 | 11-10 | v22, then a last step in code: basic lands above the format's usual count are swapped for the color-fixing lands its recent decks play (`lands.ts`); no model call | Not the base. Dev (composed from v22's runs): Added +0.6 (-0.0 to +1.1), no clear gain. On the 6 future-test decks it wasn't picked on: lands shared -0.7 (section 7b) |
 
 ### 7b. Results with no file, or not yet in the scoreboard
 
@@ -49,6 +51,9 @@ This section is the one hand-kept part of PROGRESS.md (`evals/progress-log-only.
 | 11-08 | Candidate check, `scripts/candidate-check.ts` (no result file; rerunning it prints these) | 48 target spells over 17 dev decks. Found in the top 20 / 50 / 100: most-played first 13 / 38 / 52%; v16 synergy 15 / 31 / 52%; played with the requested cards 33 / 52 / 65%; per job 17 / 29 / 52%. Opus v13 decks already contain 15%, v14 20% |
 | 11-08 | List designs on dev and future-test decks, `scripts/candidate-check.ts --colors requested [--test future-v1]` | Right spells in the top 20, dev / future: played with the requested cards 33 / 50%; type link first 35 / 31%; mix of 10 + 10 38 / 38%. Type-link designs dropped (fitted to the dev decks) |
 | 11-08 | Land step on saved decks, `scripts/land-step-test.ts` (result file `evals/results/round4/land-step-holdout-v13-claude-opus-5-5.json`; not in the scoreboard) | 21 dev decks, before / after: lands shared 9.9 / 10.1 (+0.2), Added 10.6 / 11.0 (+0.4, -0.3 to +1.1), match 43.0 / 43.5, basics 8.1 / 7.9. Dropped |
+| 11-10 | Six code-only land fixes on the saved dev decks (v22, 63 builds), `scripts/land-fix-check.ts` (rerunning it prints these) | Best: swap basics above the usual count for the usual color fixers (now v23's swap): lands shared +0.37 (+0.04 to +0.71), match +0.57 (-0.02 to +1.16), Added +0.56 (-0.02 to +1.13); 29 of 63 builds change. Replacing every land: -0.4 lands |
+| 11-10 | Land note test, `scripts/land-note-test.ts` (result file `evals/results/round4/land-note-holdout-v22-claude-opus-5-5.json`; not in the scoreboard) | 21 dev decks (v22 run 1), lands shared: the AI's revision +0.45 (-0.05 to +0.96), the code-only swap +0.56 (+0.04 to +1.08). $0.41 |
+| 11-10 | v23's swap on the future test's saved brews (v13, 2 runs), `scripts/land-swap-check.ts` (rerunning it prints these) | All 14 decks (28 builds, 8 changed): lands shared -0.33 (-0.99 to +0.34), match -0.50 (-1.58 to +0.58), Added -1.07 (-2.44 to +0.30). The 6 decks that are not dev archetypes (12 builds, 4 changed): lands -0.74 (-2.57 to +1.10), match -1.17 (-4.17 to +1.83), Added -2.17 (-5.71 to +1.37). Tuning test's score on its 9 non-dev decks: share of the real lists' cards -1.19 (-3.08 to +0.70), of their lands -3.43 (-8.66 to +1.81) |
 | 11-08 | Legality gap (proxy, scratch check) | 13 of Opus v13's 30 Standard dev decks play a nonbasic land no Standard list ran in the 90 days before; 2.0 such copies per deck (mostly shock lands) |
 | 11-08 | Judge test, `scripts/judge-test.ts` (result file `evals/results/round4/judge-test-v20-lists.json`; not yet in the scoreboard) | Opus rates a right listed spell above a wrong one 78% (66-89%), list order 75% (56-94%), 10 decks; top 3 per deck 13 / 13 right of 30. v20's in-brew picks from the list on those decks: 53 of 128 right (41%) |
 | 11-08 | Shown vs played, `scripts/borrow-listed.ts` (reads the Haiku result files; rerunning prints these) | Listed borrowed spells played by Haiku v13 / v20 decks: 30.0 / 41.7% (+11.7, -1.2 to +24.6); other listed spells 9.4 / 13.6% (+4.2, +1.5 to +7.0). v21: 21.4 / 40.5% and 15.4 / 30.5% |
@@ -57,7 +62,7 @@ This section is the one hand-kept part of PROGRESS.md (`evals/progress-log-only.
 
 | Item | Value |
 | --- | --- |
-| BUILD_LOG.md running total (62 cost items listed there, summing to exactly this) | $537.69, plus one 17-token test call |
+| BUILD_LOG.md running total (65 cost items listed there, summing to exactly this) | $543.78, plus one 17-token test call |
 | Recorded in the run register | see section 6 |
 
 The scripts' reported costs are all that's visible to Claude Code; the billed amount isn't.

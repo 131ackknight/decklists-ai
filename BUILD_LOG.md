@@ -82,6 +82,27 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-11-11 · A score without lands: the rule, before measuring
+
+Owner, after the ceiling analysis: **"Maybe we can find the score with lands removed, I guess? Or something that is at least showing the progress with those excluded somehow?"**
+
+Free: saved decks only, no model calls. Fixed here before any number is computed.
+
+**The two new scores.**
+
+- **Without lands.** For a build and one settled list: take the lands out of both, count the cards the two piles share, and divide by the average size of the two piles. The mean over the settled lists, as a percent. For two whole 60-card decks this formula is exactly the match %, so the new score reads the same way. Same settled lists, same builds, and the same rule that a Standard card not legal on the deck's date earns nothing (it still takes up room in the build's pile).
+- **Without lands or the cards the prompt hides.** The same, with the unnamed signature cards also taken out of both piles (the test's own signature rule, as in the ceiling check below). A warning, written before measuring: a build that misses the hidden cards has those slots free for other spells, so taking the cards out does not fully take the hidden idea out. Dividing by the average pile size, not by the real deck's, is there so the free slots don't flatter it.
+
+**Reported, each deck counted once:** the model alone (v0), every saved version, the inventors' first-week lists, a settled list against the other settled lists, and the best possible pile with hindsight. On dev (holdout-v2) and on the future test (future-v2), with the 6 future-test decks that are not dev archetypes on their own. Then every version's gain over the base on the new scores, paired by deck with a 95% range, next to the same gain on the whole deck; and Added the same way (a build's score minus its closest earlier list's score, both without lands).
+
+**What it can and can't decide.**
+
+- It is a second view. protocol-v4 (Added on the whole deck) still decides what is kept.
+- About ten versions get looked at on several new numbers at once, so one of them clearing zero by chance would be no surprise. A version that clears zero here is a lead to confirm under a rule written first, not a keep.
+- If the ranges are narrower without lands than with them, the lands were adding noise, and that is the case for judging future versions this way. That would be a new protocol, and the owner's call.
+
+**My guess before looking:** the level barely moves. The 11-10 breakdown found the brewer matches lands and spells about equally (40-47% of each) and so do the inventors (60-70%), so with the lands out the brewer should stay near 43 and the inventors near 66. The second score should close part of the gap.
+
 ## 2026-11-11 · What we were missing: the ceiling is 85, and the test hides half of each deck's idea
 
 Owner: **"Think deeply and analyize what we are missing, I think we are either testing incorrectly or missing something. There is a theoretical max that I dont think we have hit yet"**. Free checks only. Nothing spent, nothing built into the brewer.

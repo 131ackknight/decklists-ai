@@ -83,6 +83,34 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-11-11 · The same result as charts, spelled out
+
+The owner: "I am having a hard to time reading the data and progress over time in your last message, spell it out to me clearly along with [charts] and data." Free. No new measurement, and nothing in the brewer or the tests changed: every number here is from the entry below and PROGRESS.md 2h.
+
+I put the numbers on a chart page (a private Claude artifact, "Brewer Progress Charts"; it holds a copy of today's numbers and does not update when the scoreboard does). Three charts:
+
+1. **The score, version by version**: whole deck and without lands, on both tests, with the inventors, a later real list and the best possible score drawn as lines to aim at.
+2. **How big each step was, and how sure it is**: model alone to v2, v2 to today, model alone to today, each with its 95% range.
+3. **What is still missing**: lands, the cards the prompt hides, the other spells. The brewer's bar against the inventors', with the model alone marked.
+
+The plain reading, in the order the charts show it:
+
+| | Dev: whole deck | Dev: without lands | Future test: whole deck | Future test: without lands |
+| --- | --- | --- | --- | --- |
+| The model alone (v0) | 33.9 | 33.5 | 33.7 | 34.0 |
+| The first harness (v2) | 40.8 | 36.7 | 44.8 | 44.3 |
+| v5 | 42.1 | 39.2 | not run | |
+| v13 | 42.9 | 40.8 | 48.1 | 48.4 |
+| v22, today's brewer | 42.7 | 40.8 | not run | |
+| Inventors (first-week real lists) | 65.7 | 63.5 | 72.4 | 72.8 |
+
+- **The first harness was the big step:** +6.9 on dev, +11.1 on the future test. On dev much of it was lands (+3.3 without them).
+- **From v2 to today the whole-deck score can't show a gain:** +2.0 on dev and +3.2 on the future test, both ranges through zero. **Without lands it can:** +4.0 (0.5 to 7.5) on dev and +4.1 (-0.2 to 8.4) on the future test. Compared after seeing the scores, so a lead.
+- **Nothing since v13 has moved the without-lands score.**
+- **Still missing, in whole-deck points** (lands / hidden cards / other spells): dev 8.3 / 10.2 / 4.5; future test 7.5 / 7.9 / 9.0; the six future decks nothing was tuned on 10.6 / 5.5 / 14.2.
+
+**Decision:** none. I asked the owner whether to add the charts to the scoreboard in the repo, so they stay current.
+
 ## 2026-11-11 · The score without lands: the level doesn't move, but the progress since v2 shows up
 
 Free. Built by the rule in the entry below: `partScores` in `evals/score.ts` (6 new tests), `scripts/no-lands-check.ts`, and a standing section in PROGRESS.md (2h) that gives every saved version the three scores. Nothing in the brewer changed.

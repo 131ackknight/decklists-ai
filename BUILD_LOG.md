@@ -85,6 +85,27 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-11-11 · "Only 4 cards better?" The lead over the model alone depends on whether the model could have seen the deck
+
+The owner, on the idea-named result: "So compared to the model we are only 4 cards better???" and "if we have only achieved +4 then we are failures here". Free: the per-deck numbers of the run above, no new measurement.
+
+**On average, yes.** With the whole idea named the brewer is +6.2 points over the model alone on the 18 decks, which is 3.7 cards of 60. With 3 cards named it is +8.5, about 5 cards.
+
+**But the dev test is where the model alone looks best.** 19 of the 21 dev decks appeared before the model's training ended (June 2026, the date the post-cutoff test uses), so it has probably read about them. Splitting the 18 decks by that, whole idea named:
+
+| Decks | The model alone | The brewer | The brewer ahead by |
+| --- | --- | --- | --- |
+| 16 that appeared before the model's training ended | 50.2 | 53.7 | +3.4 points (2 cards) |
+| 2 that appeared after (Boros Dwarves, Jund Sacrifice) | 32.5 | 60.6 | +28.2 points (17 cards) |
+
+- **This split was made after seeing the result, and one side is 2 decks.** It is a lead, nothing more.
+- It agrees with what was measured on 2026-11-10 with the 3-card request (PROGRESS.md 2a): the brewer over the model alone +8.8 on dev, +14.3 on the future test (about 9 cards) and +23.7 on the 6 decks from after the training cutoff (about 14 cards).
+- With 3 cards named, the same split today: +7.7 on the 16 older decks, +15.0 on the 2 newer ones.
+
+**The reading I gave the owner.** On decks the model already knows, the harness adds little, and nothing built since v13 has added anything. On decks from after its training, which is the real job (a deck that doesn't exist yet, with cards the model has never seen), the brewer has been far ahead every time it was measured. How far once the whole idea is named is not settled: the future test with the idea named would measure it.
+
+**A side check I am not quoting yet.** By the card pool of each deck's date, 8 of the model alone's 18 idea-named decks play a card that was not legal in the format or not printed yet (39 copies); none of the brewer's 18 do. But the same check flags cards the requests themselves name (Spell Snare for Temur Harmonizer, Badgermole Cub for Aang), so the Standard date check needs a closer look before this count means anything.
+
 ## 2026-11-11 · The idea-named test, the result: with the whole idea named, the brewer goes from 42.7 to 53.7
 
 Paid, under the owner's second yes ("Yes, finish it", about $5.50, capped at $6): the other 11 decks on v24 cost **$5.27**, none failed. The whole test cost **$14.08** (the model alone $1.09; the brewer's stopped run $7.25, of which $4.54 went on decks lost to the bug; v24 $5.74), plus the two cut-off calls. `scripts/idea-test-check.ts --decks` prints everything below.

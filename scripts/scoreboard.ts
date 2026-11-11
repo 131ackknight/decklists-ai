@@ -15,6 +15,7 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { loadCardIndex } from "../src/cards/load";
 import { FileDataSource } from "../src/data/source";
 import { pages, pairVerdicts, playVerdicts, ratingRows } from "../evals/answers";
+import { IDEA_FIXED, ideaTest } from "../evals/idea-tests";
 import { latestRuns, readRegister, type RunRecord } from "../evals/register";
 import { isLand, round4Items, toCounts, type Line } from "../evals/round4/items";
 import { PROTOCOL, PROTOCOL_V1, PROTOCOL_V2, PROTOCOL_V3, onProtocolData as madeOnProtocolData, pairedGain } from "../evals/protocol";
@@ -636,6 +637,85 @@ async function main() {
     });
   out.push(`Each version's gain over the base (${PROTOCOL.base}) on dev (${PROTOCOL.dev}), paired by deck, with its 95% range; only runs on the protocol's data. A second view, not a verdict: section 2b decides what is kept.`, "");
   out.push(table(["Version", "Runs", ...VIEWS.map((p) => `${p[0].toUpperCase()}${p.slice(1)}`)], partGainRows), "");
+
+  // 2i. The idea-named tests: the request names every signature card (evals/idea-tests.ts).
+  out.push("### 2i. The idea-named tests: the request names every signature card", "");
+  out.push(
+    `holdout-idea-v1 and future-idea-v1 are holdout-v2 and future-v2 with a request that names every signature card of the deck (6.6 a deck) instead of the first 3. **They ask a different question.** The 3-card tests ask the brewer to guess the idea and build it; these give the idea and ask only for the build. A score here is never a higher score there, and section 2b's verdicts don't use these tests. How a build counts (\`evals/idea-tests.ts\`): it answers every deck whose request is word for word the one it was built for (6 future-test requests are dev's); a deck whose request names nothing new keeps its builds from the 3-card test; each deck counts once, its builds averaged. The brewer on the new requests is ${IDEA_FIXED} (${PROTOCOL.base} with \`submit_deck\`'s needs list widened from 6 entries to 16: with 6, a request naming more than 6 cards could never be submitted) and ${PROTOCOL.base}'s own builds on them; on the 3-card request it is ${PROTOCOL.base} on dev and v13 on the future test. Per-deck numbers: \`scripts/idea-test-check.ts [--future] --decks\`.`,
+    "",
+  );
+  const ideaTests = ([["Dev", false], ["Future test", true]] as const).map(([label, fut]) => ({ label, t: ideaTest({ index, items, lists, depsOf, countsOf, legalView }, fut) }));
+  const avg = (xs: number[]) => xs.reduce((a, b) => a + b, 0) / Math.max(1, xs.length);
+  const rangeOf = (g: { n: number; gain: number; lo: number; hi: number }) => (g.n >= 3 ? `${signed(g.gain)} (${signed(g.lo)} to ${signed(g.hi)})` : `${signed(g.gain)} (${g.n} decks: no range)`);
+  out.push("The level, over every deck of the test:", "");
+  out.push(
+    table(
+      ["", "Decks", "3 cards named: whole deck", "Every signature card named: whole deck", "3 cards named: without lands", "Every signature card named: without lands"],
+      ideaTests.flatMap(({ label, t }) => {
+        const everyDeck = t.all(t.brewer);
+        return [
+          [`${label}: inventors (the deck's first-week real lists)`, everyDeck.length, one(t.inventors(everyDeck, "whole")), one(t.inventors(everyDeck, "whole")), one(t.inventors(everyDeck, "noLands")), one(t.inventors(everyDeck, "noLands"))],
+          ...[t.brewer, t.alone].map((v) => {
+            const ids = t.all(v);
+            return [
+              `${label}: ${v.kind === "v0" ? "the model alone (v0)" : "the brewer"}`,
+              ids.length,
+              one(avg(ids.map((id) => t.of(v.oldRuns, id, "whole")))),
+              one(avg(ids.map((id) => t.carried(v, id, "whole")))),
+              one(avg(ids.map((id) => t.of(v.oldRuns, id, "noLands")))),
+              one(avg(ids.map((id) => t.carried(v, id, "noLands")))),
+            ];
+          }),
+        ];
+      }),
+    ),
+    "",
+  );
+  out.push("The gain from naming every signature card, on the decks whose request changed, paired by deck, with its 95% range. The last three columns are points of the whole-deck score:", "");
+  out.push(
+    table(
+      ["", "Decks", "Builds a deck", "Whole deck", "Without lands", "From lands", "From the cards the old request hid", "From the other spells"],
+      ideaTests.flatMap(({ label, t }) =>
+        [t.brewer, t.alone].map((v) => {
+          const ids = t.changed(v);
+          const builds = ids.map((id) => v.newRuns.filter((m) => m.has(id)).length);
+          return [
+            `${label}: ${v.kind === "v0" ? "the model alone (v0)" : "the brewer"}`,
+            ids.length,
+            Math.min(...builds) === Math.max(...builds) ? Math.min(...builds) : `${Math.min(...builds)} to ${Math.max(...builds)}`,
+            ...(["whole", "noLands", "lands", "hidden", "other"] as const).map((f) => rangeOf(t.gain(v.newRuns, v.oldRuns, ids, f))),
+          ];
+        }),
+      ),
+    ),
+    "",
+  );
+  out.push("The brewer over the model alone, both given every signature card. \"After the model's training\" is the decks of post-v1. The split was set before the future-test run; on dev it was made after the result, on 2 decks (BUILD_LOG.md, 2026-11-11):", "");
+  out.push(
+    table(
+      ["Decks whose request changed", "Decks", "The model alone: whole deck", "The brewer: whole deck", "The brewer ahead by", "Ahead without lands", "Points from lands: the model alone / the brewer"],
+      ideaTests.flatMap(({ label, t }) =>
+        (
+          [
+            [`${label}: all`, t.both],
+            [`${label}: appeared after the model's training`, t.both.filter(t.afterTraining)],
+            [`${label}: the others`, t.both.filter((id) => !t.afterTraining(id))],
+          ] as const
+        )
+          .filter(([, ids]) => ids.length)
+          .map(([name, ids]) => [
+            name,
+            ids.length,
+            one(t.level(t.alone.newRuns, [...ids], "whole")),
+            one(t.level(t.brewer.newRuns, [...ids], "whole")),
+            rangeOf(t.gain(t.brewer.newRuns, t.alone.newRuns, [...ids], "whole")),
+            rangeOf(t.gain(t.brewer.newRuns, t.alone.newRuns, [...ids], "noLands")),
+            `${one(t.level(t.alone.newRuns, [...ids], "lands"))} / ${one(t.level(t.brewer.newRuns, [...ids], "lands"))}`,
+          ]),
+      ),
+    ),
+    "",
+  );
 
   // 3. The owner's judging rounds.
   out.push("## 3. The owner's judging rounds (`evals/answers/`)", "");

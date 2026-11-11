@@ -86,6 +86,16 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-11-11 · The idea-named tests get a standing place on the scoreboard (2i)
+
+The owner: **"Yes, add them"** (to "Add the idea-named tests to the scoreboard as standing tests?"). Free. Nothing in the brewer or the tests changed.
+
+- **The scoring moved to shared code,** `evals/idea-tests.ts`. `scripts/idea-test-check.ts` prints the per-deck view from it and `scripts/scoreboard.ts` the totals. Rerun after the move, both reports give the numbers logged above, to the decimal.
+- **PROGRESS.md section 2i** has three tables, for dev and the future test: the level over every deck (3 cards named against every signature card named, whole deck and without lands, with the inventors); the gain on the decks whose request changed, with its range; and the brewer over the model alone, split by whether the deck appeared after the model's training.
+- **Its first lines say what it is not:** these tests ask a different question from holdout-v2 and future-v2, a score here is never a higher score there, and section 2b's verdicts don't use them.
+- **What it does not have yet:** a base with repeat runs. Every deck has one build, so a change to the brewer can't be judged on these tests until the base has 3 runs on them (about $9 a dev run on v24). Not asked for, not started.
+- Two numbers in the "Only 4 cards better?" entry were my hand sums and were a rounding step off the script's: the model alone on the 2 newer dev decks is 32.4 (not 32.5), and the 3-card split is +7.6 and +14.9 (not +7.7 and +15.0). Corrected in place.
+
 ## 2026-11-11 · The idea-named test on the future test: the jump holds (48.1 to 60.3), and the brewer's lead over the model alone is on the decks the model has not seen
 
 Paid, under the owner's "Yes, run it" (about $6.50 offered): **$3.20** (the model alone $0.38, v24 $2.82; 6 decks each, none failed). Half the offer, because 6 of the 12 changed requests are dev's and their builds were reused. `scripts/idea-test-check.ts --future --decks` prints everything below.
@@ -160,11 +170,11 @@ The owner, on the idea-named result: "So compared to the model we are only 4 car
 | Decks | The model alone | The brewer | The brewer ahead by |
 | --- | --- | --- | --- |
 | 16 that appeared before the model's training ended | 50.2 | 53.7 | +3.4 points (2 cards) |
-| 2 that appeared after (Boros Dwarves, Jund Sacrifice) | 32.5 | 60.6 | +28.2 points (17 cards) |
+| 2 that appeared after (Boros Dwarves, Jund Sacrifice) | 32.4 | 60.6 | +28.2 points (17 cards) |
 
 - **This split was made after seeing the result, and one side is 2 decks.** It is a lead, nothing more.
 - It agrees with what was measured on 2026-11-10 with the 3-card request (PROGRESS.md 2a): the brewer over the model alone +8.8 on dev, +14.3 on the future test (about 9 cards) and +23.7 on the 6 decks from after the training cutoff (about 14 cards).
-- With 3 cards named, the same split today: +7.7 on the 16 older decks, +15.0 on the 2 newer ones.
+- With 3 cards named, the same split today: +7.6 on the 16 older decks, +14.9 on the 2 newer ones.
 
 **The reading I gave the owner.** On decks the model already knows, the harness adds little, and nothing built since v13 has added anything. On decks from after its training, which is the real job (a deck that doesn't exist yet, with cards the model has never seen), the brewer has been far ahead every time it was measured. How far once the whole idea is named is not settled: the future test with the idea named would measure it.
 

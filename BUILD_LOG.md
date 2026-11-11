@@ -27,7 +27,7 @@ Three things, and the third is turning out to be the most interesting.
 
 | Item | Total |
 | --- | --- |
-| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80; v12 on six $2.61; round 3 $1.90; v13 post-cutoff $2.85; v14 and future test $41.28; v15 round $25.87; v16 round $17.46; reviewer checks $0.78; v17 on eight $4.80. v17 future test $19.00; gem test $1.82; v18 on eight $4.92; blind panel round 1 $18.13; picker test $0.69; taste tests $3.06; judge with evidence and goldfish $2.18; Fable and Sonnet judges $4.30; text playtest $4.07; v19 smoke test $0.77; found-deck test $3.79; blind panel round 2 $21.00; protocol-v1 baseline (v13 dev runs 2 and 3) $17.35; v19 dev run 1 $15.89; Haiku stand-in check (6 dev runs) $2.98; v14 dev runs 2 and 3 $18.66; v20 on Haiku (3 dev runs) $1.47; launch mistake (7 misnamed runs, stopped) $0.32; Haiku v13 and v20 runs 4-5 and v21 runs 1-3 $3.47; v20 Opus dev run 1 $8.70; v20 Opus dev runs 2 and 3 $17.18; judge test $0.42; Extravagant Spirit prompt (v13 and v20) $0.81; land-step test $1.16; v22 Opus run 1 on the 10 Standard dev decks $4.61; v22 Opus runs 2 and 3 $8.75; v0 (the model alone) run 1 on 45 decks $2.81 and dev runs 2 and 3 $2.87; land note test $0.41; the idea-named test so far: the model alone on 18 decks $1.09, the brewer's run stopped at a bug $7.25, one deck on v24 $0.47. Total about $552.59. Plus one 17-token test call. |
+| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80; v12 on six $2.61; round 3 $1.90; v13 post-cutoff $2.85; v14 and future test $41.28; v15 round $25.87; v16 round $17.46; reviewer checks $0.78; v17 on eight $4.80. v17 future test $19.00; gem test $1.82; v18 on eight $4.92; blind panel round 1 $18.13; picker test $0.69; taste tests $3.06; judge with evidence and goldfish $2.18; Fable and Sonnet judges $4.30; text playtest $4.07; v19 smoke test $0.77; found-deck test $3.79; blind panel round 2 $21.00; protocol-v1 baseline (v13 dev runs 2 and 3) $17.35; v19 dev run 1 $15.89; Haiku stand-in check (6 dev runs) $2.98; v14 dev runs 2 and 3 $18.66; v20 on Haiku (3 dev runs) $1.47; launch mistake (7 misnamed runs, stopped) $0.32; Haiku v13 and v20 runs 4-5 and v21 runs 1-3 $3.47; v20 Opus dev run 1 $8.70; v20 Opus dev runs 2 and 3 $17.18; judge test $0.42; Extravagant Spirit prompt (v13 and v20) $0.81; land-step test $1.16; v22 Opus run 1 on the 10 Standard dev decks $4.61; v22 Opus runs 2 and 3 $8.75; v0 (the model alone) run 1 on 45 decks $2.81 and dev runs 2 and 3 $2.87; land note test $0.41; the idea-named test so far: the model alone on 18 decks $1.09, the brewer's run stopped at a bug $7.25, one deck on v24 $0.47, the other 11 decks on v24 $5.27. Total about $557.86. Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats); full history 145,131 (since 2025-07-01, merged weekly) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
 | Automated tests | 172 passing |
@@ -60,11 +60,13 @@ Three things, and the third is turning out to be the most interesting.
 20. **One gap, seen five ways.** After the lands, the owner asked where else to look. Free checks on the saved decks: sideboards (3 of 15 cards right, and a sideboard built from data is no better), the old deck a brew starts from (data picks worse than the AI does), colors, borrowed spells. Each time data could list the candidates and nothing could pick among them. The brewer's mana, played out in a simulator, already works as well as the real decks' mana. The only change the owner had preferred blind was letting the AI play a game with its deck.
 21. **"We are testing incorrectly."** The owner said there was a ceiling we hadn't found. There was. No list can score 100 on the test: the real lists agree with each other at 79, and the best possible list scores 85. And the test named 3 of each deck's defining cards while the decks had about 7. The 4 it hid were worth more points than the 3 it named, and in five decks they included the card the deck is named after. Where the idea wasn't hidden, the brewer was 9 points behind the human inventors, not 23.
 22. **Take the lands out.** The owner asked to see the progress with the lands removed. The level didn't move: the brewer matches lands about as well as it matches spells (41 without lands, 43 with), and so do the human inventors (64 and 66). But the lands had been hiding a step. On the whole deck, the first harness that read real lists (v2) couldn't be told from today's. On spells alone today's is 4 points ahead, on both tests. v2's jump had been real mana bases; the better spell picks came later.
+23. **Tell it the idea.** The owner asked for one more big jump. The test had been naming 3 of each deck's defining cards when the decks had 6 or 7, and the brewer couldn't find the rest: most were nowhere in its data. So we named them all. The model alone, with no harness, jumped 15 points and passed the brewer. The brewer jumped 13, from 42.7 to 53.7 on the dev decks, half the distance to the people who invented them. The gain was the named cards and little else: the lands barely moved. Along the way the run found a bug that no test had: asked for more than 6 cards, the brewer could never hand in a deck. Half of what we had called the brewer's shortfall was a question it was never told.
 
 Recurring theme for the post: the owner's pushback improved the work at nearly every turn (no bracket scraping, no new database, no Neon credentials, use our own data instead of re-scraping MTGO, every list instead of a sample, fix `main` instead of running an old build, compare models, not ready to give up, judge decks I know intimately, an April cutoff for the future test, generic tools not bespoke fixes).
 
 ## Open decisions
 
+- **The idea-named test (2026-11-11):** dev done (42.7 to 53.7 with every signature card named). Open: the same on the future test's 12 changed decks (about $6.50, not approved), and whether `holdout-idea-v1` stands beside holdout-v2 as a second test. Also open: the request box should ask for the whole idea.
 - **Next build (proposed 2026-10-21):** v16 = v13 plus a synergy shortlist tool (the feature-synergy model narrows the card pool to the ~150 likeliest partners; the AI picks). Two runs on the future test, about $17.
 - **Lands and colors:** flat at 47% land match in every version; wrong colors on about half the decks. Owner: "we can figure out lands later." Checked 2026-11-10: a color rule is worth about +0.2 to +0.5 match (not built); the land swap (v23) helps two-color Standard decks and hurts elsewhere (built, not the base). Owner, 2026-11-10: "Yes, stop on lands". Colors stay open.
 - **Owner's 60% target** on the future test: v13 is at 48%; spells 49%, lands 47%.
@@ -82,6 +84,52 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
 
 ---
+
+## 2026-11-11 · The idea-named test, the result: with the whole idea named, the brewer goes from 42.7 to 53.7
+
+Paid, under the owner's second yes ("Yes, finish it", about $5.50, capped at $6): the other 11 decks on v24 cost **$5.27**, none failed. The whole test cost **$14.08** (the model alone $1.09; the brewer's stopped run $7.25, of which $4.54 went on decks lost to the bug; v24 $5.74), plus the two cut-off calls. `scripts/idea-test-check.ts --decks` prints everything below.
+
+**1. The brewer, the 18 decks whose request changed.** One run with every signature card named (v22's 6 clean builds and v24's 12) against v22's 3 saved runs on the 3-card request, paired by deck.
+
+| 18 decks | 3 cards named | Every signature card named | Gain (95% range) | Inventors |
+| --- | --- | --- | --- | --- |
+| Whole deck | 41.6 | 54.4 | **+12.8 (+5.2 to +20.5)** | 66.8 |
+| Without lands | 39.6 | 55.4 | +15.8 (+8.6 to +23.0) | 64.6 |
+| Points from lands | 15.9 | 18.2 | +2.4 (-2.0 to +6.7) | 24.8 |
+| Points from the cards the old request hid | 3.2 | 16.9 | +13.7 (+9.5 to +18.0) | 15.1 |
+| Points from the other spells | 22.6 | 19.3 | -3.3 (-5.9 to -0.7) | 26.9 |
+| Added | 11.7 | 21.4 | +9.6 (+5.1 to +14.1) | 31.5 |
+
+- **By the rule set before the run, this is a big jump:** +5 or more with a range clear of zero. 15 of the 18 decks scored higher.
+- **Over all 21 dev decks: 42.7 to 53.7** (without lands 40.8 to 54.3). The estimate from the ceiling check was 52.8. The gap to the inventors goes from 23.0 to 12.0.
+- **The gain is the named cards themselves** (+13.7). The builds play all 4.3 newly named cards a deck, 14.6 copies. They push out a few other right cards (-3.3).
+- **The lands did not clearly move** (+2.4, range through zero). Two decks got their mana back with the idea (Dimir Excruciator +20.1 land points, Jund Sacrifice +25.4); three lost lands (Creative Technique -9.2, Living Death -7.6, Fanatic Eldrazi -7.4). That matches the free check: lands follow the idea in some decks and not in others.
+- **Three decks went down:** Fanatic Eldrazi -14.1, Living Death -6.9, Reanimator -1.2. The biggest gains: Dimir Excruciator +43.7, Jund Sacrifice +40.6, Metalcraft +30.8, Cosmogoyf +30.0, Inside Out +22.5.
+
+**2. The model alone and the brewer, side by side** (18 decks):
+
+| Whole deck | 3 cards named | Every signature card named |
+| --- | --- | --- |
+| The model alone | 33.2 | 48.3 |
+| The brewer | 41.6 | 54.4 |
+| The brewer over the model alone | +8.5 (+3.8 to +13.1) | +6.2 (+0.8 to +11.6) |
+| The same, without lands | +7.1 (+2.4 to +11.8) | +2.2 (-2.4 to +6.8) |
+
+- **Naming the idea is worth more than the harness.** The model alone with the idea (46.8 over all 21 decks) beats the brewer without it (42.7).
+- **With the idea given, the harness's lead is mostly lands.** It is still clear on the whole deck (+6.2) and no longer clear on the spells (+2.2). The brewer has 18.2 land points against the model alone's 14.0.
+
+**3. What is left to the inventors, with the idea named** (18 decks, whole-deck points): 12.4 in all. Lands 6.6, the other spells 7.6, and the signature cards -1.8 (the brewer plays more copies of them than the inventors' first lists did).
+
+**4. My guesses.** The brewer +8: it is +12.8. The hidden cards +9: +13.7. The other spells -2: -3.3. Lands +1: +2.4. The model alone +6: +15.1. The brewer's lead over the model alone "stays near +8.9": it fell to +6.2, and on spells to +2.2. I was too low on every gain and wrong about the lead.
+
+**5. Limits.** One run. Dev decks only: the future test has not been run on these requests. 6 of the brewer's 18 builds are v22 and 12 are v24, which differ by one number in a tool's schema. And it is a different question from holdout-v2, never a higher score on the same one: protocol-v4 and every kept or dropped verdict stay as they are.
+
+**What it means.**
+- The 23 points were two jobs. Guessing the idea from 3 cards was about 11 of them. With the idea given, the brewer is 12 points from the inventors on dev.
+- For the product: the request should carry the whole idea. A user knows it; the brewer can't guess it.
+- For the harness: what is left is lands and ordinary card choices, about 7 points each on these decks. And the harness adds less than it seemed once the model knows the idea.
+
+**Decision:** waiting for the owner. By the rule, the next step is the same test on the future test's 12 changed decks (the model alone about $0.75, v24 about $5.75: about $6.50), and the owner's call on whether the idea-named test stands beside the current one. Nothing more has been spent.
 
 ## 2026-11-11 · The idea-named test, first half: the model alone jumps 15 points; the brewer's run hit a bug and was stopped
 

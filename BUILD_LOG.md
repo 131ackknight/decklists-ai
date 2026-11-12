@@ -8,6 +8,7 @@ A running record of how decklists.ai gets built: decisions, findings, numbers, a
 - Each entry: what we did, what we decided and why, what we found (with numbers), and what changed our minds.
 - Mistakes and dead ends stay in, including when the owner overruled Claude Code. They are the interesting part of the story.
 - Corrections to earlier entries are added in place as notes, so the original claim stays visible.
+- Links to claude.ai pages are private (the owner's judging pages and chart pages). The answers given on the judging pages are exported in `evals/answers/`.
 
 ## What we're building (Claude Code's answer, 2026-10-15)
 
@@ -85,6 +86,35 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
 
 ---
+
+## 2026-11-11 · Getting ready to go public: the pre-publish pass
+
+The owner: "Was thinking to make this repo public, and so other people who may hire me may see the eval stuff. Should we clean up as well as make it how youd expect a researcher to look like?" Then **"Yes, start"** (to a pre-publish pass: README, license and small fixes). Free.
+
+**Checked before touching anything (read-only).**
+- No API keys, tokens or database URLs in the files or anywhere in the history (every commit searched for the usual key shapes). `.env.example` holds empty values.
+- The private decklist exports under `data/` were never committed.
+- The 397 judging answers in `evals/answers/` hold ratings only: no account ids, no emails.
+- The owner's personal email is the author of all 268 commits.
+- On a fresh clone the install and the typecheck pass; 141 of the 173 tests pass with no data at all, and all 173 once the card index exists. I copied the built index in for that check; I did not re-download it from Scryfall.
+
+**The owner's two decisions.** No license: the repo is for reading, all rights reserved. The commit email stays: rewriting it would change every commit id, and the run register ties each run to the commit that made it.
+
+**Done.**
+- **README.md rewritten** from a 15-line product pitch: the question, how one test works, six findings with their numbers, three charts, how the work was done, a map of the repo, what a visitor can and can't rerun, how it was built (with Claude Code, and who did what), limits, rights.
+- **Three figures in `docs/figures/`.** They were drawn by throwaway scripts from the numbers in PROGRESS.md sections 2h and 2i: pictures of the scoreboard, not outputs of it. Drawing them from the result files inside the repo is for the next pass.
+- The local path in `evals/results/round4/logs/playtest.log` is gone (5 lines of a stack trace).
+- `package.json` says `UNLICENSED`.
+- This log and the scoreboard now say that claude.ai links are private pages, and where their answers are exported.
+- A list of the lines in this log that quote the owner, for the owner to skim before publishing (given to the owner; not in the repo).
+
+**Not done, and whose call it is.**
+- **The owner's quoted words stay as they are** until the owner has read them.
+- **`evals/brewers/` holds 94 files of two named players' public decklists** (used for v7's example brews). Whether they are published is the owner's call.
+- **A visitor can't recompute the scores:** the scoring needs the decklist exports. Whether to publish the answer-key lists for the 35 test decks is the owner's call.
+- **Making the repo public is the owner's click.** Nothing here changed its visibility.
+
+**Next pass, not started:** a findings page and a methods page, the charts generated in the repo, an index of the scripts, the tests running on a fresh clone in CI, and the working notes (HANDOFF.md, PLAN.md) moved under `docs/`.
 
 ## 2026-11-11 · The idea-named tests get a standing place on the scoreboard (2i)
 

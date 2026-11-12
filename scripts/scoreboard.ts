@@ -771,6 +771,7 @@ async function main() {
     roundRows.push([p.logDate, `[${p.title}](${p.url})`, p.what, p.answers, result]);
   }
   out.push(table(["Log date", "Page", "Round", "Answers", "Result"], roundRows), "");
+  out.push("The pages are private, so their links open only for the owner; every answer given on them is exported under `evals/answers/`.", "");
   out.push("Pairs pages: A is the key's left label, B its right; \"same\" is a tie. Ratings pages: mean of plan, legal, mana and shell per answer, averaged per set, complete ratings only and the key's excluded answers left out (as `scripts/analyze-ratings.ts`).", "");
 
   // 4. The blind panel, per prompt.

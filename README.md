@@ -1,5 +1,7 @@
 # decklists.ai
 
+[![verify](https://github.com/131ackknight/decklists-ai/actions/workflows/verify.yml/badge.svg)](https://github.com/131ackknight/decklists-ai/actions/workflows/verify.yml)
+
 An AI that brews Magic: The Gathering decks, and a record of measuring whether it is any good.
 
 The brewer is a harness around Claude. The model proposes a deck; tournament data and plain code check it. Most of this repository is the measuring: frozen tests, a rule written down before each run, and every result kept, including the ones that failed.
@@ -18,7 +20,7 @@ The test takes real decks that appeared from nothing, turns the clock back to th
 4. **It builds 60 cards.**
 5. **Compare** with the lists real players settled on afterwards. The score is the matching cards out of 60, as a percent, averaged over those lists.
 
-![Where every score sits, from the model alone to the best possible](docs/figures/score-ladder.png)
+![Where every score sits, from the model alone to the best possible](docs/figures/score-ladder.svg)
 
 Nobody scores 100. Real players' own lists match each other at 79, and the best 60 cards anyone could pick score 85.
 
@@ -33,13 +35,17 @@ Nobody scores 100. Real players' own lists match each other at 79, and the best 
 | 5 | **Given the idea, the model alone builds an old deck as well as the harness does. The harness matters where the model can't know.** | The brewer's lead over the model alone, both given the idea: +22.6 on decks from after the model's training, +1.8 on the rest |
 | 6 | **The eval found a product bug.** | A request naming more than 6 cards could never get a deck. No test had named that many |
 
-![The score version by version, whole deck and without lands](docs/figures/score-by-version.png)
+![The score version by version, whole deck and without lands](docs/figures/score-by-version.svg)
 
-![The brewer against the model alone, deck by deck](docs/figures/brewer-against-model-alone.png)
+![The score with 3 cards named and with every signature card named](docs/figures/idea-named.svg)
+
+![The brewer against the model alone, deck by deck](docs/figures/brewer-against-model-alone.svg)
 
 Findings 4 to 6, and the post-cutoff number in finding 1, rest on one build per deck. The scoreboard says so wherever it applies.
 
 Two tables in the scoreboard round differently (per deck, or not at all), which is why the brewer on dev reads 42.8 in one and 42.7 in another.
+
+Each finding with its evidence, how sure it is and what is still unknown: [docs/FINDINGS.md](docs/FINDINGS.md). How the tests are built and when a result is allowed to count: [docs/METHODS.md](docs/METHODS.md).
 
 ## How the work was done
 
@@ -48,13 +54,15 @@ Two tables in the scoreboard round differently (per deck, or not at all), which 
 - **A rule before the measurement.** Since November, each entry in the [build log](BUILD_LOG.md) states what will be counted, what result would mean what, and a guess, before the run. The guesses are scored afterwards, and the misses stay in.
 - **Gains come with a range.** Versions are compared deck by deck with a 95% range, and a change is kept only if it clearly beats the current brewer ([evals/protocol.ts](evals/protocol.ts)).
 - **Every paid run records itself:** the commit that ran, the data it read, what it cost and where its results are ([evals/runs.jsonl](evals/runs.jsonl)). Runs from before the register existed were added from their result files. Total spend is about $561, itemized in the log.
-- **The scoreboard is generated, never edited.** [PROGRESS.md](PROGRESS.md) is written by [scripts/scoreboard.ts](scripts/scoreboard.ts) from the result files.
+- **The scoreboard is generated, never edited.** [PROGRESS.md](PROGRESS.md) is written by [scripts/scoreboard.ts](scripts/scoreboard.ts) from the result files. The figures on this page are drawn from the scoreboard by [scripts/figures.ts](scripts/figures.ts), so they show only numbers it prints.
 - **A person judged too.** The owner rated decks blind in several rounds ([evals/answers/](evals/answers/)). Where the owner's judgment and the automatic score disagreed, the log says so.
 
 ## What is in the repository
 
 | Path | What it is |
 | --- | --- |
+| [docs/FINDINGS.md](docs/FINDINGS.md) | What was found, with the evidence for each claim |
+| [docs/METHODS.md](docs/METHODS.md) | How the tests work and when a result counts |
 | [BUILD_LOG.md](BUILD_LOG.md) | The lab notebook, newest first. Start with "The story so far" near the top |
 | [PROGRESS.md](PROGRESS.md) | The scoreboard: every test, every version, every judging round |
 | [HANDOFF.md](HANDOFF.md) | Working notes for whoever picks the work up next |
@@ -64,7 +72,7 @@ Two tables in the scoreboard round differently (per deck, or not at all), which 
 | [evals/](evals/) | The tests, the scoring, the protocol, the run register |
 | [evals/results/](evals/results/) | Every saved build from every run |
 | [evals/answers/](evals/answers/) | The owner's judging answers, exported |
-| [scripts/](scripts/) | The runner, the scoreboard, and one script for each question the log asks |
+| [scripts/](scripts/) | The runner, the scoreboard, and one script for each question the log asks. [scripts/README.md](scripts/README.md) lists them |
 
 ## What you can and can't rerun
 
@@ -72,11 +80,13 @@ Two tables in the scoreboard round differently (per deck, or not at all), which 
 
 ```bash
 pnpm install
+pnpm verify        # typecheck, then the tests that need no downloaded data
+pnpm figures       # redraws docs/figures/ from the scoreboard
 pnpm cards:build   # downloads Scryfall's card files and builds the card index
-pnpm verify        # typecheck, then the tests
+pnpm verify        # now every test runs
 ```
 
-On a fresh clone the typecheck passes, and all 173 tests pass once the card index exists.
+On a fresh clone the typecheck passes and 157 tests pass; 25 more need the card index and are skipped until it is built. With it, all 182 run. CI does the first two steps on every push.
 
 **You can't, from this repository alone:**
 

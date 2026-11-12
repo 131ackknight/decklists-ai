@@ -15,7 +15,7 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { loadCardIndex } from "../src/cards/load";
 import { FileDataSource } from "../src/data/source";
 import { pages, pairVerdicts, playVerdicts, ratingRows } from "../evals/answers";
-import { IDEA_FIXED, ideaTest } from "../evals/idea-tests";
+import { IDEA_FIXED, ideaTest, shortDeck } from "../evals/idea-tests";
 import { latestRuns, readRegister, type RunRecord } from "../evals/register";
 import { isLand, round4Items, toCounts, type Line } from "../evals/round4/items";
 import { PROTOCOL, PROTOCOL_V1, PROTOCOL_V2, PROTOCOL_V3, onProtocolData as madeOnProtocolData, pairedGain } from "../evals/protocol";
@@ -712,6 +712,24 @@ async function main() {
             rangeOf(t.gain(t.brewer.newRuns, t.alone.newRuns, [...ids], "noLands")),
             `${one(t.level(t.alone.newRuns, [...ids], "lands"))} / ${one(t.level(t.brewer.newRuns, [...ids], "lands"))}`,
           ]),
+      ),
+    ),
+    "",
+  );
+
+  out.push("The same, deck by deck (whole deck, both given every signature card):", "");
+  out.push(
+    table(
+      ["Test", "Deck", "Appeared after the model's training", "The model alone", "The brewer", "The brewer ahead by"],
+      ideaTests.flatMap(({ label, t }) =>
+        t.both.map((id) => [
+          label,
+          shortDeck(id),
+          t.afterTraining(id) ? "yes" : "no",
+          one(t.of(t.alone.newRuns, id, "whole")),
+          one(t.of(t.brewer.newRuns, id, "whole")),
+          signed(t.of(t.brewer.newRuns, id, "whole") - t.of(t.alone.newRuns, id, "whole")),
+        ]),
       ),
     ),
     "",

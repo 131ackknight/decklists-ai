@@ -115,7 +115,8 @@ describe("getFormat", () => {
 
 // Step 4 gate: runs against the real Scryfall index once `pnpm cards:build` has run.
 describe.skipIf(!existsSync(CARD_INDEX_PATH))("real card index", () => {
-  const real = loadCardIndex();
+  // Loaded only when the file exists: vitest still runs this block to collect a skipped suite's tests.
+  const real = existsSync(CARD_INDEX_PATH) ? loadCardIndex() : new CardIndex({ cards: [], tags: [] });
 
   it("finds the Premodern green untap engine", () => {
     const r = searchCards(real, { format: "premodern", colors: ["G"], tags: ["untapper"], limit: 50 });

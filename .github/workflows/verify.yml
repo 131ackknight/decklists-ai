@@ -1,0 +1,39 @@
+name: verify
+
+# Typecheck and tests on a fresh clone. The tests that need the downloaded card index are skipped here
+# (they run locally after `pnpm cards:build`). Run this workflow by hand to download it and run them all.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm verify
+      - name: The figures can be redrawn from the scoreboard alone
+        run: pnpm figures && git diff --exit-code docs/figures
+
+  with-card-data:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Download Scryfall's card files and build the card index
+        run: pnpm cards:build
+      - run: pnpm verify

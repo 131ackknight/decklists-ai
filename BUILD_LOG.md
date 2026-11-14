@@ -24,11 +24,11 @@ Three things, and the third is turning out to be the most interesting.
 
 **A side effect worth a paragraph:** building this keeps improving Decklist Data itself. On the day of this answer, 34k lists got their junk sideboard lines removed.
 
-## Running totals (as of 2026-11-11)
+## Running totals (as of 2026-11-12)
 
 | Item | Total |
 | --- | --- |
-| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80; v12 on six $2.61; round 3 $1.90; v13 post-cutoff $2.85; v14 and future test $41.28; v15 round $25.87; v16 round $17.46; reviewer checks $0.78; v17 on eight $4.80. v17 future test $19.00; gem test $1.82; v18 on eight $4.92; blind panel round 1 $18.13; picker test $0.69; taste tests $3.06; judge with evidence and goldfish $2.18; Fable and Sonnet judges $4.30; text playtest $4.07; v19 smoke test $0.77; found-deck test $3.79; blind panel round 2 $21.00; protocol-v1 baseline (v13 dev runs 2 and 3) $17.35; v19 dev run 1 $15.89; Haiku stand-in check (6 dev runs) $2.98; v14 dev runs 2 and 3 $18.66; v20 on Haiku (3 dev runs) $1.47; launch mistake (7 misnamed runs, stopped) $0.32; Haiku v13 and v20 runs 4-5 and v21 runs 1-3 $3.47; v20 Opus dev run 1 $8.70; v20 Opus dev runs 2 and 3 $17.18; judge test $0.42; Extravagant Spirit prompt (v13 and v20) $0.81; land-step test $1.16; v22 Opus run 1 on the 10 Standard dev decks $4.61; v22 Opus runs 2 and 3 $8.75; v0 (the model alone) run 1 on 45 decks $2.81 and dev runs 2 and 3 $2.87; land note test $0.41; the idea-named test so far: the model alone on 18 decks $1.09, the brewer's run stopped at a bug $7.25, one deck on v24 $0.47, the other 11 decks on v24 $5.27; the idea-named test on the future test: the model alone $0.38, v24 $2.82. Total about $561.06. Plus one 17-token test call. |
+| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80; v12 on six $2.61; round 3 $1.90; v13 post-cutoff $2.85; v14 and future test $41.28; v15 round $25.87; v16 round $17.46; reviewer checks $0.78; v17 on eight $4.80. v17 future test $19.00; gem test $1.82; v18 on eight $4.92; blind panel round 1 $18.13; picker test $0.69; taste tests $3.06; judge with evidence and goldfish $2.18; Fable and Sonnet judges $4.30; text playtest $4.07; v19 smoke test $0.77; found-deck test $3.79; blind panel round 2 $21.00; protocol-v1 baseline (v13 dev runs 2 and 3) $17.35; v19 dev run 1 $15.89; Haiku stand-in check (6 dev runs) $2.98; v14 dev runs 2 and 3 $18.66; v20 on Haiku (3 dev runs) $1.47; launch mistake (7 misnamed runs, stopped) $0.32; Haiku v13 and v20 runs 4-5 and v21 runs 1-3 $3.47; v20 Opus dev run 1 $8.70; v20 Opus dev runs 2 and 3 $17.18; judge test $0.42; Extravagant Spirit prompt (v13 and v20) $0.81; land-step test $1.16; v22 Opus run 1 on the 10 Standard dev decks $4.61; v22 Opus runs 2 and 3 $8.75; v0 (the model alone) run 1 on 45 decks $2.81 and dev runs 2 and 3 $2.87; land note test $0.41; the idea-named test so far: the model alone on 18 decks $1.09, the brewer's run stopped at a bug $7.25, one deck on v24 $0.47, the other 11 decks on v24 $5.27; the idea-named test on the future test: the model alone $0.38, v24 $2.82; Mono White Stax prompt (v13) $0.48. Total about $561.54. Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats); full history 145,131 (since 2025-07-01, merged weekly) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
 | Automated tests | 182 passing |
@@ -84,6 +84,42 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - Lesson to apply: any prompt or claim that names a card gets checked against the card index before it is used.
 - ~~Switch to pairwise~~: done; 36 pairs judged (v1 8 wins, v2 6, 22 ties; v2 100% faithful vs. 92%).
 - ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
+
+---
+
+## 2026-11-13 · Planning the proof-of-concept site: one prompt, no questions back
+
+The owner: "We are going to build our site for the decklist AI proof of concept." A single-page tool: type a request, get a deck, no follow-up questions; while it works, friendly lines like "Pondering the multiverse" and no reasoning on screen; the deck as a list or a visual view; modern and sleek. Planned with the owner's planning skill (the-right-way): one question at a time, then a build pack. Free; nothing built or run yet.
+
+Where it lives: a new public repo, `decklists-ai-site`, for the page. The brewer stays here, behind a new `/api/brew` route, so the research code stays apart from the site. Both run on Vercel Pro (a brew can take 7.7 minutes; Pro allows 800 seconds). A brew needs only about 65 MB of this repo's 673 MB `data/` folder, which fits in a Vercel function.
+
+The main decisions: open to anyone, with a safety cap of 10 brews a day and 2 per visitor (the owner: "we wont promote this"); optional format chips, otherwise the format is read from the prompt; status lines tied to the brewer's real steps, shown in friendly words (meta lookups become "Scouting the metagame"); a cheap Haiku check turns away requests that aren't for a deck, and a repeat request within a day comes from a cache; the result opens on a grouped list with the deck's name and a short "how it wins" note, with a toggle to card images; a dark, glassy look.
+
+This replaces the 2026-11-12 plan (`docs/SITE_PLAN.md`) for now. That plan had guided steps that ask for every key card, chat, a gallery, and no limits. The cost of asking no questions is known: the brewer scored 11 to 14 points higher when the request named every card the deck is built around (2026-11-11), and this page doesn't ask for them.
+
+Six slices, built one per fresh chat, with no paid calls until the last one: the page, the API stream with a fake brewer, the guard and caps, the brewing screen, the result views, then deploy and one real brew (about $0.45) on the owner's yes. The plan is in `decklists-ai-site/build-plan/`.
+
+---
+
+## 2026-11-12 · A fresh prompt: "Build me a Mono White Stax deck in Premodern"
+
+The owner: "Use the decklist AI harness so we can ask: Build me a Mono White Stax deck in predmoern" (Premodern). One brew, `scripts/brew-one.ts --harness v13` (the same as v22 outside Standard), $0.48, 10 steps. Saved in `evals/results/round4/one-build-me-a-mono-white-stax-deck-in-premodern-v13-claude-opus-5-5.json`.
+
+The brewer said up front it was a brew: no recent Premodern list is a mono-white stax deck. It built white creatures first, then the lock: 4 Armageddon, 4 Winter Orb, 3 Tangle Wire, with 4 Mox Diamond, 3 Mishra's Factory and 2 Ancient Tomb for mana after the reset, 4 Rishadan Port and 2 Wasteland. Creatures: 3 Mother of Runes, 4 Silver Knight, 4 Whipcorder, 3 Glowrider, 4 Exalted Angel; 4 Swords to Plowshares. 23 lands (12 Plains).
+
+Free checks after the run: all 22 cards (main and sideboard) are Premodern-legal in the card index. In the 2,251 Premodern lists in the data, 256 play Armageddon or Winter Orb, almost all Terrageddon (127); only one is mono-white (a White Weenie list, 2026-07-28). The brew shares its creature base with that list (Mox Diamond, Exalted Angel, Silver Knight, Whipcorder, Swords, Factory, Port, Wasteland, Armageddon); Winter Orb and Tangle Wire come from Welder Prison. Weak spots it named itself: Glowrider taxes its own Swords and Armageddon, and 16 white sources is below White Weenie's usual 19. The owner, on seeing the list: **"Pretty good"**.
+
+---
+
+## 2026-11-12 · Planning the site: about 25 questions, one plan
+
+The owner: "Build me a site that is going to use the decklist ai harness. To get great decklists. It needs to be amazing UX. So ask me a ton of questions do it right." Free; nothing built or run yet.
+
+Five rounds of questions, answered by the owner, written up in `docs/SITE_PLAN.md`. The main decisions: players first; free with no limits and no accounts; all seven formats; harness v24 (it accepts more than 6 named cards, which a card picker can easily send); a chatbot-style text box on the homepage that fills in guided steps (format, key cards, play style) to check before brewing; a live build feed while it runs; a visual deck-and-plan result page with a sideboard labeled as a draft; export, share, rate and a chat box for changes; a gallery of brews someone said they'd play; a playful MTG look; Vercel for the site and a small worker box for the few-minute brews.
+
+Two course corrections during the questions. The owner first picked guided steps over free text, then asked for a chatbot-style box on the homepage; the plan joins them (the box fills in the steps). The owner first picked "free, capped", then chose no limits at all; the plan keeps that and suggests a monthly spend limit on the Anthropic account as the owner's own safety net.
+
+Why the steps ask for every key card: the idea-named tests (2026-11-11) measured the brewer 11 to 14 points better when the request names every card the deck is built around.
 
 ---
 

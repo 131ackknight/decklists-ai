@@ -1,6 +1,6 @@
 import type Anthropic from "@anthropic-ai/sdk";
 import { describe, expect, it, vi } from "vitest";
-import { NAME_MODEL, fallbackNameBlurb, nameAndBlurb } from "./name-blurb";
+import { BLURB_MAX, NAME_MODEL, fallbackNameBlurb, nameAndBlurb, trimBlurb } from "./name-blurb";
 
 const stub = (parse: (...a: unknown[]) => unknown) => ({ messages: { parse: vi.fn(parse) } }) as unknown as Anthropic & { messages: { parse: ReturnType<typeof vi.fn> } };
 
@@ -21,16 +21,46 @@ describe("nameAndBlurb", () => {
     expect(params.messages[0].content).toContain("Winter Orb: keeps them down");
   });
 
-  it("falls back on an API error", async () => {
+  it("falls back on an API error, and logs why", async () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
     const client = stub(async () => {
       throw new Error("overloaded");
     });
     expect(await nameAndBlurb(client, NOTES, WIN)).toEqual({ name: "Mono-White Stax", blurb: "It wins with Silver Knight, Armageddon and Winter Orb." });
+    expect(warn).toHaveBeenCalledWith("name-blurb fallback: overloaded");
+    warn.mockRestore();
   });
 
-  it("falls back when the reply is empty or too long", async () => {
-    expect((await nameAndBlurb(stub(async () => ({ parsed_output: null })), NOTES, WIN)).name).toBe("Mono-White Stax");
-    expect((await nameAndBlurb(stub(async () => ({ parsed_output: { name: "x".repeat(80), blurb: "ok" } })), NOTES)).name).toBe("Mono-White Stax");
+  it("falls back on an empty reply, logging the stop reason", async () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    expect((await nameAndBlurb(stub(async () => ({ parsed_output: null, stop_reason: "max_tokens" })), NOTES, WIN)).name).toBe("Mono-White Stax");
+    expect(warn).toHaveBeenCalledWith("name-blurb fallback: no parsed reply (stop_reason max_tokens)");
+    warn.mockRestore();
+  });
+
+  it("keeps a good blurb when only the name is too long", async () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    expect(await nameAndBlurb(stub(async () => ({ parsed_output: { name: "x".repeat(80), blurb: "It locks the mana." } })), NOTES)).toEqual({ name: "Mono-White Stax", blurb: "It locks the mana." });
+    warn.mockRestore();
+  });
+
+  it("trims a long blurb to its last full sentence instead of throwing it away", async () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const long = "Lock the mana early. ".repeat(40);
+    const out = await nameAndBlurb(stub(async () => ({ parsed_output: { name: "Orb Lock", blurb: long } })), NOTES, WIN);
+    expect(out.name).toBe("Orb Lock");
+    expect(out.blurb.length).toBeLessThanOrEqual(BLURB_MAX);
+    expect(out.blurb.endsWith("early.")).toBe(true);
+    warn.mockRestore();
+  });
+});
+
+describe("trimBlurb", () => {
+  it("leaves short blurbs alone and cuts at a word when no sentence fits", () => {
+    expect(trimBlurb("It wins.  Fast.")).toBe("It wins. Fast.");
+    const cut = trimBlurb("word ".repeat(200), 30);
+    expect(cut.endsWith("…")).toBe(true);
+    expect(cut.length).toBeLessThanOrEqual(31);
   });
 });
 

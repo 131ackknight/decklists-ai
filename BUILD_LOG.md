@@ -87,6 +87,21 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-11-14 · The blurb fallback: trimmed, not thrown away, and logged
+
+The Premodern brew's page showed the fallback blurb ("It wins with Ancient Tomb, Sphere of Resistance, …") instead of 2-3 sentences. The Haiku naming call had failed or returned something out of bounds, and the fallback logged nothing, so the cause can't be known. The owner: "fix".
+
+`src/site/name-blurb.ts` now:
+
+- trims a blurb over 600 characters to its last full sentence, instead of dropping it for the card list;
+- keeps a good blurb when only the name runs long (the name then comes from the notes);
+- gives the call 800 tokens of room instead of 400;
+- logs every fallback's reason to the server log only (`name-blurb fallback: …`, e.g. the stop reason), so the next one can be read in Vercel's logs.
+
+239 tests pass, with stub clients and no paid calls. The API is redeployed.
+
+---
+
 ## 2026-11-14 · v26 is live on the site
 
 The owner, on v26's brew of the Faeries prompt: **"Yes, ship v26"**. The site's brew API now runs `brewV26` (`src/site/brewer.ts`) and is redeployed. The deck cache key now carries the brewer version (`deck:v26:…`), so a prompt cached by v24 in the last 24 hours brews fresh instead of returning the old deck. 236 tests pass. The live API answers (checked with the free off-topic request). No real brew was run on production to check it.

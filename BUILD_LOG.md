@@ -28,7 +28,7 @@ Three things, and the third is turning out to be the most interesting.
 
 | Item | Total |
 | --- | --- |
-| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80; v12 on six $2.61; round 3 $1.90; v13 post-cutoff $2.85; v14 and future test $41.28; v15 round $25.87; v16 round $17.46; reviewer checks $0.78; v17 on eight $4.80. v17 future test $19.00; gem test $1.82; v18 on eight $4.92; blind panel round 1 $18.13; picker test $0.69; taste tests $3.06; judge with evidence and goldfish $2.18; Fable and Sonnet judges $4.30; text playtest $4.07; v19 smoke test $0.77; found-deck test $3.79; blind panel round 2 $21.00; protocol-v1 baseline (v13 dev runs 2 and 3) $17.35; v19 dev run 1 $15.89; Haiku stand-in check (6 dev runs) $2.98; v14 dev runs 2 and 3 $18.66; v20 on Haiku (3 dev runs) $1.47; launch mistake (7 misnamed runs, stopped) $0.32; Haiku v13 and v20 runs 4-5 and v21 runs 1-3 $3.47; v20 Opus dev run 1 $8.70; v20 Opus dev runs 2 and 3 $17.18; judge test $0.42; Extravagant Spirit prompt (v13 and v20) $0.81; land-step test $1.16; v22 Opus run 1 on the 10 Standard dev decks $4.61; v22 Opus runs 2 and 3 $8.75; v0 (the model alone) run 1 on 45 decks $2.81 and dev runs 2 and 3 $2.87; land note test $0.41; the idea-named test so far: the model alone on 18 decks $1.09, the brewer's run stopped at a bug $7.25, one deck on v24 $0.47, the other 11 decks on v24 $5.27; the idea-named test on the future test: the model alone $0.38, v24 $2.82; Mono White Stax prompt (v13) $0.48; the site launch brew (v24, Mono-red burn) $0.32; the owner's first live brews (v24: Premodern $0.32, Modern $0.44); the v25 test brew $0.62. Total about $563.24. Plus one 17-token test call. |
+| Anthropic API spend | v1 baseline $0.63; v1 comparison pass 1 $18.03 (Fable $9.90, Opus $4.05, Sonnet $3.22, Haiku 4.5 $0.75, Haiku 5.5 $0.11); harness v2 smoke test $0.02; harness v2 pass 1 $15.03 (Opus $9.49, Sonnet $5.54); Old School rerun $0.51; intent stage evals $0.25; pipeline smoke test $1.40; v3 full runs $27.08 and lock-bug reruns $4.71; round 4 smoke test $0.38 and runs $31.58; brew holdout first run $13.16 (discarded, bug) and corrected run $12.81; v4 $15.76; brainstorm diagnostics $9.53; v5 round $26.72; v6 $8.36; forward test $0.74; v7 round $22.79; expert round $14; v8 and v9 on four prompts $3.29; v10 on three $1.20; forward v10 brew $0.38; post-cutoff test $7.33; expert round 2 $9.92; v11 on three $1.37; v11 post-cutoff $2.86; would-you-play round $4.80; v12 on six $2.61; round 3 $1.90; v13 post-cutoff $2.85; v14 and future test $41.28; v15 round $25.87; v16 round $17.46; reviewer checks $0.78; v17 on eight $4.80. v17 future test $19.00; gem test $1.82; v18 on eight $4.92; blind panel round 1 $18.13; picker test $0.69; taste tests $3.06; judge with evidence and goldfish $2.18; Fable and Sonnet judges $4.30; text playtest $4.07; v19 smoke test $0.77; found-deck test $3.79; blind panel round 2 $21.00; protocol-v1 baseline (v13 dev runs 2 and 3) $17.35; v19 dev run 1 $15.89; Haiku stand-in check (6 dev runs) $2.98; v14 dev runs 2 and 3 $18.66; v20 on Haiku (3 dev runs) $1.47; launch mistake (7 misnamed runs, stopped) $0.32; Haiku v13 and v20 runs 4-5 and v21 runs 1-3 $3.47; v20 Opus dev run 1 $8.70; v20 Opus dev runs 2 and 3 $17.18; judge test $0.42; Extravagant Spirit prompt (v13 and v20) $0.81; land-step test $1.16; v22 Opus run 1 on the 10 Standard dev decks $4.61; v22 Opus runs 2 and 3 $8.75; v0 (the model alone) run 1 on 45 decks $2.81 and dev runs 2 and 3 $2.87; land note test $0.41; the idea-named test so far: the model alone on 18 decks $1.09, the brewer's run stopped at a bug $7.25, one deck on v24 $0.47, the other 11 decks on v24 $5.27; the idea-named test on the future test: the model alone $0.38, v24 $2.82; Mono White Stax prompt (v13) $0.48; the site launch brew (v24, Mono-red burn) $0.32; the owner's first live brews (v24: Premodern $0.32, Modern $0.44); the v25 test brew $0.62; the v26 test brew $0.71. Total about $563.95. Plus one 17-token test call. |
 | Real decklists analyzed | 30,102 (last 90 days, 8 formats); full history 145,131 (since 2025-07-01, merged weekly) |
 | Cards indexed | 32,870, with 4,577 function tags and 697 alternate MTGO names |
 | Automated tests | 223 passing |
@@ -84,6 +84,29 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 - Lesson to apply: any prompt or claim that names a card gets checked against the card index before it is used.
 - ~~Switch to pairwise~~: done; 36 pairs judged (v1 8 wins, v2 6, 22 ties; v2 100% faithful vs. 92%).
 - ~~Tainted Pact round 2 ratings~~: owner couldn't recall; excluded and re-judged pairwise.
+
+---
+
+## 2026-11-14 · v26's first brew: one unplayed card left, kept with a reason
+
+The owner said "Yes, run it". One v26 brew of the same Modern prompt took 11 steps and cost $0.71.
+
+The deck: 4 Ledger Shredder, 4 Subtlety, 4 Harbinger of the Seas, 4 Kitesail Larcenist, 4 Brazen Borrower, 4 Quantum Riddler, 2 Tishana's Tidebinder; 4 Chalice of the Void, 2 Trinisphere, 2 Narset; 3 Force of Negation, 2 Counterspell, 3 Sink into Stupor; 17 Island, 1 Otawara. Saved as `evals/results/round4/one-mono-blue-skies-…-v26-claude-opus-5-5.json`.
+
+The same prompt, three versions (free check on the 10,314 recent Modern lists):
+
+| Version | Copies in no recent Modern list | Closest real list shares |
+| --- | --- | --- |
+| v24 (live site) | 17 | 19 of 60 (Merfolk) |
+| v25 (one send-back) | 6 | 27 of 60 (Merfolk) |
+| v26 (every submission, keep one) | 4 | 25 of 60 (Merfolk) |
+
+- The check sent back Warkite Marauder, Hypnotic Sprite, Thorn of Amethyst and Damping Sphere. The brewer swapped in Ledger Shredder, Subtlety and Trinisphere.
+- It kept one unplayed card, as allowed: 4 Kitesail Larcenist, "both removal and a flier", since mono-blue has almost no creature removal.
+- Faerie Mastermind and Damping Sphere are gone. So is Mutavault, which Harbinger of the Seas would have turned into a plain Island. The deck now plays basic Islands, so its own Harbinger only hurts the opponent.
+- Ledger Shredder is in 2 recent lists and Tishana's Tidebinder in 11: real, but rare.
+
+One brew each, so this shows the rule works on the case it came from, not a gain on the tests.
 
 ---
 

@@ -9,10 +9,14 @@ import { BREW_FIZZLED, SSE_PING, sse, type BrewEvent, type SiteDeck } from "./ev
 import fakeDeck from "./fixtures/fake-deck.json";
 import { nameAndBlurb } from "./name-blurb";
 import { phraseForStep } from "./phrases";
+import { NAMING_PHRASE, PROGRESS, WARMUP_PHRASE, stepProgress } from "./progress";
 import { toSiteDeck } from "./shape";
 
-/** One brew for the site: friendly phrases while it works, then the deck. Throws on any failure. */
-export type SiteBrewer = (req: { prompt: string; format: string | null }, onPhrase: (p: string) => void) => Promise<SiteDeck>;
+/**
+ * One brew for the site: friendly phrases while it works, each with how far along it is (0 to 1, D-024),
+ * then the deck. Throws on any failure.
+ */
+export type SiteBrewer = (req: { prompt: string; format: string | null }, onPhrase: (p: string, progress: number) => void) => Promise<SiteDeck>;
 
 export const BREW_MODEL = MODELS["claude-opus-5-5"];
 /** The format when neither the chips nor the prompt name one (D-006). */
@@ -53,16 +57,18 @@ const realParts: RealBrewerParts = {
 
 export function makeRealBrewer(parts: RealBrewerParts = realParts): SiteBrewer {
   return async (req, onPhrase) => {
+    onPhrase(WARMUP_PHRASE, PROGRESS.warmup);
     const c = parts.client();
     const depsP = parts.deps();
     let format = req.format?.trim() || null;
     if (!format) format = await parts.readFormat(c, req.prompt).catch(() => null);
     const deps = await depsP;
     format = (format || DEFAULT_FORMAT).toLowerCase();
-    const r = await parts.brew(c, { prompt: req.prompt, format }, deps, (_step, note) => onPhrase(phraseForStep(note)));
+    const r = await parts.brew(c, { prompt: req.prompt, format }, deps, (step, note) => onPhrase(phraseForStep(note), stepProgress(step, note)));
     // Server log only (Vercel runtime logs), never sent to the page: what each real brew cost.
     console.info(`brew done: ${JSON.stringify({ format, costUsd: r.costUsd, ms: r.ms, steps: r.steps, stopReason: r.stopReason })}`);
     if (!r.deck) throw new Error(r.error ?? "The brew submitted no deck.");
+    onPhrase(NAMING_PHRASE, PROGRESS.naming);
     const nb = await nameAndBlurb(c, r.text, r.deck.winLine);
     return toSiteDeck(r, deps.index, nb);
   };
@@ -77,10 +83,13 @@ export const FAKE_STEPS = ["meta, archetype", "reference_list", "search_cards, c
 /** A replay at no cost (BREW_FAKE=1): scripted steps `delayMs` apart, then the saved deck. */
 export function makeFakeBrewer(delayMs = 1500): SiteBrewer {
   return async (_req, onPhrase) => {
-    for (const note of FAKE_STEPS) {
+    onPhrase(WARMUP_PHRASE, PROGRESS.warmup);
+    for (const [i, note] of FAKE_STEPS.entries()) {
       await new Promise((r) => setTimeout(r, delayMs));
-      onPhrase(phraseForStep(note));
+      onPhrase(phraseForStep(note), stepProgress(i + 1, note));
     }
+    await new Promise((r) => setTimeout(r, delayMs));
+    onPhrase(NAMING_PHRASE, PROGRESS.naming);
     return structuredClone(fakeDeck as SiteDeck);
   };
 }
@@ -90,7 +99,8 @@ export const fakeBrewer: SiteBrewer = makeFakeBrewer();
 export const PING_MS = 15_000;
 
 /**
- * The SSE body for one brew: status events (a phrase repeated back to back is sent once), a ping comment
+ * The SSE body for one brew: status events (sent when the phrase or the progress changes; progress never
+ * goes back), a ping comment
  * every 15 s, then exactly one terminal event. A failure of any kind becomes the one friendly error;
  * the real reason goes to the server log only. When the client goes away the stream stops writing (the
  * brew itself runs on: brewV24 takes no abort signal).
@@ -112,11 +122,14 @@ export function brewStream(brewer: SiteBrewer, req: { prompt: string; format: st
       const send = (e: BrewEvent) => write(sse(e));
       ping = setInterval(() => write(SSE_PING), PING_MS);
       let last = "";
+      let pct = 0;
       try {
-        const deck = await brewer(req, (phrase) => {
-          if (phrase === last) return;
+        const deck = await brewer(req, (phrase, progress) => {
+          const next = Math.round(Math.min(1, Math.max(pct, progress)) * 1000) / 1000;
+          if (phrase === last && next === pct) return;
           last = phrase;
-          send({ type: "status", phrase });
+          pct = next;
+          send({ type: "status", phrase, progress: pct });
         });
         send({ type: "deck", deck, cached: false });
       } catch (err) {

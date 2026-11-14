@@ -15,7 +15,8 @@ export interface SiteDeck {
 }
 
 export type BrewEvent =
-  | { type: "status"; phrase: string }
+  /** `progress` (0 to 1) moves only on real events and never goes back (D-024). */
+  | { type: "status"; phrase: string; progress: number }
   | { type: "deck"; deck: SiteDeck; cached: boolean }
   | { type: "refused"; reason: "off_topic" | "ip_limit" | "daily_cap"; message: string }
   | { type: "error"; message: string };

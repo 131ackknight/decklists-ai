@@ -87,6 +87,22 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-11-14 · A progress bar that moves only on real events
+
+The owner asked for a real progress bar. A true percentage can't be known, because the brewer decides how many steps a deck takes: the first real brew took 8, and the limit is 40. So the bar moves only when something real happens, and each status event now carries how far along the brew is (`src/site/progress.ts`):
+
+- **6%:** the brew starts (loading the card pool and lists, reading the format). A new line, "Warming up the forge", covers what used to be about 10 silent seconds.
+- **Each brewer step:** closes 18% of the gap left to 85%, so 8 steps reach about 70% and 15 about 81%. The bar can't reach the end early, however long the brew runs.
+- **87%:** the step that submits the deck.
+- **93%:** naming the deck and writing its blurb, with a new line, "Naming your deck".
+- **100%:** the deck arrives.
+
+Between events the page creeps the bar forward slowly, at most 6 points past the last real position and never past 97%, so a long step doesn't look frozen. The one stretch still covered mostly by the creep is the brewer's own write-up after it submits the deck (about 37 s on the first brew), which reports no steps.
+
+Built and tested with the fake brewer, so it cost nothing: 228 API tests, plus 51 unit tests and 9 browser tests on the site. Not yet seen on a real brew.
+
+---
+
 ## 2026-11-14 · The caps come off
 
 The owner's first brew of their own on the live site ("Mono White Control Deck with Armageddon, some artifacts to produce mana, Decree of Justice, and maybe some removal and stuff") got "You've brewed your two decks for today." The launch checks had used both of the day's per-visitor brews from the same address: the Upstash test and the first real brew. The owner: "hit this immediately lets remove the cap".

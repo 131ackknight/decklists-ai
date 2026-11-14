@@ -7,6 +7,7 @@ import { FAKE_STEPS, brewStream, makeFakeBrewer, makeRealBrewer, type RealBrewer
 import { BREW_FIZZLED, type BrewEvent } from "./events";
 import fakeDeck from "./fixtures/fake-deck.json";
 import { FLAVOR_LINES } from "./phrases";
+import { NAMING_PHRASE, PROGRESS, WARMUP_PHRASE } from "./progress";
 
 async function readAll(stream: ReadableStream<Uint8Array>): Promise<string> {
   return new Response(stream).text();
@@ -51,11 +52,21 @@ describe("fake brew stream", () => {
       text.then(() => (done = true));
       for (let i = 0; i < 400 && !done; i++) await vi.advanceTimersByTimeAsync(1000);
       const raw = await text;
-      expect(raw.match(/^: ping$/gm)?.length).toBe(Math.floor((20_000 * FAKE_STEPS.length) / 15_000));
+      // One delay per step, plus one before the naming line.
+      expect(raw.match(/^: ping$/gm)?.length).toBe(Math.ceil((20_000 * (FAKE_STEPS.length + 1)) / 15_000) - 1); // a ping due as the stream ends is not sent
       expect(parseEvents(raw).at(-1)?.type).toBe("deck");
     } finally {
       vi.useRealTimers();
     }
+  });
+
+  it("progress only goes up, stays below 1, and ends on the naming line", async () => {
+    const events = parseEvents(await readAll(brewStream(makeFakeBrewer(0), req)));
+    const statuses = events.filter((e): e is Extract<typeof e, { type: "status" }> => e.type === "status");
+    const pcts = statuses.map((e) => e.progress);
+    expect(pcts[0]).toBe(PROGRESS.warmup);
+    expect(pcts.every((p, i) => p > 0 && p < 1 && (i === 0 || p >= pcts[i - 1]))).toBe(true);
+    expect(statuses.at(-1)).toEqual({ type: "status", phrase: NAMING_PHRASE, progress: PROGRESS.naming });
   });
 
   it("the fixture is a full deck with every card grouped", () => {
@@ -105,9 +116,11 @@ describe("real brewer (stubbed: no model call)", () => {
     const parts = stubParts();
     const raw = await readAll(brewStream(makeRealBrewer(parts), req));
     const events = parseEvents(raw);
-    expect(events.map((e) => e.type)).toEqual(["status", "status", "status", "deck"]);
-    expect(events[0]).toEqual({ type: "status", phrase: "Scouting the metagame" });
-    expect(events[3]).toEqual({
+    expect(events.map((e) => e.type)).toEqual(["status", "status", "status", "status", "status", "deck"]);
+    expect(events[0]).toEqual({ type: "status", phrase: WARMUP_PHRASE, progress: PROGRESS.warmup });
+    expect(events[1]).toEqual({ type: "status", phrase: "Scouting the metagame", progress: expect.any(Number) });
+    expect(events[4]).toEqual({ type: "status", phrase: NAMING_PHRASE, progress: PROGRESS.naming });
+    expect(events[5]).toEqual({
       type: "deck",
       cached: false,
       deck: { name: "Orb Lock", blurb: "It wins with Winter Orb.", format: "premodern", main: [{ qty: 4, name: "Winter Orb", type: "Artifact" }], side: [] },
@@ -131,7 +144,8 @@ describe("real brewer (stubbed: no model call)", () => {
     vi.spyOn(console, "error").mockImplementation(() => {});
     for (const brew of [async () => brewResult({ deck: null, error: "API 529: overloaded" }), async () => Promise.reject(new Error("API 500 SECRET"))]) {
       const raw = await readAll(brewStream(makeRealBrewer(stubParts({ brew })), req));
-      expect(parseEvents(raw)).toEqual([{ type: "error", message: BREW_FIZZLED }]);
+      expect(parseEvents(raw).filter((e) => e.type !== "status")).toEqual([{ type: "error", message: BREW_FIZZLED }]);
+      expect(parseEvents(raw).at(-1)).toEqual({ type: "error", message: BREW_FIZZLED });
       expect(raw).not.toContain("SECRET");
     }
   });
@@ -139,6 +153,6 @@ describe("real brewer (stubbed: no model call)", () => {
   it("unknown steps become flavor lines", async () => {
     const parts = stubParts({ brew: async (_c, _r, _d, onStep) => (onStep(1, "new_tool"), brewResult()) });
     const events = parseEvents(await readAll(brewStream(makeRealBrewer(parts), req)));
-    expect(FLAVOR_LINES).toContain((events[0] as { phrase: string }).phrase);
+    expect(FLAVOR_LINES).toContain((events[1] as { phrase: string }).phrase);
   });
 });

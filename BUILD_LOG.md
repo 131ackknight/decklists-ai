@@ -87,6 +87,14 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-11-14 · The caps come off
+
+The owner's first brew of their own on the live site ("Mono White Control Deck with Armageddon, some artifacts to produce mana, Decree of Justice, and maybe some removal and stuff") got "You've brewed your two decks for today." The launch checks had used both of the day's per-visitor brews from the same address: the Upstash test and the first real brew. The owner: "hit this immediately lets remove the cap".
+
+Both caps are now set to 1,000,000 (env vars `BREW_PER_IP` and `BREW_DAILY_CAP` on the API project), and the API is redeployed. The code and the counters stay, so a cap can come back by changing two numbers and redeploying. The off-topic check and the 24-hour cache still run before every brew. Spend is now bounded only by the Anthropic account's own monthly limit. A brew costs about $0.32. The redeploy and its checks were free.
+
+---
+
 ## 2026-11-13 · The site is live: decklists-ai-site.vercel.app, and the first real brew on it ($0.32)
 
 The proof-of-concept site from the 2026-11-13 plan is deployed. Two Vercel projects:

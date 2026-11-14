@@ -3,7 +3,7 @@ import type { CardIndex } from "@/cards/card-index";
 import { loadCardIndex } from "@/cards/load";
 import { FileDataSource, type DataSource } from "@/data/source";
 import { MODELS } from "@/harness/models";
-import { brewV24, type BrewRequest, type BrewResult } from "@/harness/run";
+import { brewV26, type BrewRequest, type BrewResult } from "@/harness/run";
 import { classifyIntent } from "@/pipeline/intent";
 import { BREW_FIZZLED, SSE_PING, sse, type BrewEvent, type SiteDeck } from "./events";
 import fakeDeck from "./fixtures/fake-deck.json";
@@ -51,7 +51,8 @@ let client: Anthropic | null = null;
 const realParts: RealBrewerParts = {
   client: () => (client ??= new Anthropic()),
   deps: loadDeps,
-  brew: (c, req, deps, onStep) => brewV24(c, BREW_MODEL, req, deps, onStep),
+  // Harness v26 since 2026-11-14 (site D-025): v24 plus the stale-card check. Owner: "Yes, ship v26".
+  brew: (c, req, deps, onStep) => brewV26(c, BREW_MODEL, req, deps, onStep),
   readFormat: async (c, prompt) => (await classifyIntent(c, MODELS["claude-haiku-5-5"].id, { prompt })).intent?.format ?? null,
 };
 
@@ -74,7 +75,7 @@ export function makeRealBrewer(parts: RealBrewerParts = realParts): SiteBrewer {
   };
 }
 
-/** brewV24 on Opus 5.5. Costs real money: never run in tests or local checks (D-016). */
+/** brewV26 on Opus 5.5. Costs real money: never run in tests or local checks (D-016). */
 export const realBrewer: SiteBrewer = makeRealBrewer();
 
 /** Steps as brewV24 reports them, for the fake run; they go through the same phrase map. */

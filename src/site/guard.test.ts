@@ -97,7 +97,7 @@ describe("guard", () => {
     expect(capKey("2026-11-13")).toBe("cap:2026-11-13");
     expect(ipKey("2026-11-13", "1.2.3.4")).toMatch(/^ip:2026-11-13:[0-9a-f]{64}$/);
     expect(ipKey("2026-11-13", "1.2.3.4")).not.toContain("1.2.3.4");
-    expect(deckKey("Burn", null)).toMatch(/^deck:[0-9a-f]{64}$/);
+    expect(deckKey("Burn", null)).toMatch(/^deck:v26:[0-9a-f]{64}$/); // brewer version in the key (D-025)
     expect(deckKey("Burn ", "Modern")).toBe(deckKey("burn", "modern"));
   });
 });

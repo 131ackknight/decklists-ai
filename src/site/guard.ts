@@ -34,7 +34,11 @@ const sha256 = (s: string) => createHash("sha256").update(s).digest("hex");
 /** Lowercased, trimmed, inner whitespace collapsed. */
 export const normalizePrompt = (p: string) => p.toLowerCase().trim().replace(/\s+/g, " ");
 
-export const deckKey = (prompt: string, format: string | null) => `deck:${sha256(`${normalizePrompt(prompt)}|${(format ?? "").trim().toLowerCase()}`)}`;
+/** The brewer version in the cache key, so decks cached by an older brewer aren't served after a switch (site D-025). */
+export const BREWER_VERSION = "v26";
+
+export const deckKey = (prompt: string, format: string | null) =>
+  `deck:${BREWER_VERSION}:${sha256(`${normalizePrompt(prompt)}|${(format ?? "").trim().toLowerCase()}`)}`;
 export const capKey = (day: string) => `cap:${day}`;
 export const ipKey = (day: string, ip: string) => `ip:${day}:${sha256(ip)}`;
 

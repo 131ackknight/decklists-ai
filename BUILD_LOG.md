@@ -87,6 +87,24 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-11-14 · The owner's first live brew: a creature suite "from like 2014"
+
+The owner's prompt on the live site: "Mono blue skies/stompy deck that has some stax pieces and some creatures to kill with". It brewed in Modern: 7 steps, 2 minutes, $0.44. The deck is legal. It plays 4 Chalice of the Void, 2 Trinisphere, 3 Damping Sphere and 4 Counterspell, with a Faeries creature base: 4 Spellstutter Sprite, 4 Scion of Oona, 4 Faerie Mastermind, 3 Brazen Borrower, 2 Vendilion Clique, 3 Glen Elendra Guardian, 2 Subtlety, 2 Emrakul's Messenger. The owner: **"the creature suite is from like 2014"**.
+
+The data agrees (free check on `data/reference-lists.jsonl`, 10,314 Modern lists from 2026-07-17 to 2026-10-14):
+
+- No Modern list in those 90 days plays Spellstutter Sprite, Scion of Oona, Faerie Mastermind or Emrakul's Messenger. Spellstutter Sprite lives in Pauper Faeries (372 lists). Vendilion Clique and Glen Elendra Guardian appear in one Modern list each.
+- Modern's real mono-blue creature deck is Merfolk (14 lists): Harbinger of the Seas, Lord of Atlantis, Master of the Pearl Trident, Tide Shaper and Tishana's Tidebinder. It is also the closest real deck to the brew, sharing only 19 of its 60 cards.
+- The stax pieces are real Modern cards, but from Eldrazi Tron (Chalice in 217 lists, Trinisphere in 290).
+
+**Reading:** the request named no cards and no archetype that exists in Modern ("skies", "stompy"), so the brewer had no real shell to build on and filled the creature slots from memory: Lorwyn-era Faeries. This is the weak spot the idea-named tests found (2026-11-11): the brewer is much better when the request points at real cards. The site asks no questions, so it gets requests like this one.
+
+**Also found:** the brew data ends on 2026-10-14, a month before launch. The site has no data refresh yet (D-005: by redeploy).
+
+Nothing changed yet. Possible fixes, not chosen: flag cards nobody in the format has played lately, so the brewer must justify or replace them; or steer open requests to the nearest real archetype in the format's colors (here Merfolk). Either needs a free check on saved brews first.
+
+---
+
 ## 2026-11-14 · A progress bar that moves only on real events
 
 The owner asked for a real progress bar. A true percentage can't be known, because the brewer decides how many steps a deck takes: the first real brew took 8, and the limit is 40. So the bar moves only when something real happens, and each status event now carries how far along the brew is (`src/site/progress.ts`):

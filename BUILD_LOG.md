@@ -87,6 +87,21 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-11-14 · v26: most unplayed cards go, one may stay
+
+The owner's note on v25's brew: **"Still unplayed cards"**. That brew kept 4 Faerie Mastermind with a reason, and 2 Damping Sphere slipped through: v25 checks only once, so the resubmission wasn't checked. Then: **"i dont think ALL unplayed unnammed card are bad, but probably just most of them"**.
+
+The data agrees (free, `scripts/stale-card-check.ts`, now also counting the real decks' own unplayed cards). Real decks play about one card that nobody in the format had played lately and that the request doesn't name: 1.3 cards and 3.8 copies a deck on dev, 1.3 cards and 3.5 copies on the future test. The brewer plays about as many (2.9 and 3.3 copies), but the wrong ones: 17% and 4% match. The live Faeries brew had four such cards, 14 copies.
+
+**v26** = v25 with the check made firmer (`brewV26`, `STALE_KEEP_CARDS`/`STALE_KEEP_COPIES` in `src/harness/stale.ts`):
+
+- Every submission is checked, up to 3 send-backs. After that the deck goes through rather than the brew being lost.
+- One such card, up to 4 copies, may stay with a reason. Any more must be replaced with cards real decks in the format play.
+
+236 tests pass. Not run yet. One brew of the owner's prompt is about $0.60.
+
+---
+
 ## 2026-11-14 · v25's first brew: the stale Faeries are gone
 
 The owner said "Yes, build and test". One brew of the owner's prompt on v25, in Modern, on the same data as the live site: "Mono blue skies/stompy deck that has some stax pieces and some creatures to kill with". It took 11 steps and cost $0.62. The live v24 brew of the same prompt took 7 steps and $0.44.

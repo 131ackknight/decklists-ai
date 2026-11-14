@@ -11,7 +11,7 @@ import type { DataSource, QtyName } from "@/data/source";
 import { goldfish } from "@/sim/goldfish";
 import { synergyModelFor, synergyScore } from "@/synergy/feature-synergy";
 import { coachNotes, formatStaples, partnerNotes, PlanInput, type CoachNote, type Plan } from "@/coach/coach";
-import { staleUnnamed } from "./stale";
+import { STALE_HARD_ROUNDS, STALE_KEEP_COPIES, STALE_KEEP_CARDS, staleUnnamed } from "./stale";
 
 /** State shared by one brew's tool calls. */
 export interface ToolContext {
@@ -48,6 +48,8 @@ export interface ToolContext {
   /** Harness v25: send the deck back once over spells nobody in the format plays lately that the player didn't ask for (stale.ts). */
   staleCheck?: boolean;
   staleRounds?: number;
+  /** Harness v26: the stale check runs on every submission (up to STALE_HARD_ROUNDS send-backs), and only one such card (up to 4 copies) may stay with a reason. */
+  staleHard?: boolean;
 }
 
 export interface EnginePlan {
@@ -712,16 +714,25 @@ export const TOOLS = [
         }
       }
       // Harness v25: spells no recent list in the format plays, not new, and not asked for: replace or justify, once.
-      if (ctx.staleCheck && (ctx.staleRounds ?? 0) < 1) {
+      // v26 (staleHard): every submission, at most STALE_HARD_ROUNDS times so a brew can't be lost to it, and only
+      // one such card (up to 4 copies) may stay with a reason; real decks play about that many.
+      if (ctx.staleCheck && (ctx.staleRounds ?? 0) < (ctx.staleHard ? STALE_HARD_ROUNDS : 1)) {
         const answered = new Set((input.cardNoteResponses ?? []).map((r) => r.id.toLowerCase()));
-        const stale = staleUnnamed(ctx.index, ctx.data, key, input.main, ctx.request ?? "").filter((c) => !answered.has(`stale-${c.name.toLowerCase()}`));
+        const all = staleUnnamed(ctx.index, ctx.data, key, input.main, ctx.request ?? "");
+        const kept = all.filter((c) => answered.has(`stale-${c.name.toLowerCase()}`));
+        const tooMany = !!ctx.staleHard && (kept.length > STALE_KEEP_CARDS || kept.reduce((n, c) => n + c.qty, 0) > STALE_KEEP_COPIES);
+        const stale = tooMany ? all : all.filter((c) => !kept.includes(c));
         if (stale.length) {
           ctx.staleRounds = (ctx.staleRounds ?? 0) + 1;
           const lists = ctx.data.recentLists(key).length;
+          const why = `No ${key} list in the last 90 days (${lists} lists) plays these, they are not new cards, and the player didn't ask for them.`;
+          const find = `a card real ${key} decks play for the same job (meta, archetype and reference_list show what they play)`;
           return {
             accepted: false,
             staleNote: stale.map((c) => `${c.name} (${c.qty})`),
-            howToProceed: `No ${key} list in the last 90 days (${lists} lists) plays these, they are not new cards, and the player didn't ask for them. Replace each with a card real ${key} decks play for the same job (meta, archetype and reference_list show what they play), or resubmit with cardNoteResponses using id 'stale-<card name>' saying why it stays.`,
+            howToProceed: ctx.staleHard
+              ? `${why} Most cards like these are wrong: real decks play at most one. Replace each with ${find}. You may keep one of them, up to ${STALE_KEEP_COPIES} copies, if it truly earns its slot: resubmit with cardNoteResponses using id 'stale-<card name>' saying why.${tooMany ? ` You kept ${kept.length} (${kept.reduce((n, c) => n + c.qty, 0)} copies): keep at most one.` : ""}`
+              : `${why} Replace each with ${find}, or resubmit with cardNoteResponses using id 'stale-<card name>' saying why it stays.`,
           };
         }
       }

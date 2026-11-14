@@ -245,6 +245,8 @@ export async function brewV5(
     needsMax?: number;
     /** Harness v25: send the deck back once over stale spells the player didn't ask for. */
     staleCheck?: boolean;
+    /** Harness v26: that check on every submission, with a reason taken for one such card at most. */
+    staleHard?: boolean;
   } = { system: V5_SYSTEM_PROMPT },
 ): Promise<BrewResult> {
   const started = Date.now();
@@ -262,6 +264,7 @@ export async function brewV5(
     request: req.prompt,
     needsMax: variant.needsMax,
     staleCheck: variant.staleCheck,
+    staleHard: variant.staleHard,
   };
   if (variant.maxCopyRate != null) ctx.lock = { cards: [], maxCopyRate: variant.maxCopyRate };
   const key = req.format ? getFormat(req.format)?.key : undefined;
@@ -443,6 +446,34 @@ export function brewV25(
     cardChecksV2: true,
     needsMax: 16,
     staleCheck: true,
+  });
+}
+
+/**
+ * Harness v26 (2026-11-14): v25's stale check made firmer. v25 sent the deck back once and took a reason for
+ * any card, so its first brew kept 4 Faerie Mastermind (with a reason) and 2 Damping Sphere (on the
+ * resubmission, not rechecked), both in no recent Modern list. The owner, on that deck: "Still unplayed
+ * cards", then "i dont think ALL unplayed unnammed card are bad, but probably just most of them". v26 checks
+ * every submission (up to STALE_HARD_ROUNDS send-backs) and lets one such card, up to 4 copies, stay with a
+ * reason: about what real decks play (stale.ts).
+ */
+export function brewV26(
+  client: Anthropic,
+  model: ModelConfig,
+  req: BrewRequest,
+  deps: { index: CardIndex; data: DataSource },
+  onStep?: (step: number, note: string) => void,
+): Promise<BrewResult> {
+  return brewV5(client, model, req, deps, onStep, {
+    system: V12_SYSTEM_PROMPT,
+    extraTools: ["played_with"],
+    requireWinLine: true,
+    strictBrew: true,
+    requireNeeds: true,
+    cardChecksV2: true,
+    needsMax: 16,
+    staleCheck: true,
+    staleHard: true,
   });
 }
 

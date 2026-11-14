@@ -6,6 +6,15 @@ import type { DataSource, QtyName } from "@/data/source";
 export const STALE_NEW_DAYS = 180;
 /** Below this many recent lists the format's data is too thin to call a card stale. */
 export const STALE_MIN_LISTS = 50;
+/** v26: how many times the check may send a deck back before it lets one through, so a brew is never lost to it. */
+export const STALE_HARD_ROUNDS = 3;
+/**
+ * v26: stale cards the player didn't name that may stay with a reason: one card, up to 4 copies. Real decks
+ * play about that many (1.3 cards, 3.5-3.8 copies a deck on both tests; scripts/stale-card-check.ts), and
+ * the owner: "i dont think ALL unplayed unnammed card are bad, but probably just most of them".
+ */
+export const STALE_KEEP_CARDS = 1;
+export const STALE_KEEP_COPIES = 4;
 
 const DAY = 86_400_000;
 

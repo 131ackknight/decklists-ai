@@ -94,7 +94,7 @@ async function main() {
     return items.get(id)!.prompt.toLowerCase().includes(name);
   };
 
-  type Row = { id: string; stale: number; staleRight: number; unnamed: number; unnamedRight: number; realStale: number; cards: string[] };
+  type Row = { id: string; stale: number; staleRight: number; unnamed: number; unnamedRight: number; realStale: number; realUnnamed: number; realUnnamedCards: number; cards: string[] };
   const rows: Row[] = [];
   for (const rec of records) {
     for (const r of JSON.parse(readFileSync(rec.file, "utf8")).results as ({ id: string; deck: SavedDeck | null } | null)[]) {
@@ -113,6 +113,8 @@ async function main() {
         unnamed: unnamedCards.reduce((n, [, q]) => n + q, 0),
         unnamedRight: rightOf(unnamedCards),
         realStale: mean(s.map((l) => [...l].reduce((n, [k, q]) => n + (isStale(k) ? q : 0), 0))),
+        realUnnamed: mean(s.map((l) => [...l].reduce((n, [k, q]) => n + (isStale(k) && !named(r.id, k) ? q : 0), 0))),
+        realUnnamedCards: mean(s.map((l) => [...l].filter(([k]) => isStale(k) && !named(r.id, k)).length)),
         cards: staleCards.map(([k, q]) => `${q} ${index.getCard(k)?.name ?? k}${named(r.id, k) ? " (named)" : ""}`),
       });
     }
@@ -134,7 +136,7 @@ async function main() {
     const un = mean(sub.map((r) => r.unnamed));
     const unRight = mean(sub.map((r) => r.unnamedRight));
     console.log(`  stale copies the request did not name ${un.toFixed(2)}, played by the real deck ${unRight.toFixed(2)} (${un ? ((unRight / un) * 100).toFixed(0) : "0"}%)`);
-    console.log(`  stale copies in the real decks   ${mean(sub.map((r) => r.realStale)).toFixed(2)}`);
+    console.log(`  stale copies in the real decks   ${mean(sub.map((r) => r.realStale)).toFixed(2)}, not named in the request ${mean(sub.map((r) => r.realUnnamed)).toFixed(2)} copies of ${mean(sub.map((r) => r.realUnnamedCards)).toFixed(2)} cards`);
   }
   if (detail) {
     console.log("");

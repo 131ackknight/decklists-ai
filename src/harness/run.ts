@@ -243,6 +243,8 @@ export async function brewV5(
     extraText?: string;
     /** Harness v24: submit_deck takes this many "needs" entries (6 otherwise). */
     needsMax?: number;
+    /** Harness v25: send the deck back once over stale spells the player didn't ask for. */
+    staleCheck?: boolean;
   } = { system: V5_SYSTEM_PROMPT },
 ): Promise<BrewResult> {
   const started = Date.now();
@@ -259,6 +261,7 @@ export async function brewV5(
     cardNoteRounds: 0,
     request: req.prompt,
     needsMax: variant.needsMax,
+    staleCheck: variant.staleCheck,
   };
   if (variant.maxCopyRate != null) ctx.lock = { cards: [], maxCopyRate: variant.maxCopyRate };
   const key = req.format ? getFormat(req.format)?.key : undefined;
@@ -414,6 +417,32 @@ export function brewV24(
     requireNeeds: true,
     cardChecksV2: true,
     needsMax: 16,
+  });
+}
+
+/**
+ * Harness v25 (2026-11-14): v24 plus one send-back over stale spells the player didn't ask for: main-deck
+ * spells no list in the format played in the last 90 days, released more than 180 days ago (stale.ts). From
+ * the owner's first live brew, a Modern deck built on Lorwyn-era Faeries nobody plays ("the creature suite
+ * is from like 2014"). The free check (scripts/stale-card-check.ts) found such cards right 17% of the time on
+ * dev and 4% on the future test. Run it on the date-correct card pool, like v22 (the runner's job).
+ */
+export function brewV25(
+  client: Anthropic,
+  model: ModelConfig,
+  req: BrewRequest,
+  deps: { index: CardIndex; data: DataSource },
+  onStep?: (step: number, note: string) => void,
+): Promise<BrewResult> {
+  return brewV5(client, model, req, deps, onStep, {
+    system: V12_SYSTEM_PROMPT,
+    extraTools: ["played_with"],
+    requireWinLine: true,
+    strictBrew: true,
+    requireNeeds: true,
+    cardChecksV2: true,
+    needsMax: 16,
+    staleCheck: true,
   });
 }
 

@@ -11,7 +11,7 @@ import { existsSync, writeFileSync } from "node:fs";
 import { loadCardIndex } from "../src/cards/load";
 import { FileDataSource } from "../src/data/source";
 import { MODELS } from "../src/harness/models";
-import { brewV13, brewV20, brewV23, type BrewResult } from "../src/harness/run";
+import { brewV13, brewV20, brewV23, brewV24, brewV25, type BrewResult } from "../src/harness/run";
 import { dataFingerprint, recordRun } from "../evals/register";
 
 try {
@@ -28,7 +28,7 @@ const modelId = arg("model", "claude-opus-5-5")!;
 const model = MODELS[modelId];
 if (!prompt || !format) throw new Error('Pass --format and --prompt "..."');
 if (!model) throw new Error(`Unknown model ${modelId}`);
-if (!["v13", "v20", "v23"].includes(harness)) throw new Error("--harness v13, v20 or v23");
+if (!["v13", "v20", "v23", "v24", "v25"].includes(harness)) throw new Error("--harness v13, v20, v23, v24 or v25");
 
 async function main() {
   const index = loadCardIndex();
@@ -39,7 +39,7 @@ async function main() {
   const run = { script: "brew-one", file: out, tests: [] as string[], harness, model: modelId, data: dataFingerprint() };
   const started = recordRun({ event: "started", ...run, items: 1 });
   const req = { prompt: prompt!, format };
-  const brewer = harness === "v20" ? brewV20 : harness === "v23" ? brewV23 : brewV13;
+  const brewer = harness === "v20" ? brewV20 : harness === "v23" ? brewV23 : harness === "v24" ? brewV24 : harness === "v25" ? brewV25 : brewV13;
   const r: BrewResult = await brewer(new Anthropic(), model, req, { index, data });
   writeFileSync(out, JSON.stringify({ ranAt: new Date().toISOString(), harness, model: modelId, prompt, format, complete: true, results: [{ id: slug, prompt, format, text: r.text, deck: r.deck, borrow: r.borrow, landSwap: r.landSwap, costUsd: r.costUsd, steps: r.steps, errors: r.error ? [r.error] : [] }] }, null, 1));
   recordRun({ event: "finished", ...run, items: 1, decks: r.deck ? 1 : 0, costUsd: Math.round(r.costUsd * 10000) / 10000, complete: true, commit: started.commit, dirty: started.dirty });

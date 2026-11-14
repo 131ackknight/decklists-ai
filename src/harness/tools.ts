@@ -11,6 +11,7 @@ import type { DataSource, QtyName } from "@/data/source";
 import { goldfish } from "@/sim/goldfish";
 import { synergyModelFor, synergyScore } from "@/synergy/feature-synergy";
 import { coachNotes, formatStaples, partnerNotes, PlanInput, type CoachNote, type Plan } from "@/coach/coach";
+import { staleUnnamed } from "./stale";
 
 /** State shared by one brew's tool calls. */
 export interface ToolContext {
@@ -44,6 +45,9 @@ export interface ToolContext {
   stapleRounds?: number;
   /** Harness v24: how many "needs" entries submit_deck takes. It took 6, so a request naming more than 6 cards could never be submitted. */
   needsMax?: number;
+  /** Harness v25: send the deck back once over spells nobody in the format plays lately that the player didn't ask for (stale.ts). */
+  staleCheck?: boolean;
+  staleRounds?: number;
 }
 
 export interface EnginePlan {
@@ -705,6 +709,20 @@ export const TOOLS = [
               };
             }
           }
+        }
+      }
+      // Harness v25: spells no recent list in the format plays, not new, and not asked for: replace or justify, once.
+      if (ctx.staleCheck && (ctx.staleRounds ?? 0) < 1) {
+        const answered = new Set((input.cardNoteResponses ?? []).map((r) => r.id.toLowerCase()));
+        const stale = staleUnnamed(ctx.index, ctx.data, key, input.main, ctx.request ?? "").filter((c) => !answered.has(`stale-${c.name.toLowerCase()}`));
+        if (stale.length) {
+          ctx.staleRounds = (ctx.staleRounds ?? 0) + 1;
+          const lists = ctx.data.recentLists(key).length;
+          return {
+            accepted: false,
+            staleNote: stale.map((c) => `${c.name} (${c.qty})`),
+            howToProceed: `No ${key} list in the last 90 days (${lists} lists) plays these, they are not new cards, and the player didn't ask for them. Replace each with a card real ${key} decks play for the same job (meta, archetype and reference_list show what they play), or resubmit with cardNoteResponses using id 'stale-<card name>' saying why it stays.`,
+          };
         }
       }
       // Harness v10: a brew has to say how it wins, and the line has to be in the deck.

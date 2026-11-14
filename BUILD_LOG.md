@@ -87,6 +87,23 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-11-14 · The owner's second live brew: "Big whiff" (Premodern), and v25 built
+
+**v25 is built, not yet run.** v25 = v24 plus one send-back from `submit_deck`: main-deck spells no list in the format played in the last 90 days, not new, and not named in the request, must be replaced or kept with a reason (`src/harness/stale.ts`, 5 new tests, 233 passing). A free dry run on the owner's Modern Faeries brew flags exactly its stale creatures: Spellstutter Sprite, Faerie Mastermind and Scion of Oona (4 each), Emrakul's Messenger (2), plus Damping Sphere (3). The one paid test of the same prompt did not run, because the local Anthropic key was rejected (401). Nothing was spent.
+
+**The second live brew** (Premodern, v24, 5 steps, $0.32): "Mono-Blue Stompy Stax". 4 Tinker, 3 Masticore, 1 Phyrexian Colossus, 1 Karn, 1 Morphling, 2 Gilded Drake; 4 Sphere of Resistance, 4 Tangle Wire, 3 Winter Orb, 2 Powder Keg; 4 Mind Stone, 2 Thran Dynamo, 4 Ancient Tomb, 3 City of Traitors; Impulse, Counterspell, Mana Leak, Annul. The owner, line by line:
+
+- "It has tinker for this collosus, but no way to untap it" (Phyrexian Colossus doesn't untap unless you pay 8 life).
+- "Gilded drake for basically no reason?"
+- "Lots of stacks and 3 masticores that is heavily dependant on mana" (Winter Orb, Tangle Wire and Sphere tax the deck's own Masticores).
+- "Big whiff"
+
+**v25 would not have caught it.** Every card is played in Premodern lately (free check: Colossus in 3 of 2,251 recent lists, Gilded Drake 5, Masticore 96). These misses are about fit: a card's drawback with nothing to cover it, a card with no job, lock pieces that choke the deck's own threats. That is the gap every earlier check pointed to ("choosing which cards fit").
+
+**Also found:** the blurb on this deck is the fallback ("It wins with Ancient Tomb, Sphere of Resistance, ..."), so the Haiku naming call failed or gave a reply out of bounds. The fallback leaves no log line, so the cause can't be read yet.
+
+---
+
 ## 2026-11-14 · Stale cards: a flag only for cards the request didn't name
 
 The owner chose to check the "flag stale cards" fix first (free, `scripts/stale-card-check.ts`). **Stale** means a nonland card that no list in the format played in the 90 days before the brew, released more than 180 days before it (so new cards are not stale). The check reads saved brews: v22's three dev runs (holdout-v2) and v13's two future-test runs (future-v2; v22 has none there).

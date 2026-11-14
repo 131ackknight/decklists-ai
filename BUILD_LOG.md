@@ -87,6 +87,20 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-11-14 · Stale cards: a flag only for cards the request didn't name
+
+The owner chose to check the "flag stale cards" fix first (free, `scripts/stale-card-check.ts`). **Stale** means a nonland card that no list in the format played in the 90 days before the brew, released more than 180 days before it (so new cards are not stale). The check reads saved brews: v22's three dev runs (holdout-v2) and v13's two future-test runs (future-v2; v22 has none there).
+
+**Step 1, every stale card.** The brewer plays stale cards often: 43 of 63 dev builds and 25 of 28 future-test builds. About half of those copies are cards the real deck also plays: 51% on dev, 46% on the future test, 41% on its six new archetypes. That is the test's nature, since inventors build new decks around cards the format had forgotten (Creative Technique, Arclight Phoenix, Thud). A flag on every stale card would push the brewer off right cards half the time. Not built.
+
+**Step 2, stale cards the request didn't name.** Most of the right stale picks are cards the request names. The stale cards it didn't name are rarely right: 17% on dev (0.5 of 2.9 copies a brew), 4% on the future test (0.1 of 3.3), and none on the six new archetypes (0 of 3.3). The owner's Faeries brew is this case: 14 copies of four Faeries nobody asked for.
+
+**Caveat:** the "didn't name" split was chosen after seeing step 1's numbers on both tests (not tuned deck by deck, but not fixed in advance either). And the check shows only that these cards are wrong, not that the brewer would find right ones in their place. That needs a brew.
+
+**Proposed, not started:** v25 = v24 plus a check that names each stale card the request didn't ask for and asks the brewer to replace it, or keep it with a reason. First one brew of the owner's Faeries prompt (about $0.45), then a dev run (about $9) if it looks right. The cost side is small: the brewer gets only 0.5 and 0.1 such copies right today.
+
+---
+
 ## 2026-11-14 · The owner's first live brew: a creature suite "from like 2014"
 
 The owner's prompt on the live site: "Mono blue skies/stompy deck that has some stax pieces and some creatures to kill with". It brewed in Modern: 7 steps, 2 minutes, $0.44. The deck is legal. It plays 4 Chalice of the Void, 2 Trinisphere, 3 Damping Sphere and 4 Counterspell, with a Faeries creature base: 4 Spellstutter Sprite, 4 Scion of Oona, 4 Faerie Mastermind, 3 Brazen Borrower, 2 Vendilion Clique, 3 Glen Elendra Guardian, 2 Subtlety, 2 Emrakul's Messenger. The owner: **"the creature suite is from like 2014"**.

@@ -87,6 +87,16 @@ Recurring theme for the post: the owner's pushback improved the work at nearly e
 
 ---
 
+## 2026-11-14 · v26 is live on the site
+
+The owner, on v26's brew of the Faeries prompt: **"Yes, ship v26"**. The site's brew API now runs `brewV26` (`src/site/brewer.ts`) and is redeployed. The deck cache key now carries the brewer version (`deck:v26:…`), so a prompt cached by v24 in the last 24 hours brews fresh instead of returning the old deck. 236 tests pass. The live API answers (checked with the free off-topic request). No real brew was run on production to check it.
+
+Cost to expect: v26's two test brews ran 11 steps each, at $0.62 (v25) and $0.71 (v26). Live v24 brews were $0.32-0.44. The send-backs add steps.
+
+Not done: v26 has no score on the dev or future tests. A dev run is about $9.
+
+---
+
 ## 2026-11-14 · v26's first brew: one unplayed card left, kept with a reason
 
 The owner said "Yes, run it". One v26 brew of the same Modern prompt took 11 steps and cost $0.71.

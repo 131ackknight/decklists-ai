@@ -12,7 +12,7 @@ const nextConfig = {
   },
   // The tracer sees the data folder read by path and pulls all of it in (about 730 MB); keep only D-005's files.
   outputFileTracingExcludes: {
-    "/api/brew": ["./data/export-*/**", "./data/reference-lists-*.jsonl", "./data/scryfall/*.gz", "./scripts/**", "./evals/**"],
+    "/api/brew": ["./data/export-*/**", "./data/reference-lists-*.jsonl", "./data/scryfall/*.gz", "./scripts/**", "./evals/**", "./docs/**"],
   },
 };
 

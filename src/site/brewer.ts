@@ -58,7 +58,10 @@ export function makeRealBrewer(parts: RealBrewerParts = realParts): SiteBrewer {
     let format = req.format?.trim() || null;
     if (!format) format = await parts.readFormat(c, req.prompt).catch(() => null);
     const deps = await depsP;
-    const r = await parts.brew(c, { prompt: req.prompt, format: (format || DEFAULT_FORMAT).toLowerCase() }, deps, (_step, note) => onPhrase(phraseForStep(note)));
+    format = (format || DEFAULT_FORMAT).toLowerCase();
+    const r = await parts.brew(c, { prompt: req.prompt, format }, deps, (_step, note) => onPhrase(phraseForStep(note)));
+    // Server log only (Vercel runtime logs), never sent to the page: what each real brew cost.
+    console.info(`brew done: ${JSON.stringify({ format, costUsd: r.costUsd, ms: r.ms, steps: r.steps, stopReason: r.stopReason })}`);
     if (!r.deck) throw new Error(r.error ?? "The brew submitted no deck.");
     const nb = await nameAndBlurb(c, r.text, r.deck.winLine);
     return toSiteDeck(r, deps.index, nb);

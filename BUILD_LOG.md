@@ -100,6 +100,8 @@ What changed, by the free check on the 10,314 recent Modern lists:
 
 This is one brew against one, and brews vary from run to run. It shows the check does what it was built to do on the case it came from. It doesn't show v25 is better on the tests: that needs a dev run (about $9), which hasn't been asked for. The owner's "would you play it?" is the real judge.
 
+**The owner, asked "Would you play this v25 deck?": "No, still off".** v25 is not shipped; the site stays on v24. Waiting on the owner's notes on what is off.
+
 The deck: 4 Harbinger of the Seas, 4 Faerie Mastermind, 4 Quantum Riddler, 4 Subtlety, 3 Brazen Borrower, 2 Wan Shi Tong; 4 Chalice of the Void, 2 Trinisphere, 2 Damping Sphere, 2 Narset; 4 Counterspell, 3 Force of Negation, 3 Sink into Stupor; 16 Island, 2 Mutavault, 1 Otawara. Saved in `evals/results/round4/one-mono-blue-skies-stompy-deck-that-has-some-stax-pieces-and-so-v25-claude-opus-5-5.json`.
 
 ---

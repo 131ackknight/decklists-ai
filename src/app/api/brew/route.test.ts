@@ -22,6 +22,9 @@ const post = (body: unknown, headers: Record<string, string> = {}) =>
 
 beforeEach(() => {
   vi.stubEnv("BREW_FAKE", "1");
+  // Never reach a real store from tests.
+  vi.stubEnv("UPSTASH_REDIS_REST_URL", "");
+  vi.stubEnv("UPSTASH_REDIS_REST_TOKEN", "");
   vi.stubEnv("BREW_ALLOWED_ORIGINS", "https://decklists-ai-site.vercel.app, http://localhost:3000");
 });
 afterEach(() => {
@@ -65,6 +68,48 @@ describe("POST /api/brew", () => {
     const res = await post({ prompt: "Burn", format: "modern" }, { origin: "https://evil.example" });
     expect(res.status).toBe(403);
     expect(res.headers.get("access-control-allow-origin")).toBeNull();
+  });
+});
+
+/** Reads a whole response, advancing fake timers so the fake brewer's steps run. */
+async function drain(res: Response): Promise<string> {
+  const text = res.text();
+  let done = false;
+  text.then(() => (done = true));
+  for (let i = 0; i < 40 && !done; i++) await vi.advanceTimersByTimeAsync(1000);
+  return text;
+}
+
+describe("POST /api/brew guard (fake mode, in-memory store)", () => {
+  it("refuses a poem as off_topic, as one SSE event", async () => {
+    const res = await post({ prompt: "Write me a poem about Islands", format: null }, { "x-forwarded-for": "203.0.113.1" });
+    expect(res.headers.get("content-type")).toContain("text/event-stream");
+    expect(parseEvents(await res.text())).toEqual([{ type: "refused", reason: "off_topic", message: 'I only brew Magic decks. Try something like "Mono-red burn in Modern".' }]);
+  });
+
+  it("serves a repeat from cache at once with cached: true", async () => {
+    vi.useFakeTimers();
+    const body = { prompt: "Cache me: Pauper Affinity", format: "Pauper" };
+    const first = parseEvents(await drain(await post(body, { "x-forwarded-for": "203.0.113.2" })));
+    expect(first.at(-1)).toMatchObject({ type: "deck", cached: false });
+    vi.useRealTimers();
+    const again = parseEvents(await (await post({ ...body, prompt: "  cache me:  pauper affinity" }, { "x-forwarded-for": "203.0.113.3" })).text());
+    expect(again).toEqual([{ type: "deck", deck: fakeDeck, cached: true }]);
+  });
+
+  it("reads BREW_PER_IP and BREW_DAILY_CAP, and uses the first x-forwarded-for entry", async () => {
+    vi.useFakeTimers();
+    vi.stubEnv("BREW_PER_IP", "1");
+    const ip = { "x-forwarded-for": "198.51.100.7, 10.0.0.1" };
+    expect(parseEvents(await drain(await post({ prompt: "Per-IP one", format: null }, ip))).at(-1)?.type).toBe("deck");
+    expect(parseEvents(await drain(await post({ prompt: "Per-IP two", format: null }, { "x-forwarded-for": "198.51.100.7" })))).toEqual([
+      { type: "refused", reason: "ip_limit", message: "You've brewed your two decks for today. Come back tomorrow!" },
+    ]);
+    vi.stubEnv("BREW_PER_IP", "5");
+    vi.stubEnv("BREW_DAILY_CAP", "0");
+    expect(parseEvents(await drain(await post({ prompt: "Capped", format: null }, { "x-forwarded-for": "198.51.100.8" })))).toEqual([
+      { type: "refused", reason: "daily_cap", message: "The forge is cooling down for today. Come back tomorrow!" },
+    ]);
   });
 });
 
